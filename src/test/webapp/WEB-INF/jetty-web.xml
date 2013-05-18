@@ -4,8 +4,6 @@
 
 <Configure id="webappContext" class="org.eclipse.jetty.webapp.WebAppContext">
 
-    <Set name="contextPath">/</Set>
-
     <New class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>solr_home_path</Arg>
         <Arg>
