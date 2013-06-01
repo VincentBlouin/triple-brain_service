@@ -89,6 +89,7 @@ public class VertexResource {
     }
 
     @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("/{vertexId}")
     public Response removeVertex(
             @Context HttpServletRequest request
@@ -108,6 +109,8 @@ public class VertexResource {
 
     @POST
     @Path("{shortId}/label")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
     public Response updateVertexLabel(
             @PathParam("shortId") String shortId,
             @QueryParam("label") String label
@@ -126,6 +129,7 @@ public class VertexResource {
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("{shortId}/type")
     public Response addType(
             @PathParam("shortId") String shortId,
@@ -171,6 +175,7 @@ public class VertexResource {
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("{shortId}/same_as")
     public Response addSameAs(
             @PathParam("shortId") String shortId,
@@ -191,6 +196,7 @@ public class VertexResource {
     }
 
     @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("{shortId}/identification/{friendly_resource_uri}")
     public Response removeFriendlyResource(
             @PathParam("shortId") String shortId,
@@ -231,6 +237,7 @@ public class VertexResource {
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("{shortId}/suggestions")
     public Response addSuggestions(
             @PathParam("shortId") String shortId,

@@ -106,6 +106,7 @@ public class UserResource{
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response createUser(JSONObject jsonUser) throws Exception {
         User user = User.withUsernameAndEmail(jsonUser.optString(USER_NAME, ""), jsonUser.optString(EMAIL, ""))

@@ -48,6 +48,7 @@ public class UserSessionResource {
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN + ";charset=utf-8")
     @Path("/")
     public Response authenticate(
             JSONObject loginInfo,
@@ -74,6 +75,7 @@ public class UserSessionResource {
     }
 
     @DELETE
+    @Produces(MediaType.TEXT_PLAIN + ";charset=utf-8")
     @Path("/")
     public Response logout(@Context HttpServletRequest request){
         request.getSession().setAttribute(AUTHENTICATION_ATTRIBUTE_KEY, false);

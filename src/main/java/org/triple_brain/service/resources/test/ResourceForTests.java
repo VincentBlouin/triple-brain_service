@@ -103,6 +103,7 @@ public class ResourceForTests {
     }
 
     @Path("search/create_core")
+    @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response createSessionUserSearchCore(@Context HttpServletRequest request) {
         graphIndexer.createUserCore(
@@ -112,6 +113,7 @@ public class ResourceForTests {
     }
 
     @Path("search/close")
+    @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response closeSearchEngine() {
         graphIndexer.close();
@@ -119,6 +121,7 @@ public class ResourceForTests {
     }
 
     @Path("search/delete_all_documents")
+    @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response deleteAllUserDocuments(@Context HttpServletRequest request) {
         deleteAllUserDocumentsForSearch(
@@ -140,6 +143,7 @@ public class ResourceForTests {
     }
 
     @Path("search/index_all_vertices")
+    @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response indexSessionUserVertices(@Context HttpServletRequest request) {
         User currentUser = userFromSession(request.getSession());

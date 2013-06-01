@@ -66,6 +66,7 @@ public class EdgeResource {
     }
 
     @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("/{edgeShortId}")
     public Response removeRelation(
        @Context HttpServletRequest request
@@ -79,6 +80,7 @@ public class EdgeResource {
 
     @POST
     @Path("{edgeShortId}/label")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response modifyEdgeLabel(
             @PathParam("edgeShortId") String edgeShortId,
             @QueryParam("label") String label){
