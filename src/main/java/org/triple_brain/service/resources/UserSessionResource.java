@@ -24,7 +24,7 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
 /*
 * Copyright Mozilla Public License 1.1
 */
-@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @PermitAll
 public class UserSessionResource {
@@ -48,7 +48,7 @@ public class UserSessionResource {
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN + ";charset=utf-8")
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response authenticate(
             JSONObject loginInfo,
@@ -75,7 +75,7 @@ public class UserSessionResource {
     }
 
     @DELETE
-    @Produces(MediaType.TEXT_PLAIN + ";charset=utf-8")
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response logout(@Context HttpServletRequest request){
         request.getSession().setAttribute(AUTHENTICATION_ATTRIBUTE_KEY, false);
