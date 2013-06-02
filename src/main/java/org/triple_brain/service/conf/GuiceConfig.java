@@ -9,10 +9,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import org.apache.solr.core.CoreContainer;
-import org.triple_brain.service.MessagesDistributorServlet;
-import org.triple_brain.service.RestInterceptor;
-import org.triple_brain.service.resources.*;
-import org.triple_brain.service.resources.test.*;
 import org.triple_brain.module.model.graph.GraphComponentTest;
 import org.triple_brain.module.model.graph.neo4j.Neo4JGraphComponentTest;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4JModule;
@@ -20,6 +16,10 @@ import org.triple_brain.module.repository_sql.SQLModule;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.module.search.GraphSearch;
 import org.triple_brain.module.search.SearchUtils;
+import org.triple_brain.service.MessagesDistributorServlet;
+import org.triple_brain.service.RestInterceptor;
+import org.triple_brain.service.resources.*;
+import org.triple_brain.service.resources.test.*;
 import org.xml.sax.SAXException;
 
 import javax.naming.Context;
@@ -30,6 +30,8 @@ import javax.ws.rs.Path;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.inject.jndi.JndiIntegration.fromJndi;
 
@@ -66,7 +68,9 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 serve("/MessageWebSocket").with(MessagesDistributorServlet.class);
 
-                serve("/users/*").with(GuiceContainer.class);
+                final Map<String, String> params = new HashMap<String, String>();
+                params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
+                serve("/users/*").with(GuiceContainer.class, params);
 
                 bind(DataSource.class)
                         .annotatedWith(Names.named("nonRdfDb"))
