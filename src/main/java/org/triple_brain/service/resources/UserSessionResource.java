@@ -48,7 +48,7 @@ public class UserSessionResource {
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.WILDCARD)
     @Path("/")
     public Response authenticate(
             JSONObject loginInfo,
