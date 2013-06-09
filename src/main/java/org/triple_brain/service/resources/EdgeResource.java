@@ -41,6 +41,7 @@ public class EdgeResource {
     }
 
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response addRelation(
             @QueryParam("sourceVertexId") String sourceVertexId,
