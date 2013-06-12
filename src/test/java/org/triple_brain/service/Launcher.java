@@ -24,7 +24,7 @@ public class Launcher {
         server = new Server(port);
         HandlerCollection handlers = new HandlerCollection();
 
-        WebAppContext wac = new WebAppContext("src/main/webapp", "/");
+        WebAppContext wac = new WebAppContext("src/main/webapp", "/service");
         handlers.addHandler(wac);
 
         XmlConfiguration conf = new XmlConfiguration(new File("src/test/webapp/WEB-INF/jetty-web.xml").toURI().toURL().openStream());

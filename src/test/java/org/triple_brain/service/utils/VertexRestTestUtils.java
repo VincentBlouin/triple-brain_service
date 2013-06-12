@@ -29,6 +29,7 @@ public class VertexRestTestUtils {
 
     public JSONObject vertexWithUri(URI vertexUri){
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("vertex")
@@ -40,6 +41,7 @@ public class VertexRestTestUtils {
 
     public JSONArray connectedEdgesOfVertexWithURI(URI vertexUri) {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("vertex")
@@ -52,6 +54,7 @@ public class VertexRestTestUtils {
 
     public boolean vertexWithUriHasDestinationVertexWithUri(URI vertexUri, URI destinationVertexUri){
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("vertex")

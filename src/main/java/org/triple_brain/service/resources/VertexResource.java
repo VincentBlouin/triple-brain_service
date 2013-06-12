@@ -129,6 +129,22 @@ public class VertexResource {
     }
 
     @POST
+    @Path("{shortId}/note")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response updateVertexNote(
+            @PathParam("shortId") String shortId,
+            String note
+    ) {
+        URI vertexId = uriFromShortId(shortId);
+        Vertex vertex = userGraph.vertexWithURI(
+                vertexId
+        );
+        vertex.note(note);
+        return Response.ok().build();
+    }
+
+    @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("{shortId}/type")
     public Response addType(

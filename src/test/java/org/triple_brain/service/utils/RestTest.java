@@ -40,7 +40,7 @@ public abstract class RestTest {
 
     @BeforeClass
     static public void startServer() throws Exception {
-        BASE_URI = new URI("http://localhost:8786");
+        BASE_URI = new URI("http://localhost:8786/");
 
         launcher = new Launcher(BASE_URI.getPort());
         launcher.launch();
@@ -70,6 +70,7 @@ public abstract class RestTest {
 
     private static void closeSearchEngine() {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("search")
@@ -84,8 +85,9 @@ public abstract class RestTest {
     }
 
     protected void createAUser(JSONObject userAsJson) {
-       ClientResponse response = resource
-                .path("users/")
+        ClientResponse response = resource
+                .path("service")
+                .path("users")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, userAsJson);
@@ -93,7 +95,7 @@ public abstract class RestTest {
     }
 
     protected User authenticate(User user) {
-        try{
+        try {
             JSONObject loginInfo = new JSONObject()
                     .put(
                             UserJsonFields.EMAIL,
@@ -101,19 +103,21 @@ public abstract class RestTest {
                     )
                     .put(UserJsonFields.PASSWORD, DEFAULT_PASSWORD);
             ClientResponse response = resource
+                    .path("service")
                     .path("users")
                     .path("session")
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
                     .post(ClientResponse.class, loginInfo);
             assertThat(response.getStatus(), is(200));
             authCookie = response.getCookies().get(0);
             return user;
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
     protected JSONObject authenticate(JSONObject user) {
-        try{
+        try {
             JSONObject loginInfo = new JSONObject()
                     .put(
                             UserJsonFields.EMAIL,
@@ -121,13 +125,15 @@ public abstract class RestTest {
                     )
                     .put(UserJsonFields.PASSWORD, DEFAULT_PASSWORD);
             ClientResponse response = resource
+                    .path("service")
                     .path("users")
                     .path("session")
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
                     .post(ClientResponse.class, loginInfo);
             assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
             authCookie = response.getCookies().get(0);
             return response.getEntity(JSONObject.class);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }

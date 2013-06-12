@@ -60,6 +60,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     protected void makeGraphHave3SerialVerticesWithLongLabels() {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("make_graph_have_3_serial_vertices_with_long_labels")
@@ -87,6 +88,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     private void createUserCore() {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("search")
@@ -98,6 +100,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     private void deleteAllUserVerticesFromSearch() {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("search")
@@ -109,6 +112,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     protected void indexAllVertices() {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("search")
@@ -133,6 +137,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     public boolean graphElementWithIdExistsInCurrentGraph(URI graphElementId){
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("graph")
@@ -147,6 +152,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     public JSONObject wholeGraph(){
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("drawn_graph")

@@ -70,7 +70,7 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 final Map<String, String> params = new HashMap<String, String>();
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
-                serve("/users/*").with(GuiceContainer.class, params);
+                serve("/users*").with(GuiceContainer.class, params);
 
                 bind(DataSource.class)
                         .annotatedWith(Names.named("nonRdfDb"))

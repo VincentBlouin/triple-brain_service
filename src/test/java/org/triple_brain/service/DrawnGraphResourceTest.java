@@ -29,6 +29,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
     public void can_get_drawn_graph_around_default_central_vertex() throws Exception {
         Integer depthOfSubVertices = 2;
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("drawn_graph")
@@ -54,6 +55,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         JSONObject newEdge = createdStatement.getJSONObject(StatementJsonFields.EDGE);
         String secondVertexId = encodeURL(newEdge.getString(EdgeJsonFields.DESTINATION_VERTEX_ID));
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("drawn_graph")
@@ -74,6 +76,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
     public void only_a_certain_number_vertices_show_with_specified_depth() throws Exception {
         Integer depthOfSubVertices = 1;
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("drawn_graph")
@@ -85,6 +88,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         assertFalse(verticesContainID(drawnGraph.getJSONObject(VERTICES), vertexCUri().toString()));
 
         response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("drawn_graph")
@@ -96,6 +100,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         assertThat(drawnGraph.getJSONObject(VERTICES).length(), is(3));
 
         response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("drawn_graph")

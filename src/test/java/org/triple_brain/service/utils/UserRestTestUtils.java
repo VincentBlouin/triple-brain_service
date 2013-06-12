@@ -27,6 +27,7 @@ public class UserRestTestUtils {
 
     public boolean emailExists(String email){
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("users")

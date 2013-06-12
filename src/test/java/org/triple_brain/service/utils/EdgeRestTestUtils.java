@@ -37,6 +37,7 @@ public class EdgeRestTestUtils {
 
     public JSONObject edgeWithUri(URI edgeUri){
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("test")
                 .path("edge")

@@ -36,6 +36,14 @@ import static org.triple_brain.module.model.json.StatementJsonFields.*;
 public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
+    public void adding_a_vertex_returns_correct_status() throws Exception {
+        ClientResponse response = vertexUtils.addAVertexToVertexAWithUri(
+                vertexAUri()
+        );
+        assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+    }
+
+    @Test
     public void can_add_a_vertex() throws Exception {
         int numberOfConnectedEdges = vertexUtils.connectedEdgesOfVertexWithURI(
                 vertexAUri()
@@ -45,14 +53,6 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                 vertexAUri()
         ).length();
         assertThat(updatedNumberOfConnectedEdges, is(numberOfConnectedEdges + 1));
-    }
-
-    @Test
-    public void adding_a_vertex_returns_correct_status() throws Exception {
-        ClientResponse response = vertexUtils.addAVertexToVertexAWithUri(
-                vertexAUri()
-        );
-        assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
     }
 
     @Test
@@ -96,7 +96,11 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         anotherUser.password(DEFAULT_PASSWORD);
         authenticate(anotherUser);
         ClientResponse response = resource
-                .path(new UserUris(authenticatedUser).defaultVertexUri().getPath())
+                .path(
+                        new UserUris(
+                                authenticatedUser
+                        ).defaultVertexUri().getPath()
+                )
                 .cookie(authCookie)
                 .post(ClientResponse.class);
         assertThat(response.getStatus(), is(Response.Status.FORBIDDEN.getStatusCode()));
@@ -137,6 +141,15 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
+    public void can_update_note() throws Exception {
+        String vertexANote = vertexA().getString(VertexJsonFields.NOTE);
+        assertThat(vertexANote, is(not("some note")));
+        updateVertexANoteUsingRest("some note");
+        vertexANote = vertexA().getString(VertexJsonFields.NOTE);
+        assertThat(vertexANote, is("some note"));
+    }
+
+    @Test
     public void updating_label_returns_correct_status() throws Exception {
         ClientResponse response = updateVertexALabelUsingRest("new vertex label");
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
@@ -149,6 +162,16 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                 .queryParam("label", label)
                 .cookie(authCookie)
                 .post(ClientResponse.class);
+        return response;
+    }
+
+    private ClientResponse updateVertexANoteUsingRest(String note) throws Exception {
+        ClientResponse response = resource
+                .path(vertexAUri().getPath())
+                .path("note")
+                .cookie(authCookie)
+                .type(MediaType.TEXT_PLAIN)
+                .post(ClientResponse.class, note);
         return response;
     }
 

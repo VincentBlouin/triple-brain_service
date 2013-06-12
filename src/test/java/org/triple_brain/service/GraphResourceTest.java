@@ -31,6 +31,7 @@ public class GraphResourceTest extends GraphManipulationRestTest {
 
     private ClientResponse getGraphAsXMLRDFUsingRest()throws Exception{
         return  resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("graph")
