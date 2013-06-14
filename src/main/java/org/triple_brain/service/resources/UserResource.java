@@ -106,9 +106,9 @@ public class UserResource{
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.WILDCARD)
     @Path("/")
-    public Response createUser(JSONObject jsonUser) throws Exception {
+    public Response createUser(JSONObject jsonUser){
         User user = User.withUsernameAndEmail(jsonUser.optString(USER_NAME, ""), jsonUser.optString(EMAIL, ""))
                 .password(jsonUser.optString(PASSWORD, ""));
 
@@ -123,23 +123,26 @@ public class UserResource{
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> entry : errors.entrySet()) {
-                jsonMessages.put(new JSONObject().put(
-                        "field", entry.getKey()
-                ).put(
-                        "reason", entry.getValue()
-                ));
+                try{
+                    jsonMessages.put(new JSONObject().put(
+                            "field", entry.getKey()
+                    ).put(
+                            "reason", entry.getValue()
+                    ));
+                }catch(JSONException e){
+                    throw new RuntimeException(e);
+                }
             }
 
             throw new WebApplicationException(Response
                     .status(BAD_REQUEST)
-                    .entity(jsonMessages.toString())
-                    .build());
+                    .entity(jsonMessages)
+                    .build()
+            );
         }
-
         userRepository.save(user);
         graphFactory.createForUser(user);
         UserGraph userGraph = graphFactory.loadForUser(user);
-        graphIndexer.createUserCore(user);
         graphIndexer.indexVertexOfUser(
                 userGraph.defaultVertex(),
                 user

@@ -48,8 +48,11 @@ public class UserResourceTest extends GraphManipulationRestTest {
                 .put(UserJsonFields.EMAIL, "roger.lamothe@example.org")
                 .put(UserJsonFields.PASSWORD, "password");
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("session")
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, loginInfo);
         assertThat(response.getStatus(), is(200));
     }
@@ -67,6 +70,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     private ClientResponse logoutUsingCookie(NewCookie cookie) {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("session")
                 .cookie(cookie)
@@ -76,6 +80,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     private boolean isUserAuthenticated(NewCookie cookie) {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("is_authenticated")
                 .cookie(cookie)
@@ -99,8 +104,11 @@ public class UserResourceTest extends GraphManipulationRestTest {
                 )
                 .put(UserJsonFields.PASSWORD, DEFAULT_PASSWORD);
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("session")
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, loginInfo);
         JSONObject userFromResponse = response.getEntity(JSONObject.class);
         String originalUserUsername = user.getString(UserJsonFields.USER_NAME);
@@ -150,7 +158,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
         String username = jsonUser.getString(UserJsonFields.USER_NAME);
         assertThat(
                 response.getHeaders().get("Location").get(0),
-                is(BASE_URI + "users/" + username)
+                is(BASE_URI + "/service/users/" + username)
         );
     }
 
@@ -176,7 +184,8 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     private ClientResponse createUser(JSONObject user) {
         return resource
-                .path("users/")
+                .path("service")
+                .path("users")
                 .type(MediaType.APPLICATION_JSON)
                 .cookie(authCookie)
                 .post(ClientResponse.class, user);
@@ -187,9 +196,11 @@ public class UserResourceTest extends GraphManipulationRestTest {
         JSONObject user = createUserWithUsername("roger_lamothe");
         authenticate(user);
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("session")
                 .cookie(authCookie)
+                .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
         JSONObject userFromResponse = response.getEntity(JSONObject.class);
         assertThat(userFromResponse.getString(USER_NAME), is("roger_lamothe"));
@@ -198,6 +209,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
     @Test
     public void getting_current_authenticated_user_without_being_authenticated_returns_the_forbidden_status() throws Exception {
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path("session")
                 .get(ClientResponse.class);
@@ -210,8 +222,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
         createUserWithEmail("roger.lamothe@example.org");
         JSONObject jsonUser = userUtils.validForCreation().put(EMAIL, "roger.lamothe@example.org");
         ClientResponse response = resource
-                .path("users/")
-                .type("application/json")
+                .path("service")
+                .path("users")
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, jsonUser);
         assertThat(response.getStatus(), is(400));
         JSONArray errors = response.getEntity(JSONArray.class);
@@ -225,8 +239,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
         createUserWithUsername("roger_lamothe");
         JSONObject jsonUser = userUtils.validForCreation().put(USER_NAME, "roger_lamothe");
         ClientResponse response = resource
-                .path("users/")
-                .type("application/json")
+                .path("service")
+                .path("users")
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, jsonUser);
         assertThat(response.getStatus(), is(400));
         JSONArray errors = response.getEntity(JSONArray.class);
@@ -243,8 +259,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
         jsonUser.put(PASSWORD, "pass");
         jsonUser.put(PASSWORD_VERIFICATION, "");
         ClientResponse response = resource
-                .path("users/")
-                .type("application/json")
+                .path("service")
+                .path("users")
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .cookie(authCookie)
                 .post(ClientResponse.class, jsonUser);
         JSONArray errors = response.getEntity(JSONArray.class);

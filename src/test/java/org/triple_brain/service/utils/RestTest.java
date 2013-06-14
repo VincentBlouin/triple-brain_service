@@ -40,7 +40,7 @@ public abstract class RestTest {
 
     @BeforeClass
     static public void startServer() throws Exception {
-        BASE_URI = new URI("http://localhost:8786/");
+        BASE_URI = new URI("http://localhost:8786");
 
         launcher = new Launcher(BASE_URI.getPort());
         launcher.launch();
@@ -55,6 +55,7 @@ public abstract class RestTest {
     @AfterClass
     static public void stopServer() throws Exception {
         closeSearchEngine();
+        closeGraphDatabase();
         launcher.stop();
     }
 
@@ -66,6 +67,17 @@ public abstract class RestTest {
     @After
     public void after_rest_test() throws SQLException {
         closeConnection();
+    }
+
+    private static void closeGraphDatabase(){
+        ClientResponse response = resource
+                .path("service")
+                .path("users")
+                .path("test")
+                .path("graph")
+                .path("server")
+                .delete(ClientResponse.class);
+        assertThat(response.getStatus(), is(200));
     }
 
     private static void closeSearchEngine() {

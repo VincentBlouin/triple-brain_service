@@ -53,7 +53,6 @@ public class GraphManipulationRestTest extends RestTest {
                 resource,
                 authCookie
         );
-        createUserCore();
         deleteAllUserVerticesFromSearch();
         makeGraphHave3SerialVerticesWithLongLabels();
     }
@@ -84,18 +83,6 @@ public class GraphManipulationRestTest extends RestTest {
     }
     public JSONObject vertexC(){
         return vertexUtils.vertexWithUri(vertexCUri());
-    }
-
-    private void createUserCore() {
-        ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .path("test")
-                .path("search")
-                .path("create_core")
-                .cookie(authCookie)
-                .get(ClientResponse.class);
-        assertThat(response.getStatus(), is(200));
     }
 
     private void deleteAllUserVerticesFromSearch() {

@@ -70,7 +70,6 @@ public class ResourceForTests {
             );
         }
         graphFactory.createForUser(user);
-        graphIndexer.createUserCore(user);
         deleteAllUserDocumentsForSearch(user);
         UserGraph userGraph = graphFactory.loadForUser(
                 user
@@ -102,16 +101,6 @@ public class ResourceForTests {
         }
     }
 
-    @Path("search/create_core")
-    @Produces(MediaType.TEXT_PLAIN)
-    @GET
-    public Response createSessionUserSearchCore(@Context HttpServletRequest request) {
-        graphIndexer.createUserCore(
-                userFromSession(request.getSession())
-        );
-        return Response.ok().build();
-    }
-
     @Path("search/close")
     @Produces(MediaType.TEXT_PLAIN)
     @GET
@@ -131,11 +120,9 @@ public class ResourceForTests {
     }
 
     private void deleteAllUserDocumentsForSearch(User user) {
-        SolrServer solrServer = searchUtils.solrServerFromUser(
-                user
-        );
+        SolrServer solrServer = searchUtils.getServer();
         try {
-            solrServer.deleteByQuery("*:*");
+            solrServer.deleteByQuery("owner_username:" + user.username());
             solrServer.commit();
         } catch (SolrServerException | IOException e) {
             throw new RuntimeException(e);

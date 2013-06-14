@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 import org.triple_brain.module.common_utils.Uris;
 
+import javax.ws.rs.core.MediaType;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -21,6 +23,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     public void can_search_vertices_for_auto_complete()throws Exception{
         indexAllVertices();
         ClientResponse response = resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("search")
@@ -28,7 +31,8 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .path("auto_complete")
                 .path(Uris.encodeURL("vert"))
                 .cookie(authCookie)
-                .type("application/json")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.TEXT_PLAIN)
                 .get(ClientResponse.class);
         JSONArray searchResults = response.getEntity(JSONArray.class);
         assertThat(searchResults.length(), is(3));
@@ -55,6 +59,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
 
     private ClientResponse searchForAutoCompleteUsingRest(String textToSearchWith)throws Exception{
         return resource
+                .path("service")
                 .path("users")
                 .path(authenticatedUser.username())
                 .path("search")
@@ -62,7 +67,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .path("auto_complete")
                 .path(Uris.encodeURL(textToSearchWith))
                 .cookie(authCookie)
-                .type("application/json")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
     }
 
