@@ -8,28 +8,21 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import org.apache.solr.core.CoreContainer;
 import org.triple_brain.module.model.graph.GraphComponentTest;
 import org.triple_brain.module.model.graph.neo4j.Neo4JGraphComponentTest;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4JModule;
 import org.triple_brain.module.repository_sql.SQLModule;
-import org.triple_brain.module.search.GraphIndexer;
-import org.triple_brain.module.search.GraphSearch;
-import org.triple_brain.module.search.SearchUtils;
+import org.triple_brain.module.search.SearchModule;
 import org.triple_brain.service.MessagesDistributorServlet;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
 import org.triple_brain.service.resources.test.*;
-import org.xml.sax.SAXException;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.ws.rs.Path;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,29 +71,34 @@ public class GuiceConfig extends GuiceServletContextListener {
                 install(new Neo4JModule());
                 try{
                     final InitialContext jndiContext = new InitialContext();
-                    String solrHomePath = (String) jndiContext.lookup("solr_home_path");
-                    String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
-                    File solrConfigXml = new File(solrHomePath + solrXMLPath);
-                    CoreContainer coreContainer = new CoreContainer(solrHomePath, solrConfigXml);
-                    bind(GraphIndexer.class).toInstance(GraphIndexer.withCoreContainer(coreContainer));
-                    bind(GraphSearch.class).toInstance(GraphSearch.withCoreContainer(coreContainer));
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
+                    SearchModule searchModule;
+                    if(isTesting){
+                        searchModule = new SearchModule(isTesting);
+                    }else{
+                        String solrHomePath = (String) jndiContext.lookup("solr_home_path");
+                        String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
+                        searchModule = isTesting ?
+                                new SearchModule(isTesting) :
+                                new SearchModule(
+                                        isTesting,
+                                        solrHomePath,
+                                        solrXMLPath
+                                );
+                    }
+                    install(searchModule);
                     if(isTesting){
                         bind(ResourceForTests.class);
                         bind(VertexResourceTestUtils.class);
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
-                        bind(SearchUtils.class).toInstance(
-                                SearchUtils.usingCoreCoreContainer(coreContainer)
-                        );
-
                         bind(GraphComponentTest.class).toInstance(
                                 new Neo4JGraphComponentTest()
                         );
                     }
-                }catch(NamingException | ParserConfigurationException | IOException | SAXException e){
+                }catch(NamingException e){
                     throw new RuntimeException(e);
                 }
 

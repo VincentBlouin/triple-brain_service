@@ -5,20 +5,6 @@
 <Configure id="webappContext" class="org.eclipse.jetty.webapp.WebAppContext">
 
     <New class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>solr_home_path</Arg>
-        <Arg>
-            /home/vince/Projects/triple_brain/module/search/src/test/resources/solr/
-        </Arg>
-    </New>
-
-    <New class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>solr_xml_path_relative_to_home</Arg>
-        <Arg>
-            conf/solr.xml
-        </Arg>
-    </New>
-
-    <New class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>is_testing</Arg>
         <Arg>
             yes
