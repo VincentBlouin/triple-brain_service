@@ -141,6 +141,7 @@ public class VertexResource {
                 vertexId
         );
         vertex.note(note);
+        graphIndexer.indexVertex(vertex);
         return Response.ok().build();
     }
 

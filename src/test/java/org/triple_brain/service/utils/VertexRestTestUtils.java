@@ -6,8 +6,10 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
+import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
 
@@ -18,13 +20,15 @@ public class VertexRestTestUtils {
 
     private WebResource resource;
     private NewCookie authCookie;
+    private User authenticatedUser;
 
-    public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie){
-        return new VertexRestTestUtils(resource, authCookie);
+    public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
+        return new VertexRestTestUtils(resource, authCookie, authenticatedUser);
     }
-    protected VertexRestTestUtils(WebResource resource, NewCookie authCookie){
+    protected VertexRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser){
         this.resource = resource;
         this.authCookie = authCookie;
+        this.authenticatedUser = authenticatedUser;
     }
 
     public JSONObject vertexWithUri(URI vertexUri){
@@ -75,6 +79,16 @@ public class VertexRestTestUtils {
         }
     }
 
+    public ClientResponse updateVertexANote(String note) throws Exception {
+        ClientResponse response = resource
+                .path(graphUtils().vertexAUri().getPath())
+                .path("note")
+                .cookie(authCookie)
+                .type(MediaType.TEXT_PLAIN)
+                .post(ClientResponse.class, note);
+        return response;
+    }
+
     public boolean vertexIsInVertices(JSONObject vertex, JSONObject vertices){
         try{
             return vertices.has(vertex.getString(VertexJsonFields.ID));
@@ -89,5 +103,13 @@ public class VertexRestTestUtils {
                 .cookie(authCookie)
                 .post(ClientResponse.class);
         return response;
+    }
+
+    private GraphRestTestUtils graphUtils(){
+        return GraphRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                authenticatedUser
+        );
     }
 }

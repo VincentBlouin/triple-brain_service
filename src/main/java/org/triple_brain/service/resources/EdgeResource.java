@@ -8,6 +8,7 @@ import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.search.GraphIndexer;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,9 @@ public class EdgeResource {
 
     @Inject
     GraphFactory graphFactory;
+
+    @Inject
+    GraphIndexer graphIndexer;
 
     private UserGraph userGraph;
 
@@ -75,7 +79,15 @@ public class EdgeResource {
         Edge edge = userGraph.edgeWithUri(Uris.get(
                 request.getRequestURI()
         ));
+        Vertex sourceVertex = edge.sourceVertex();
+        Vertex destinationVertex = edge.destinationVertex();
         edge.remove();
+        graphIndexer.indexVertex(
+                sourceVertex
+        );
+        graphIndexer.indexVertex(
+                destinationVertex
+        );
         return Response.ok().build();
     }
 
@@ -90,6 +102,12 @@ public class EdgeResource {
             edgeId
         );
         edge.label(label);
+        graphIndexer.indexVertex(
+                edge.sourceVertex()
+        );
+        graphIndexer.indexVertex(
+                edge.destinationVertex()
+        );
         return Response.ok().build();
     }
 

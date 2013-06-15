@@ -144,7 +144,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     public void can_update_note() throws Exception {
         String vertexANote = vertexA().getString(VertexJsonFields.NOTE);
         assertThat(vertexANote, is(not("some note")));
-        updateVertexANoteUsingRest("some note");
+        vertexUtils.updateVertexANote("some note");
         vertexANote = vertexA().getString(VertexJsonFields.NOTE);
         assertThat(vertexANote, is("some note"));
     }
@@ -162,16 +162,6 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                 .queryParam("label", label)
                 .cookie(authCookie)
                 .post(ClientResponse.class);
-        return response;
-    }
-
-    private ClientResponse updateVertexANoteUsingRest(String note) throws Exception {
-        ClientResponse response = resource
-                .path(vertexAUri().getPath())
-                .path("note")
-                .cookie(authCookie)
-                .type(MediaType.TEXT_PLAIN)
-                .post(ClientResponse.class, note);
         return response;
     }
 

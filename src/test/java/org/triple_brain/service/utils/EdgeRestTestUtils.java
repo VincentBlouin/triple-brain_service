@@ -6,7 +6,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
+import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
+import org.triple_brain.module.model.json.graph.GraphJSONFields;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
@@ -18,13 +20,18 @@ public class EdgeRestTestUtils {
 
     private WebResource resource;
     private NewCookie authCookie;
-
-    public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie){
-        return new EdgeRestTestUtils(resource, authCookie);
+    private GraphRestTestUtils graphUtils;
+    public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
+        return new EdgeRestTestUtils(resource, authCookie, authenticatedUser);
     }
-    protected EdgeRestTestUtils(WebResource resource, NewCookie authCookie){
+    protected EdgeRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser){
         this.resource = resource;
         this.authCookie = authCookie;
+        graphUtils = GraphRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                authenticatedUser
+        );
     }
 
     public URI uriOfEdge(JSONObject jsonObject){
@@ -33,6 +40,25 @@ public class EdgeRestTestUtils {
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public ClientResponse updateEdgeLabel(String label, JSONObject edge)throws Exception{
+        ClientResponse response = resource
+                .path(edge.getString(EdgeJsonFields.ID))
+                .path("label")
+                .queryParam("label", label)
+                .cookie(authCookie)
+                .post(ClientResponse.class);
+        return response;
+    }
+
+    public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception{
+        JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
+        ClientResponse response = resource
+                .path(edgeBetweenAAndB.getString(EdgeJsonFields.ID))
+                .cookie(authCookie)
+                .delete(ClientResponse.class);
+        return response;
     }
 
     public JSONObject edgeWithUri(URI edgeUri){
@@ -80,6 +106,17 @@ public class EdgeRestTestUtils {
             throw new RuntimeException(e);
         }
         throw new RuntimeException("none found !");
+    }
+
+    public JSONObject edgeBetweenAAndB()throws Exception{
+        JSONArray allEdges = graphUtils.wholeGraph().getJSONArray(
+                GraphJSONFields.EDGES
+        );
+        return edgeBetweenTwoVerticesUriGivenEdges(
+                graphUtils.vertexAUri(),
+                graphUtils.vertexBUri(),
+                allEdges
+        );
     }
 
     private boolean oneOfTwoUriIsUri(URI first, URI second, URI toCompare){

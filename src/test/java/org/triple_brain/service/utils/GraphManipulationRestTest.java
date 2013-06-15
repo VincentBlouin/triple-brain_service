@@ -1,8 +1,6 @@
 package org.triple_brain.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.triple_brain.module.common_utils.Uris;
@@ -19,17 +17,13 @@ import static org.junit.Assert.assertThat;
 */
 public class GraphManipulationRestTest extends RestTest {
 
-    protected final Integer DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES = 10;
-
-
-    private JSONObject vertexA;
-    private JSONObject vertexB;
-    private JSONObject vertexC;
+    public static final Integer DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES = 10;
 
     protected User authenticatedUser;
     protected  VertexRestTestUtils vertexUtils;
     protected  EdgeRestTestUtils edgeUtils;
     protected UserRestTestUtils userUtils;
+    protected GraphRestTestUtils graphUtils;
 
     @Before
     public void before_graph_manipulator_rest_test() throws Exception{
@@ -47,43 +41,23 @@ public class GraphManipulationRestTest extends RestTest {
 
         vertexUtils = VertexRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
-                authCookie
+                authCookie,
+                authenticatedUser
         );
         edgeUtils = EdgeRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
-                authCookie
+                authCookie,
+                authenticatedUser
+        );
+        graphUtils = GraphRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                authenticatedUser
         );
         deleteAllUserVerticesFromSearch();
-        makeGraphHave3SerialVerticesWithLongLabels();
+        graphUtils.makeGraphHave3SerialVerticesWithLongLabels();
     }
 
-    protected void makeGraphHave3SerialVerticesWithLongLabels() {
-        ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .path("test")
-                .path("make_graph_have_3_serial_vertices_with_long_labels")
-                .cookie(authCookie)
-                .get(ClientResponse.class);
-        JSONArray verticesABAndC = response.getEntity(JSONArray.class);
-        try{
-            vertexA = verticesABAndC.getJSONObject(0);
-            vertexB = verticesABAndC.getJSONObject(1);
-            vertexC = verticesABAndC.getJSONObject(2);
-        }catch(JSONException e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    public JSONObject vertexA(){
-        return vertexUtils.vertexWithUri(vertexAUri());
-    }
-    public JSONObject vertexB(){
-        return vertexUtils.vertexWithUri(vertexBUri());
-    }
-    public JSONObject vertexC(){
-        return vertexUtils.vertexWithUri(vertexCUri());
-    }
 
     private void deleteAllUserVerticesFromSearch() {
         ClientResponse response = resource
@@ -110,17 +84,7 @@ public class GraphManipulationRestTest extends RestTest {
     }
 
 
-    public URI vertexAUri(){
-        return vertexUtils.uriOfVertex(vertexA);
-    }
 
-    public URI vertexBUri(){
-        return vertexUtils.uriOfVertex(vertexB);
-    }
-
-    public URI vertexCUri(){
-        return vertexUtils.uriOfVertex(vertexC);
-    }
 
     public boolean graphElementWithIdExistsInCurrentGraph(URI graphElementId){
         ClientResponse response = resource
@@ -137,16 +101,23 @@ public class GraphManipulationRestTest extends RestTest {
         return Boolean.valueOf(boolStr);
     }
 
-    public JSONObject wholeGraph(){
-        ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .path(authenticatedUser.username())
-                .path("drawn_graph")
-                .path(DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES.toString())
-                .cookie(authCookie)
-                .get(ClientResponse.class);
-        return response.getEntity(JSONObject.class);
+    protected JSONObject vertexA(){
+        return graphUtils.vertexA();
+    }
+    protected JSONObject vertexB(){
+        return graphUtils.vertexB();
+    }
+    protected JSONObject vertexC(){
+        return graphUtils.vertexC();
     }
 
+    protected URI vertexAUri(){
+        return graphUtils.vertexAUri();
+    }
+    protected URI vertexBUri(){
+        return graphUtils.vertexBUri();
+    }
+    protected URI vertexCUri(){
+        return graphUtils.vertexCUri();
+    }
 }

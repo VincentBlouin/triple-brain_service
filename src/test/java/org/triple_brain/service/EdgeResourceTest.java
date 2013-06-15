@@ -44,7 +44,9 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     @Test
     public void adding_a_relation_returns_correct_headers()throws JSONException{
         ClientResponse response = addRelationBetweenVertexAAndC();
-        JSONArray allEdges = wholeGraph().getJSONArray(GraphJSONFields.EDGES);
+        JSONArray allEdges = graphUtils.wholeGraph().getJSONArray(
+                GraphJSONFields.EDGES
+        );
         JSONObject edgeBetweenAAndC = edgeUtils.edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexCUri(),
@@ -72,9 +74,11 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_remove_a_relation() throws Exception {
-        JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
-        removeEdgeBetweenVertexAAndB();
-        JSONArray allEdges = wholeGraph().getJSONArray(GraphJSONFields.EDGES);
+        JSONObject edgeBetweenAAndB = edgeUtils.edgeBetweenAAndB();
+        edgeUtils.removeEdgeBetweenVertexAAndB();
+        JSONArray allEdges = graphUtils.wholeGraph().getJSONArray(
+                GraphJSONFields.EDGES
+        );
         assertFalse(
                 edgeUtils.edgeIsInEdges(
                         edgeBetweenAAndB, allEdges
@@ -84,28 +88,19 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void removing_a_relation_returns_correct_status() throws Exception{
-        ClientResponse response = removeEdgeBetweenVertexAAndB();
+        ClientResponse response = edgeUtils.removeEdgeBetweenVertexAAndB();
         assertThat(response.getStatus(), is(200));
-    }
-
-    private ClientResponse removeEdgeBetweenVertexAAndB() throws Exception{
-        JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
-        ClientResponse response = resource
-                .path(edgeBetweenAAndB.getString(EdgeJsonFields.ID))
-                .cookie(authCookie)
-                .delete(ClientResponse.class);
-        return response;
     }
 
     @Test
     public void can_update_label() throws Exception {
-        JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
+        JSONObject edgeBetweenAAndB = edgeUtils.edgeBetweenAAndB();
         assertThat(
                 edgeBetweenAAndB.getString(EdgeJsonFields.LABEL),
                 is(not("new edge label"))
         );
         updateEdgeLabelBetweenAAndB("new edge label");
-        edgeBetweenAAndB = edgeBetweenAAndB();
+        edgeBetweenAAndB = edgeUtils.edgeBetweenAAndB();
         assertThat(
                 edgeBetweenAAndB.getString(EdgeJsonFields.LABEL),
                 is("new edge label")
@@ -119,22 +114,9 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     }
 
     private ClientResponse updateEdgeLabelBetweenAAndB(String label)throws Exception{
-        JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
-        ClientResponse response = resource
-                .path(edgeBetweenAAndB.getString(EdgeJsonFields.ID))
-                .path("label")
-                .queryParam("label", label)
-                .cookie(authCookie)
-                .post(ClientResponse.class);
-        return response;
-    }
-
-    private JSONObject edgeBetweenAAndB()throws Exception{
-        JSONArray allEdges = wholeGraph().getJSONArray(GraphJSONFields.EDGES);
-        return edgeUtils.edgeBetweenTwoVerticesUriGivenEdges(
-                vertexAUri(),
-                vertexBUri(),
-                allEdges
+        return edgeUtils.updateEdgeLabel(
+                label,
+                edgeUtils.edgeBetweenAAndB()
         );
     }
 }
