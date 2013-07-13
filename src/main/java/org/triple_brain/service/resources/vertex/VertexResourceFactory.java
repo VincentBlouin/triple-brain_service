@@ -1,4 +1,4 @@
-package org.triple_brain.service.resources;
+package org.triple_brain.service.resources.vertex;
 
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.service.resources.vertex.VertexResource;

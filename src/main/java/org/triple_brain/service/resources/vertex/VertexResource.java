@@ -16,7 +16,6 @@ import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ExternalResourceServiceUtils;
-import org.triple_brain.service.resources.VertexSuggestionResourceFactory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +42,9 @@ public class VertexResource {
 
     @Inject
     VertexSuggestionResourceFactory vertexSuggestionResourceFactory;
+
+    @Inject
+    VertexPublicAccessResourceFactory vertexPublicAccessResourceFactory;
 
     @Inject
     BeforeAfterEachRestCall beforeAfterEachRestCall;
@@ -239,7 +241,7 @@ public class VertexResource {
     }
 
     @Path("{shortId}/suggestions")
-    public VertexSuggestionResource getSuggestions(
+    public VertexSuggestionResource getVertexSuggestionResource(
             @PathParam("shortId") String shortId
     ) {
         URI vertexId = uriFromShortId(shortId);
@@ -247,6 +249,19 @@ public class VertexResource {
                 vertexId
         );
         return vertexSuggestionResourceFactory.ofVertex(
+                vertex
+        );
+    }
+
+    @Path("{shortId}/public_access")
+    public VertexPublicAccessResource getPublicAccessResource(
+            @PathParam("shortId") String shortId
+    ){
+        URI vertexId = uriFromShortId(shortId);
+        Vertex vertex = userGraph.vertexWithURI(
+                vertexId
+        );
+        return vertexPublicAccessResourceFactory.ofVertex(
                 vertex
         );
     }

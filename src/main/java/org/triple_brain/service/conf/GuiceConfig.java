@@ -17,6 +17,9 @@ import org.triple_brain.service.MessagesDistributorServlet;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
 import org.triple_brain.service.resources.test.*;
+import org.triple_brain.service.resources.vertex.VertexPublicAccessResourceFactory;
+import org.triple_brain.service.resources.vertex.VertexResourceFactory;
+import org.triple_brain.service.resources.vertex.VertexSuggestionResourceFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -56,6 +59,8 @@ public class GuiceConfig extends GuiceServletContextListener {
                         .build(VertexResourceFactory.class));
                 install(new FactoryModuleBuilder()
                         .build(VertexSuggestionResourceFactory.class));
+                install(new FactoryModuleBuilder()
+                        .build(VertexPublicAccessResourceFactory.class));
                 install(new FactoryModuleBuilder()
                         .build(EdgeResourceFactory.class));
                 install(new FactoryModuleBuilder()

@@ -5,6 +5,6 @@ import org.triple_brain.module.model.graph.Vertex;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class VertexPrivacyResource {
-    private Vertex vertex;
+public interface VertexSuggestionResourceFactory {
+    public VertexSuggestionResource ofVertex(Vertex vertex);
 }

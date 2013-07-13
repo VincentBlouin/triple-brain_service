@@ -8,6 +8,7 @@ import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.json.graph.GraphJSONFields;
 import org.triple_brain.service.resources.vertex.VertexResource;
+import org.triple_brain.service.resources.vertex.VertexResourceFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
