@@ -11,6 +11,7 @@ import static org.triple_brain.module.repository_sql.SQLConnection.createTables;
 public class Launch {
     public static void before(){
         Neo4JModule.clearDb();
+
     }
     public static void after(){
         clearDatabases();

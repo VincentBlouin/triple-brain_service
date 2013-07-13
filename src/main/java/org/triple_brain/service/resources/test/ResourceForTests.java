@@ -116,7 +116,7 @@ public class ResourceForTests {
         removeSearchIndex();
         return Response.ok().build();
     }
-    private void removeSearchIndex() {
+    public void removeSearchIndex() {
         SolrServer solrServer = searchUtils.getServer();
         try {
             solrServer.deleteByQuery("*:*");
