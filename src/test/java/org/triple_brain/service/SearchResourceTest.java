@@ -5,12 +5,16 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
+import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.search.json.SearchJsonConverter;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 import org.triple_brain.module.common_utils.Uris;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -29,7 +33,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("search")
                 .path("vertices")
                 .path("auto_complete")
@@ -68,7 +72,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0);
         assertThat(resultsForA.getString(NOTE), is(""));
-        vertexUtils.updateVertexANote(
+        vertexUtils().updateVertexANote(
                 "A description"
         );
         resultsForA = searchForAutoCompleteUsingRest(
@@ -98,9 +102,9 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 resultsForB,
                 "between vertex A and vertex B"
         ));
-        edgeUtils.updateEdgeLabel(
+        edgeUtils().updateEdgeLabel(
                 "new edge text !",
-                edgeUtils.edgeBetweenAAndB()
+                edgeUtils().edgeBetweenAAndB()
         );
         resultsForA = searchForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
@@ -142,7 +146,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 resultsForA,
                 "between vertex A and vertex B"
         ));
-        edgeUtils.removeEdgeBetweenVertexAAndB();
+        edgeUtils().removeEdgeBetweenVertexAAndB();
         resultsForA = searchForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
@@ -152,14 +156,72 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 resultsForA,
                 "between vertex A and vertex B"
         ));
-
     }
 
-    private ClientResponse searchForAutoCompleteUsingRest(String textToSearchWith)throws Exception{
-        return resource
+    @Test
+    public void making_vertex_public_re_indexes_it()throws Exception{
+        indexAllVertices();
+        JSONObject anotherUserAsJson = userUtils().validForCreation();
+        createAUser(anotherUserAsJson);
+        User anotherUser = User.withUsernameAndEmail(
+                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
+                anotherUserAsJson.getString(UserJsonFields.EMAIL)
+        );
+        anotherUser.password(DEFAULT_PASSWORD);
+        authenticate(anotherUser);
+        JSONArray results = searchForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        assertThat(results.length(), is(0));
+        authenticate(defaultAuthenticatedUser);
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        authenticate(anotherUser);
+        results = searchForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        assertThat(results.length(), is(1));
+    }
+
+    @Test
+    public void making_vertex_private_re_indexes_it()throws Exception{
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        indexAllVertices();
+        JSONObject anotherUserAsJson = userUtils().validForCreation();
+        createAUser(anotherUserAsJson);
+        User anotherUser = User.withUsernameAndEmail(
+                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
+                anotherUserAsJson.getString(UserJsonFields.EMAIL)
+        );
+        anotherUser.password(DEFAULT_PASSWORD);
+        authenticate(anotherUser);
+        JSONArray results = searchForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        assertThat(results.length(), is(greaterThan(0)));
+        authenticate(defaultAuthenticatedUser);
+        vertexUtils().makePrivateVertexWithUri(
+                vertexAUri()
+        );
+        authenticate(anotherUser);
+        results = searchForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        assertThat(results.length(), is(0));
+    }
+
+    private ClientResponse searchForAutoCompleteUsingRestAndUser(String textToSearchWith, User user){
+        ClientResponse clientResponse = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(user.username())
                 .path("search")
                 .path("vertices")
                 .path("auto_complete")
@@ -167,5 +229,17 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
+        assertThat(
+                clientResponse.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        return clientResponse;
+    }
+
+    private ClientResponse searchForAutoCompleteUsingRest(String textToSearchWith){
+        return searchForAutoCompleteUsingRestAndUser(
+                textToSearchWith,
+                defaultAuthenticatedUser
+        );
     }
 }

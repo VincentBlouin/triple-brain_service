@@ -11,7 +11,11 @@ import org.triple_brain.module.model.json.graph.VertexJsonFields;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 import java.net.URI;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -103,6 +107,32 @@ public class VertexRestTestUtils {
                 .cookie(authCookie)
                 .post(ClientResponse.class);
         return response;
+    }
+
+    public ClientResponse makePublicVertexWithUri(URI vertexUri){
+        ClientResponse clientResponse = resource
+                .path(vertexUri.getPath())
+                .path("public_access")
+                .cookie(authCookie)
+                .post(ClientResponse.class);
+        assertThat(
+                clientResponse.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        return clientResponse;
+    }
+
+    public ClientResponse makePrivateVertexWithUri(URI vertexUri){
+        ClientResponse clientResponse = resource
+                .path(vertexUri.getPath())
+                .path("public_access")
+                .cookie(authCookie)
+                .delete(ClientResponse.class);
+        assertThat(
+                clientResponse.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        return clientResponse;
     }
 
     private GraphRestTestUtils graphUtils(){

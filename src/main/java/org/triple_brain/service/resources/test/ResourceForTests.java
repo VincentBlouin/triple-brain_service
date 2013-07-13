@@ -113,11 +113,19 @@ public class ResourceForTests {
     @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response deleteAllUserDocuments(@Context HttpServletRequest request) {
-        deleteAllUserDocumentsForSearch(
-                userFromSession(request.getSession())
-        );
+        removeSearchIndex();
         return Response.ok().build();
     }
+    private void removeSearchIndex() {
+        SolrServer solrServer = searchUtils.getServer();
+        try {
+            solrServer.deleteByQuery("*:*");
+            solrServer.commit();
+        } catch (SolrServerException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private void deleteAllUserDocumentsForSearch(User user) {
         SolrServer solrServer = searchUtils.getServer();

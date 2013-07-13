@@ -95,7 +95,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void authentication_returns_user_as_json() throws Exception {
-        JSONObject user = userUtils.validForCreation();
+        JSONObject user = userUtils().validForCreation();
         createUser(user);
         JSONObject loginInfo = new JSONObject()
                 .put(
@@ -120,15 +120,15 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_create_user() throws Exception {
-        JSONObject user = userUtils.validForCreation();
-        assertFalse(userUtils.emailExists(
+        JSONObject user = userUtils().validForCreation();
+        assertFalse(userUtils().emailExists(
                 user.getString(EMAIL)
         ));
         createUser(
                 user
         );
         assertTrue(
-                userUtils.emailExists(
+                userUtils().emailExists(
                         user.getString(EMAIL)
                 )
         );
@@ -140,7 +140,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
         assertFalse(isUserAuthenticated(
                 authCookie
         ));
-        JSONObject validForCreation = userUtils.validForCreation();
+        JSONObject validForCreation = userUtils().validForCreation();
         createUser(validForCreation);
         assertTrue(isUserAuthenticated(
                 authCookie
@@ -149,7 +149,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void creating_a_user_returns_corrects_response() throws Exception {
-        JSONObject jsonUser = userUtils.validForCreation();
+        JSONObject jsonUser = userUtils().validForCreation();
         ClientResponse response = createUser(
                 jsonUser
         );
@@ -164,7 +164,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void when_creating_a_user_a_mind_map_is_created_for_him() throws Exception {
-        JSONObject validUser = userUtils.validForCreation();
+        JSONObject validUser = userUtils().validForCreation();
         User user = User.withUsernameAndEmail(
                 validUser.getString(USER_NAME),
                 validUser.getString(UserJsonFields.EMAIL)
@@ -220,7 +220,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
     @Test
     public void cant_register_same_email_twice() throws Exception {
         createUserWithEmail("roger.lamothe@example.org");
-        JSONObject jsonUser = userUtils.validForCreation().put(EMAIL, "roger.lamothe@example.org");
+        JSONObject jsonUser = userUtils().validForCreation().put(EMAIL, "roger.lamothe@example.org");
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -237,7 +237,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
     @Test
     public void cant_register_same_user_name_twice() throws Exception {
         createUserWithUsername("roger_lamothe");
-        JSONObject jsonUser = userUtils.validForCreation().put(USER_NAME, "roger_lamothe");
+        JSONObject jsonUser = userUtils().validForCreation().put(USER_NAME, "roger_lamothe");
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -272,13 +272,13 @@ public class UserResourceTest extends GraphManipulationRestTest {
     }
 
     private void createUserWithEmail(String email) throws Exception {
-        JSONObject user = userUtils.validForCreation();
+        JSONObject user = userUtils().validForCreation();
         user.put(UserJsonFields.EMAIL, email);
         createUser(user);
     }
 
     private JSONObject createUserWithUsername(String username) throws Exception {
-        JSONObject user = userUtils.validForCreation();
+        JSONObject user = userUtils().validForCreation();
         user.put(UserJsonFields.USER_NAME, username);
         createUser(user);
         return user;

@@ -33,7 +33,7 @@ public class GraphResourceTest extends GraphManipulationRestTest {
         return  resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("graph")
                 .cookie(authCookie)
                 .get(ClientResponse.class);

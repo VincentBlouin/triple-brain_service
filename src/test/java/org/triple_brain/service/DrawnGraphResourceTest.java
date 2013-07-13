@@ -31,7 +31,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("drawn_graph")
                 .path(depthOfSubVertices.toString())
                 .cookie(authCookie)
@@ -41,15 +41,15 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         assertThat(drawnGraph, is(not(nullValue())));
         JSONObject vertices = drawnGraph.getJSONObject(VERTICES);
         assertThat(vertices.length(), is(greaterThan(0)));
-        JSONObject defaultVertex = graphUtils.vertexA();
-        assertTrue(vertexUtils.vertexIsInVertices(defaultVertex, vertices));
+        JSONObject defaultVertex = graphUtils().vertexA();
+        assertTrue(vertexUtils().vertexIsInVertices(defaultVertex, vertices));
     }
 
     @Test
     public void can_get_drawn_graph_around_specified_central_vertex() throws Exception {
         Integer depthOfSubVertices = 2;
-        JSONObject defaultVertex = graphUtils.vertexA();
-        JSONObject createdStatement = vertexUtils.addAVertexToVertexAWithUri(Uris.get(
+        JSONObject defaultVertex = graphUtils().vertexA();
+        JSONObject createdStatement = vertexUtils().addAVertexToVertexAWithUri(Uris.get(
                 defaultVertex.getString(VertexJsonFields.ID)
         )).getEntity(JSONObject.class);
         JSONObject newEdge = createdStatement.getJSONObject(StatementJsonFields.EDGE);
@@ -57,7 +57,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("drawn_graph")
                 .path(depthOfSubVertices.toString())
                 .path(secondVertexId)
@@ -78,7 +78,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("drawn_graph")
                 .path(depthOfSubVertices.toString())
                 .cookie(authCookie)
@@ -87,17 +87,17 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         assertThat(drawnGraph.getJSONObject(VERTICES).length(), is(2));
         assertFalse(verticesContainID(
                 drawnGraph.getJSONObject(VERTICES),
-                graphUtils.vertexCUri().toString()
+                graphUtils().vertexCUri().toString()
         ));
 
         response = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("drawn_graph")
                 .path(depthOfSubVertices.toString())
                 .path(encodeURL(
-                        graphUtils.vertexBUri().toString()
+                        graphUtils().vertexBUri().toString()
                 ))
                 .cookie(authCookie)
                 .get(ClientResponse.class);
@@ -107,17 +107,17 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
         response = resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(defaultAuthenticatedUser.username())
                 .path("drawn_graph")
                 .path(depthOfSubVertices.toString())
                 .path(encodeURL(
-                        graphUtils.vertexCUri().toString()
+                        graphUtils().vertexCUri().toString()
                 ))
                 .cookie(authCookie)
                 .get(ClientResponse.class);
         drawnGraph = response.getEntity(JSONObject.class);
         assertThat(drawnGraph.getJSONObject(VERTICES).length(), is(2));
-        URI defaultVertexUri = graphUtils.vertexAUri();
+        URI defaultVertexUri = graphUtils().vertexAUri();
         assertFalse(
                 verticesContainID(
                         drawnGraph.getJSONObject(VERTICES),

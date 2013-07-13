@@ -35,7 +35,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void adding_a_vertex_returns_correct_status() throws Exception {
-        ClientResponse response = vertexUtils.addAVertexToVertexAWithUri(
+        ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(
                 vertexAUri()
         );
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
@@ -43,11 +43,11 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_add_a_vertex() throws Exception {
-        int numberOfConnectedEdges = vertexUtils.connectedEdgesOfVertexWithURI(
+        int numberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         ).length();
-        vertexUtils.addAVertexToVertexAWithUri(vertexAUri());
-        int updatedNumberOfConnectedEdges = vertexUtils.connectedEdgesOfVertexWithURI(
+        vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
+        int updatedNumberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         ).length();
         assertThat(updatedNumberOfConnectedEdges, is(numberOfConnectedEdges + 1));
@@ -55,37 +55,37 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
-        ClientResponse response = vertexUtils.addAVertexToVertexAWithUri(vertexAUri());
+        ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         JSONObject subject = createdStatement.getJSONObject(SOURCE_VERTEX);
         assertThat(subject.getString(VertexJsonFields.ID), is(vertexAUri().toString()));
-        JSONObject newEdge = edgeUtils.edgeWithUri(
+        JSONObject newEdge = edgeUtils().edgeWithUri(
                 Uris.get(
                         createdStatement.getJSONObject(EDGE).getString(
                                 EdgeJsonFields.ID
                         )
                 )
         );
-        JSONObject newVertex = vertexUtils.vertexWithUri(
+        JSONObject newVertex = vertexUtils().vertexWithUri(
                 Uris.get(
                         createdStatement.getJSONObject(END_VERTEX).getString(
                                 VertexJsonFields.ID
                         )
                 )
         );
-        JSONArray edgesOfVertexA = vertexUtils.connectedEdgesOfVertexWithURI(
+        JSONArray edgesOfVertexA = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         );
-        assertTrue(edgeUtils.edgeIsInEdges(newEdge, edgesOfVertexA));
-        assertTrue(vertexUtils.vertexWithUriHasDestinationVertexWithUri(
+        assertTrue(edgeUtils().edgeIsInEdges(newEdge, edgesOfVertexA));
+        assertTrue(vertexUtils().vertexWithUriHasDestinationVertexWithUri(
                 vertexAUri(),
-                vertexUtils.uriOfVertex(newVertex)
+                vertexUtils().uriOfVertex(newVertex)
         ));
     }
 
     @Test
     public void cannot_add_a_vertex_that_user_doesnt_own() throws Exception {
-        JSONObject anotherUserAsJson = userUtils.validForCreation();
+        JSONObject anotherUserAsJson = userUtils().validForCreation();
         createAUser(anotherUserAsJson);
         User anotherUser = User.withUsernameAndEmail(
                 anotherUserAsJson.getString(UserJsonFields.USER_NAME),
@@ -96,7 +96,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         ClientResponse response = resource
                 .path(
                         new UserUris(
-                                authenticatedUser
+                                defaultAuthenticatedUser
                         ).defaultVertexUri().getPath()
                 )
                 .cookie(authCookie)
@@ -142,7 +142,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     public void can_update_note() throws Exception {
         String vertexANote = vertexA().getString(VertexJsonFields.NOTE);
         assertThat(vertexANote, is(not("some note")));
-        vertexUtils.updateVertexANote("some note");
+        vertexUtils().updateVertexANote("some note");
         vertexANote = vertexA().getString(VertexJsonFields.NOTE);
         assertThat(vertexANote, is("some note"));
     }

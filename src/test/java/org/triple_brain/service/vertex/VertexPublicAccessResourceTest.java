@@ -29,19 +29,15 @@ public class VertexPublicAccessResourceTest extends GraphManipulationRestTest{
     }
 
     private ClientResponse makePublic(){
-        return resource
-                .path(vertexAUri().getPath())
-                .path("public_access")
-                .cookie(authCookie)
-                .post(ClientResponse.class);
+        return vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
     }
 
     private ClientResponse makePrivate(){
-        return resource
-                .path(vertexAUri().getPath())
-                .path("public_access")
-                .cookie(authCookie)
-                .delete(ClientResponse.class);
+        return vertexUtils().makePrivateVertexWithUri(
+                vertexAUri()
+        );
     }
 
     private boolean isVertexAPublic(){

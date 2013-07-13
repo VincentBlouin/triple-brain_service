@@ -19,47 +19,52 @@ public class GraphManipulationRestTest extends RestTest {
 
     public static final Integer DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES = 10;
 
-    protected User authenticatedUser;
-    protected  VertexRestTestUtils vertexUtils;
-    protected  EdgeRestTestUtils edgeUtils;
-    protected UserRestTestUtils userUtils;
-    protected GraphRestTestUtils graphUtils;
+    protected User defaultAuthenticatedUser;
 
     @Before
     public void before_graph_manipulator_rest_test() throws Exception{
-        userUtils = UserRestTestUtils.withWebResource(
-                resource
-        );
-        JSONObject userAsJson = userUtils.validForCreation();
+        JSONObject userAsJson = userUtils().validForCreation();
         createAUser(userAsJson);
         authenticate(userAsJson);
-        authenticatedUser = User.withUsernameAndEmail(
+        defaultAuthenticatedUser = User.withUsernameAndEmail(
                 userAsJson.getString(UserJsonFields.USER_NAME),
                 userAsJson.getString(UserJsonFields.EMAIL)
         );
-        authenticatedUser.password(DEFAULT_PASSWORD);
-
-        vertexUtils = VertexRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
-                authCookie,
-                authenticatedUser
-        );
-        edgeUtils = EdgeRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
-                authCookie,
-                authenticatedUser
-        );
-        graphUtils = GraphRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
-                authCookie,
-                authenticatedUser
-        );
-        deleteAllUserVerticesFromSearch();
-        graphUtils.makeGraphHave3SerialVerticesWithLongLabels();
+        defaultAuthenticatedUser.password(DEFAULT_PASSWORD);
+        deleteAllVerticesFromSearch();
+        graphUtils().makeGraphHave3SerialVerticesWithLongLabels();
     }
 
+    protected  VertexRestTestUtils vertexUtils(){
+        return VertexRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                defaultAuthenticatedUser
+        );
+    }
 
-    private void deleteAllUserVerticesFromSearch() {
+    protected EdgeRestTestUtils edgeUtils(){
+        return EdgeRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                defaultAuthenticatedUser
+        );
+    }
+    protected  GraphRestTestUtils graphUtils(){
+        return GraphRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                defaultAuthenticatedUser
+        );
+    }
+
+    protected  UserRestTestUtils userUtils(){
+        return UserRestTestUtils.withWebResource(
+                resource
+        );
+    }
+
+    private void deleteAllVerticesFromSearch() {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -102,22 +107,22 @@ public class GraphManipulationRestTest extends RestTest {
     }
 
     protected JSONObject vertexA(){
-        return graphUtils.vertexA();
+        return graphUtils().vertexA();
     }
     protected JSONObject vertexB(){
-        return graphUtils.vertexB();
+        return graphUtils().vertexB();
     }
     protected JSONObject vertexC(){
-        return graphUtils.vertexC();
+        return graphUtils().vertexC();
     }
 
     protected URI vertexAUri(){
-        return graphUtils.vertexAUri();
+        return graphUtils().vertexAUri();
     }
     protected URI vertexBUri(){
-        return graphUtils.vertexBUri();
+        return graphUtils().vertexBUri();
     }
     protected URI vertexCUri(){
-        return graphUtils.vertexCUri();
+        return graphUtils().vertexCUri();
     }
 }
