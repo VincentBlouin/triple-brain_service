@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
-import javax.ws.rs.core.MediaType;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +33,6 @@ public class VertexPublicAccessResourceTest extends GraphManipulationRestTest{
                 .path(vertexAUri().getPath())
                 .path("public_access")
                 .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class);
     }
 
@@ -44,7 +41,6 @@ public class VertexPublicAccessResourceTest extends GraphManipulationRestTest{
                 .path(vertexAUri().getPath())
                 .path("public_access")
                 .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
                 .delete(ClientResponse.class);
     }
 

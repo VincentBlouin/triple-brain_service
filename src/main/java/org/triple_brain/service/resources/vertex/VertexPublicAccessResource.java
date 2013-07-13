@@ -11,8 +11,8 @@ import javax.ws.rs.core.Response;
 /*
 * Copyright Mozilla Public License 1.1
 */
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.TEXT_PLAIN)
+@Consumes(MediaType.TEXT_PLAIN)
 public class VertexPublicAccessResource {
 
     private Vertex vertex;
