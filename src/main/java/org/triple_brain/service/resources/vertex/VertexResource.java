@@ -1,21 +1,22 @@
-package org.triple_brain.service.resources;
+package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.service.ExternalResourceServiceUtils;
-import org.triple_brain.module.model.*;
+import org.triple_brain.module.model.BeforeAfterEachRestCall;
+import org.triple_brain.module.model.ExternalFriendlyResource;
+import org.triple_brain.module.model.FreebaseExternalFriendlyResource;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.json.ExternalResourceJson;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
-import org.triple_brain.module.model.suggestion.Suggestion;
-import org.triple_brain.module.model.suggestion.SuggestionOrigin;
 import org.triple_brain.module.search.GraphIndexer;
+import org.triple_brain.service.ExternalResourceServiceUtils;
+import org.triple_brain.service.resources.VertexSuggestionResourceFactory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +27,9 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
-import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 import static org.triple_brain.module.common_utils.Uris.decodeURL;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
-import static org.triple_brain.module.model.json.SuggestionJsonFields.*;
+import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
 /**
  * Copyright Mozilla Public License 1.1
@@ -40,6 +40,9 @@ public class VertexResource {
 
     @Inject
     GraphIndexer graphIndexer;
+
+    @Inject
+    VertexSuggestionResourceFactory vertexSuggestionResourceFactory;
 
     @Inject
     BeforeAfterEachRestCall beforeAfterEachRestCall;
@@ -235,57 +238,17 @@ public class VertexResource {
         return Response.ok().build();
     }
 
-    @GET
     @Path("{shortId}/suggestions")
-    public Response getSuggestions(
+    public VertexSuggestionResource getSuggestions(
             @PathParam("shortId") String shortId
     ) {
         URI vertexId = uriFromShortId(shortId);
         Vertex vertex = userGraph.vertexWithURI(
                 vertexId
         );
-        try {
-            JSONArray suggestions = VertexJsonFields.toJson(vertex)
-                    .getJSONArray(VertexJsonFields.SUGGESTIONS);
-            return Response.ok(suggestions).build();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("{shortId}/suggestions")
-    public Response addSuggestions(
-            @PathParam("shortId") String shortId,
-            JSONArray suggestions
-    ) {        
-        URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
-            vertexId
+        return vertexSuggestionResourceFactory.ofVertex(
+                vertex
         );
-        vertex.addSuggestions(
-                suggestionsSetFromJSONArray(suggestions)
-        );
-        return Response.ok().build();
-    }
-
-    private Suggestion[] suggestionsSetFromJSONArray(JSONArray jsonSuggestions) {
-        Suggestion[] suggestions = new Suggestion[jsonSuggestions.length()];
-        for (int i = 0; i < jsonSuggestions.length(); i++) {
-            try {
-                JSONObject jsonSuggestion = jsonSuggestions.getJSONObject(i);
-                suggestions[i] = Suggestion.withSameAsDomainLabelAndOrigins(
-                        URI.create(jsonSuggestion.getString(TYPE_URI)),
-                        URI.create(jsonSuggestion.getString(DOMAIN_URI)),
-                        jsonSuggestion.getString(LABEL),
-                        SuggestionOrigin.valueOf(jsonSuggestion.getString(ORIGIN))
-                );
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return suggestions;
     }
 
     private URI uriFromShortId(String shortId){
