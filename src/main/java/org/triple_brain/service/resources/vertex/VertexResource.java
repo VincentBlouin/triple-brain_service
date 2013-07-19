@@ -4,18 +4,13 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.BeforeAfterEachRestCall;
-import org.triple_brain.module.model.ExternalFriendlyResource;
-import org.triple_brain.module.model.FreebaseExternalFriendlyResource;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
-import org.triple_brain.module.model.json.ExternalResourceJson;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 import org.triple_brain.module.search.GraphIndexer;
-import org.triple_brain.service.ExternalResourceServiceUtils;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -23,10 +18,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
-import static org.triple_brain.module.common_utils.Uris.decodeURL;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
@@ -46,11 +39,7 @@ public class VertexResource {
     @Inject
     VertexPublicAccessResourceFactory vertexPublicAccessResourceFactory;
 
-    @Inject
-    BeforeAfterEachRestCall beforeAfterEachRestCall;
-
-    @Inject
-    ExternalResourceServiceUtils externalResourceServiceUtils;
+    @Inject VertexIdentificationResourceFactory vertexIdentificationResourceFactory;
 
     private UserGraph userGraph;
 
@@ -62,7 +51,7 @@ public class VertexResource {
     }
 
     @POST
-    @Path("/{sourceVertexId}")
+    @Path("/{sourceVertexShortId}")
     public Response addVertexAndEdgeToSourceVertex(
             @Context HttpServletRequest request
     ) {
@@ -95,7 +84,7 @@ public class VertexResource {
 
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/{vertexId}")
+    @Path("/{vertexShortId}")
     public Response removeVertex(
             @Context HttpServletRequest request
     ) {
@@ -150,94 +139,15 @@ public class VertexResource {
         return Response.ok().build();
     }
 
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("{shortId}/type")
-    public Response addType(
-            @PathParam("shortId") String shortId,
-            JSONObject type
-    ) {
+    @Path("{shortId}/identification")
+    public VertexIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
         URI vertexId = uriFromShortId(shortId);
         Vertex vertex = userGraph.vertexWithURI(
                 vertexId
         );
-        ExternalFriendlyResource externalFriendlyResource = ExternalResourceJson.fromJson(type);
-        vertex.addType(
-                externalFriendlyResource
+        return vertexIdentificationResourceFactory.forVertex(
+                vertex
         );
-        updateImagesOfExternalResourceIfNecessary(externalFriendlyResource);
-        updateDescriptionOfExternalResourceIfNecessary(externalFriendlyResource);
-        return Response.ok().build();
-    }
-
-    public void updateImagesOfExternalResourceIfNecessary(ExternalFriendlyResource externalFriendlyResource) {
-        if (!externalFriendlyResource.gotTheImages()) {
-            if (FreebaseExternalFriendlyResource.isFromFreebase(externalFriendlyResource)) {
-                FreebaseExternalFriendlyResource freebaseResource = FreebaseExternalFriendlyResource.fromExternalResource(
-                        externalFriendlyResource
-                );
-                freebaseResource.getImages(
-                        externalResourceServiceUtils.imagesUpdateHandler
-                );
-            }
-        }
-    }
-
-    public void updateDescriptionOfExternalResourceIfNecessary(ExternalFriendlyResource externalFriendlyResource) {
-        if (!externalFriendlyResource.gotADescription()) {
-            if (FreebaseExternalFriendlyResource.isFromFreebase(externalFriendlyResource)) {
-                FreebaseExternalFriendlyResource freebaseResource = FreebaseExternalFriendlyResource.fromExternalResource(
-                        externalFriendlyResource
-                );
-                freebaseResource.getDescription(
-                        externalResourceServiceUtils.descriptionUpdateHandler
-                );
-            }
-        }
-    }
-
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("{shortId}/same_as")
-    public Response addSameAs(
-            @PathParam("shortId") String shortId,
-            JSONObject sameAs
-    ) {
-        URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
-            vertexId
-        );
-        ExternalFriendlyResource externalFriendlyResource = ExternalResourceJson.fromJson(sameAs);
-        vertex.addSameAs(
-                externalFriendlyResource
-        );
-
-        updateImagesOfExternalResourceIfNecessary(externalFriendlyResource);
-        updateDescriptionOfExternalResourceIfNecessary(externalFriendlyResource);
-        return Response.ok().build();
-    }
-
-    @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("{shortId}/identification/{friendly_resource_uri}")
-    public Response removeFriendlyResource(
-            @PathParam("shortId") String shortId,
-            @PathParam("friendly_resource_uri") String friendlyResourceUri
-    ) {
-        try{
-            friendlyResourceUri = decodeURL(friendlyResourceUri);
-        } catch (UnsupportedEncodingException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
-                vertexId
-        );
-        ExternalFriendlyResource type = vertex.friendlyResourceWithUri(
-                URI.create(friendlyResourceUri)
-        );
-        vertex.removeFriendlyResource(type);
-        return Response.ok().build();
     }
 
     @Path("{shortId}/suggestions")
@@ -273,5 +183,4 @@ public class VertexResource {
                 shortId
         );
     }
-
 }
