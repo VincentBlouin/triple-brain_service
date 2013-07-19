@@ -32,16 +32,32 @@ public class SearchResource {
     }
 
     @GET
+    @Path("own_vertices/auto_complete/{search_text}")
+    public Response searchOwnVerticesForAutoComplete(
+            @PathParam("search_text") String searchText
+    ){
+        try{
+            return Response.ok(
+                    graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                            Uris.decodeURL(searchText),
+                            user
+                    )).build();
+        }catch(UnsupportedEncodingException e){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+    }
+
+    @GET
     @Path("vertices/auto_complete/{search_text}")
     public Response searchVerticesForAutoComplete(
             @PathParam("search_text") String searchText
     ){
         try{
             return Response.ok(
-                    graphSearch.searchVerticesForAutoCompletionByLabelAndUser(
-                    Uris.decodeURL(searchText),
-                    user
-            )).build();
+                    graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                            Uris.decodeURL(searchText),
+                            user
+                    )).build();
         }catch(UnsupportedEncodingException e){
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }

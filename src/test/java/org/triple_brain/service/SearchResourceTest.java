@@ -35,7 +35,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .path("users")
                 .path(defaultAuthenticatedUser.username())
                 .path("search")
-                .path("vertices")
+                .path("own_vertices")
                 .path("auto_complete")
                 .path(Uris.encodeURL("vert"))
                 .cookie(authCookie)
@@ -50,14 +50,14 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     @Test
     public void search_for_auto_complete_can_have_spaces()throws Exception{
         indexAllVertices();
-        ClientResponse response = searchForAutoCompleteUsingRest(
+        ClientResponse response = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 "vertex Azu"
         );
         JSONArray searchResults = response.getEntity(JSONArray.class);
         JSONObject firstResult = searchResults.getJSONObject(0);
         assertThat(firstResult.getString(LABEL), is("vertex Azure"));
 
-        response = searchForAutoCompleteUsingRest(
+        response = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 "vertex Bar"
         );
         searchResults = response.getEntity(JSONArray.class);
@@ -68,14 +68,14 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     @Test
     public void updating_note_updates_search()throws Exception{
         indexAllVertices();
-        JSONObject resultsForA = searchForAutoCompleteUsingRest(
+        JSONObject resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0);
         assertThat(resultsForA.getString(NOTE), is(""));
         vertexUtils().updateVertexANote(
                 "A description"
         );
-        resultsForA = searchForAutoCompleteUsingRest(
+        resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0);
         assertThat(resultsForA.getString(NOTE), is("A description"));
@@ -84,7 +84,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     @Test
     public void updating_edge_labels_reflects_in_search_for_connected_vertices()throws Exception{
         indexAllVertices();
-        JSONArray resultsForA = searchForAutoCompleteUsingRest(
+        JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
                 SearchJsonConverter.RELATIONS_NAME
@@ -93,7 +93,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 resultsForA,
                 "between vertex A and vertex B"
         ));
-        JSONArray resultsForB = searchForAutoCompleteUsingRest(
+        JSONArray resultsForB = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexB().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
                 SearchJsonConverter.RELATIONS_NAME
@@ -106,7 +106,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 "new edge text !",
                 edgeUtils().edgeBetweenAAndB()
         );
-        resultsForA = searchForAutoCompleteUsingRest(
+        resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
                 SearchJsonConverter.RELATIONS_NAME
@@ -119,7 +119,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 resultsForA,
                 "new edge text !"
         ));
-        resultsForB = searchForAutoCompleteUsingRest(
+        resultsForB = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexB().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
                 SearchJsonConverter.RELATIONS_NAME
@@ -137,7 +137,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     @Test
     public void deleting_edge_removes_relations_name_of_connected_vertices_in_search()throws Exception{
         indexAllVertices();
-        JSONArray resultsForA = searchForAutoCompleteUsingRest(
+        JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
                 SearchJsonConverter.RELATIONS_NAME
@@ -147,7 +147,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 "between vertex A and vertex B"
         ));
         edgeUtils().removeEdgeBetweenVertexAAndB();
-        resultsForA = searchForAutoCompleteUsingRest(
+        resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
                 SearchJsonConverter.RELATIONS_NAME
@@ -169,7 +169,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         );
         anotherUser.password(DEFAULT_PASSWORD);
         authenticate(anotherUser);
-        JSONArray results = searchForAutoCompleteUsingRestAndUser(
+        JSONArray results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
                 anotherUser
         ).getEntity(JSONArray.class);
@@ -179,7 +179,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 vertexAUri()
         );
         authenticate(anotherUser);
-        results = searchForAutoCompleteUsingRestAndUser(
+        results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
                 anotherUser
         ).getEntity(JSONArray.class);
@@ -200,7 +200,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         );
         anotherUser.password(DEFAULT_PASSWORD);
         authenticate(anotherUser);
-        JSONArray results = searchForAutoCompleteUsingRestAndUser(
+        JSONArray results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
                 anotherUser
         ).getEntity(JSONArray.class);
@@ -210,20 +210,69 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 vertexAUri()
         );
         authenticate(anotherUser);
-        results = searchForAutoCompleteUsingRestAndUser(
+        results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
                 anotherUser
         ).getEntity(JSONArray.class);
         assertThat(results.length(), is(0));
     }
 
-    private ClientResponse searchForAutoCompleteUsingRestAndUser(String textToSearchWith, User user){
+    @Test
+    public void can_search_for_only_own_vertices()throws Exception{
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        indexAllVertices();
+        JSONObject anotherUserAsJson = userUtils().validForCreation();
+        createAUser(anotherUserAsJson);
+        User anotherUser = User.withUsernameAndEmail(
+                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
+                anotherUserAsJson.getString(UserJsonFields.EMAIL)
+        );
+        anotherUser.password(DEFAULT_PASSWORD);
+        authenticate(anotherUser);
+        JSONArray results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        assertThat(results.length(), is(greaterThan(0)));
+        results = searchOnlyOwnVerticesForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        assertThat(results.length(), is(0));
+    }
+
+    private ClientResponse searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(String textToSearchWith, User user){
+        return searchVerticesForAutoCompleteUsingRestAndUser(
+                textToSearchWith,
+                user,
+                false
+        );
+    }
+
+    private ClientResponse searchOnlyOwnVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, User user){
+        return searchVerticesForAutoCompleteUsingRestAndUser(
+                textToSearchWith,
+                user,
+                true
+        );
+    }
+
+    private ClientResponse searchOwnVerticesOnlyForAutoCompleteUsingRest(String textToSearchWith){
+        return searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
+                textToSearchWith,
+                defaultAuthenticatedUser
+        );
+    }
+
+    private ClientResponse searchVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, User user, Boolean onlyOwnVertices){
         ClientResponse clientResponse = resource
                 .path("service")
                 .path("users")
                 .path(user.username())
                 .path("search")
-                .path("vertices")
+                .path(onlyOwnVertices ? "own_vertices" : "vertices")
                 .path("auto_complete")
                 .path(Uris.encodeURL(textToSearchWith))
                 .cookie(authCookie)
@@ -233,13 +282,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 clientResponse.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return clientResponse;
-    }
 
-    private ClientResponse searchForAutoCompleteUsingRest(String textToSearchWith){
-        return searchForAutoCompleteUsingRestAndUser(
-                textToSearchWith,
-                defaultAuthenticatedUser
-        );
+        return clientResponse;
     }
 }
