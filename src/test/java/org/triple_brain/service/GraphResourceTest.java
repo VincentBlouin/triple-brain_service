@@ -1,9 +1,15 @@
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.triple_brain.module.common_utils.Uris;
+import org.triple_brain.module.model.json.graph.GraphJSONFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
+
+import javax.ws.rs.core.Response;
+import java.net.URI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -13,6 +19,39 @@ import static org.hamcrest.Matchers.*;
  */
 
 public class GraphResourceTest extends GraphManipulationRestTest {
+
+    @Test
+    public void response_status_is_ok_for_getting_graph(){
+        assertThat(
+                getGraph().getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+    @Test
+    public void can_get_graph(){
+        JSONObject graph = getGraph().getEntity(JSONObject.class);
+        JSONObject vertexAFromGraph = graph.optJSONObject(
+                GraphJSONFields.VERTICES
+        );
+        assertThat(
+                vertexAFromGraph.length(),
+                is(3)
+        );
+    }
+
+//    @Test
+//    public void cant_get_graph_using_central_vertex_of_another_user(){
+//        graphUtils().
+//        JSONObject graph = getGraph().getEntity(JSONObject.class);
+//        JSONObject vertexAFromGraph = graph.optJSONObject(
+//                GraphJSONFields.VERTICES
+//        );
+//
+//        assertThat(
+//                vertexAFromGraph.length(),
+//                is(3)
+//        );
+//    }
 
     @Test
     @Ignore("not implemented yet")
@@ -29,6 +68,26 @@ public class GraphResourceTest extends GraphManipulationRestTest {
         assertThat(response.getStatus(), is(200));
     }
 
+    private ClientResponse getGraph(){
+        return getGraphOfCentralVertexUri(
+                vertexAUri()
+        );
+    }
+
+    private ClientResponse getGraphOfCentralVertexUri(URI centralVertexUri){
+        Integer depth = 5;
+        return resource
+                .path("service")
+                .path("users")
+                .path(defaultAuthenticatedUser.username())
+                .path("graph")
+                .path(depth.toString())
+                .path(Uris.encodeURL(centralVertexUri))
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+    }
+
+
     private ClientResponse getGraphAsXMLRDFUsingRest()throws Exception{
         return  resource
                 .path("service")
@@ -38,4 +97,6 @@ public class GraphResourceTest extends GraphManipulationRestTest {
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }
+
+
 }

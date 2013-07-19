@@ -153,7 +153,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
         ClientResponse response = createUser(
                 jsonUser
         );
-        assertThat(response.getStatus(), is(201));
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.CREATED.getStatusCode())
+        );
         jsonUser = authenticate(jsonUser);
         String username = jsonUser.getString(UserJsonFields.USER_NAME);
         assertThat(
@@ -180,15 +183,6 @@ public class UserResourceTest extends GraphManipulationRestTest {
                         new UserUris(user).defaultVertexUri()
                 )
         );
-    }
-
-    private ClientResponse createUser(JSONObject user) {
-        return resource
-                .path("service")
-                .path("users")
-                .type(MediaType.APPLICATION_JSON)
-                .cookie(authCookie)
-                .post(ClientResponse.class, user);
     }
 
     @Test

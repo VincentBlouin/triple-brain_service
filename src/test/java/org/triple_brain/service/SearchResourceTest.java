@@ -5,20 +5,17 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
-import org.triple_brain.module.model.User;
+import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.search.json.SearchJsonConverter;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
-import org.triple_brain.module.common_utils.Uris;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
 import static org.triple_brain.module.model.json.graph.VertexJsonFields.NOTE;
 
@@ -161,14 +158,10 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     @Test
     public void making_vertex_public_re_indexes_it()throws Exception{
         indexAllVertices();
-        JSONObject anotherUserAsJson = userUtils().validForCreation();
-        createAUser(anotherUserAsJson);
-        User anotherUser = User.withUsernameAndEmail(
-                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
-                anotherUserAsJson.getString(UserJsonFields.EMAIL)
+        JSONObject anotherUser = createAUser();
+        authenticate(
+                anotherUser
         );
-        anotherUser.password(DEFAULT_PASSWORD);
-        authenticate(anotherUser);
         JSONArray results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
                 anotherUser
@@ -192,13 +185,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 vertexAUri()
         );
         indexAllVertices();
-        JSONObject anotherUserAsJson = userUtils().validForCreation();
-        createAUser(anotherUserAsJson);
-        User anotherUser = User.withUsernameAndEmail(
-                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
-                anotherUserAsJson.getString(UserJsonFields.EMAIL)
-        );
-        anotherUser.password(DEFAULT_PASSWORD);
+        JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         JSONArray results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
@@ -223,13 +210,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 vertexAUri()
         );
         indexAllVertices();
-        JSONObject anotherUserAsJson = userUtils().validForCreation();
-        createAUser(anotherUserAsJson);
-        User anotherUser = User.withUsernameAndEmail(
-                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
-                anotherUserAsJson.getString(UserJsonFields.EMAIL)
-        );
-        anotherUser.password(DEFAULT_PASSWORD);
+        JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         JSONArray results = searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 vertexA().getString(LABEL),
@@ -243,7 +224,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         assertThat(results.length(), is(0));
     }
 
-    private ClientResponse searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(String textToSearchWith, User user){
+    private ClientResponse searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user){
         return searchVerticesForAutoCompleteUsingRestAndUser(
                 textToSearchWith,
                 user,
@@ -251,7 +232,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         );
     }
 
-    private ClientResponse searchOnlyOwnVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, User user){
+    private ClientResponse searchOnlyOwnVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user){
         return searchVerticesForAutoCompleteUsingRestAndUser(
                 textToSearchWith,
                 user,
@@ -262,15 +243,15 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     private ClientResponse searchOwnVerticesOnlyForAutoCompleteUsingRest(String textToSearchWith){
         return searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 textToSearchWith,
-                defaultAuthenticatedUser
+                defaultAuthenticatedUserAsJson
         );
     }
 
-    private ClientResponse searchVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, User user, Boolean onlyOwnVertices){
+    private ClientResponse searchVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user, Boolean onlyOwnVertices){
         ClientResponse clientResponse = resource
                 .path("service")
                 .path("users")
-                .path(user.username())
+                .path(user.optString(UserJsonFields.USER_NAME))
                 .path("search")
                 .path(onlyOwnVertices ? "own_vertices" : "vertices")
                 .path("auto_complete")

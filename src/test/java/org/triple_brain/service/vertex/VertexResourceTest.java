@@ -5,9 +5,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.Uris;
-import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
@@ -79,14 +77,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void cannot_add_a_vertex_that_user_doesnt_own() throws Exception {
-        JSONObject anotherUserAsJson = userUtils().validForCreation();
-        createAUser(anotherUserAsJson);
-        User anotherUser = User.withUsernameAndEmail(
-                anotherUserAsJson.getString(UserJsonFields.USER_NAME),
-                anotherUserAsJson.getString(UserJsonFields.EMAIL)
-        );
-        anotherUser.password(DEFAULT_PASSWORD);
-        authenticate(anotherUser);
+        authenticate(createAUser());
         ClientResponse response = resource
                 .path(
                         new UserUris(
