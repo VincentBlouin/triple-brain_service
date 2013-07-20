@@ -3,6 +3,7 @@ package org.triple_brain.service.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.json.graph.GraphJSONFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
@@ -21,14 +22,15 @@ import static org.triple_brain.module.model.json.graph.GraphJSONFields.VERTICES;
 public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
 
     @Test
-    public void response_status_is_ok_for_getting_graph(){
+    public void response_status_is_ok_for_getting_graph() {
         assertThat(
                 getGraph().getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
     }
+
     @Test
-    public void can_get_graph(){
+    public void can_get_graph() {
         JSONObject graph = getGraph().getEntity(JSONObject.class);
         JSONObject vertexAFromGraph = graph.optJSONObject(
                 GraphJSONFields.VERTICES
@@ -40,7 +42,7 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void cant_get_graph_using_central_vertex_of_another_user(){
+    public void cant_get_graph_using_central_vertex_of_another_user() {
         NewCookie newCookie = authenticate(
                 createAUser()
         ).getCookies().get(0);
@@ -81,14 +83,48 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
         );
     }
 
-    private ClientResponse getGraph(){
+    @Test
+    @Ignore("Getting graph of another user not implemented yet")
+    public void cant_get_private_surround_vertices_of_public_vertex() {
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        authenticate(
+                createAUser()
+        );
+        ClientResponse clientResponse = getGraphOfCentralVertexUriAtDepth(
+                vertexAUri(),
+                5
+        );
+        assertThat(
+                clientResponse.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        JSONObject graph = clientResponse.getEntity(JSONObject.class);
+        JSONObject vertices = graph.optJSONObject(
+                GraphJSONFields.VERTICES
+        );
+        JSONObject edges = graph.optJSONObject(
+                GraphJSONFields.EDGES
+        );
+        assertThat(
+                vertices.length(),
+                is(1)
+        );
+        assertThat(
+                edges.length(),
+                is(0)
+        );
+    }
+
+    private ClientResponse getGraph() {
         return getGraphOfCentralVertexUriAtDepth(
                 vertexAUri(),
                 5
         );
     }
 
-    private ClientResponse getGraphOfCentralVertexUriAtDepth(URI centralVertexUri, Integer depth){
+    private ClientResponse getGraphOfCentralVertexUriAtDepth(URI centralVertexUri, Integer depth) {
         return resource
                 .path(centralVertexUri.getPath())
                 .path("surround_graph")
