@@ -157,7 +157,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
                 response.getStatus(),
                 is(Response.Status.CREATED.getStatusCode())
         );
-        jsonUser = authenticate(jsonUser);
+        jsonUser = authenticate(jsonUser).getEntity(JSONObject.class);
         String username = jsonUser.getString(UserJsonFields.USER_NAME);
         assertThat(
                 response.getHeaders().get("Location").get(0),

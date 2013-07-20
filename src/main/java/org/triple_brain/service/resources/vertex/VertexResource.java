@@ -41,6 +41,9 @@ public class VertexResource {
 
     @Inject VertexIdentificationResourceFactory vertexIdentificationResourceFactory;
 
+    @Inject
+    VertexSurroundGraphResourceFactory vertexSurroundGraphResourceFactory;
+
     private UserGraph userGraph;
 
     @AssistedInject
@@ -139,14 +142,21 @@ public class VertexResource {
         return Response.ok().build();
     }
 
+    @Path("{shortId}/surround_graph/{depthOfSubVertices}")
+    public VertexSurroundGraphResource getVertexSurroundGraphResource(
+            @PathParam("shortId") String shortId,
+            @PathParam("depthOfSubVertices") Integer depth
+            ){
+        return vertexSurroundGraphResourceFactory.ofCenterVertexWithDepth(
+                vertexFromShortId(shortId),
+                depth
+        );
+    }
+
     @Path("{shortId}/identification")
     public VertexIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
-        URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
-                vertexId
-        );
         return vertexIdentificationResourceFactory.forVertex(
-                vertex
+                vertexFromShortId(shortId)
         );
     }
 
@@ -154,12 +164,8 @@ public class VertexResource {
     public VertexSuggestionResource getVertexSuggestionResource(
             @PathParam("shortId") String shortId
     ) {
-        URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
-                vertexId
-        );
         return vertexSuggestionResourceFactory.ofVertex(
-                vertex
+                vertexFromShortId(shortId)
         );
     }
 
@@ -167,12 +173,8 @@ public class VertexResource {
     public VertexPublicAccessResource getPublicAccessResource(
             @PathParam("shortId") String shortId
     ){
-        URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
-                vertexId
-        );
         return vertexPublicAccessResourceFactory.ofVertex(
-                vertex
+                vertexFromShortId(shortId)
         );
     }
 
@@ -181,6 +183,13 @@ public class VertexResource {
                 userGraph.user()
         ).vertexUriFromShortId(
                 shortId
+        );
+    }
+
+    private Vertex vertexFromShortId(String shortId){
+        URI vertexId = uriFromShortId(shortId);
+        return userGraph.vertexWithURI(
+                vertexId
         );
     }
 }

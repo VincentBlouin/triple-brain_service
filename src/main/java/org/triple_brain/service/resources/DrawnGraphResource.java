@@ -2,85 +2,41 @@ package org.triple_brain.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.graphviz_visualisation.GraphToDrawnGraphConverter;
-import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.SubGraph;
-import org.triple_brain.module.model.graph.UserGraph;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 
-import static org.triple_brain.module.common_utils.Uris.decodeURL;
-
-/**
- * Copyright Mozilla Public License 1.1
- */
+/*
+* Copyright Mozilla Public License 1.1
+*/
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.TEXT_PLAIN)
-@Singleton
+@Consumes(MediaType.APPLICATION_JSON)
 public class DrawnGraphResource {
 
-    @Inject
-    GraphFactory graphFactory;
-
-    private User user;
+    private SubGraph graph;
 
     @AssistedInject
     public DrawnGraphResource(
-        @Assisted User user
-    ){
-        this.user = user;
+            @Assisted SubGraph graph
+    ) {
+        this.graph = graph;
     }
 
     @GET
-    @Path("/{depthOfSubVertices}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response drawnGraph(
-            @PathParam("depthOfSubVertices") Integer depthOfSubVertices
-    ){
-        UserGraph userGraph = graphFactory.loadForUser(
-                user
-        );
-        SubGraph graph = userGraph.graphWithDefaultVertexAndDepth(
-                depthOfSubVertices
-        );
+    @Path("/")
+    public Response get() {
         JSONObject drawnGraph = GraphToDrawnGraphConverter.withGraph(
                 graph
         ).convert();
-        return Response.ok(drawnGraph, MediaType.APPLICATION_JSON).build();
-    }
-
-    @GET
-    @Path("/{depthOfSubVertices}/{centralVertexId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response drawnGraph(
-            @PathParam("depthOfSubVertices") Integer depthOfSubVertices,
-            @PathParam("centralVertexId") String centralVertexId
-    ) throws JSONException{
-        try{
-            centralVertexId = decodeURL(centralVertexId);
-        }catch(UnsupportedEncodingException e){
-            Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        UserGraph userGraph = graphFactory.loadForUser(
-                user
-        );
-        SubGraph graph = userGraph.graphWithDepthAndCenterVertexId(
-                depthOfSubVertices,
-                centralVertexId
-        );
-        JSONObject drawnGraph = GraphToDrawnGraphConverter.withGraph(
-                graph
-        ).convert();
-        return Response.ok(drawnGraph, MediaType.APPLICATION_JSON).build();
+        return Response.ok(
+                drawnGraph
+        ).build();
     }
 }

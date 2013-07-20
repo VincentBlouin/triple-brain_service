@@ -7,9 +7,12 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 import java.net.URI;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -41,22 +44,28 @@ public class GraphRestTestUtils {
 
     public JSONObject wholeGraph(){
         ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .path(authenticatedUser.username())
-                .path("drawn_graph")
+                .path(vertexAUri().getPath())
+                .path("surround_graph")
                 .path(GraphManipulationRestTest
                         .DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES
                         .toString()
                 )
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.TEXT_PLAIN_TYPE)
                 .cookie(authCookie)
                 .get(ClientResponse.class);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
         return response.getEntity(JSONObject.class);
     }
 
-    public void makeGraphHave3SerialVerticesWithLongLabels() {
+    public JSONArray makeGraphHave3SerialVerticesWithLongLabels() {
+        return makeGraphHave3SerialVerticesWithLongLabelsUsingCookie(
+                authCookie
+        );
+    }
+
+    public JSONArray makeGraphHave3SerialVerticesWithLongLabelsUsingCookie(NewCookie authCookie) {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -72,6 +81,7 @@ public class GraphRestTestUtils {
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
+        return verticesABAndC;
     }
 
     public URI vertexAUri(){

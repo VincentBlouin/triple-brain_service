@@ -74,18 +74,6 @@ public class UserResource{
         throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
 
-    @Path("{username}/drawn_graph")
-    public DrawnGraphResource drawnGraphResource(
-            @PathParam("username") String username
-    ) {
-        if (isAllowed(username, request)) {
-            return drawnGraphResourceFactory.withUser(
-                    userFromSession(request.getSession())
-            );
-        }
-        throw new WebApplicationException(Response.Status.FORBIDDEN);
-    }
-
     @Path("{username}/search")
     public SearchResource searchResource(
             @PathParam("username") String username

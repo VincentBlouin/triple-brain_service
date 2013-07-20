@@ -135,7 +135,7 @@ public abstract class RestTest {
         }
     }
 
-    protected JSONObject authenticate(JSONObject user) {
+    protected ClientResponse authenticate(JSONObject user) {
         try {
             JSONObject loginInfo = new JSONObject()
                     .put(
@@ -151,7 +151,7 @@ public abstract class RestTest {
                     .post(ClientResponse.class, loginInfo);
             assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
             authCookie = response.getCookies().get(0);
-            return response.getEntity(JSONObject.class);
+            return response;
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

@@ -50,8 +50,6 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 bind(UserResource.class);
                 install(new FactoryModuleBuilder()
-                        .build(DrawnGraphResourceFactory.class));
-                install(new FactoryModuleBuilder()
                         .build(GraphResourceFactory.class));
                 install(new FactoryModuleBuilder()
                         .build(VertexResourceFactory.class));
@@ -65,6 +63,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                         .build(EdgeResourceFactory.class));
                 install(new FactoryModuleBuilder()
                         .build(SearchResourceFactory.class));
+                install(new FactoryModuleBuilder()
+                        .build(VertexSurroundGraphResourceFactory.class));
+                install(new FactoryModuleBuilder()
+                        .build(DrawnGraphResourceFactory.class));
 
                 serve("/MessageWebSocket").with(MessagesDistributorServlet.class);
 
