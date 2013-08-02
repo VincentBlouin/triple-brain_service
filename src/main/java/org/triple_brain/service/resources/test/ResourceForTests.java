@@ -62,7 +62,11 @@ public class ResourceForTests {
     @Path("login")
     @GET
     public Response createUserAuthenticateAndRedirectToHomePage(@Context HttpServletRequest request) throws Exception {
-        User user = User.withUsernameAndEmail("test_user", "test@triple_brain.org")
+        User user = User.withUsernameEmailAndLocales(
+                "test_user",
+                "test@triple_brain.org",
+                ""
+        )
                 .password("password");
         if(!userRepository.emailExists(user.email())){
             userRepository.save(
@@ -155,9 +159,11 @@ public class ResourceForTests {
     @Path("create_user")
     @POST
     public Response createUserWithDefaultPassword() throws Exception {
-        User user = User.withUsernameAndEmail(
+        User user = User.withUsernameEmailAndLocales(
                 UUID.randomUUID().toString(),
-                UUID.randomUUID().toString() + "@triplebrain.org")
+                UUID.randomUUID().toString() + "@triplebrain.org",
+                ""
+        )
                 .password("password");
         userRepository.save(user);
         return Response.ok(

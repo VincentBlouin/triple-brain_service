@@ -22,10 +22,10 @@ import java.net.URI;
 import java.util.Map;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.isUserInSession;
-import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 import static org.triple_brain.module.model.json.UserJsonFields.*;
 import static org.triple_brain.module.model.validator.UserValidator.*;
+import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.isUserInSession;
+import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
 /**
  * Copyright Mozilla Public License 1.1
@@ -97,7 +97,11 @@ public class UserResource{
     @Produces(MediaType.WILDCARD)
     @Path("/")
     public Response createUser(JSONObject jsonUser){
-        User user = User.withUsernameAndEmail(jsonUser.optString(USER_NAME, ""), jsonUser.optString(EMAIL, ""))
+        User user = User.withUsernameEmailAndLocales(
+                jsonUser.optString(USER_NAME, ""),
+                jsonUser.optString(EMAIL, ""),
+                jsonUser.optJSONArray(PREFERRED_LOCALES).toString()
+       )
                 .password(jsonUser.optString(PASSWORD, ""));
 
         JSONArray jsonMessages = new JSONArray();

@@ -28,9 +28,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_authenticate_user() throws Exception {
-        User rogerLamothe = User.withUsernameAndEmail(
+        User rogerLamothe = User.withUsernameEmailAndLocales(
                 "roger_lamothe",
-                "roger.lamothe@example.org"
+                "roger.lamothe@example.org",
+                ""
         );
         JSONObject rogerLamotheAsJson = UserJsonFields.toJson(
                 rogerLamothe
@@ -168,9 +169,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
     @Test
     public void when_creating_a_user_a_mind_map_is_created_for_him() throws Exception {
         JSONObject validUser = userUtils().validForCreation();
-        User user = User.withUsernameAndEmail(
+        User user = User.withUsernameEmailAndLocales(
                 validUser.getString(USER_NAME),
-                validUser.getString(UserJsonFields.EMAIL)
+                validUser.getString(UserJsonFields.EMAIL),
+                ""
         );
         assertFalse(
                 graphElementWithIdExistsInCurrentGraph(
