@@ -31,7 +31,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
         User rogerLamothe = User.withUsernameEmailAndLocales(
                 "roger_lamothe",
                 "roger.lamothe@example.org",
-                ""
+                new JSONArray().put("fr").toString()
         );
         JSONObject rogerLamotheAsJson = UserJsonFields.toJson(
                 rogerLamothe
@@ -43,6 +43,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
         rogerLamotheAsJson.put(
                 UserJsonFields.PASSWORD_VERIFICATION,
                 DEFAULT_PASSWORD
+        );
+        rogerLamotheAsJson.put(
+                UserJsonFields.PREFERRED_LOCALES,
+                new JSONArray().put("fr")
         );
         createUser(rogerLamotheAsJson);
         JSONObject loginInfo = new JSONObject()
@@ -172,7 +176,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
         User user = User.withUsernameEmailAndLocales(
                 validUser.getString(USER_NAME),
                 validUser.getString(UserJsonFields.EMAIL),
-                ""
+                "[fr]"
         );
         assertFalse(
                 graphElementWithIdExistsInCurrentGraph(
@@ -254,6 +258,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
         jsonUser.put(USER_NAME, "");
         jsonUser.put(PASSWORD, "pass");
         jsonUser.put(PASSWORD_VERIFICATION, "");
+        jsonUser.put(PREFERRED_LOCALES, new JSONArray().put("fr"));
         ClientResponse response = resource
                 .path("service")
                 .path("users")

@@ -31,7 +31,7 @@ public class GraphManipulationRestTest extends RestTest {
         defaultAuthenticatedUser = User.withUsernameEmailAndLocales(
                 userAsJson.getString(UserJsonFields.USER_NAME),
                 userAsJson.getString(UserJsonFields.EMAIL),
-                ""
+                "[fr]"
         );
         defaultAuthenticatedUser.password(DEFAULT_PASSWORD);
         deleteAllVerticesFromSearch();

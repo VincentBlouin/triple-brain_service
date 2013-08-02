@@ -2,6 +2,7 @@ package org.triple_brain.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -45,6 +46,7 @@ public class UserRestTestUtils {
             user.put(EMAIL, randomEmail());
             user.put(PASSWORD, RestTest.DEFAULT_PASSWORD);
             user.put(PASSWORD_VERIFICATION, RestTest.DEFAULT_PASSWORD);
+            user.put(PREFERRED_LOCALES, new JSONArray().put("fr"));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }

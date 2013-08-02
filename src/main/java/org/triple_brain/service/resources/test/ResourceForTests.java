@@ -65,7 +65,7 @@ public class ResourceForTests {
         User user = User.withUsernameEmailAndLocales(
                 "test_user",
                 "test@triple_brain.org",
-                ""
+                "[fr]"
         )
                 .password("password");
         if(!userRepository.emailExists(user.email())){
@@ -162,7 +162,7 @@ public class ResourceForTests {
         User user = User.withUsernameEmailAndLocales(
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString() + "@triplebrain.org",
-                ""
+                "[fr]"
         )
                 .password("password");
         userRepository.save(user);
