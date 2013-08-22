@@ -39,7 +39,7 @@ public class VertexResourceTestUtils {
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
-        Vertex vertex = userGraph.vertexWithURI(new URI(vertexId));
+        Vertex vertex = userGraph.vertexWithUri(new URI(vertexId));
         return Response.ok(VertexJsonFields.toJson(vertex)).build();
     }
 
@@ -47,7 +47,7 @@ public class VertexResourceTestUtils {
     @GET
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
-        Vertex vertex = userGraph.vertexWithURI(new URI(vertexId));
+        Vertex vertex = userGraph.vertexWithUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
         for(Edge edge : vertex.connectedEdges()){
             edges.put(
@@ -64,8 +64,8 @@ public class VertexResourceTestUtils {
     @GET
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
-        Vertex vertex = userGraph.vertexWithURI(new URI(Uris.decodeURL(vertexId)));
-        Vertex otherVertex = userGraph.vertexWithURI(new URI(Uris.decodeURL(otherVertexId)));
+        Vertex vertex = userGraph.vertexWithUri(new URI(Uris.decodeURL(vertexId)));
+        Vertex otherVertex = userGraph.vertexWithUri(new URI(Uris.decodeURL(otherVertexId)));
         return Response.ok(
                 vertex.hasDestinationVertex(otherVertex).toString()
         ).build();

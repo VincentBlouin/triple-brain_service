@@ -8,7 +8,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
-import org.triple_brain.module.model.json.graph.GraphJSONFields;
+import org.triple_brain.module.model.json.graph.GraphJsonFields;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
@@ -110,7 +110,7 @@ public class EdgeRestTestUtils {
 
     public JSONObject edgeBetweenAAndB()throws Exception{
         JSONArray allEdges = graphUtils.wholeGraph().getJSONArray(
-                GraphJSONFields.EDGES
+                GraphJsonFields.EDGES
         );
         return edgeBetweenTwoVerticesUriGivenEdges(
                 graphUtils.vertexAUri(),

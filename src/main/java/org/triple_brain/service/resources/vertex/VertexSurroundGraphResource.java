@@ -7,7 +7,7 @@ package org.triple_brain.service.resources.vertex;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.model.graph.*;
-import org.triple_brain.module.model.json.graph.GraphJSONFields;
+import org.triple_brain.module.model.json.graph.GraphJsonFields;
 import org.triple_brain.service.resources.DrawnGraphResource;
 import org.triple_brain.service.resources.DrawnGraphResourceFactory;
 
@@ -42,7 +42,7 @@ public class VertexSurroundGraphResource {
     @Path("/")
     public Response get() {
         return Response.ok(
-                GraphJSONFields.toJson(
+                GraphJsonFields.toJson(
                         getGraph()
                 )
         ).build();

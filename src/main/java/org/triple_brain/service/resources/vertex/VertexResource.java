@@ -11,6 +11,7 @@ import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 import org.triple_brain.module.search.GraphIndexer;
+import org.triple_brain.service.resources.GraphElementIdentificationResource;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,8 @@ public class VertexResource {
     @Inject
     VertexPublicAccessResourceFactory vertexPublicAccessResourceFactory;
 
-    @Inject VertexIdentificationResourceFactory vertexIdentificationResourceFactory;
+    @Inject
+    GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
 
     @Inject
     VertexSurroundGraphResourceFactory vertexSurroundGraphResourceFactory;
@@ -58,8 +60,8 @@ public class VertexResource {
     public Response addVertexAndEdgeToSourceVertex(
             @Context HttpServletRequest request
     ) {
-        Vertex sourceVertex = userGraph.vertexWithURI(URI.create(
-            request.getRequestURI()
+        Vertex sourceVertex = userGraph.vertexWithUri(URI.create(
+                request.getRequestURI()
         ));
         Edge createdEdge = sourceVertex.addVertexAndRelation();
         Vertex createdVertex = createdEdge.destinationVertex();
@@ -92,12 +94,12 @@ public class VertexResource {
             @Context HttpServletRequest request
     ) {
         graphIndexer.deleteVertexOfUser(
-                userGraph.vertexWithURI(URI.create(
-                    request.getRequestURI()
+                userGraph.vertexWithUri(URI.create(
+                        request.getRequestURI()
                 )),
                 userGraph.user()
         );
-        Vertex vertex = userGraph.vertexWithURI(URI.create(
+        Vertex vertex = userGraph.vertexWithUri(URI.create(
                 request.getRequestURI()
         ));
         vertex.remove();
@@ -113,7 +115,7 @@ public class VertexResource {
             @QueryParam("label") String label
     ) {
         URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
+        Vertex vertex = userGraph.vertexWithUri(
                 vertexId
         );
         vertex.label(label);
@@ -134,7 +136,7 @@ public class VertexResource {
             String note
     ) {
         URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithURI(
+        Vertex vertex = userGraph.vertexWithUri(
                 vertexId
         );
         vertex.note(note);
@@ -154,8 +156,8 @@ public class VertexResource {
     }
 
     @Path("{shortId}/identification")
-    public VertexIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
-        return vertexIdentificationResourceFactory.forVertex(
+    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
+        return graphElementIdentificationResourceFactory.forGraphElement(
                 vertexFromShortId(shortId)
         );
     }
@@ -188,7 +190,7 @@ public class VertexResource {
 
     private Vertex vertexFromShortId(String shortId){
         URI vertexId = uriFromShortId(shortId);
-        return userGraph.vertexWithURI(
+        return userGraph.vertexWithUri(
                 vertexId
         );
     }

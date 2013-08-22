@@ -5,7 +5,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.triple_brain.module.model.json.graph.GraphJSONFields;
+import org.triple_brain.module.model.json.graph.GraphJsonFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.NewCookie;
@@ -14,7 +14,7 @@ import java.net.URI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.triple_brain.module.model.json.graph.GraphJSONFields.VERTICES;
+import static org.triple_brain.module.model.json.graph.GraphJsonFields.VERTICES;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -33,7 +33,7 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
     public void can_get_graph() {
         JSONObject graph = getGraph().getEntity(JSONObject.class);
         JSONObject vertexAFromGraph = graph.optJSONObject(
-                GraphJSONFields.VERTICES
+                GraphJsonFields.VERTICES
         );
         assertThat(
                 vertexAFromGraph.length(),
@@ -102,10 +102,10 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
         );
         JSONObject graph = clientResponse.getEntity(JSONObject.class);
         JSONObject vertices = graph.optJSONObject(
-                GraphJSONFields.VERTICES
+                GraphJsonFields.VERTICES
         );
         JSONObject edges = graph.optJSONObject(
-                GraphJSONFields.EDGES
+                GraphJsonFields.EDGES
         );
         assertThat(
                 vertices.length(),

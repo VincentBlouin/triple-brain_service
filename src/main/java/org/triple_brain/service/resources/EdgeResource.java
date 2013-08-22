@@ -9,6 +9,7 @@ import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.search.GraphIndexer;
+import org.triple_brain.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,9 @@ public class EdgeResource {
     @Inject
     GraphIndexer graphIndexer;
 
+    @Inject
+    GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
+
     private UserGraph userGraph;
 
     @AssistedInject
@@ -56,11 +60,11 @@ public class EdgeResource {
         }catch (UnsupportedEncodingException e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Vertex sourceVertex = userGraph.vertexWithURI(URI.create(
-            sourceVertexId
+        Vertex sourceVertex = userGraph.vertexWithUri(URI.create(
+                sourceVertexId
         ));
-        Vertex destinationVertex = userGraph.vertexWithURI(URI.create(
-            destinationVertexId
+        Vertex destinationVertex = userGraph.vertexWithUri(URI.create(
+                destinationVertexId
         ));
         Edge createdEdge = sourceVertex.addRelationToVertex(destinationVertex);
         return Response.created(URI.create(
@@ -107,6 +111,21 @@ public class EdgeResource {
                 edge.destinationVertex()
         );
         return Response.ok().build();
+    }
+
+    @Path("{shortId}/identification")
+    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
+        return graphElementIdentificationResourceFactory.forGraphElement(
+                edgeFromShortId(shortId)
+        );
+    }
+
+    private Edge edgeFromShortId(String shortId){
+        return userGraph.edgeWithUri(
+                edgeUriFromShortId(
+                        shortId
+                )
+        );
     }
 
     private URI edgeUriFromShortId(String shortId){

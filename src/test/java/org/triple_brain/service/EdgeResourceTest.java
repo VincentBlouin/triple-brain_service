@@ -5,10 +5,10 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
+import org.triple_brain.module.model.json.graph.GraphJsonFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
-import org.triple_brain.module.model.json.graph.GraphJSONFields;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,7 +45,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     public void adding_a_relation_returns_correct_headers()throws JSONException{
         ClientResponse response = addRelationBetweenVertexAAndC();
         JSONArray allEdges = graphUtils().wholeGraph().getJSONArray(
-                GraphJSONFields.EDGES
+                GraphJsonFields.EDGES
         );
         JSONObject edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
@@ -77,7 +77,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         JSONObject edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         edgeUtils().removeEdgeBetweenVertexAAndB();
         JSONArray allEdges = graphUtils().wholeGraph().getJSONArray(
-                GraphJSONFields.EDGES
+                GraphJsonFields.EDGES
         );
         assertFalse(
                 edgeUtils().edgeIsInEdges(

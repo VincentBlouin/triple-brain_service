@@ -1,11 +1,11 @@
-package org.triple_brain.service.resources.vertex;
+package org.triple_brain.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.ExternalFriendlyResource;
 import org.triple_brain.module.model.FreebaseExternalFriendlyResource;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.json.ExternalResourceJson;
 import org.triple_brain.service.ExternalResourceServiceUtils;
 
@@ -23,7 +23,7 @@ import static org.triple_brain.module.common_utils.Uris.decodeURL;
 */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VertexIdentificationResource {
+public class GraphElementIdentificationResource {
     public static enum identification_types {
         SAME_AS, TYPE
     }
@@ -33,13 +33,13 @@ public class VertexIdentificationResource {
     @Inject
     ExternalResourceServiceUtils externalResourceServiceUtils;
 
-    private Vertex vertex;
+    private GraphElement graphElement;
 
     @AssistedInject
-    public VertexIdentificationResource(
-            @Assisted Vertex vertex
+    public GraphElementIdentificationResource(
+            @Assisted GraphElement graphElement
     ) {
-        this.vertex = vertex;
+        this.graphElement = graphElement;
     }
 
     @POST
@@ -51,11 +51,11 @@ public class VertexIdentificationResource {
         );
         String type = identification.optString("type");
         if (type.equalsIgnoreCase(identification_types.SAME_AS.name())) {
-            vertex.addSameAs(
+            graphElement.addSameAs(
                     externalFriendlyResource
             );
         } else if (type.equalsIgnoreCase(identification_types.TYPE.name())) {
-            vertex.addType(
+            graphElement.addType(
                     externalFriendlyResource
             );
         } else {
@@ -77,10 +77,10 @@ public class VertexIdentificationResource {
         } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        ExternalFriendlyResource type = vertex.friendlyResourceWithUri(
+        ExternalFriendlyResource type = graphElement.friendlyResourceWithUri(
                 URI.create(friendlyResourceUri)
         );
-        vertex.removeFriendlyResource(type);
+        graphElement.removeFriendlyResource(type);
         return Response.ok().build();
     }
 

@@ -3,8 +3,8 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.json.drawn_graph.DrawnGraphJSONFields;
-import org.triple_brain.module.model.json.drawn_graph.DrawnVertexJSONFields;
+import org.triple_brain.module.model.json.drawn_graph.DrawnGraphJsonFields;
+import org.triple_brain.module.model.json.drawn_graph.DrawnVertexJsonFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import java.net.URI;
@@ -24,10 +24,10 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
                 5
         ).getEntity(JSONObject.class);
         JSONObject vertex = drawnGraph.optJSONObject(
-                DrawnGraphJSONFields.VERTICES
+                DrawnGraphJsonFields.VERTICES
         ).optJSONObject(vertexAUri().toString());
         assertTrue(vertex.has(
-                DrawnVertexJSONFields.POSITION
+                DrawnVertexJsonFields.POSITION
         ));
     }
 

@@ -7,8 +7,10 @@ import org.junit.Test;
 import org.triple_brain.module.model.ExternalFriendlyResource;
 import org.triple_brain.module.model.ModelTestScenarios;
 import org.triple_brain.module.model.json.ExternalResourceJson;
+import org.triple_brain.module.model.json.graph.EdgeJsonFields;
+import org.triple_brain.module.model.json.graph.GraphElementJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
-import org.triple_brain.service.resources.vertex.VertexIdentificationResource;
+import org.triple_brain.service.resources.GraphElementIdentificationResource;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
@@ -22,7 +24,7 @@ import static org.triple_brain.module.common_utils.Uris.encodeURL;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class VertexIdentificationResourceTest extends GraphManipulationRestTest {
+public class GraphElementIdentificationResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void setting_type_of_a_vertex_returns_correct_response_status() throws Exception {
@@ -61,13 +63,48 @@ public class VertexIdentificationResourceTest extends GraphManipulationRestTest 
         );
     }
 
+    @Test
+    public void can_add_same_as_to_an_edge() throws Exception {
+        JSONObject edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        JSONArray sameAs = vertexA().getJSONArray(GraphElementJsonFields.SAME_AS);
+        assertThat(
+                sameAs.length(),
+                is(0)
+        );
+        addCreatorPredicateToEdge(edgeBetweenAAndB);
+        sameAs = edgeUtils().edgeBetweenAAndB().getJSONArray(
+                EdgeJsonFields.SAME_AS
+        );
+        assertThat(
+                sameAs.length(),
+                is(greaterThan(0))
+        );
+    }
+
+    private ClientResponse addCreatorPredicateToEdge(JSONObject edge)throws Exception{
+        JSONObject creatorPredicate = ExternalResourceJson.get(
+                ModelTestScenarios.creatorPredicate()
+        );
+        creatorPredicate.put(
+                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
+                GraphElementIdentificationResource.identification_types.SAME_AS
+        );
+        ClientResponse response = resource
+                .path(edge.optString(EdgeJsonFields.ID))
+                .path("identification")
+                .cookie(authCookie)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, creatorPredicate);
+        return response;
+    }
+
     private ClientResponse addFoafPersonTypeToVertexA() throws Exception {
         JSONObject personType = ExternalResourceJson.get(
                 ModelTestScenarios.personType()
         );
         personType.put(
-                VertexIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                VertexIdentificationResource.identification_types.TYPE
+                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
+                GraphElementIdentificationResource.identification_types.TYPE
         );
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
