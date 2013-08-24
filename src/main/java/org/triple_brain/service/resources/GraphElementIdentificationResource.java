@@ -77,10 +77,10 @@ public class GraphElementIdentificationResource {
         } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        ExternalFriendlyResource type = graphElement.friendlyResourceWithUri(
+        ExternalFriendlyResource friendlyResource = graphElement.friendlyResourceWithUri(
                 URI.create(friendlyResourceUri)
         );
-        graphElement.removeFriendlyResource(type);
+        graphElement.removeFriendlyResource(friendlyResource);
         return Response.ok().build();
     }
 
