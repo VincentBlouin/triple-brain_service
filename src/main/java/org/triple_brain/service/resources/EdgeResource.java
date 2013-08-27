@@ -90,6 +90,10 @@ public class EdgeResource {
         graphIndexer.indexVertex(
                 destinationVertex
         );
+        graphIndexer.deleteGraphElementOfUser(
+                edge,
+                userGraph.user()
+        );
         return Response.ok().build();
     }
 
@@ -109,6 +113,10 @@ public class EdgeResource {
         );
         graphIndexer.indexVertex(
                 edge.destinationVertex()
+        );
+        graphIndexer.indexRelationOfUser(
+                edge,
+                userGraph.user()
         );
         return Response.ok().build();
     }

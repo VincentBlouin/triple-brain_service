@@ -93,7 +93,7 @@ public class VertexResource {
     public Response removeVertex(
             @Context HttpServletRequest request
     ) {
-        graphIndexer.deleteVertexOfUser(
+        graphIndexer.deleteGraphElementOfUser(
                 userGraph.vertexWithUri(URI.create(
                         request.getRequestURI()
                 )),
