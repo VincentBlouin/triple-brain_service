@@ -88,13 +88,13 @@ public class GraphManipulationRestTest extends RestTest {
         assertThat(response.getStatus(), is(200));
     }
 
-    protected void indexAllVertices() {
+    protected void indexGraph() {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
                 .path("test")
                 .path("search")
-                .path("index_all_vertices")
+                .path("index_graph")
                 .cookie(authCookie)
                 .get(ClientResponse.class);
         assertThat(response.getStatus(), is(200));

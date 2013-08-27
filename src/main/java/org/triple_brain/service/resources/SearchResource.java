@@ -62,4 +62,20 @@ public class SearchResource {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
     }
+
+    @GET
+    @Path("relations/auto_complete/{search_text}")
+    public Response searchRelationsForAutoComplete(
+            @PathParam("search_text") String searchText
+    ){
+        try{
+            return Response.ok(
+                    graphSearch.searchRelationsForAutoCompletionByLabel(
+                            Uris.decodeURL(searchText),
+                            user
+                    )).build();
+        }catch(UnsupportedEncodingException e){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+    }
 }

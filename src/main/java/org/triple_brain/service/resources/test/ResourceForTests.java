@@ -141,7 +141,7 @@ public class ResourceForTests {
         }
     }
 
-    @Path("search/index_all_vertices")
+    @Path("search/index_graph")
     @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response indexSessionUserVertices(@Context HttpServletRequest request) {
@@ -152,6 +152,12 @@ public class ResourceForTests {
         SubGraph subGraph = userGraph.graphWithDefaultVertexAndDepth(10);
         for (Vertex vertex : subGraph.vertices()) {
             graphIndexer.indexVertexOfUser(vertex, currentUser);
+        }
+        for (Edge edge : subGraph.edges()) {
+            graphIndexer.indexRelationOfUser(
+                    edge,
+                    currentUser
+            );
         }
         return Response.ok().build();
     }
