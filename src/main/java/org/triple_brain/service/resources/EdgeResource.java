@@ -83,16 +83,16 @@ public class EdgeResource {
         ));
         Vertex sourceVertex = edge.sourceVertex();
         Vertex destinationVertex = edge.destinationVertex();
+        graphIndexer.deleteGraphElementOfUser(
+                edge,
+                userGraph.user()
+        );
         edge.remove();
         graphIndexer.indexVertex(
                 sourceVertex
         );
         graphIndexer.indexVertex(
                 destinationVertex
-        );
-        graphIndexer.deleteGraphElementOfUser(
-                edge,
-                userGraph.user()
         );
         return Response.ok().build();
     }
