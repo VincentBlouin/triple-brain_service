@@ -66,8 +66,11 @@ public class GuiceConfig extends GuiceServletContextListener {
                 install(new FactoryModuleBuilder()
                         .build(VertexSurroundGraphResourceFactory.class));
                 install(new FactoryModuleBuilder()
-                        .build(DrawnGraphResourceFactory.class));
-
+                        .build(DrawnGraphResourceFactory.class)
+                );
+                install(new FactoryModuleBuilder()
+                        .build(VertexImageResourceFactory.class)
+                );
                 serve("/MessageWebSocket").with(MessagesDistributorServlet.class);
 
                 final Map<String, String> params = new HashMap<String, String>();

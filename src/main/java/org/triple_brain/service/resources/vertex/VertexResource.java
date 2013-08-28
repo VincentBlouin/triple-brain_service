@@ -46,12 +46,15 @@ public class VertexResource {
     @Inject
     VertexSurroundGraphResourceFactory vertexSurroundGraphResourceFactory;
 
+    @Inject
+    VertexImageResourceFactory vertexImageResourceFactory;
+
     private UserGraph userGraph;
 
     @AssistedInject
     public VertexResource(
             @Assisted UserGraph userGraph
-    ){
+    ) {
         this.userGraph = userGraph;
     }
 
@@ -144,51 +147,62 @@ public class VertexResource {
         return Response.ok().build();
     }
 
-    @Path("{shortId}/surround_graph/{depthOfSubVertices}")
-    public VertexSurroundGraphResource getVertexSurroundGraphResource(
-            @PathParam("shortId") String shortId,
-            @PathParam("depthOfSubVertices") Integer depth
-            ){
-        return vertexSurroundGraphResourceFactory.ofCenterVertexWithDepth(
-                vertexFromShortId(shortId),
-                depth
-        );
-    }
 
-    @Path("{shortId}/identification")
-    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
-        return graphElementIdentificationResourceFactory.forGraphElement(
-                vertexFromShortId(shortId)
-        );
-    }
-
-    @Path("{shortId}/suggestions")
-    public VertexSuggestionResource getVertexSuggestionResource(
+    @Path("{shortId}/image")
+    public VertexImageResource image(
             @PathParam("shortId") String shortId
     ) {
-        return vertexSuggestionResourceFactory.ofVertex(
+        return vertexImageResourceFactory.ofVertex(
                 vertexFromShortId(shortId)
         );
     }
 
-    @Path("{shortId}/public_access")
-    public VertexPublicAccessResource getPublicAccessResource(
-            @PathParam("shortId") String shortId
-    ){
-        return vertexPublicAccessResourceFactory.ofVertex(
-                vertexFromShortId(shortId)
-        );
-    }
+        @Path("{shortId}/surround_graph/{depthOfSubVertices}")
+        public VertexSurroundGraphResource getVertexSurroundGraphResource (
+                @PathParam("shortId")String shortId,
+                @PathParam("depthOfSubVertices")Integer depth
+        ){
+            return vertexSurroundGraphResourceFactory.ofCenterVertexWithDepth(
+                    vertexFromShortId(shortId),
+                    depth
+            );
+        }
 
-    private URI uriFromShortId(String shortId){
-        return  new UserUris(
+        @Path("{shortId}/identification")
+        public GraphElementIdentificationResource getVertexIdentificationResource (@PathParam("shortId")String
+        shortId){
+            return graphElementIdentificationResourceFactory.forGraphElement(
+                    vertexFromShortId(shortId)
+            );
+        }
+
+        @Path("{shortId}/suggestions")
+        public VertexSuggestionResource getVertexSuggestionResource (
+                @PathParam("shortId")String shortId
+        ){
+            return vertexSuggestionResourceFactory.ofVertex(
+                    vertexFromShortId(shortId)
+            );
+        }
+
+        @Path("{shortId}/public_access")
+        public VertexPublicAccessResource getPublicAccessResource (
+                @PathParam("shortId")String shortId
+        ){
+            return vertexPublicAccessResourceFactory.ofVertex(
+                    vertexFromShortId(shortId)
+            );
+        }
+
+    private URI uriFromShortId(String shortId) {
+        return new UserUris(
                 userGraph.user()
         ).vertexUriFromShortId(
                 shortId
         );
     }
 
-    private Vertex vertexFromShortId(String shortId){
+    private Vertex vertexFromShortId(String shortId) {
         URI vertexId = uriFromShortId(shortId);
         return userGraph.vertexWithUri(
                 vertexId
