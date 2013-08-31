@@ -3,11 +3,11 @@ package org.triple_brain.service.resources;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.ExternalFriendlyResource;
 import org.triple_brain.module.model.FreebaseExternalFriendlyResource;
+import org.triple_brain.module.model.FriendlyResource;
+import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.graph.GraphElement;
-import org.triple_brain.module.model.json.ExternalResourceJson;
-import org.triple_brain.service.ExternalResourceServiceUtils;
+import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -31,7 +31,9 @@ public class GraphElementIdentificationResource {
     public static final String IDENTIFICATION_TYPE_STRING = "type";
 
     @Inject
-    ExternalResourceServiceUtils externalResourceServiceUtils;
+    FriendlyResourceFactory friendlyResourceFactory;
+    @Inject
+    ResourceServiceUtils resourceServiceUtils;
 
     private GraphElement graphElement;
 
@@ -46,23 +48,23 @@ public class GraphElementIdentificationResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response add(JSONObject identification) {
-        ExternalFriendlyResource externalFriendlyResource = ExternalResourceJson.fromJson(
+        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingJson(
                 identification
         );
         String type = identification.optString("type");
         if (type.equalsIgnoreCase(identification_types.SAME_AS.name())) {
             graphElement.addSameAs(
-                    externalFriendlyResource
+                    friendlyResource
             );
         } else if (type.equalsIgnoreCase(identification_types.TYPE.name())) {
             graphElement.addType(
-                    externalFriendlyResource
+                    friendlyResource
             );
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        updateImagesOfExternalResourceIfNecessary(externalFriendlyResource);
-        updateDescriptionOfExternalResourceIfNecessary(externalFriendlyResource);
+        updateImagesOfExternalResourceIfNecessary(friendlyResource);
+        updateDescriptionOfExternalResourceIfNecessary(friendlyResource);
         return Response.ok().build();
     }
 
@@ -77,34 +79,34 @@ public class GraphElementIdentificationResource {
         } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        ExternalFriendlyResource friendlyResource = graphElement.friendlyResourceWithUri(
+        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
                 URI.create(friendlyResourceUri)
         );
         graphElement.removeFriendlyResource(friendlyResource);
         return Response.ok().build();
     }
 
-    private void updateImagesOfExternalResourceIfNecessary(ExternalFriendlyResource externalFriendlyResource) {
-        if (!externalFriendlyResource.gotTheImages()) {
-            if (FreebaseExternalFriendlyResource.isFromFreebase(externalFriendlyResource)) {
+    private void updateImagesOfExternalResourceIfNecessary(FriendlyResource friendlyResourceImpl) {
+        if (!friendlyResourceImpl.gotTheImages()) {
+            if (FreebaseExternalFriendlyResource.isFromFreebase(friendlyResourceImpl)) {
                 FreebaseExternalFriendlyResource freebaseResource = FreebaseExternalFriendlyResource.fromExternalResource(
-                        externalFriendlyResource
+                        friendlyResourceImpl
                 );
                 freebaseResource.getImages(
-                        externalResourceServiceUtils.imagesUpdateHandler
+                        resourceServiceUtils.imagesUpdateHandler
                 );
             }
         }
     }
 
-    private void updateDescriptionOfExternalResourceIfNecessary(ExternalFriendlyResource externalFriendlyResource) {
-        if (!externalFriendlyResource.gotADescription()) {
-            if (FreebaseExternalFriendlyResource.isFromFreebase(externalFriendlyResource)) {
+    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResource friendlyResourceImpl) {
+        if (!friendlyResourceImpl.gotADescription()) {
+            if (FreebaseExternalFriendlyResource.isFromFreebase(friendlyResourceImpl)) {
                 FreebaseExternalFriendlyResource freebaseResource = FreebaseExternalFriendlyResource.fromExternalResource(
-                        externalFriendlyResource
+                        friendlyResourceImpl
                 );
                 freebaseResource.getDescription(
-                        externalResourceServiceUtils.descriptionUpdateHandler
+                        resourceServiceUtils.descriptionUpdateHandler
                 );
             }
         }

@@ -61,7 +61,7 @@ public class VertexSurroundGraphResource {
         );
         SubGraph graph = userGraph.graphWithDepthAndCenterVertexId(
                 depthOfSubVertices,
-                centerVertex.id()
+                centerVertex.uri()
         );
 //        removeVerticesNotAllowedToAccess(
 //                graph

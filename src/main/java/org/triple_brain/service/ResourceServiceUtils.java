@@ -12,23 +12,22 @@ import java.util.Set;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class ExternalResourceServiceUtils {
+public class ResourceServiceUtils {
     @Inject
     BeforeAfterEachRestCall beforeAfterEachRestCall;
 
     @Inject
-    ExternalFriendlyResourcePersistenceUtils friendlyResourcePersistor;
+    FriendlyResourceFactory friendlyResourceFactory;
 
     public Observer imagesUpdateHandler = new Observer() {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseExternalFriendlyResource freebaseExternalFriendlyResource = (FreebaseExternalFriendlyResource) observable;
-            ExternalFriendlyResource externalResource = freebaseExternalFriendlyResource.get();
+            FriendlyResource resource = freebaseExternalFriendlyResource.get();
             Set<Image> images = (Set<Image>) o;
             Object state = beforeAfterEachRestCall.before();
             try {
-                friendlyResourcePersistor.addImages(
-                        externalResource,
+                resource.addImages(
                         images
                 );
             } catch (Exception e) {
@@ -39,12 +38,10 @@ public class ExternalResourceServiceUtils {
             }
             BayeuxInitializer.notificationService.notifyChannelMessage(
                     "/identification/" +
-                            Uris.encodeURL(externalResource.uri()) +
+                            Uris.encodeURL(resource.uri()) +
                             "/updated",
                     ExternalResourceJson.get(
-                            friendlyResourcePersistor.getUpdated(
-                                    externalResource
-                            )
+                            resource
                     )
             );
         }
@@ -54,12 +51,11 @@ public class ExternalResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseExternalFriendlyResource freebaseExternalFriendlyResource = (FreebaseExternalFriendlyResource) observable;
-            ExternalFriendlyResource externalResource = freebaseExternalFriendlyResource.get();
+            FriendlyResource resource = freebaseExternalFriendlyResource.get();
             String description = (String) o;
             Object state = beforeAfterEachRestCall.before();
             try {
-                friendlyResourcePersistor.setDescription(
-                        externalResource,
+                resource.description(
                         description
                 );
             } catch (Exception e) {
@@ -70,12 +66,10 @@ public class ExternalResourceServiceUtils {
             }
             BayeuxInitializer.notificationService.notifyChannelMessage(
                     "/identification/" +
-                            Uris.encodeURL(externalResource.uri()) +
+                            Uris.encodeURL(resource.uri()) +
                             "/updated",
                     ExternalResourceJson.get(
-                            friendlyResourcePersistor.getUpdated(
-                                    externalResource
-                            )
+                            resource
                     )
             );
         }

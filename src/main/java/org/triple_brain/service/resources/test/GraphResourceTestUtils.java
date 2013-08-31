@@ -13,6 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.net.URI;
+
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
 /*
@@ -35,7 +37,9 @@ public class GraphResourceTestUtils {
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("graphElementId") String graphElementId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
         return Response.ok(
-                userGraph.haveElementWithId(graphElementId).toString()
+                userGraph.haveElementWithId(
+                        URI.create(graphElementId)
+                ).toString()
         ).build();
     }
 

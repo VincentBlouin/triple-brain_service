@@ -9,11 +9,10 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.imgscalr.Scalr;
 import org.triple_brain.module.common_utils.Urls;
-import org.triple_brain.module.model.ExternalFriendlyResource;
-import org.triple_brain.module.model.ExternalFriendlyResourcePersistenceUtils;
+import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.graph.Vertex;
-import org.triple_brain.service.ExternalResourceServiceUtils;
+import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -38,10 +37,10 @@ public class VertexImageResource {
     public static final String IMAGES_FOLDER_PATH = "/var/lib/triple_brain/image";
 
     @Inject
-    ExternalResourceServiceUtils externalResourceServiceUtils;
+    ResourceServiceUtils resourceServiceUtils;
 
     @Inject
-    ExternalFriendlyResourcePersistenceUtils externalFriendlyResourcePersistenceUtils;
+    FriendlyResourceFactory friendlyResourceFactory;
 
     @AssistedInject
     public VertexImageResource(
@@ -54,7 +53,7 @@ public class VertexImageResource {
     @Path("/{imageId}/small")
     @Produces("application/octet-stream")
     public byte[] getSmall(@PathParam("imageId") String imageId) {
-        return makeImageSmall(
+        return resizedSmallImage(
                 new File(IMAGES_FOLDER_PATH + "/" + imageId)
         );
     }
@@ -63,24 +62,9 @@ public class VertexImageResource {
     @Produces("application/octet-stream")
     @Path("/{imageId}/big")
     public byte[] getBig(@PathParam("imageId") String imageId) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(
-                    ImageIO.read(
-                            new File(IMAGES_FOLDER_PATH + "/" + imageId)
-                    ),
-                    "png",
-                    baos
-            );
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            return imageInByte;
-        } catch (IOException e) {
-            throw new WebApplicationException(
-                    Response.Status.INTERNAL_SERVER_ERROR
-            );
-        }
+        return resizedBigImage(
+                new File(IMAGES_FOLDER_PATH + "/" + imageId)
+        );
     }
 
     @POST
@@ -128,25 +112,42 @@ public class VertexImageResource {
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
         }
-        externalFriendlyResourcePersistenceUtils.addImages(
-                ExternalFriendlyResource.fromGraphElement(vertex),
+        vertex.addImages(
                 uploadedImages
         );
         return Response.ok().build();
     }
 
-    private byte[] makeImageSmall(File image) {
+    private byte[] resizedSmallImage(File image) {
+        return resizeImageToMaxWidth(
+                image,
+                60
+        );
+    }
+
+    private byte[] resizedBigImage(File image) {
+        return resizeImageToMaxWidth(
+                image,
+                600
+        );
+    }
+
+    private byte[] resizeImageToMaxWidth(File image, Integer width) {
         try {
             BufferedImage originalImage = ImageIO.read(
                     image
             );
-            originalImage = Scalr.resize(
-                    originalImage,
-                    Scalr.Method.QUALITY,
-                    Scalr.Mode.FIT_TO_WIDTH,
-                    60,
-                    60
-            );
+            originalImage = originalImage.getWidth() > width ?
+                    Scalr.resize(
+                            originalImage,
+                            Scalr.Method.QUALITY,
+                            Scalr.Mode.FIT_TO_WIDTH,
+                            width,
+                            width
+                    ) :
+                    ImageIO.read(
+                            image
+                    );
             //To save with original ratio uncomment next line and comment the above.
             //originalImage= Scalr.resize(originalImage, 153, 128);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -4,10 +4,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.ModelTestScenarios;
+import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.json.SuggestionJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
-import org.triple_brain.module.model.suggestion.Suggestion;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
@@ -28,10 +27,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                 suggestions.length(),
                 is(0)
         );
-
-        addSuggestionToVertex(
-                ModelTestScenarios.startDateSuggestion()
-        );
+        addStartDateSuggestionToVertexA();
         suggestions = vertexA().getJSONArray(VertexJsonFields.SUGGESTIONS);
         assertThat(
                 suggestions.length(),
@@ -39,12 +35,24 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
         );
     }
 
-    private ClientResponse addSuggestionToVertex(Suggestion suggestion) throws Exception {
-        JSONObject suggestionAsJson = SuggestionJsonFields.toJson(suggestion);
-        suggestionAsJson.put(
-                SuggestionJsonFields.ORIGIN,
-                suggestion.origins().iterator().next().toString()
-        );
+    private ClientResponse addStartDateSuggestionToVertexA() throws Exception {
+        JSONObject suggestionAsJson = new JSONObject()
+                        .put(
+                                SuggestionJsonFields.TYPE_URI,
+                                Uris.get("http://rdf.freebase.com/rdf/time/event/start_date")
+                        )
+                        .put(
+                                SuggestionJsonFields.DOMAIN_URI,
+                                Uris.get("http://rdf.freebase.com/rdf/type/datetime")
+                        )
+                        .put(
+                                SuggestionJsonFields.LABEL,
+                                "Start date"
+                        )
+                        .put(
+                                SuggestionJsonFields.ORIGIN,
+                                Uris.get("http://rdf.freebase.com/rdf/time/event")
+                        );
         return addSuggestionsToVertex(
                 new JSONArray().put(
                         suggestionAsJson
@@ -69,9 +77,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                 suggestions.length(),
                 is(0)
         );
-        addSuggestionToVertex(
-                ModelTestScenarios.startDateSuggestion()
-        );
+        addStartDateSuggestionToVertexA();
         suggestions = getSuggestionsOfVertex();
         assertThat(
                 suggestions.length(),

@@ -4,8 +4,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.ExternalFriendlyResource;
-import org.triple_brain.module.model.ModelTestScenarios;
 import org.triple_brain.module.model.json.ExternalResourceJson;
 import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 import org.triple_brain.module.model.json.graph.GraphElementJsonFields;
@@ -81,14 +79,16 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
-    private ClientResponse addCreatorPredicateToEdge(JSONObject edge)throws Exception{
-        JSONObject creatorPredicate = ExternalResourceJson.get(
-                ModelTestScenarios.creatorPredicate()
-        );
-        creatorPredicate.put(
-                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                GraphElementIdentificationResource.identification_types.SAME_AS
-        );
+    private ClientResponse addCreatorPredicateToEdge(JSONObject edge) throws Exception {
+        JSONObject creatorPredicate = new JSONObject()
+                .put(
+                        ExternalResourceJson.URI,
+                        "http://purl.org/dc/terms/creator"
+                )
+                .put(
+                        GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
+                        GraphElementIdentificationResource.identification_types.SAME_AS
+                );
         ClientResponse response = resource
                 .path(edge.optString(EdgeJsonFields.ID))
                 .path("identification")
@@ -99,13 +99,15 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse addFoafPersonTypeToVertexA() throws Exception {
-        JSONObject personType = ExternalResourceJson.get(
-                ModelTestScenarios.personType()
-        );
-        personType.put(
-                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                GraphElementIdentificationResource.identification_types.TYPE
-        );
+        JSONObject personType = new JSONObject()
+                .put(
+                        ExternalResourceJson.URI,
+                        "http://xmlns.com/foaf/0.1/Person"
+                )
+                .put(
+                        GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
+                        GraphElementIdentificationResource.identification_types.TYPE
+                );
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("identification")
@@ -116,11 +118,10 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse removeFoafPersonIdentificationToVertexA() throws Exception {
-        ExternalFriendlyResource personType = ModelTestScenarios.personType();
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("identification")
-                .path(encodeURL(personType.uri().toString()))
+                .path(encodeURL("http://xmlns.com/foaf/0.1/Person"))
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
                 .delete(ClientResponse.class);

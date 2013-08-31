@@ -8,14 +8,12 @@ import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.json.graph.VertexJsonFields;
 import org.triple_brain.module.model.suggestion.Suggestion;
-import org.triple_brain.module.model.suggestion.SuggestionOrigin;
+import org.triple_brain.module.model.suggestion.SuggestionFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-
-import static org.triple_brain.module.model.json.SuggestionJsonFields.*;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -25,6 +23,9 @@ import static org.triple_brain.module.model.json.SuggestionJsonFields.*;
 public class VertexSuggestionResource {
 
     private Vertex vertex;
+
+    @Inject
+    SuggestionFactory suggestionFactory;
 
     @AssistedInject
     public VertexSuggestionResource(
@@ -56,20 +57,19 @@ public class VertexSuggestionResource {
     }
 
     private Suggestion[] suggestionsSetFromJSONArray(JSONArray jsonSuggestions) {
-        Suggestion[] suggestions = new Suggestion[jsonSuggestions.length()];
+        Suggestion[] suggestionImpls = new Suggestion[
+                jsonSuggestions.length()
+                ];
         for (int i = 0; i < jsonSuggestions.length(); i++) {
             try {
                 JSONObject jsonSuggestion = jsonSuggestions.getJSONObject(i);
-                suggestions[i] = Suggestion.withSameAsDomainLabelAndOrigins(
-                        URI.create(jsonSuggestion.getString(TYPE_URI)),
-                        URI.create(jsonSuggestion.getString(DOMAIN_URI)),
-                        jsonSuggestion.getString(LABEL),
-                        SuggestionOrigin.valueOf(jsonSuggestion.getString(ORIGIN))
+                suggestionImpls[i] = suggestionFactory.createFromJsonObject(
+                    jsonSuggestion
                 );
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         }
-        return suggestions;
+        return suggestionImpls;
     }
 }
