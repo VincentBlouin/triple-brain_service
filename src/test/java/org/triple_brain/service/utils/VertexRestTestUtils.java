@@ -77,7 +77,7 @@ public class VertexRestTestUtils {
 
     public URI uriOfVertex(JSONObject jsonObject){
         try{
-            return Uris.get(jsonObject.getString(VertexJsonFields.ID));
+            return Uris.get(jsonObject.getString(VertexJsonFields.URI));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
@@ -95,7 +95,7 @@ public class VertexRestTestUtils {
 
     public boolean vertexIsInVertices(JSONObject vertex, JSONObject vertices){
         try{
-            return vertices.has(vertex.getString(VertexJsonFields.ID));
+            return vertices.has(vertex.getString(VertexJsonFields.URI));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }

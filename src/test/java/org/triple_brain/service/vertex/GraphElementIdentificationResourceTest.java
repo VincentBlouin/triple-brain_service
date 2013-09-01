@@ -90,7 +90,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                         GraphElementIdentificationResource.identification_types.SAME_AS
                 );
         ClientResponse response = resource
-                .path(edge.optString(EdgeJsonFields.ID))
+                .path(edge.optString(EdgeJsonFields.URI))
                 .path("identification")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)

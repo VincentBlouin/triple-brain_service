@@ -56,7 +56,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
             response.getHeaders().get("Location").get(0),
             is(
                 BASE_URI + edgeBetweenAAndC.getString(
-                        EdgeJsonFields.ID
+                        EdgeJsonFields.URI
                 )
             )
         );

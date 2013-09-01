@@ -22,12 +22,16 @@ public class ResourceServiceUtils {
     public Observer imagesUpdateHandler = new Observer() {
         @Override
         public void update(Observable observable, Object o) {
-            FreebaseExternalFriendlyResource freebaseExternalFriendlyResource = (FreebaseExternalFriendlyResource) observable;
-            FriendlyResource resource = freebaseExternalFriendlyResource.get();
+            FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
+            FriendlyResourceCached resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             Set<Image> images = (Set<Image>) o;
+            FriendlyResource updatedResource = resourceCached;
             Object state = beforeAfterEachRestCall.before();
             try {
-                resource.addImages(
+                updatedResource = friendlyResourceFactory.createOrLoadFromUri(
+                        resourceCached.uri()
+                );
+                updatedResource.addImages(
                         images
                 );
             } catch (Exception e) {
@@ -38,10 +42,10 @@ public class ResourceServiceUtils {
             }
             BayeuxInitializer.notificationService.notifyChannelMessage(
                     "/identification/" +
-                            Uris.encodeURL(resource.uri()) +
+                            Uris.encodeURL(updatedResource.uri()) +
                             "/updated",
                     ExternalResourceJson.get(
-                            resource
+                            updatedResource
                     )
             );
         }
@@ -50,12 +54,16 @@ public class ResourceServiceUtils {
     public Observer descriptionUpdateHandler = new Observer() {
         @Override
         public void update(Observable observable, Object o) {
-            FreebaseExternalFriendlyResource freebaseExternalFriendlyResource = (FreebaseExternalFriendlyResource) observable;
-            FriendlyResource resource = freebaseExternalFriendlyResource.get();
+            FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
+            FriendlyResourceCached resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             String description = (String) o;
             Object state = beforeAfterEachRestCall.before();
+            FriendlyResource updatedResource = resourceCached;
             try {
-                resource.description(
+                updatedResource = friendlyResourceFactory.createOrLoadFromUri(
+                        resourceCached.uri()
+                );
+                updatedResource.description(
                         description
                 );
             } catch (Exception e) {
@@ -66,15 +74,12 @@ public class ResourceServiceUtils {
             }
             BayeuxInitializer.notificationService.notifyChannelMessage(
                     "/identification/" +
-                            Uris.encodeURL(resource.uri()) +
+                            Uris.encodeURL(updatedResource.uri()) +
                             "/updated",
                     ExternalResourceJson.get(
-                            resource
+                            updatedResource
                     )
             );
         }
     };
-
-
-
 }

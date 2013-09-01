@@ -50,18 +50,18 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         JSONObject subject = createdStatement.getJSONObject(SOURCE_VERTEX);
-        assertThat(subject.getString(VertexJsonFields.ID), is(vertexAUri().toString()));
+        assertThat(subject.getString(VertexJsonFields.URI), is(vertexAUri().toString()));
         JSONObject newEdge = edgeUtils().edgeWithUri(
                 Uris.get(
                         createdStatement.getJSONObject(EDGE).getString(
-                                EdgeJsonFields.ID
+                                EdgeJsonFields.URI
                         )
                 )
         );
         JSONObject newVertex = vertexUtils().vertexWithUri(
                 Uris.get(
                         createdStatement.getJSONObject(END_VERTEX).getString(
-                                VertexJsonFields.ID
+                                VertexJsonFields.URI
                         )
                 )
         );

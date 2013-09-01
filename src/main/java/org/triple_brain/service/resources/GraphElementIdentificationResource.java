@@ -3,9 +3,7 @@ package org.triple_brain.service.resources;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.FreebaseExternalFriendlyResource;
-import org.triple_brain.module.model.FriendlyResource;
-import org.triple_brain.module.model.FriendlyResourceFactory;
+import org.triple_brain.module.model.*;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.service.ResourceServiceUtils;
 
@@ -32,8 +30,12 @@ public class GraphElementIdentificationResource {
 
     @Inject
     FriendlyResourceFactory friendlyResourceFactory;
+
     @Inject
     ResourceServiceUtils resourceServiceUtils;
+
+    @Inject
+    BeforeAfterEachRestCall beforeAfterEachRestCall;
 
     private GraphElement graphElement;
 
@@ -63,8 +65,15 @@ public class GraphElementIdentificationResource {
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        updateImagesOfExternalResourceIfNecessary(friendlyResource);
-        updateDescriptionOfExternalResourceIfNecessary(friendlyResource);
+        FriendlyResourceCached friendlyResourceCached = FriendlyResourceCached.fromFriendlyResource(
+                friendlyResource
+        );
+        updateImagesOfExternalResourceIfNecessary(
+                friendlyResourceCached
+        );
+        updateDescriptionOfExternalResourceIfNecessary(
+                friendlyResourceCached
+        );
         return Response.ok().build();
     }
 
@@ -86,11 +95,11 @@ public class GraphElementIdentificationResource {
         return Response.ok().build();
     }
 
-    private void updateImagesOfExternalResourceIfNecessary(FriendlyResource friendlyResourceImpl) {
-        if (!friendlyResourceImpl.gotTheImages()) {
-            if (FreebaseExternalFriendlyResource.isFromFreebase(friendlyResourceImpl)) {
-                FreebaseExternalFriendlyResource freebaseResource = FreebaseExternalFriendlyResource.fromExternalResource(
-                        friendlyResourceImpl
+    private void updateImagesOfExternalResourceIfNecessary(FriendlyResourceCached friendlyResource) {
+        if (!friendlyResource.gotTheImages()) {
+            if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
+                FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
+                        friendlyResource
                 );
                 freebaseResource.getImages(
                         resourceServiceUtils.imagesUpdateHandler
@@ -99,11 +108,11 @@ public class GraphElementIdentificationResource {
         }
     }
 
-    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResource friendlyResourceImpl) {
-        if (!friendlyResourceImpl.gotADescription()) {
-            if (FreebaseExternalFriendlyResource.isFromFreebase(friendlyResourceImpl)) {
-                FreebaseExternalFriendlyResource freebaseResource = FreebaseExternalFriendlyResource.fromExternalResource(
-                        friendlyResourceImpl
+    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResourceCached friendlyResource) {
+        if (!friendlyResource.gotADescription()) {
+            if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
+                FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
+                        friendlyResource
                 );
                 freebaseResource.getDescription(
                         resourceServiceUtils.descriptionUpdateHandler

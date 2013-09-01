@@ -36,7 +36,7 @@ public class EdgeRestTestUtils {
 
     public URI uriOfEdge(JSONObject jsonObject){
         try{
-            return Uris.get(jsonObject.getString(EdgeJsonFields.ID));
+            return Uris.get(jsonObject.getString(EdgeJsonFields.URI));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
@@ -44,7 +44,7 @@ public class EdgeRestTestUtils {
 
     public ClientResponse updateEdgeLabel(String label, JSONObject edge)throws Exception{
         ClientResponse response = resource
-                .path(edge.getString(EdgeJsonFields.ID))
+                .path(edge.getString(EdgeJsonFields.URI))
                 .path("label")
                 .queryParam("label", label)
                 .cookie(authCookie)
@@ -55,7 +55,7 @@ public class EdgeRestTestUtils {
     public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception{
         JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
         ClientResponse response = resource
-                .path(edgeBetweenAAndB.getString(EdgeJsonFields.ID))
+                .path(edgeBetweenAAndB.getString(EdgeJsonFields.URI))
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
         return response;
