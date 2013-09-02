@@ -34,7 +34,7 @@ public class GraphManipulationRestTest extends RestTest {
                 "[fr]"
         );
         defaultAuthenticatedUser.password(DEFAULT_PASSWORD);
-        deleteAllVerticesFromSearch();
+        deleteAllDocumentsFromSearch();
         graphUtils().makeGraphHave3SerialVerticesWithLongLabels();
     }
 
@@ -76,7 +76,7 @@ public class GraphManipulationRestTest extends RestTest {
         return newUser;
     }
 
-    private void deleteAllVerticesFromSearch() {
+    private void deleteAllDocumentsFromSearch() {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
