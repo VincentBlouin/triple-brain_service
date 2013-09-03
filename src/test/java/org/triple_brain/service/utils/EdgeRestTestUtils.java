@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
+import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
 
 import javax.ws.rs.core.NewCookie;
@@ -36,7 +36,7 @@ public class EdgeRestTestUtils {
 
     public URI uriOfEdge(JSONObject jsonObject){
         try{
-            return Uris.get(jsonObject.getString(EdgeJsonFields.URI));
+            return Uris.get(jsonObject.getString(EdgeJson.URI));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
@@ -44,7 +44,7 @@ public class EdgeRestTestUtils {
 
     public ClientResponse updateEdgeLabel(String label, JSONObject edge)throws Exception{
         ClientResponse response = resource
-                .path(edge.getString(EdgeJsonFields.URI))
+                .path(edge.getString(EdgeJson.URI))
                 .path("label")
                 .queryParam("label", label)
                 .cookie(authCookie)
@@ -55,7 +55,7 @@ public class EdgeRestTestUtils {
     public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception{
         JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
         ClientResponse response = resource
-                .path(edgeBetweenAAndB.getString(EdgeJsonFields.URI))
+                .path(edgeBetweenAAndB.getString(EdgeJson.URI))
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
         return response;
@@ -92,10 +92,10 @@ public class EdgeRestTestUtils {
             for(int i = 0 ; i < edges.length(); i++){
                 JSONObject edge = edges.getJSONObject(i);
                 URI sourceVertexId = URI.create(
-                        edge.getString(EdgeJsonFields.SOURCE_VERTEX_ID)
+                        edge.getString(EdgeJson.SOURCE_VERTEX_ID)
                 );
                 URI destinationVertexId = URI.create(
-                        edge.getString(EdgeJsonFields.DESTINATION_VERTEX_ID)
+                        edge.getString(EdgeJson.DESTINATION_VERTEX_ID)
                 );
                 if(oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&
                         oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, destinationVertexId)){

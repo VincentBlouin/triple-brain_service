@@ -8,7 +8,7 @@ import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.scenarios.TestScenarios;
 import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
 import org.triple_brain.module.model.json.UserJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.module.search.SearchUtils;
@@ -189,16 +189,16 @@ public class ResourceForTests {
         JSONArray verticesCalledABAndCAsJsonArray = new JSONArray();
         verticesCalledABAndCAsJsonArray
                 .put(
-                        VertexJsonFields.toJson(
+                        VertexJson.toJson(
                                 verticesCalledABAndC.vertexA()
                         )
                 )
                 .put(
-                        VertexJsonFields.toJson(
+                        VertexJson.toJson(
                                 verticesCalledABAndC.vertexB()
                         ))
                 .put(
-                        VertexJsonFields.toJson(
+                        VertexJson.toJson(
                                 verticesCalledABAndC.vertexC()
                         ));
 

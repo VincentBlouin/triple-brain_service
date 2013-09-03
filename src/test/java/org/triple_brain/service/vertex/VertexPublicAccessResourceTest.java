@@ -2,7 +2,7 @@ package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Test;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import static org.junit.Assert.assertFalse;
@@ -42,7 +42,7 @@ public class VertexPublicAccessResourceTest extends GraphManipulationRestTest{
 
     private boolean isVertexAPublic(){
         return vertexA().optBoolean(
-                VertexJsonFields.IS_PUBLIC
+                VertexJson.IS_PUBLIC
         );
     }
 

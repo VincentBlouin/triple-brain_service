@@ -4,7 +4,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.json.drawn_graph.DrawnGraphJsonFields;
-import org.triple_brain.module.model.json.drawn_graph.DrawnVertexJsonFields;
+import org.triple_brain.module.model.json.drawn_graph.DrawnVertexJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import java.net.URI;
@@ -27,7 +27,7 @@ public class DrawnGraphResourceTest extends GraphManipulationRestTest {
                 DrawnGraphJsonFields.VERTICES
         ).optJSONObject(vertexAUri().toString());
         assertTrue(vertex.has(
-                DrawnVertexJsonFields.POSITION
+                DrawnVertexJson.POSITION
         ));
     }
 

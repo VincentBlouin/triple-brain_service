@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.VertexJson;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
@@ -77,7 +77,7 @@ public class VertexRestTestUtils {
 
     public URI uriOfVertex(JSONObject jsonObject){
         try{
-            return Uris.get(jsonObject.getString(VertexJsonFields.URI));
+            return Uris.get(jsonObject.getString(VertexJson.URI));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
@@ -86,7 +86,7 @@ public class VertexRestTestUtils {
     public ClientResponse updateVertexANote(String note) throws Exception {
         ClientResponse response = resource
                 .path(graphUtils().vertexAUri().getPath())
-                .path("note")
+                .path("comment")
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
                 .post(ClientResponse.class, note);
@@ -95,7 +95,7 @@ public class VertexRestTestUtils {
 
     public boolean vertexIsInVertices(JSONObject vertex, JSONObject vertices){
         try{
-            return vertices.has(vertex.getString(VertexJsonFields.URI));
+            return vertices.has(vertex.getString(VertexJson.URI));
         }catch(JSONException e){
             throw new RuntimeException(e);
         }

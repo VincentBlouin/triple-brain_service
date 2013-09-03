@@ -6,7 +6,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.graph.Vertex;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
 import org.triple_brain.module.model.suggestion.SuggestionFactory;
 
@@ -38,8 +38,8 @@ public class VertexSuggestionResource {
     @Path("/")
     public Response getSuggestions() {
         try {
-            JSONArray suggestions = VertexJsonFields.toJson(vertex)
-                    .getJSONArray(VertexJsonFields.SUGGESTIONS);
+            JSONArray suggestions = VertexJson.toJson(vertex)
+                    .getJSONArray(VertexJson.SUGGESTIONS);
             return Response.ok(suggestions).build();
         } catch (JSONException e) {
             throw new RuntimeException(e);

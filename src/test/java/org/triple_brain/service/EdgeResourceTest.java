@@ -5,10 +5,10 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
+import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -56,7 +56,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
             response.getHeaders().get("Location").get(0),
             is(
                 BASE_URI + edgeBetweenAAndC.getString(
-                        EdgeJsonFields.URI
+                        EdgeJson.URI
                 )
             )
         );
@@ -96,13 +96,13 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     public void can_update_label() throws Exception {
         JSONObject edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         assertThat(
-                edgeBetweenAAndB.getString(EdgeJsonFields.LABEL),
+                edgeBetweenAAndB.getString(EdgeJson.LABEL),
                 is(not("new edge label"))
         );
         updateEdgeLabelBetweenAAndB("new edge label");
         edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         assertThat(
-                edgeBetweenAAndB.getString(EdgeJsonFields.LABEL),
+                edgeBetweenAAndB.getString(EdgeJson.LABEL),
                 is("new edge label")
         );
     }

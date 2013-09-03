@@ -4,10 +4,10 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.json.ExternalResourceJson;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
-import org.triple_brain.module.model.json.graph.GraphElementJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.FriendlyResourceJson;
+import org.triple_brain.module.model.json.graph.EdgeJson;
+import org.triple_brain.module.model.json.graph.GraphElementJson;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
@@ -32,13 +32,13 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
 
     @Test
     public void can_add_an_additional_type_to_vertex() throws Exception {
-        JSONArray additionalTypes = vertexA().getJSONArray(VertexJsonFields.TYPES);
+        JSONArray additionalTypes = vertexA().getJSONArray(VertexJson.TYPES);
         assertThat(
                 additionalTypes.length(),
                 is(0)
         );
         addFoafPersonTypeToVertexA();
-        additionalTypes = vertexA().getJSONArray(VertexJsonFields.TYPES);
+        additionalTypes = vertexA().getJSONArray(VertexJson.TYPES);
         assertThat(
                 additionalTypes.length(),
                 is(greaterThan(0))
@@ -48,13 +48,13 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void can_remove_the_additional_type_of_vertex() throws Exception {
         addFoafPersonTypeToVertexA();
-        JSONArray additionalTypes = vertexA().getJSONArray(VertexJsonFields.TYPES);
+        JSONArray additionalTypes = vertexA().getJSONArray(VertexJson.TYPES);
         assertThat(
                 additionalTypes.length(),
                 is(greaterThan(0))
         );
         removeFoafPersonIdentificationToVertexA();
-        additionalTypes = vertexA().getJSONArray(VertexJsonFields.TYPES);
+        additionalTypes = vertexA().getJSONArray(VertexJson.TYPES);
         assertThat(
                 additionalTypes.length(),
                 is(0)
@@ -64,14 +64,14 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void can_add_same_as_to_an_edge() throws Exception {
         JSONObject edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
-        JSONArray sameAs = vertexA().getJSONArray(GraphElementJsonFields.SAME_AS);
+        JSONArray sameAs = vertexA().getJSONArray(GraphElementJson.SAME_AS);
         assertThat(
                 sameAs.length(),
                 is(0)
         );
         addCreatorPredicateToEdge(edgeBetweenAAndB);
         sameAs = edgeUtils().edgeBetweenAAndB().getJSONArray(
-                EdgeJsonFields.SAME_AS
+                EdgeJson.SAME_AS
         );
         assertThat(
                 sameAs.length(),
@@ -82,7 +82,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     private ClientResponse addCreatorPredicateToEdge(JSONObject edge) throws Exception {
         JSONObject creatorPredicate = new JSONObject()
                 .put(
-                        ExternalResourceJson.URI,
+                        FriendlyResourceJson.URI,
                         "http://purl.org/dc/terms/creator"
                 )
                 .put(
@@ -90,7 +90,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                         GraphElementIdentificationResource.identification_types.SAME_AS
                 );
         ClientResponse response = resource
-                .path(edge.optString(EdgeJsonFields.URI))
+                .path(edge.optString(EdgeJson.URI))
                 .path("identification")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     private ClientResponse addFoafPersonTypeToVertexA() throws Exception {
         JSONObject personType = new JSONObject()
                 .put(
-                        ExternalResourceJson.URI,
+                        FriendlyResourceJson.URI,
                         "http://xmlns.com/foaf/0.1/Person"
                 )
                 .put(

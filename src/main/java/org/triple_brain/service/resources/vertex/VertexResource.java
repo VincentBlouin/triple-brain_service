@@ -8,8 +8,8 @@ import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.EdgeJson;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
 
@@ -75,13 +75,13 @@ public class VertexResource {
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
             jsonCreatedStatement.put(
-                    SOURCE_VERTEX, VertexJsonFields.toJson(sourceVertex)
+                    SOURCE_VERTEX, VertexJson.toJson(sourceVertex)
             );
             jsonCreatedStatement.put(
-                    EDGE, EdgeJsonFields.toJson(createdEdge)
+                    EDGE, EdgeJson.toJson(createdEdge)
             );
             jsonCreatedStatement.put(
-                    END_VERTEX, VertexJsonFields.toJson(createdVertex)
+                    END_VERTEX, VertexJson.toJson(createdVertex)
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -131,18 +131,18 @@ public class VertexResource {
     }
 
     @POST
-    @Path("{shortId}/note")
+    @Path("{shortId}/comment")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateVertexNote(
+    public Response updateVertexComments(
             @PathParam("shortId") String shortId,
-            String note
+            String comment
     ) {
         URI vertexId = uriFromShortId(shortId);
         Vertex vertex = userGraph.vertexWithUri(
                 vertexId
         );
-        vertex.note(note);
+        vertex.comment(comment);
         graphIndexer.indexVertex(vertex);
         return Response.ok().build();
     }

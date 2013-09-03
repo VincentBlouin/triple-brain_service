@@ -3,7 +3,7 @@ package org.triple_brain.service.resources.test;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
+import org.triple_brain.module.model.json.graph.EdgeJson;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class EdgeResourceTestUtils {
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
         Edge edge = userGraph.edgeWithUri(new URI(edgeId));
-        return Response.ok(EdgeJsonFields.toJson(edge)).build();
+        return Response.ok(EdgeJson.toJson(edge)).build();
     }
 
 }

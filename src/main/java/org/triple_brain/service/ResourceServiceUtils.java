@@ -2,7 +2,7 @@ package org.triple_brain.service;
 
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.*;
-import org.triple_brain.module.model.json.ExternalResourceJson;
+import org.triple_brain.module.model.json.FriendlyResourceJson;
 
 import javax.inject.Inject;
 import java.util.Observable;
@@ -44,7 +44,7 @@ public class ResourceServiceUtils {
                     "/identification/" +
                             Uris.encodeURL(updatedResource.uri()) +
                             "/updated",
-                    ExternalResourceJson.get(
+                    FriendlyResourceJson.toJson(
                             updatedResource
                     )
             );
@@ -63,7 +63,7 @@ public class ResourceServiceUtils {
                 updatedResource = friendlyResourceFactory.createOrLoadFromUri(
                         resourceCached.uri()
                 );
-                updatedResource.description(
+                updatedResource.comment(
                         description
                 );
             } catch (Exception e) {
@@ -76,7 +76,7 @@ public class ResourceServiceUtils {
                     "/identification/" +
                             Uris.encodeURL(updatedResource.uri()) +
                             "/updated",
-                    ExternalResourceJson.get(
+                    FriendlyResourceJson.toJson(
                             updatedResource
                     )
             );

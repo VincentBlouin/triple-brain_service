@@ -6,8 +6,8 @@ import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.EdgeJson;
+import org.triple_brain.module.model.json.graph.VertexJson;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -40,7 +40,7 @@ public class VertexResourceTestUtils {
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
         Vertex vertex = userGraph.vertexWithUri(new URI(vertexId));
-        return Response.ok(VertexJsonFields.toJson(vertex)).build();
+        return Response.ok(VertexJson.toJson(vertex)).build();
     }
 
     @Path("{vertexId}/connected_edges")
@@ -51,7 +51,7 @@ public class VertexResourceTestUtils {
         JSONArray edges = new JSONArray();
         for(Edge edge : vertex.connectedEdges()){
             edges.put(
-                    EdgeJsonFields.toJson(
+                    EdgeJson.toJson(
                             edge
                     )
             );

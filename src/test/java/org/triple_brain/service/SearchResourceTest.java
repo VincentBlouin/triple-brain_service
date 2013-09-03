@@ -16,8 +16,8 @@ import javax.ws.rs.core.Response;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.LABEL;
-import static org.triple_brain.module.model.json.graph.VertexJsonFields.NOTE;
+import static org.triple_brain.module.model.json.FriendlyResourceJson.COMMENT;
+import static org.triple_brain.module.model.json.graph.VertexJson.LABEL;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -68,14 +68,14 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         JSONObject resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0);
-        assertThat(resultsForA.getString(NOTE), is(""));
+        assertThat(resultsForA.getString(COMMENT), is(""));
         vertexUtils().updateVertexANote(
                 "A description"
         );
         resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
         ).getEntity(JSONArray.class).getJSONObject(0);
-        assertThat(resultsForA.getString(NOTE), is("A description"));
+        assertThat(resultsForA.getString(COMMENT), is("A description"));
     }
 
     @Test

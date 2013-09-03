@@ -91,7 +91,7 @@ public class GraphElementIdentificationResource {
         FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
                 URI.create(friendlyResourceUri)
         );
-        graphElement.removeFriendlyResource(friendlyResource);
+        graphElement.removeIdentification(friendlyResource);
         return Response.ok().build();
     }
 
@@ -109,7 +109,7 @@ public class GraphElementIdentificationResource {
     }
 
     private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResourceCached friendlyResource) {
-        if (!friendlyResource.gotADescription()) {
+        if (!friendlyResource.gotComments()) {
             if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
                 FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
                         friendlyResource

@@ -6,7 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.json.SuggestionJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
@@ -22,13 +22,13 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_add_suggestions_to_vertex() throws Exception {
-        JSONArray suggestions = vertexA().getJSONArray(VertexJsonFields.SUGGESTIONS);
+        JSONArray suggestions = vertexA().getJSONArray(VertexJson.SUGGESTIONS);
         assertThat(
                 suggestions.length(),
                 is(0)
         );
         addStartDateSuggestionToVertexA();
-        suggestions = vertexA().getJSONArray(VertexJsonFields.SUGGESTIONS);
+        suggestions = vertexA().getJSONArray(VertexJson.SUGGESTIONS);
         assertThat(
                 suggestions.length(),
                 is(greaterThan(0))

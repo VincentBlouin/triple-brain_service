@@ -6,8 +6,8 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.json.graph.EdgeJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJsonFields;
+import org.triple_brain.module.model.json.graph.EdgeJson;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
@@ -50,18 +50,18 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         JSONObject subject = createdStatement.getJSONObject(SOURCE_VERTEX);
-        assertThat(subject.getString(VertexJsonFields.URI), is(vertexAUri().toString()));
+        assertThat(subject.getString(VertexJson.URI), is(vertexAUri().toString()));
         JSONObject newEdge = edgeUtils().edgeWithUri(
                 Uris.get(
                         createdStatement.getJSONObject(EDGE).getString(
-                                EdgeJsonFields.URI
+                                EdgeJson.URI
                         )
                 )
         );
         JSONObject newVertex = vertexUtils().vertexWithUri(
                 Uris.get(
                         createdStatement.getJSONObject(END_VERTEX).getString(
-                                VertexJsonFields.URI
+                                VertexJson.URI
                         )
                 )
         );
@@ -116,19 +116,19 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_update_label() throws Exception {
-        String vertexALabel = vertexA().getString(VertexJsonFields.LABEL);
+        String vertexALabel = vertexA().getString(VertexJson.LABEL);
         assertThat(vertexALabel, is(not("new vertex label")));
         updateVertexALabelUsingRest("new vertex label");
-        vertexALabel = vertexA().getString(VertexJsonFields.LABEL);
+        vertexALabel = vertexA().getString(VertexJson.LABEL);
         assertThat(vertexALabel, is("new vertex label"));
     }
 
     @Test
     public void can_update_note() throws Exception {
-        String vertexANote = vertexA().getString(VertexJsonFields.NOTE);
+        String vertexANote = vertexA().getString(VertexJson.COMMENT);
         assertThat(vertexANote, is(not("some note")));
         vertexUtils().updateVertexANote("some note");
-        vertexANote = vertexA().getString(VertexJsonFields.NOTE);
+        vertexANote = vertexA().getString(VertexJson.COMMENT);
         assertThat(vertexANote, is("some note"));
     }
 
