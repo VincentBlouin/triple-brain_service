@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 
 /*
@@ -73,6 +74,7 @@ public class VertexImageResource {
     @Path("/")
     public Response add(@Context HttpServletRequest request) {
         Set<Image> uploadedImages = new HashSet<>();
+        String imageBaseUrl = "";
         if (ServletFileUpload.isMultipartContent(request)) {
             final FileItemFactory factory = new DiskFileItemFactory();
             final ServletFileUpload fileUpload = new ServletFileUpload(factory);
@@ -95,15 +97,23 @@ public class VertexImageResource {
                         );
                         System.out.println("Saving the file: " + savedFile.getName());
                         item.write(savedFile);
-                        String url = request.getRequestURL() + "/" + imageId + "/";
+                        imageBaseUrl = request.getRequestURL() + "/" + imageId + "/";
                         uploadedImages.add(
                                 Image.withUrlForSmallAndBigger(
-                                        Urls.get(url + "/small"),
-                                        Urls.get(url + "big")
+                                        Urls.get(imageBaseUrl + "small"),
+                                        Urls.get(imageBaseUrl + "big")
                                 )
                         );
                     }
                 }
+                vertex.addImages(
+                        uploadedImages
+                );
+                return Response.created(
+                       URI.create(
+                               imageBaseUrl
+                       )
+                ).build();
             } catch (FileUploadException fue) {
                 fue.printStackTrace();
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -112,10 +122,9 @@ public class VertexImageResource {
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
         }
-        vertex.addImages(
-                uploadedImages
+        throw new WebApplicationException(
+                Response.Status.INTERNAL_SERVER_ERROR
         );
-        return Response.ok().build();
     }
 
     private byte[] resizedSmallImage(File image) {
