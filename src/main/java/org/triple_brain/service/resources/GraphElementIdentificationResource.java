@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.*;
 import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.inject.Inject;
@@ -30,6 +31,9 @@ public class GraphElementIdentificationResource {
 
     @Inject
     FriendlyResourceFactory friendlyResourceFactory;
+
+    @Inject
+    GraphIndexer graphIndexer;
 
     @Inject
     ResourceServiceUtils resourceServiceUtils;
@@ -65,6 +69,10 @@ public class GraphElementIdentificationResource {
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
+        graphIndexer.updateGraphElementIndex(
+                graphElement,
+                graphElement.owner()
+        );
         FriendlyResourceCached friendlyResourceCached = FriendlyResourceCached.fromFriendlyResource(
                 friendlyResource
         );
@@ -90,6 +98,10 @@ public class GraphElementIdentificationResource {
         }
         FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
                 URI.create(friendlyResourceUri)
+        );
+        graphIndexer.updateGraphElementIndex(
+                graphElement,
+                graphElement.owner()
         );
         graphElement.removeIdentification(friendlyResource);
         return Response.ok().build();
