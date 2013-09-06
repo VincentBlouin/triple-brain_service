@@ -181,7 +181,8 @@ public class VertexResource {
         public GraphElementIdentificationResource getVertexIdentificationResource (@PathParam("shortId")String
         shortId){
             return graphElementIdentificationResourceFactory.forGraphElement(
-                    vertexFromShortId(shortId)
+                    vertexFromShortId(shortId),
+                    true
             );
         }
 

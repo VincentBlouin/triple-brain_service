@@ -124,7 +124,8 @@ public class EdgeResource {
     @Path("{shortId}/identification")
     public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
         return graphElementIdentificationResourceFactory.forGraphElement(
-                edgeFromShortId(shortId)
+                edgeFromShortId(shortId),
+                false
         );
     }
 
