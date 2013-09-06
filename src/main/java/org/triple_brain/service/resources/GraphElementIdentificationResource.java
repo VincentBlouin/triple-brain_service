@@ -4,7 +4,9 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.*;
+import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ResourceServiceUtils;
 
@@ -42,12 +44,15 @@ public class GraphElementIdentificationResource {
     BeforeAfterEachRestCall beforeAfterEachRestCall;
 
     private GraphElement graphElement;
+    private boolean isVertex;
 
     @AssistedInject
     public GraphElementIdentificationResource(
-            @Assisted GraphElement graphElement
+            @Assisted GraphElement graphElement,
+            @Assisted boolean isVertex
     ) {
         this.graphElement = graphElement;
+        this.isVertex = isVertex;
     }
 
     @POST
@@ -69,10 +74,7 @@ public class GraphElementIdentificationResource {
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        graphIndexer.updateGraphElementIndex(
-                graphElement,
-                graphElement.owner()
-        );
+        reindexGraphElement();
         FriendlyResourceCached friendlyResourceCached = FriendlyResourceCached.fromFriendlyResource(
                 friendlyResource
         );
@@ -99,10 +101,7 @@ public class GraphElementIdentificationResource {
         FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
                 URI.create(friendlyResourceUri)
         );
-        graphIndexer.updateGraphElementIndex(
-                graphElement,
-                graphElement.owner()
-        );
+        reindexGraphElement();
         graphElement.removeIdentification(friendlyResource);
         return Response.ok().build();
     }
@@ -130,6 +129,20 @@ public class GraphElementIdentificationResource {
                         resourceServiceUtils.descriptionUpdateHandler
                 );
             }
+        }
+    }
+
+    private void reindexGraphElement(){
+        if(isVertex){
+            graphIndexer.indexVertexOfUser(
+                    (Vertex) graphElement,
+                    graphElement.owner()
+            );
+        }else{
+            graphIndexer.indexRelationOfUser(
+                    (Edge) graphElement,
+                    graphElement.owner()
+            );
         }
     }
 }
