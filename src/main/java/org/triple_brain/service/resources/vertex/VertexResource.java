@@ -59,6 +59,15 @@ public class VertexResource {
     }
 
     @POST
+    @Path("/")
+    public Response createVertex(){
+        Vertex newVertex = userGraph.createVertex();
+        return Response.ok()
+                .entity(VertexJson.toJson(newVertex))
+                .build();
+    }
+
+    @POST
     @Path("/{sourceVertexShortId}")
     public Response addVertexAndEdgeToSourceVertex(
             @Context HttpServletRequest request
