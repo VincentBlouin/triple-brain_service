@@ -34,20 +34,20 @@ public class ResourceServiceUtils {
                 updatedResource.addImages(
                         images
                 );
+                BayeuxInitializer.notificationService.notifyChannelMessage(
+                        "/identification/" +
+                                Uris.encodeURL(updatedResource.uri()) +
+                                "/updated",
+                        FriendlyResourceJson.toJson(
+                                updatedResource
+                        )
+                );
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             finally{
                 beforeAfterEachRestCall.after(state);
             }
-            BayeuxInitializer.notificationService.notifyChannelMessage(
-                    "/identification/" +
-                            Uris.encodeURL(updatedResource.uri()) +
-                            "/updated",
-                    FriendlyResourceJson.toJson(
-                            updatedResource
-                    )
-            );
         }
     };
 
@@ -66,20 +66,20 @@ public class ResourceServiceUtils {
                 updatedResource.comment(
                         description
                 );
+                BayeuxInitializer.notificationService.notifyChannelMessage(
+                        "/identification/" +
+                                Uris.encodeURL(updatedResource.uri()) +
+                                "/updated",
+                        FriendlyResourceJson.toJson(
+                                updatedResource
+                        )
+                );
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             finally{
                 beforeAfterEachRestCall.after(state);
             }
-            BayeuxInitializer.notificationService.notifyChannelMessage(
-                    "/identification/" +
-                            Uris.encodeURL(updatedResource.uri()) +
-                            "/updated",
-                    FriendlyResourceJson.toJson(
-                            updatedResource
-                    )
-            );
         }
     };
 }

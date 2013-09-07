@@ -26,7 +26,7 @@ import static org.triple_brain.module.common_utils.Uris.decodeURL;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GraphElementIdentificationResource {
     public static enum identification_types {
-        SAME_AS, TYPE
+        SAME_AS, TYPE, GENERIC
     }
 
     public static final String IDENTIFICATION_TYPE_STRING = "type";
@@ -69,6 +69,10 @@ public class GraphElementIdentificationResource {
             );
         } else if (type.equalsIgnoreCase(identification_types.TYPE.name())) {
             graphElement.addType(
+                    friendlyResource
+            );
+        } else if(type.equalsIgnoreCase(identification_types.GENERIC.name())){
+            graphElement.addGenericIdentification(
                     friendlyResource
             );
         } else {
