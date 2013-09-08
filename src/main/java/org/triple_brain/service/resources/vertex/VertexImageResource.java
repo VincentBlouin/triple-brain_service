@@ -26,6 +26,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /*
@@ -54,18 +56,30 @@ public class VertexImageResource {
     @Path("/{imageId}/small")
     @Produces("application/octet-stream")
     public byte[] getSmall(@PathParam("imageId") String imageId) {
-        return resizedSmallImage(
-                new File(IMAGES_FOLDER_PATH + "/" + imageId)
-        );
+        try{
+            return Files.readAllBytes(
+                    Paths.get(
+                            IMAGES_FOLDER_PATH + "/" + imageId  + "_small"
+                    )
+            );
+        }catch(IOException e){
+            throw new RuntimeException(e);
+        }
     }
 
     @GET
     @Produces("application/octet-stream")
     @Path("/{imageId}/big")
     public byte[] getBig(@PathParam("imageId") String imageId) {
-        return resizedBigImage(
-                new File(IMAGES_FOLDER_PATH + "/" + imageId)
-        );
+        try{
+            return Files.readAllBytes(
+                    Paths.get(
+                            IMAGES_FOLDER_PATH + "/" + imageId  + "_big"
+                    )
+            );
+        }catch(IOException e){
+            throw new RuntimeException(e);
+        }
     }
 
     @POST
@@ -97,6 +111,8 @@ public class VertexImageResource {
                         );
                         System.out.println("Saving the file: " + savedFile.getName());
                         item.write(savedFile);
+                        saveSmallImage(savedFile);
+                        saveBigImage(savedFile);
                         imageBaseUrl = request.getRequestURL() + "/" + imageId + "/";
                         uploadedImages.add(
                                 Image.withUrlForSmallAndBigger(
@@ -125,6 +141,32 @@ public class VertexImageResource {
         throw new WebApplicationException(
                 Response.Status.INTERNAL_SERVER_ERROR
         );
+    }
+
+    private void saveSmallImage(File rawImageFile){
+        try{
+            Files.write(
+                    Paths.get(
+                            rawImageFile.getAbsolutePath() + "_small"
+                    ),
+                    resizedSmallImage(rawImageFile)
+            );
+        }catch(IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void saveBigImage(File rawImageFile){
+        try{
+            Files.write(
+                    Paths.get(
+                            rawImageFile.getAbsolutePath() + "_big"
+                    ),
+                    resizedBigImage(rawImageFile)
+            );
+        }catch(IOException e){
+            throw new RuntimeException(e);
+        }
     }
 
     private byte[] resizedSmallImage(File image) {
