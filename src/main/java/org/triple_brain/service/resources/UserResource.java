@@ -87,12 +87,12 @@ public class UserResource{
     }
 
     @Path("{username}/admin")
-    public SearchResource adminResource(
+    public AdminResource adminResource(
             @PathParam("username") String username
     ) {
         if(isUserNameTheOneInSession(username) && username.equals("vince")){
             return injector.getInstance(
-                    SearchResource.class
+                    AdminResource.class
             );
         }
         throw new WebApplicationException(
