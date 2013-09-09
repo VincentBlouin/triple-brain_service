@@ -78,9 +78,8 @@ public class ResourceForTests {
         UserGraph userGraph = graphFactory.loadForUser(
                 user
         );
-        graphIndexer.indexVertexOfUser(
-                userGraph.defaultVertex(),
-                user
+        graphIndexer.indexVertex(
+                userGraph.defaultVertex()
         );
 //        addALotOfVerticesToVertex(
 //                userGraph.defaultVertex()
@@ -151,12 +150,11 @@ public class ResourceForTests {
         );
         SubGraph subGraph = userGraph.graphWithDefaultVertexAndDepth(10);
         for (Vertex vertex : subGraph.vertices()) {
-            graphIndexer.indexVertexOfUser(vertex, currentUser);
+            graphIndexer.indexVertex(vertex);
         }
         for (Edge edge : subGraph.edges()) {
-            graphIndexer.indexRelationOfUser(
-                    edge,
-                    currentUser
+            graphIndexer.indexRelation(
+                    edge
             );
         }
         return Response.ok().build();

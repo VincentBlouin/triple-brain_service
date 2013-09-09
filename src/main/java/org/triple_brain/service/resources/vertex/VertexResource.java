@@ -22,7 +22,6 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
-import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
 /**
  * Copyright Mozilla Public License 1.1
@@ -77,9 +76,8 @@ public class VertexResource {
         ));
         Edge createdEdge = sourceVertex.addVertexAndRelation();
         Vertex createdVertex = createdEdge.destinationVertex();
-        graphIndexer.indexVertexOfUser(
-                createdVertex,
-                userFromSession(request.getSession())
+        graphIndexer.indexVertex(
+                createdVertex
         );
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
@@ -132,9 +130,8 @@ public class VertexResource {
         );
         vertex.label(label);
 
-        graphIndexer.indexVertexOfUser(
-                vertex,
-                userGraph.user()
+        graphIndexer.indexVertex(
+                vertex
         );
         return Response.ok().build();
     }
@@ -171,7 +168,8 @@ public class VertexResource {
                 @PathParam("shortId")String shortId,
                 @PathParam("depthOfSubVertices")Integer depth
         ){
-            return vertexSurroundGraphResourceFactory.ofCenterVertexWithDepth(
+            return vertexSurroundGraphResourceFactory.ofUserGraphCenterVertexAndDepth(
+                    userGraph,
                     vertexFromShortId(shortId),
                     depth
             );

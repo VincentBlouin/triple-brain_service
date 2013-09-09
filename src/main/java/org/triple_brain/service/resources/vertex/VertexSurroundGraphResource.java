@@ -28,12 +28,15 @@ public class VertexSurroundGraphResource {
 
     private Vertex centerVertex;
     private Integer depthOfSubVertices;
+    private UserGraph userGraph;
 
     @AssistedInject
     public VertexSurroundGraphResource(
+            @Assisted UserGraph userGraph,
             @Assisted Vertex centerVertex,
             @Assisted Integer depth
     ) {
+        this.userGraph = userGraph;
         this.centerVertex = centerVertex;
         this.depthOfSubVertices = depth;
     }
@@ -56,9 +59,6 @@ public class VertexSurroundGraphResource {
     }
 
     private SubGraph getGraph(){
-        UserGraph userGraph = graphFactory.loadForUser(
-                centerVertex.owner()
-        );
         SubGraph graph = userGraph.graphWithDepthAndCenterVertexId(
                 depthOfSubVertices,
                 centerVertex.uri()
@@ -85,7 +85,7 @@ public class VertexSurroundGraphResource {
     }
 
     private boolean canAccessVertex(Vertex vertex) {
-        return vertex.owner().equals(vertex.owner()) ||
+        return centerVertex.ownerUsername().equals(vertex.ownerUsername()) ||
                 vertex.isPublic();
     }
 }

@@ -114,9 +114,8 @@ public class EdgeResource {
         graphIndexer.indexVertex(
                 edge.destinationVertex()
         );
-        graphIndexer.indexRelationOfUser(
-                edge,
-                userGraph.user()
+        graphIndexer.indexRelation(
+                edge
         );
         return Response.ok().build();
     }

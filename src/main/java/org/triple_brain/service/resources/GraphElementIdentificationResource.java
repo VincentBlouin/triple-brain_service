@@ -138,14 +138,12 @@ public class GraphElementIdentificationResource {
 
     private void reindexGraphElement(){
         if(isVertex){
-            graphIndexer.indexVertexOfUser(
-                    (Vertex) graphElement,
-                    graphElement.owner()
+            graphIndexer.indexVertex(
+                    (Vertex) graphElement
             );
         }else{
-            graphIndexer.indexRelationOfUser(
-                    (Edge) graphElement,
-                    graphElement.owner()
+            graphIndexer.indexRelation(
+                    (Edge) graphElement
             );
         }
     }

@@ -66,7 +66,7 @@ public class UserResource{
     public GraphResource graphResource(
             @PathParam("username") String username
     ) {
-        if (isAllowed(username, request)) {
+        if (isUserNameTheOneInSession(username)) {
             return graphResourceFactory.withUser(
                     userFromSession(request.getSession())
             );
@@ -78,7 +78,7 @@ public class UserResource{
     public SearchResource searchResource(
             @PathParam("username") String username
     ) {
-        if (isAllowed(username, request)) {
+        if (isUserNameTheOneInSession(username)) {
             return searchResourceFactory.withUser(
                     userFromSession(request.getSession())
             );
@@ -86,6 +86,19 @@ public class UserResource{
         throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
 
+    @Path("{username}/admin")
+    public SearchResource adminResource(
+            @PathParam("username") String username
+    ) {
+        if(isUserNameTheOneInSession(username) && username.equals("vince")){
+            return injector.getInstance(
+                    SearchResource.class
+            );
+        }
+        throw new WebApplicationException(
+                Response.Status.FORBIDDEN
+        );
+    }
     @Path("session")
     public UserSessionResource sessionResource(){
         return injector.getInstance(
@@ -135,9 +148,8 @@ public class UserResource{
         userRepository.save(user);
         graphFactory.createForUser(user);
         UserGraph userGraph = graphFactory.loadForUser(user);
-        graphIndexer.indexVertexOfUser(
-                userGraph.defaultVertex(),
-                user
+        graphIndexer.indexVertex(
+                userGraph.defaultVertex()
         );
         UserSessionResource.authenticateUserInSession(
                 user, request.getSession()
@@ -155,7 +167,7 @@ public class UserResource{
         ).build();
     }
 
-    private Boolean isAllowed(String userName, HttpServletRequest request) {
+    private Boolean isUserNameTheOneInSession(String userName) {
         if(!isUserInSession(request.getSession())){
             return false;
         }
