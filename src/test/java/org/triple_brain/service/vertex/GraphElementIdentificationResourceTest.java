@@ -13,6 +13,7 @@ import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -79,6 +80,18 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
+    @Test
+    public void if_invalid_identification_it_throws_an_exception() throws Exception {
+        ClientResponse clientResponse = addIdentificationToGraphElementWithUri(
+                new JSONObject(),
+                vertexAUri()
+        );
+        assertThat(
+                clientResponse.getStatus(),
+                is(Response.Status.NOT_ACCEPTABLE.getStatusCode())
+        );
+    }
+
     private ClientResponse addCreatorPredicateToEdge(JSONObject edge) throws Exception {
         JSONObject creatorPredicate = new JSONObject()
                 .put(
@@ -89,13 +102,10 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                         GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
                         GraphElementIdentificationResource.identification_types.SAME_AS
                 );
-        ClientResponse response = resource
-                .path(edge.optString(EdgeJson.URI))
-                .path("identification")
-                .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, creatorPredicate);
-        return response;
+        return addIdentificationToGraphElementWithUri(
+                creatorPredicate,
+                URI.create(edge.optString(EdgeJson.URI))
+        );
     }
 
     private ClientResponse addFoafPersonTypeToVertexA() throws Exception {
@@ -108,12 +118,19 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                         GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
                         GraphElementIdentificationResource.identification_types.TYPE
                 );
+        return addIdentificationToGraphElementWithUri(
+                personType,
+                vertexAUri()
+        );
+    }
+
+    private ClientResponse addIdentificationToGraphElementWithUri(JSONObject identification, URI graphElementUri){
         ClientResponse response = resource
-                .path(vertexAUri().getPath())
+                .path(graphElementUri.getPath())
                 .path("identification")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, personType);
+                .post(ClientResponse.class, identification);
         return response;
     }
 

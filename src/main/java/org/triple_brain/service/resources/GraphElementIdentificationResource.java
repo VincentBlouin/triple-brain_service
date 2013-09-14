@@ -7,6 +7,7 @@ import org.triple_brain.module.model.*;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.validator.FriendlyResourceValidator;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ResourceServiceUtils;
 
@@ -59,6 +60,12 @@ public class GraphElementIdentificationResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response add(JSONObject identification) {
+        FriendlyResourceValidator validator = new FriendlyResourceValidator();
+        if(!validator.validate(identification).isEmpty()){
+            throw new WebApplicationException(
+                    Response.Status.NOT_ACCEPTABLE
+            );
+        }
         FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingJson(
                 identification
         );
