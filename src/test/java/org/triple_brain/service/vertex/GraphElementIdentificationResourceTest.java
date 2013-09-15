@@ -32,6 +32,15 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     @Test
+    public void status_is_ok_when_adding_identification()throws Exception{
+        ClientResponse clientResponse = addFoafPersonTypeToVertexA();
+        assertThat(
+                clientResponse.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+
+    @Test
     public void can_add_an_additional_type_to_vertex() throws Exception {
         JSONArray additionalTypes = vertexA().getJSONArray(VertexJson.TYPES);
         assertThat(
