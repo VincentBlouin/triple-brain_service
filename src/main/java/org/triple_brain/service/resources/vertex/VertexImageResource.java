@@ -8,7 +8,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.imgscalr.Scalr;
-import org.triple_brain.module.common_utils.Urls;
 import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.graph.Vertex;
@@ -88,7 +87,7 @@ public class VertexImageResource {
     @Path("/")
     public Response add(@Context HttpServletRequest request) {
         Set<Image> uploadedImages = new HashSet<>();
-        String imageBaseUrl = "";
+        String imageId = "";
         if (ServletFileUpload.isMultipartContent(request)) {
             final FileItemFactory factory = new DiskFileItemFactory();
             final ServletFileUpload fileUpload = new ServletFileUpload(factory);
@@ -103,7 +102,7 @@ public class VertexImageResource {
                     final Iterator iter = items.iterator();
                     while (iter.hasNext()) {
                         final FileItem item = (FileItem) iter.next();
-                        String imageId = UUID.randomUUID().toString();
+                        imageId = UUID.randomUUID().toString();
                         final File savedFile = new File(
                                 IMAGES_FOLDER_PATH
                                         + File.separator +
@@ -113,11 +112,11 @@ public class VertexImageResource {
                         item.write(savedFile);
                         saveSmallImage(savedFile);
                         saveBigImage(savedFile);
-                        imageBaseUrl = request.getRequestURL() + "/" + imageId + "/";
+                        String imageBaseUrl = request.getRequestURI() + "/" + imageId + "/";
                         uploadedImages.add(
-                                Image.withUrlForSmallAndBigger(
-                                        Urls.get(imageBaseUrl + "small"),
-                                        Urls.get(imageBaseUrl + "big")
+                                Image.withUriForSmallAndBigger(
+                                        URI.create(imageBaseUrl + "small"),
+                                        URI.create(imageBaseUrl + "big")
                                 )
                         );
                     }
@@ -127,7 +126,7 @@ public class VertexImageResource {
                 );
                 return Response.created(
                        URI.create(
-                               imageBaseUrl
+                               imageId
                        )
                 ).build();
             } catch (FileUploadException fue) {
