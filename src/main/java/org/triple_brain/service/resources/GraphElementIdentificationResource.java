@@ -100,7 +100,7 @@ public class GraphElementIdentificationResource {
 
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("{friendly_resource_uri}")
+    @Path("/{friendly_resource_uri}")
     public Response removeFriendlyResource(
             @PathParam("friendly_resource_uri") String friendlyResourceUri
     ) {
@@ -112,8 +112,8 @@ public class GraphElementIdentificationResource {
         FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
                 URI.create(friendlyResourceUri)
         );
-        reindexGraphElement();
         graphElement.removeIdentification(friendlyResource);
+        reindexGraphElement();
         return Response.ok().build();
     }
 
