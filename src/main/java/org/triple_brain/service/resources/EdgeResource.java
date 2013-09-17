@@ -129,13 +129,11 @@ public class EdgeResource {
     }
 
     private Edge edgeFromShortId(String shortId){
-        Edge edge = userGraph.edgeWithUri(
+        return userGraph.edgeWithUri(
                 edgeUriFromShortId(
                         shortId
                 )
         );
-        System.out.println(edge.label());
-        return edge;
     }
 
     private URI edgeUriFromShortId(String shortId){

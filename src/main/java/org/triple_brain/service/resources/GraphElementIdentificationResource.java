@@ -15,10 +15,6 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-
-import static org.triple_brain.module.common_utils.Uris.decodeURL;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -98,19 +94,23 @@ public class GraphElementIdentificationResource {
         return Response.ok().build();
     }
 
-    @DELETE
+    /*todo It should be @DELETE
+     but sending the uri of identification as path param was returning 404 in production ???
+    */
+    @POST
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/{friendly_resource_uri}")
+    @Path("/delete")
     public Response removeFriendlyResource(
-            @PathParam("friendly_resource_uri") String friendlyResourceUri
+            JSONObject friendlyResourceAsJson
     ) {
-        try {
-            friendlyResourceUri = decodeURL(friendlyResourceUri);
-        } catch (UnsupportedEncodingException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        FriendlyResourceValidator validator = new FriendlyResourceValidator();
+        if(!validator.validate(friendlyResourceAsJson).isEmpty()){
+            throw new WebApplicationException(
+                    Response.Status.NOT_ACCEPTABLE
+            );
         }
-        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
-                URI.create(friendlyResourceUri)
+        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingJson(
+                friendlyResourceAsJson
         );
         graphElement.removeIdentification(friendlyResource);
         reindexGraphElement();

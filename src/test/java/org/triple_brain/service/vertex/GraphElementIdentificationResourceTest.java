@@ -18,7 +18,6 @@ import java.net.URI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -144,13 +143,18 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse removeFoafPersonIdentificationToVertexA() throws Exception {
+        JSONObject identification = new JSONObject()
+                .put(
+                        FriendlyResourceJson.URI,
+                        "http://xmlns.com/foaf/0.1/Person"
+                );
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("identification")
-                .path(encodeURL("http://xmlns.com/foaf/0.1/Person"))
+                .path("delete")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
-                .delete(ClientResponse.class);
+                .post(ClientResponse.class, identification);
         return response;
     }
 }
