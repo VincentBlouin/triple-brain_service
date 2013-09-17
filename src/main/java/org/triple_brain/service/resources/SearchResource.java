@@ -34,7 +34,7 @@ public class SearchResource {
     @GET
     @Path("own_vertices/auto_complete/{search_text}")
     public Response searchOwnVerticesForAutoComplete(
-            @PathParam("search_text") String searchText
+            @PathParam("search_text") @Encoded String searchText
     ){
         try{
             return Response.ok(
@@ -50,7 +50,7 @@ public class SearchResource {
     @GET
     @Path("vertices/auto_complete/{search_text}")
     public Response searchVerticesForAutoComplete(
-            @PathParam("search_text") String searchText
+            @PathParam("search_text") @Encoded String searchText
     ){
         try{
             return Response.ok(
@@ -66,7 +66,7 @@ public class SearchResource {
     @GET
     @Path("relations/auto_complete/{search_text}")
     public Response searchRelationsForAutoComplete(
-            @PathParam("search_text") String searchText
+            @PathParam("search_text") @Encoded String searchText
     ){
         try{
             return Response.ok(
