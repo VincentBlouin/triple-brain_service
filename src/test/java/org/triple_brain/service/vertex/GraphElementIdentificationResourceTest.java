@@ -143,18 +143,15 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse removeFoafPersonIdentificationToVertexA() throws Exception {
-        JSONObject identification = new JSONObject()
-                .put(
-                        FriendlyResourceJson.URI,
-                        "http://xmlns.com/foaf/0.1/Person"
-                );
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("identification")
-                .path("delete")
+                .queryParam(
+                        "uri",
+                        "http://xmlns.com/foaf/0.1/Person"
+                )
                 .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, identification);
+                .delete(ClientResponse.class);
         return response;
     }
 }

@@ -43,6 +43,7 @@ public class VertexSurroundGraphResource {
 
     @GET
     @Path("/")
+    @GraphTransactional
     public Response get() {
         return Response.ok(
                 GraphJsonFields.toJson(
@@ -52,6 +53,7 @@ public class VertexSurroundGraphResource {
     }
 
     @Path("/drawn")
+    @GraphTransactional
     public DrawnGraphResource getDrawnGraphResource(){
         return drawnGraphResourceFactory.ofGraph(
                 getGraph()

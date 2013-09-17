@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.Edge;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.json.graph.EdgeJson;
@@ -58,8 +59,9 @@ public class VertexResource {
     }
 
     @POST
+    @GraphTransactional
     @Path("/")
-    public Response createVertex(){
+    public Response createVertex() {
         Vertex newVertex = userGraph.createVertex();
         return Response.ok()
                 .entity(VertexJson.toJson(newVertex))
@@ -67,6 +69,7 @@ public class VertexResource {
     }
 
     @POST
+    @GraphTransactional
     @Path("/{sourceVertexShortId}")
     public Response addVertexAndEdgeToSourceVertex(
             @Context HttpServletRequest request
@@ -98,6 +101,7 @@ public class VertexResource {
     }
 
     @DELETE
+    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{vertexShortId}")
     public Response removeVertex(
@@ -117,6 +121,7 @@ public class VertexResource {
     }
 
     @POST
+    @GraphTransactional
     @Path("{shortId}/label")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
@@ -137,6 +142,7 @@ public class VertexResource {
     }
 
     @POST
+    @GraphTransactional
     @Path("{shortId}/comment")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
@@ -155,6 +161,7 @@ public class VertexResource {
 
 
     @Path("{shortId}/image")
+    @GraphTransactional
     public VertexImageResource image(
             @PathParam("shortId") String shortId
     ) {
@@ -163,44 +170,48 @@ public class VertexResource {
         );
     }
 
-        @Path("{shortId}/surround_graph/{depthOfSubVertices}")
-        public VertexSurroundGraphResource getVertexSurroundGraphResource (
-                @PathParam("shortId")String shortId,
-                @PathParam("depthOfSubVertices")Integer depth
-        ){
-            return vertexSurroundGraphResourceFactory.ofUserGraphCenterVertexAndDepth(
-                    userGraph,
-                    vertexFromShortId(shortId),
-                    depth
-            );
-        }
+    @Path("{shortId}/surround_graph/{depthOfSubVertices}")
+    @GraphTransactional
+    public VertexSurroundGraphResource getVertexSurroundGraphResource(
+            @PathParam("shortId") String shortId,
+            @PathParam("depthOfSubVertices") Integer depth
+    ) {
+        return vertexSurroundGraphResourceFactory.ofUserGraphCenterVertexAndDepth(
+                userGraph,
+                vertexFromShortId(shortId),
+                depth
+        );
+    }
 
-        @Path("{shortId}/identification")
-        public GraphElementIdentificationResource getVertexIdentificationResource (@PathParam("shortId")String
-        shortId){
-            return graphElementIdentificationResourceFactory.forGraphElement(
-                    vertexFromShortId(shortId),
-                    true
-            );
-        }
+    @Path("{shortId}/identification")
+    @GraphTransactional
+    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String
+                                                                                      shortId) {
+        return graphElementIdentificationResourceFactory.forGraphElement(
+                vertexFromShortId(shortId),
+                true
+        );
+    }
 
-        @Path("{shortId}/suggestions")
-        public VertexSuggestionResource getVertexSuggestionResource (
-                @PathParam("shortId")String shortId
-        ){
-            return vertexSuggestionResourceFactory.ofVertex(
-                    vertexFromShortId(shortId)
-            );
-        }
+    @Path("{shortId}/suggestions")
+    @GraphTransactional
+    public VertexSuggestionResource getVertexSuggestionResource(
+            @PathParam("shortId") String shortId
+    ) {
+        return vertexSuggestionResourceFactory.ofVertex(
+                vertexFromShortId(shortId)
+        );
+    }
 
-        @Path("{shortId}/public_access")
-        public VertexPublicAccessResource getPublicAccessResource (
-                @PathParam("shortId")String shortId
-        ){
-            return vertexPublicAccessResourceFactory.ofVertex(
-                    vertexFromShortId(shortId)
-            );
-        }
+    @Path("{shortId}/public_access")
+    @GraphTransactional
+    public VertexPublicAccessResource getPublicAccessResource(
+            @PathParam("shortId") String shortId
+    ) {
+        return vertexPublicAccessResourceFactory.ofVertex(
+                vertexFromShortId(shortId)
+        );
+    }
 
     private URI uriFromShortId(String shortId) {
         return new UserUris(

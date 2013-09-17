@@ -2,14 +2,10 @@ package org.triple_brain.service.resources.test;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.common_utils.Uris;
-import org.triple_brain.module.model.graph.Edge;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexJson;
 
-import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +24,6 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
 * Copyright Mozilla Public License 1.1
 */
 @Path("/test/vertex/")
-@PermitAll
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)
 public class VertexResourceTestUtils {
@@ -36,6 +31,7 @@ public class VertexResourceTestUtils {
     GraphFactory graphFactory;
 
     @Path("{vertexId}")
+    @GraphTransactional
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
@@ -44,6 +40,7 @@ public class VertexResourceTestUtils {
     }
 
     @Path("{vertexId}/connected_edges")
+    @GraphTransactional
     @GET
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
@@ -61,6 +58,7 @@ public class VertexResourceTestUtils {
 
     @Path("{vertexId}/has_destination/{otherVertexId}")
     @Produces(MediaType.TEXT_PLAIN)
+    @GraphTransactional
     @GET
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));

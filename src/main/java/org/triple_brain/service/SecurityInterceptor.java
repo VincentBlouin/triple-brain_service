@@ -3,7 +3,7 @@ package org.triple_brain.service;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.GraphElementIdentifier;
+import org.triple_brain.module.model.graph.GraphTransactional;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -92,7 +92,7 @@ public class SecurityInterceptor implements MethodInterceptor {
     }
 
     private boolean isGraphElementIdentifierAnnotation(Annotation annotation){
-        return annotation.annotationType().getCanonicalName().equals(GraphElementIdentifier.class.getCanonicalName());
+        return annotation.annotationType().getCanonicalName().equals(GraphTransactional.class.getCanonicalName());
 
     }
 

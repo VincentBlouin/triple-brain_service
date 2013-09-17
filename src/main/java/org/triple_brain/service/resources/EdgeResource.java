@@ -4,10 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.graph.Edge;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
@@ -50,6 +47,7 @@ public class EdgeResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
+    @GraphTransactional
     public Response addRelation(
             @QueryParam("sourceVertexId") String sourceVertexId,
             @QueryParam("destinationVertexId") String destinationVertexId
@@ -75,6 +73,7 @@ public class EdgeResource {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{edgeShortId}")
+    @GraphTransactional
     public Response removeRelation(
        @Context HttpServletRequest request
     ){
@@ -100,6 +99,7 @@ public class EdgeResource {
     @POST
     @Path("{edgeShortId}/label")
     @Produces(MediaType.TEXT_PLAIN)
+    @GraphTransactional
     public Response modifyEdgeLabel(
             @PathParam("edgeShortId") String edgeShortId,
             @QueryParam("label") String label){
@@ -121,6 +121,7 @@ public class EdgeResource {
     }
 
     @Path("{shortId}/identification")
+    @GraphTransactional
     public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
         return graphElementIdentificationResourceFactory.forGraphElement(
                 edgeFromShortId(shortId),

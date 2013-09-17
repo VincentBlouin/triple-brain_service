@@ -4,6 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.graphviz_visualisation.GraphToDrawnGraphConverter;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.SubGraph;
 
 import javax.ws.rs.Consumes;
@@ -31,6 +32,7 @@ public class DrawnGraphResource {
 
     @GET
     @Path("/")
+    @GraphTransactional
     public Response get() {
         JSONObject drawnGraph = GraphToDrawnGraphConverter.withGraph(
                 graph

@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
@@ -36,6 +37,7 @@ public class VertexSuggestionResource {
 
     @GET
     @Path("/")
+    @GraphTransactional
     public Response getSuggestions() {
         try {
             JSONArray suggestions = VertexJson.toJson(vertex)
@@ -49,6 +51,7 @@ public class VertexSuggestionResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
+    @GraphTransactional
     public Response addSuggestions(JSONArray suggestions) {
         vertex.addSuggestions(
                 suggestionsSetFromJSONArray(suggestions)

@@ -2,15 +2,14 @@ package org.triple_brain.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.search.GraphSearch;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -26,56 +25,47 @@ public class SearchResource {
 
     @AssistedInject
     public SearchResource(
-        @Assisted User user
-    ){
+            @Assisted User user
+    ) {
         this.user = user;
     }
 
     @GET
-    @Path("own_vertices/auto_complete/{search_text}")
+    @Path("own_vertices/auto_complete")
+    @GraphTransactional
     public Response searchOwnVerticesForAutoComplete(
-            @PathParam("search_text") @Encoded String searchText
-    ){
-        try{
-            return Response.ok(
-                    graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
-                            Uris.decodeURL(searchText),
-                            user
-                    )).build();
-        }catch(UnsupportedEncodingException e){
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+            @QueryParam("text") String searchText
+    ) {
+        return Response.ok(
+                graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                        searchText,
+                        user
+                )).build();
     }
 
     @GET
-    @Path("vertices/auto_complete/{search_text}")
+    @Path("vertices/auto_complete")
+    @GraphTransactional
     public Response searchVerticesForAutoComplete(
-            @PathParam("search_text") @Encoded String searchText
-    ){
-        try{
-            return Response.ok(
-                    graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
-                            Uris.decodeURL(searchText),
-                            user
-                    )).build();
-        }catch(UnsupportedEncodingException e){
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+            @QueryParam("text") String searchText
+    ) {
+        return Response.ok(
+                graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                        searchText,
+                        user
+                )).build();
     }
 
     @GET
-    @Path("relations/auto_complete/{search_text}")
+    @Path("relations/auto_complete")
+    @GraphTransactional
     public Response searchRelationsForAutoComplete(
-            @PathParam("search_text") @Encoded String searchText
-    ){
-        try{
-            return Response.ok(
-                    graphSearch.searchRelationsForAutoCompletionByLabel(
-                            Uris.decodeURL(searchText),
-                            user
-                    )).build();
-        }catch(UnsupportedEncodingException e){
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+            @QueryParam("text") String searchText
+    ) {
+        return Response.ok(
+                graphSearch.searchRelationsForAutoCompletionByLabel(
+                        searchText,
+                        user
+                )).build();
     }
 }

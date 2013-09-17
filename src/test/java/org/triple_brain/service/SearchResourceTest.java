@@ -5,7 +5,6 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
-import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.search.json.SearchJsonConverter;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
@@ -25,7 +24,7 @@ import static org.triple_brain.module.model.json.graph.VertexJson.LABEL;
 public class SearchResourceTest extends GraphManipulationRestTest {
 
     @Test
-    public void can_search_vertices_for_auto_complete()throws Exception{
+    public void can_search_vertices_for_auto_complete() throws Exception {
         indexGraph();
         ClientResponse response = resource
                 .path("service")
@@ -34,10 +33,9 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .path("search")
                 .path("own_vertices")
                 .path("auto_complete")
-                .path(Uris.encodeURL("vert"))
+                .queryParam("text", "vert")
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .type(MediaType.TEXT_PLAIN)
                 .get(ClientResponse.class);
         JSONArray searchResults = response.getEntity(JSONArray.class);
         assertThat(searchResults.length(), is(3));
@@ -45,7 +43,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void search_for_auto_complete_can_have_spaces()throws Exception{
+    public void search_for_auto_complete_can_have_spaces() throws Exception {
         indexGraph();
         ClientResponse response = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 "vertex Azu"
@@ -63,7 +61,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void updating_note_updates_search()throws Exception{
+    public void updating_note_updates_search() throws Exception {
         indexGraph();
         JSONObject resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
@@ -79,7 +77,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void updating_edge_labels_reflects_in_search_for_connected_vertices()throws Exception{
+    public void updating_edge_labels_reflects_in_search_for_connected_vertices() throws Exception {
         indexGraph();
         JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
@@ -132,7 +130,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void deleting_edge_removes_relations_name_of_connected_vertices_in_search()throws Exception{
+    public void deleting_edge_removes_relations_name_of_connected_vertices_in_search() throws Exception {
         indexGraph();
         JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
                 vertexA().getString(LABEL)
@@ -156,7 +154,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void making_vertex_public_re_indexes_it()throws Exception{
+    public void making_vertex_public_re_indexes_it() throws Exception {
         indexGraph();
         JSONObject anotherUser = createAUser();
         authenticate(
@@ -180,7 +178,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void making_vertex_private_re_indexes_it()throws Exception{
+    public void making_vertex_private_re_indexes_it() throws Exception {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
@@ -205,7 +203,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void can_search_for_only_own_vertices()throws Exception{
+    public void can_search_for_only_own_vertices() throws Exception {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
@@ -225,7 +223,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void can_search_relations(){
+    public void can_search_relations() {
         indexGraph();
         JSONArray relations = searchForRelations(
                 "between",
@@ -234,7 +232,8 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         assertThat(relations.length(), is(2));
     }
 
-    private ClientResponse searchForRelations(String textToSearchWith, JSONObject user){
+    private ClientResponse searchForRelations(String textToSearchWith, JSONObject user) {
+
         ClientResponse clientResponse = resource
                 .path("service")
                 .path("users")
@@ -242,7 +241,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .path("search")
                 .path("relations")
                 .path("auto_complete")
-                .path(Uris.encodeURL(textToSearchWith))
+                .queryParam("text", textToSearchWith)
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
@@ -253,7 +252,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         return clientResponse;
     }
 
-    private ClientResponse searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user){
+    private ClientResponse searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user) {
         return searchVerticesForAutoCompleteUsingRestAndUser(
                 textToSearchWith,
                 user,
@@ -261,7 +260,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         );
     }
 
-    private ClientResponse searchOnlyOwnVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user){
+    private ClientResponse searchOnlyOwnVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user) {
         return searchVerticesForAutoCompleteUsingRestAndUser(
                 textToSearchWith,
                 user,
@@ -269,14 +268,14 @@ public class SearchResourceTest extends GraphManipulationRestTest {
         );
     }
 
-    private ClientResponse searchOwnVerticesOnlyForAutoCompleteUsingRest(String textToSearchWith){
+    private ClientResponse searchOwnVerticesOnlyForAutoCompleteUsingRest(String textToSearchWith) {
         return searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
                 textToSearchWith,
                 defaultAuthenticatedUserAsJson
         );
     }
 
-    private ClientResponse searchVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user, Boolean onlyOwnVertices){
+    private ClientResponse searchVerticesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user, Boolean onlyOwnVertices) {
         ClientResponse clientResponse = resource
                 .path("service")
                 .path("users")
@@ -284,7 +283,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 .path("search")
                 .path(onlyOwnVertices ? "own_vertices" : "vertices")
                 .path("auto_complete")
-                .path(Uris.encodeURL(textToSearchWith))
+                .queryParam("text", textToSearchWith)
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
@@ -292,7 +291,6 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 clientResponse.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-
         return clientResponse;
     }
 }

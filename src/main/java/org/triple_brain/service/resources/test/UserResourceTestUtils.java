@@ -2,7 +2,6 @@ package org.triple_brain.service.resources.test;
 
 import org.triple_brain.module.repository.user.UserRepository;
 
-import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -16,7 +15,6 @@ import javax.ws.rs.core.Response;
 * Copyright Mozilla Public License 1.1
 */
 @Path("test/users")
-@PermitAll
 @Singleton
 public class UserResourceTestUtils {
 

@@ -13,7 +13,6 @@ import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.module.search.SearchUtils;
 
-import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
 */
 @Path("/test")
 @Produces(MediaType.APPLICATION_JSON)
-@PermitAll
 @Singleton
 public class ResourceForTests {
 
@@ -60,6 +58,7 @@ public class ResourceForTests {
     GraphComponentTest graphComponentTest;
 
     @Path("login")
+    @GraphTransactional
     @GET
     public Response createUserAuthenticateAndRedirectToHomePage(@Context HttpServletRequest request) throws Exception {
         User user = User.withUsernameEmailAndLocales(
@@ -142,6 +141,7 @@ public class ResourceForTests {
 
     @Path("search/index_graph")
     @Produces(MediaType.TEXT_PLAIN)
+    @GraphTransactional
     @GET
     public Response indexSessionUserVertices(@Context HttpServletRequest request) {
         User currentUser = userFromSession(request.getSession());
@@ -177,6 +177,7 @@ public class ResourceForTests {
 
 
     @Path("make_graph_have_3_serial_vertices_with_long_labels")
+    @GraphTransactional
     @GET
     public Response makeGraphHave3SerialVerticesWithLongLabels(@Context HttpServletRequest request) throws Exception {
         User currentUser = userFromSession(request.getSession());

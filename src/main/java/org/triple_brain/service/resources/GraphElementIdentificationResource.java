@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.*;
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.validator.FriendlyResourceValidator;
 import org.triple_brain.module.search.GraphIndexer;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -54,6 +56,7 @@ public class GraphElementIdentificationResource {
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
+    @GraphTransactional
     @Path("/")
     public Response add(JSONObject identification) {
         FriendlyResourceValidator validator = new FriendlyResourceValidator();
@@ -94,23 +97,15 @@ public class GraphElementIdentificationResource {
         return Response.ok().build();
     }
 
-    /*todo It should be @DELETE
-     but sending the uri of identification as path param was returning 404 in production ???
-    */
-    @POST
+    @DELETE
+    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/delete")
+    @Path("/")
     public Response removeFriendlyResource(
-            JSONObject friendlyResourceAsJson
+            @QueryParam("uri") String identificationUri
     ) {
-        FriendlyResourceValidator validator = new FriendlyResourceValidator();
-        if(!validator.validate(friendlyResourceAsJson).isEmpty()){
-            throw new WebApplicationException(
-                    Response.Status.NOT_ACCEPTABLE
-            );
-        }
-        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingJson(
-                friendlyResourceAsJson
+        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
+                URI.create(identificationUri)
         );
         graphElement.removeIdentification(friendlyResource);
         reindexGraphElement();

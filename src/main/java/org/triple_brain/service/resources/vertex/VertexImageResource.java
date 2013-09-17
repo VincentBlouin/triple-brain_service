@@ -10,6 +10,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.imgscalr.Scalr;
 import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.Image;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.service.ResourceServiceUtils;
 
@@ -83,6 +84,7 @@ public class VertexImageResource {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @GraphTransactional
     @Produces("text/plain")
     @Path("/")
     public Response add(@Context HttpServletRequest request) {

@@ -2,6 +2,7 @@ package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.search.GraphIndexer;
 
@@ -31,6 +32,7 @@ public class VertexPublicAccessResource {
 
     @POST
     @Path("/")
+    @GraphTransactional
     public Response makePublic(){
         vertex.makePublic();
         graphIndexer.indexVertex(
@@ -41,6 +43,7 @@ public class VertexPublicAccessResource {
 
     @DELETE
     @Path("/")
+    @GraphTransactional
     public Response makePrivate(){
         vertex.makePrivate();
         graphIndexer.indexVertex(

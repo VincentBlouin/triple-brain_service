@@ -6,11 +6,11 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphFactory;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
 
-import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +32,6 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
  */
 
 @Path("/")
-@PermitAll
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Singleton
@@ -108,6 +107,7 @@ public class UserResource{
 
     @POST
     @Produces(MediaType.WILDCARD)
+    @GraphTransactional
     @Path("/")
     public Response createUser(JSONObject jsonUser){
         User user = User.withUsernameEmailAndLocales(

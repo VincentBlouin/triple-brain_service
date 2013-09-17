@@ -7,7 +7,6 @@ import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.repository.user.NonExistingUserException;
 import org.triple_brain.module.repository.user.UserRepository;
 
-import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +25,6 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
 */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@PermitAll
 public class UserSessionResource {
 
     @Inject

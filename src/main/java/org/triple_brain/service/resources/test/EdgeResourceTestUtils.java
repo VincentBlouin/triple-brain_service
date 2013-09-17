@@ -2,10 +2,10 @@ package org.triple_brain.service.resources.test;
 
 import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphFactory;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 
-import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,6 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
 * Copyright Mozilla Public License 1.1
 */
 @Path("/test/edge/")
-@PermitAll
 @Singleton
 public class EdgeResourceTestUtils {
 
@@ -30,6 +29,7 @@ public class EdgeResourceTestUtils {
     GraphFactory graphFactory;
 
     @Path("{edgeId}")
+    @GraphTransactional
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
