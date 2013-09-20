@@ -121,14 +121,12 @@ public class VertexResource {
         Vertex vertex = userGraph.vertexWithUri(URI.create(
                 request.getRequestURI()
         ));
-        graphIndexer.deleteGraphElementOfUser(
-                vertex,
-                userGraph.user()
+        graphIndexer.deleteGraphElement(
+                vertex
         );
         for(Edge edge : vertex.connectedEdges()){
-            graphIndexer.deleteGraphElementOfUser(
-                    edge,
-                    userGraph.user()
+            graphIndexer.deleteGraphElement(
+                    edge
             );
         }
         vertex.remove();

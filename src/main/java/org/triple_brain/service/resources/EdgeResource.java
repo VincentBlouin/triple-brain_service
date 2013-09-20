@@ -82,9 +82,8 @@ public class EdgeResource {
         ));
         Vertex sourceVertex = edge.sourceVertex();
         Vertex destinationVertex = edge.destinationVertex();
-        graphIndexer.deleteGraphElementOfUser(
-                edge,
-                userGraph.user()
+        graphIndexer.deleteGraphElement(
+                edge
         );
         edge.remove();
         graphIndexer.indexVertex(
