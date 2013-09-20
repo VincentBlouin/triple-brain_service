@@ -58,6 +58,17 @@ public class VertexResource {
         this.userGraph = userGraph;
     }
 
+    @GET
+    @GraphTransactional
+    @Path("/{shortId}")
+    public Response getVertex(@PathParam("shortId") String shortId){
+        return Response.ok().entity(
+               VertexJson.toJson(
+                       vertexFromShortId(shortId)
+               )
+        ).build();
+    }
+
     @POST
     @GraphTransactional
     @Path("/")
