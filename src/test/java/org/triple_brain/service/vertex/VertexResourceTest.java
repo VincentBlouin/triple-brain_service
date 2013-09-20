@@ -94,7 +94,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         assertTrue(graphElementWithIdExistsInCurrentGraph(
                 vertexBUri()
         ));
-        removeVertexB();
+        vertexUtils().removeVertexB();
         assertFalse(graphElementWithIdExistsInCurrentGraph(
                 vertexBUri()
         ));
@@ -102,16 +102,8 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void removing_vertex_returns_correct_response_status() throws Exception {
-        ClientResponse response = removeVertexB();
+        ClientResponse response = vertexUtils().removeVertexB();
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
-    }
-
-    private ClientResponse removeVertexB() throws Exception {
-        ClientResponse response = resource
-                .path(vertexBUri().getPath())
-                .cookie(authCookie)
-                .delete(ClientResponse.class);
-        return response;
     }
 
     @Test

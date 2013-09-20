@@ -135,6 +135,14 @@ public class VertexRestTestUtils {
         return clientResponse;
     }
 
+    public ClientResponse removeVertexB(){
+        ClientResponse response = resource
+                .path(graphUtils().vertexBUri().getPath())
+                .cookie(authCookie)
+                .delete(ClientResponse.class);
+        return response;
+    }
+
     private GraphRestTestUtils graphUtils(){
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 resource,

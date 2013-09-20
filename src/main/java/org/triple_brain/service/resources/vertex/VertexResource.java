@@ -118,15 +118,19 @@ public class VertexResource {
     public Response removeVertex(
             @Context HttpServletRequest request
     ) {
-        graphIndexer.deleteGraphElementOfUser(
-                userGraph.vertexWithUri(URI.create(
-                        request.getRequestURI()
-                )),
-                userGraph.user()
-        );
         Vertex vertex = userGraph.vertexWithUri(URI.create(
                 request.getRequestURI()
         ));
+        graphIndexer.deleteGraphElementOfUser(
+                vertex,
+                userGraph.user()
+        );
+        for(Edge edge : vertex.connectedEdges()){
+            graphIndexer.deleteGraphElementOfUser(
+                    edge,
+                    userGraph.user()
+            );
+        }
         vertex.remove();
         return Response.ok().build();
     }

@@ -154,6 +154,22 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
+    public void when_deleting_a_vertex_its_relations_are_also_removed_from_search(){
+        indexGraph();
+        JSONArray relations = searchForRelations(
+                "between",
+                defaultAuthenticatedUserAsJson
+        ).getEntity(JSONArray.class);
+        assertThat(relations.length(), is(2));
+        vertexUtils().removeVertexB();
+        relations = searchForRelations(
+                "between",
+                defaultAuthenticatedUserAsJson
+        ).getEntity(JSONArray.class);
+        assertThat(relations.length(), is(0));
+    }
+
+    @Test
     public void making_vertex_public_re_indexes_it() throws Exception {
         indexGraph();
         JSONObject anotherUser = createAUser();
