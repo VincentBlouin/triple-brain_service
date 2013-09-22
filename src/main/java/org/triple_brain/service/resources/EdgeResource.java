@@ -107,15 +107,7 @@ public class EdgeResource {
             edgeId
         );
         edge.label(label);
-        graphIndexer.indexVertex(
-                edge.sourceVertex()
-        );
-        graphIndexer.indexVertex(
-                edge.destinationVertex()
-        );
-        graphIndexer.indexRelation(
-                edge
-        );
+        graphIndexer.handleEdgeLabelUpdated(edge);
         return Response.ok().build();
     }
 

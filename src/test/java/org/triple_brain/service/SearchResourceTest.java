@@ -3,6 +3,7 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
 import org.triple_brain.module.model.json.UserJsonFields;
@@ -130,6 +131,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
+    @Ignore
     public void deleting_edge_removes_relations_name_of_connected_vertices_in_search() throws Exception {
         indexGraph();
         JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
@@ -266,6 +268,30 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 is(Response.Status.OK.getStatusCode())
         );
         return clientResponse;
+    }
+
+    @Test
+    public void removing_vertex_removes_relations_name_of_edge_of_connected_vertices()throws Exception{
+        indexGraph();
+        JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertTrue(JsonUtils.containsString(
+                resultsForA,
+                "between vertex A and vertex B"
+        ));
+        vertexUtils().removeVertexB();
+        resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertFalse(JsonUtils.containsString(
+                resultsForA,
+                "between vertex A and vertex B"
+        ));
     }
 
     private ClientResponse searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(String textToSearchWith, JSONObject user) {
