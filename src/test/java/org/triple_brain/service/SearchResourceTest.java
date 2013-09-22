@@ -131,7 +131,6 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    @Ignore
     public void deleting_edge_removes_relations_name_of_connected_vertices_in_search() throws Exception {
         indexGraph();
         JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
@@ -271,6 +270,7 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
+    @Ignore
     public void removing_vertex_removes_relations_name_of_edge_of_connected_vertices()throws Exception{
         indexGraph();
         JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(
