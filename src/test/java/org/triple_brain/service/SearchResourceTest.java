@@ -7,7 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
 import org.triple_brain.module.model.json.UserJsonFields;
-import org.triple_brain.module.search.json.SearchJsonConverter;
+import org.triple_brain.module.solr_search.json.SearchJsonConverter;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;

@@ -12,7 +12,7 @@ import org.triple_brain.module.model.graph.GraphComponentTest;
 import org.triple_brain.module.model.graph.neo4j.Neo4JGraphComponentTest;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4JModule;
 import org.triple_brain.module.repository_sql.SQLModule;
-import org.triple_brain.module.search.SearchModule;
+import org.triple_brain.module.solr_search.SolrSearchModule;
 import org.triple_brain.service.MessagesDistributorServlet;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
@@ -85,15 +85,15 @@ public class GuiceConfig extends GuiceServletContextListener {
                     final InitialContext jndiContext = new InitialContext();
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
-                    SearchModule searchModule;
+                    SolrSearchModule searchModule;
                     if(isTesting){
-                        searchModule = new SearchModule(isTesting);
+                        searchModule = new SolrSearchModule(isTesting);
                     }else{
                         String solrHomePath = (String) jndiContext.lookup("solr_home_path");
                         String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
                         searchModule = isTesting ?
-                                new SearchModule(isTesting) :
-                                new SearchModule(
+                                new SolrSearchModule(isTesting) :
+                                new SolrSearchModule(
                                         isTesting,
                                         solrHomePath,
                                         solrXMLPath

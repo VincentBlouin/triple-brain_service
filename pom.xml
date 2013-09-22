@@ -42,7 +42,7 @@
                 <version>1.4</version>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>org.triple_brain.module:triple_brain-search:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>org.triple_brain.module:triple_brain-solr-search:1.0.0-SNAPSHOT</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>
@@ -91,6 +91,12 @@
         <dependency>
             <groupId>org.triple_brain.module</groupId>
             <artifactId>triple_brain-search</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-solr-search</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 

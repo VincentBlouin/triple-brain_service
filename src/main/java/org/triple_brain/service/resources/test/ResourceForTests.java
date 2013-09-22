@@ -11,7 +11,7 @@ import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
-import org.triple_brain.module.search.SearchUtils;
+import org.triple_brain.module.solr_search.SearchUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -107,7 +107,7 @@ public class ResourceForTests {
     @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response closeSearchEngine() {
-        graphIndexer.close();
+        searchUtils.close();
         return Response.ok().build();
     }
 
