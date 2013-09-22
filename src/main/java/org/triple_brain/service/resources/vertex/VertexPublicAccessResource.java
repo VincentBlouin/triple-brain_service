@@ -38,6 +38,7 @@ public class VertexPublicAccessResource {
         graphIndexer.indexVertex(
                 vertex
         );
+        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -49,6 +50,7 @@ public class VertexPublicAccessResource {
         graphIndexer.indexVertex(
                 vertex
         );
+        graphIndexer.commit();
         return Response.ok().build();
     }
 }

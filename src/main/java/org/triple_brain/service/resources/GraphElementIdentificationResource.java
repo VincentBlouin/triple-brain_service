@@ -148,5 +148,6 @@ public class GraphElementIdentificationResource {
                     (Edge) graphElement
             );
         }
+        graphIndexer.commit();
     }
 }

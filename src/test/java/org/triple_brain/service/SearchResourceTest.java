@@ -3,7 +3,6 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
 import org.triple_brain.module.model.json.UserJsonFields;
@@ -270,7 +269,6 @@ public class SearchResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    @Ignore
     public void removing_vertex_removes_relations_name_of_edge_of_connected_vertices()throws Exception{
         indexGraph();
         JSONArray resultsForA = searchOwnVerticesOnlyForAutoCompleteUsingRest(

@@ -80,6 +80,7 @@ public class ResourceForTests {
         graphIndexer.indexVertex(
                 userGraph.defaultVertex()
         );
+        graphIndexer.commit();
 //        addALotOfVerticesToVertex(
 //                userGraph.defaultVertex()
 //        );
@@ -157,6 +158,7 @@ public class ResourceForTests {
                     edge
             );
         }
+        graphIndexer.commit();
         return Response.ok().build();
     }
 

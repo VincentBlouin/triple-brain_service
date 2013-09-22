@@ -21,6 +21,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 
@@ -121,6 +123,7 @@ public class VertexResource {
         Vertex vertex = userGraph.vertexWithUri(URI.create(
                 request.getRequestURI()
         ));
+        Set<Vertex> connectedVertices = new HashSet<>();
         graphIndexer.deleteGraphElement(
                 vertex
         );
@@ -128,8 +131,15 @@ public class VertexResource {
             graphIndexer.deleteGraphElement(
                     edge
             );
+            connectedVertices.add(edge.otherVertex(vertex));
         }
         vertex.remove();
+        for(Vertex connectedVertex : connectedVertices){
+            graphIndexer.indexVertex(
+                    connectedVertex
+            );
+        }
+        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -147,10 +157,10 @@ public class VertexResource {
                 vertexId
         );
         vertex.label(label);
-
         graphIndexer.indexVertex(
                 vertex
         );
+        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -169,6 +179,7 @@ public class VertexResource {
         );
         vertex.comment(comment);
         graphIndexer.indexVertex(vertex);
+        graphIndexer.commit();
         return Response.ok().build();
     }
 

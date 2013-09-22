@@ -92,6 +92,7 @@ public class EdgeResource {
         graphIndexer.indexVertex(
                 destinationVertex
         );
+        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -108,6 +109,7 @@ public class EdgeResource {
         );
         edge.label(label);
         graphIndexer.handleEdgeLabelUpdated(edge);
+        graphIndexer.commit();
         return Response.ok().build();
     }
 
