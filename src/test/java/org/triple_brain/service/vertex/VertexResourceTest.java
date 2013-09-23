@@ -3,6 +3,8 @@ package org.triple_brain.service.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
@@ -14,9 +16,12 @@ import javax.ws.rs.core.Response;
 
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
+import static org.triple_brain.module.model.json.FriendlyResourceJson.COMMENT;
+import static org.triple_brain.module.model.json.FriendlyResourceJson.LABEL;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 
 /**
@@ -138,5 +143,86 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                 .cookie(authCookie)
                 .post(ClientResponse.class);
         return response;
+    }
+
+    @Test
+    public void updating_note_updates_search() throws Exception {
+        indexGraph();
+        JSONObject resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0);
+        Assert.assertThat(resultsForA.getString(COMMENT), Is.is(""));
+        vertexUtils().updateVertexANote(
+                "A description"
+        );
+        resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0);
+        Assert.assertThat(resultsForA.getString(COMMENT), Is.is("A description"));
+    }
+
+    @Test
+    public void when_deleting_a_vertex_its_relations_are_also_removed_from_search(){
+        indexGraph();
+        JSONArray relations = searchUtils().searchForRelations(
+                "between",
+                defaultAuthenticatedUserAsJson
+        ).getEntity(JSONArray.class);
+        Assert.assertThat(relations.length(), Is.is(2));
+        vertexUtils().removeVertexB();
+        relations = searchUtils().searchForRelations(
+                "between",
+                defaultAuthenticatedUserAsJson
+        ).getEntity(JSONArray.class);
+        Assert.assertThat(relations.length(), Is.is(0));
+    }
+
+    @Test
+    public void making_vertex_public_re_indexes_it() throws Exception {
+        indexGraph();
+        JSONObject anotherUser = createAUser();
+        authenticate(
+                anotherUser
+        );
+        JSONArray results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        Assert.assertThat(results.length(), Is.is(0));
+        authenticate(defaultAuthenticatedUser);
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        authenticate(anotherUser);
+        results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        Assert.assertThat(results.length(), Is.is(1));
+    }
+
+    @Test
+    public void making_vertex_private_re_indexes_it() throws Exception {
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        indexGraph();
+        JSONObject anotherUser = createAUser();
+        authenticate(anotherUser);
+        JSONArray results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        Assert.assertThat(results.length(), Is.is(greaterThan(0)));
+        authenticate(defaultAuthenticatedUser);
+        vertexUtils().makePrivateVertexWithUri(
+                vertexAUri()
+        );
+        authenticate(anotherUser);
+        results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
+                vertexA().getString(LABEL),
+                anotherUser
+        ).getEntity(JSONArray.class);
+        Assert.assertThat(results.length(), Is.is(0));
     }
 }

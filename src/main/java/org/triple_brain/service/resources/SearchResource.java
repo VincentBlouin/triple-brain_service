@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -65,6 +66,19 @@ public class SearchResource {
         return Response.ok(
                 graphSearch.searchRelationsForAutoCompletionByLabel(
                         searchText,
+                        user
+                )).build();
+    }
+
+    @GET
+    @Path("uri")
+    @GraphTransactional
+    public Response getByUri(
+            @QueryParam("uri") String uri
+    ) {
+        return Response.ok(
+                graphSearch.getByUri(
+                        URI.create(uri),
                         user
                 )).build();
     }

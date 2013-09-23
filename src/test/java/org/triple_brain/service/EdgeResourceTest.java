@@ -4,9 +4,12 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
+import org.triple_brain.module.common_utils.JsonUtils;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
+import org.triple_brain.module.solr_search.json.SearchJsonConverter;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 import org.triple_brain.module.model.UserUris;
 
@@ -16,6 +19,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
+import static org.triple_brain.module.model.json.FriendlyResourceJson.LABEL;
 
 /**
  * Copyright Mozilla Public License 1.1
@@ -118,5 +122,82 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
                 label,
                 edgeUtils().edgeBetweenAAndB()
         );
+    }
+
+    @Test
+    public void updating_edge_labels_reflects_in_search_for_connected_vertices() throws Exception {
+        indexGraph();
+        JSONArray resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        Assert.assertTrue(JsonUtils.containsString(
+                resultsForA,
+                "between vertex A and vertex B"
+        ));
+        JSONArray resultsForB = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexB().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        Assert.assertTrue(JsonUtils.containsString(
+                resultsForB,
+                "between vertex A and vertex B"
+        ));
+        edgeUtils().updateEdgeLabel(
+                "new edge text !",
+                edgeUtils().edgeBetweenAAndB()
+        );
+        resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertFalse(JsonUtils.containsString(
+                resultsForA,
+                "between vertex A and vertex B"
+        ));
+        Assert.assertTrue(JsonUtils.containsString(
+                resultsForA,
+                "new edge text !"
+        ));
+        resultsForB = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexB().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertFalse(JsonUtils.containsString(
+                resultsForB,
+                "between vertex A and vertex B"
+        ));
+        Assert.assertTrue(JsonUtils.containsString(
+                resultsForB,
+                "new edge text !"
+        ));
+    }
+
+    @Test
+    public void deleting_edge_removes_relations_name_of_connected_vertices_in_search() throws Exception {
+        indexGraph();
+        JSONArray resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        Assert.assertTrue(JsonUtils.containsString(
+                resultsForA,
+                "between vertex A and vertex B"
+        ));
+        edgeUtils().removeEdgeBetweenVertexAAndB();
+        resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
+                vertexA().getString(LABEL)
+        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
+                SearchJsonConverter.RELATIONS_NAME
+        );
+        assertFalse(JsonUtils.containsString(
+                resultsForA,
+                "between vertex A and vertex B"
+        ));
     }
 }

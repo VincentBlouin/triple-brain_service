@@ -68,6 +68,14 @@ public class GraphManipulationRestTest extends RestTest {
         );
     }
 
+    protected SearchRestTestUtils searchUtils() {
+        return SearchRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                defaultAuthenticatedUserAsJson
+        );
+    }
+
     protected JSONObject createAUser() {
         JSONObject newUser = userUtils().validForCreation();
         createUser(
