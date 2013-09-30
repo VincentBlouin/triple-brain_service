@@ -44,7 +44,7 @@ public class VertexGroupResourceTest extends GraphManipulationRestTest{
                 groupVertexUri
         );
         JSONArray includedVerticesUri = newVertex.optJSONArray(
-                VertexJson.INCLUDED_VERTICES_URI
+                VertexJson.INCLUDED_VERTICES
         );
         assertThat(
                 includedVerticesUri.length(),
