@@ -7,6 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.json.graph.VertexJson;
 
 import javax.ws.rs.core.MediaType;
@@ -37,13 +38,14 @@ public class VertexRestTestUtils {
 
     public JSONObject vertexWithUri(URI vertexUri){
         ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .path("test")
-                .path("vertex")
-                .path(Uris.encodeURL(vertexUri.toString()))
+                .path(vertexUri.getPath())
                 .cookie(authCookie)
+                .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
         return response.getEntity(JSONObject.class);
     }
 
@@ -141,6 +143,12 @@ public class VertexRestTestUtils {
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
         return response;
+    }
+
+    public URI baseVertexUri(){
+        return new UserUris(
+                authenticatedUser
+        ).baseVertexUri();
     }
 
     private GraphRestTestUtils graphUtils(){

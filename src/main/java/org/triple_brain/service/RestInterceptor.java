@@ -2,7 +2,7 @@ package org.triple_brain.service;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.triple_brain.module.model.BeforeAfterEachRestCall;
+import org.triple_brain.module.model.GraphTransaction;
 import org.triple_brain.module.model.graph.GraphTransactional;
 
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public class RestInterceptor implements MethodInterceptor {
 
     @Inject
-    BeforeAfterEachRestCall beforeAfterEachRestCall;
+    GraphTransaction graphTransaction;
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -23,14 +23,14 @@ public class RestInterceptor implements MethodInterceptor {
         if(!isTransactional){
             return invocation.proceed();
         }
-        Object state = beforeAfterEachRestCall.before();
+        Object state = graphTransaction.before();
         Object returnedObject;
         try{
             returnedObject = invocation.proceed();
         }catch(Exception e){
             throw e;
         }finally {
-            beforeAfterEachRestCall.after(state);
+            graphTransaction.after(state);
         }
         return returnedObject;
     }

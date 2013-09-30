@@ -40,7 +40,7 @@ public class GraphElementIdentificationResource {
     ResourceServiceUtils resourceServiceUtils;
 
     @Inject
-    BeforeAfterEachRestCall beforeAfterEachRestCall;
+    GraphTransaction graphTransaction;
 
     private GraphElement graphElement;
     private boolean isVertex;

@@ -30,7 +30,6 @@ import static org.triple_brain.module.model.json.StatementJsonFields.*;
  * Copyright Mozilla Public License 1.1
  */
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class VertexResource {
 
     @Inject
@@ -49,6 +48,9 @@ public class VertexResource {
     VertexSurroundGraphResourceFactory vertexSurroundGraphResourceFactory;
 
     @Inject
+    VertexGroupResourceFactory vertexGroupResourceFactory;
+
+    @Inject
     VertexImageResourceFactory vertexImageResourceFactory;
 
     private UserGraph userGraph;
@@ -64,11 +66,9 @@ public class VertexResource {
     @GraphTransactional
     @Path("/{shortId}")
     public Response getVertex(@PathParam("shortId") String shortId){
-        return Response.ok().entity(
-               VertexJson.toJson(
-                       vertexFromShortId(shortId)
-               )
-        ).build();
+        return Response.ok(VertexJson.toJson(
+                vertexFromShortId(shortId)
+        )).build();
     }
 
     @POST
@@ -79,6 +79,13 @@ public class VertexResource {
         return Response.ok()
                 .entity(VertexJson.toJson(newVertex))
                 .build();
+    }
+
+    @Path("/group")
+    public VertexGroupResource getVertexGroupResource(){
+        return vertexGroupResourceFactory.withUserGraph(
+                userGraph
+        );
     }
 
     @POST

@@ -14,7 +14,7 @@ import java.util.Set;
 */
 public class ResourceServiceUtils {
     @Inject
-    BeforeAfterEachRestCall beforeAfterEachRestCall;
+    GraphTransaction graphTransaction;
 
     @Inject
     FriendlyResourceFactory friendlyResourceFactory;
@@ -26,7 +26,7 @@ public class ResourceServiceUtils {
             FriendlyResourceCached resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             Set<Image> images = (Set<Image>) o;
             FriendlyResource updatedResource = resourceCached;
-            Object state = beforeAfterEachRestCall.before();
+            Object state = graphTransaction.before();
             try {
                 updatedResource = friendlyResourceFactory.createOrLoadFromUri(
                         resourceCached.uri()
@@ -46,7 +46,7 @@ public class ResourceServiceUtils {
                 throw new RuntimeException(e);
             }
             finally{
-                beforeAfterEachRestCall.after(state);
+                graphTransaction.after(state);
             }
         }
     };
@@ -57,7 +57,7 @@ public class ResourceServiceUtils {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
             FriendlyResourceCached resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             String description = (String) o;
-            Object state = beforeAfterEachRestCall.before();
+            Object state = graphTransaction.before();
             FriendlyResource updatedResource = resourceCached;
             try {
                 updatedResource = friendlyResourceFactory.createOrLoadFromUri(
@@ -78,7 +78,7 @@ public class ResourceServiceUtils {
                 throw new RuntimeException(e);
             }
             finally{
-                beforeAfterEachRestCall.after(state);
+                graphTransaction.after(state);
             }
         }
     };
