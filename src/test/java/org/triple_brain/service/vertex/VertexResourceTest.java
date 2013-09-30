@@ -63,7 +63,7 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                         )
                 )
         );
-        JSONObject newVertex = vertexUtils().vertexWithUri(
+        JSONObject newVertex = vertexUtils().vertexWithUriOfCurrentUser(
                 Uris.get(
                         createdStatement.getJSONObject(END_VERTEX).getString(
                                 VertexJson.URI

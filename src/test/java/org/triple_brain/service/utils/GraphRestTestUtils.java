@@ -103,12 +103,12 @@ public class GraphRestTestUtils {
     }
 
     public JSONObject vertexA(){
-        return vertexUtils.vertexWithUri(vertexAUri());
+        return vertexUtils.vertexWithUriOfAnyUser(vertexAUri());
     }
     public JSONObject vertexB(){
-        return vertexUtils.vertexWithUri(vertexBUri());
+        return vertexUtils.vertexWithUriOfAnyUser(vertexBUri());
     }
     public JSONObject vertexC(){
-        return vertexUtils.vertexWithUri(vertexCUri());
+        return vertexUtils.vertexWithUriOfAnyUser(vertexCUri());
     }
 }

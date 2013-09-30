@@ -36,7 +36,19 @@ public class VertexRestTestUtils {
         this.authenticatedUser = authenticatedUser;
     }
 
-    public JSONObject vertexWithUri(URI vertexUri){
+    public JSONObject vertexWithUriOfAnyUser(URI vertexUri){
+        ClientResponse response = resource
+                .path("service")
+                .path("users")
+                .path("test")
+                .path("vertex")
+                .path(Uris.encodeURL(vertexUri.toString()))
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+        return response.getEntity(JSONObject.class);
+    }
+
+    public JSONObject vertexWithUriOfCurrentUser(URI vertexUri){
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .cookie(authCookie)

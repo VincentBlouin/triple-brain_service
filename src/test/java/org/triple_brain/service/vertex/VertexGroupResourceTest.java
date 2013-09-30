@@ -40,7 +40,7 @@ public class VertexGroupResourceTest extends GraphManipulationRestTest{
                 .getHeaders()
                 .get("Location")
                 .get(0));
-        JSONObject newVertex = vertexUtils().vertexWithUri(
+        JSONObject newVertex = vertexUtils().vertexWithUriOfCurrentUser(
                 groupVertexUri
         );
         JSONArray includedVerticesUri = newVertex.optJSONArray(
