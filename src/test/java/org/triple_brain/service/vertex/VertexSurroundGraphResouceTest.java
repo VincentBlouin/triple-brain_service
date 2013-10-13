@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
+import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.NewCookie;
@@ -79,6 +80,21 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
         ).getEntity(JSONObject.class);
         assertThat(
                 graph.getJSONObject(VERTICES).length(),
+                is(2)
+        );
+    }
+
+    @Test
+    public void distance_from_center_vertex_is_included() throws Exception{
+        JSONObject graph = getGraphOfCentralVertexUriAtDepth(
+                vertexAUri(),
+                2
+        ).getEntity(JSONObject.class);
+        JSONObject vertexC = graph.getJSONObject(VERTICES).getJSONObject(
+                vertexCUri().toString()
+        );
+        assertThat(
+                vertexC.getInt(VertexInSubGraphJson.DISTANCE_FROM_CENTER_VERTEX),
                 is(2)
         );
     }

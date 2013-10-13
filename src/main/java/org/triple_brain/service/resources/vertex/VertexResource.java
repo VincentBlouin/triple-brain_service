@@ -10,7 +10,7 @@ import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
 import org.triple_brain.module.model.json.graph.EdgeJson;
-import org.triple_brain.module.model.json.graph.VertexJson;
+import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
 
@@ -66,7 +66,7 @@ public class VertexResource {
     @GraphTransactional
     @Path("/{shortId}")
     public Response getVertex(@PathParam("shortId") String shortId){
-        return Response.ok(VertexJson.toJson(
+        return Response.ok(VertexInSubGraphJson.toJson(
                 vertexFromShortId(shortId)
         )).build();
     }
@@ -77,7 +77,7 @@ public class VertexResource {
     public Response createVertex() {
         Vertex newVertex = userGraph.createVertex();
         return Response.ok()
-                .entity(VertexJson.toJson(newVertex))
+                .entity(VertexInSubGraphJson.toJson(newVertex))
                 .build();
     }
 
@@ -105,13 +105,13 @@ public class VertexResource {
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
             jsonCreatedStatement.put(
-                    SOURCE_VERTEX, VertexJson.toJson(sourceVertex)
+                    SOURCE_VERTEX, VertexInSubGraphJson.toJson(sourceVertex)
             );
             jsonCreatedStatement.put(
                     EDGE, EdgeJson.toJson(createdEdge)
             );
             jsonCreatedStatement.put(
-                    END_VERTEX, VertexJson.toJson(createdVertex)
+                    END_VERTEX, VertexInSubGraphJson.toJson(createdVertex)
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);

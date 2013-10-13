@@ -4,7 +4,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.json.graph.EdgeJson;
-import org.triple_brain.module.model.json.graph.VertexJson;
+import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,7 +36,7 @@ public class VertexResourceTestUtils {
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
         Vertex vertex = userGraph.vertexWithUri(new URI(vertexId));
-        return Response.ok(VertexJson.toJson(vertex)).build();
+        return Response.ok(VertexInSubGraphJson.toJson(vertex)).build();
     }
 
     @Path("{vertexId}/connected_edges")

@@ -7,6 +7,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
 import org.triple_brain.module.model.suggestion.SuggestionFactory;
@@ -40,7 +41,7 @@ public class VertexSuggestionResource {
     @GraphTransactional
     public Response getSuggestions() {
         try {
-            JSONArray suggestions = VertexJson.toJson(vertex)
+            JSONArray suggestions = VertexInSubGraphJson.toJson(vertex)
                     .getJSONArray(VertexJson.SUGGESTIONS);
             return Response.ok(suggestions).build();
         } catch (JSONException e) {
