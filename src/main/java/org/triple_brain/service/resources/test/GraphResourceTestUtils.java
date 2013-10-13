@@ -1,9 +1,11 @@
 package org.triple_brain.service.resources.test;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.triple_brain.module.model.WholeGraph;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.Vertex;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Iterator;
 
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
@@ -28,6 +31,9 @@ public class GraphResourceTestUtils {
 
     @Inject
     GraphDatabaseService graphDb;
+
+    @Inject
+    WholeGraph wholeGraph;
 
     @Path("graph_element/{graphElementId}/exists")
     @GraphTransactional
@@ -52,6 +58,17 @@ public class GraphResourceTestUtils {
         return Response.ok().build();
     }
 
+    @Path("set_all_number_of_connected_edges_to_zero")
+    @GraphTransactional
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
+        Iterator<Vertex> vertexIt = wholeGraph.getAllVertices();
+        while(vertexIt.hasNext()){
+            Vertex vertex = vertexIt.next();
+            vertex.setNumberOfConnectedEdges(0);
+        }
+        return Response.ok().build();
+    }
 
 
 

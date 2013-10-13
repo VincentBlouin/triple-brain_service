@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.json.UserJsonFields;
+import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
@@ -59,6 +60,46 @@ public class AdminResourceTest extends GraphManipulationRestTest {
                 .get(ClientResponse.class);
         JSONArray searchResults = clientResponse.getEntity(JSONArray.class);
         assertThat(searchResults.length(), is(2));
+    }
+
+    @Test
+    public void can_refresh_number_of_connected_edges()throws Exception{
+        setNumberOfConnectedOfAllVerticesToZero();
+        assertThat(
+                vertexB().getInt(VertexJson.NUMBER_OF_CONNECTED_EDGES),
+                is(0)
+        );
+        refreshNumberOfConnectedEdges(
+                loginAsVince()
+        );
+        authenticate(defaultAuthenticatedUserAsJson);
+        assertThat(
+                vertexB().getInt(VertexJson.NUMBER_OF_CONNECTED_EDGES),
+                is(2)
+        );
+    }
+
+
+    private ClientResponse setNumberOfConnectedOfAllVerticesToZero(){
+        return resource
+                .path("service")
+                .path("users")
+                .path("test")
+                .path("graph")
+                .path("set_all_number_of_connected_edges_to_zero")
+                .cookie(authCookie)
+                .post(ClientResponse.class);
+    }
+
+    private ClientResponse refreshNumberOfConnectedEdges(NewCookie vinceCookie){
+        return resource
+                .path("service")
+                .path("users")
+                .path("vince")
+                .path("admin")
+                .path("refresh_number_of_connected_edges")
+                .cookie(vinceCookie)
+                .post(ClientResponse.class);
     }
 
     private ClientResponse reindexAll(NewCookie vinceCookie){

@@ -225,4 +225,12 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         ).getEntity(JSONArray.class);
         Assert.assertThat(results.length(), Is.is(0));
     }
+
+    @Test
+    public void number_of_connected_vertices_are_included()throws Exception{
+        assertThat(
+                vertexB().getInt(VertexJson.NUMBER_OF_CONNECTED_EDGES),
+                is(2)
+        );
+    }
 }
