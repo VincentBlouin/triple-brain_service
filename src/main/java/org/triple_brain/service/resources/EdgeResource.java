@@ -113,6 +113,15 @@ public class EdgeResource {
         return Response.ok().build();
     }
 
+    @PUT
+    @Path("{shortId}/inverse")
+    @GraphTransactional
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response inverse(@PathParam("shortId") String shortId){
+        edgeFromShortId(shortId).inverse();
+        return Response.ok().build();
+    }
+
     @Path("{shortId}/identification")
     @GraphTransactional
     public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){

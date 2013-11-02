@@ -7,11 +7,13 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.JsonUtils;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
 import org.triple_brain.module.solr_search.json.SearchJsonConverter;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
-import org.triple_brain.module.model.UserUris;
+
+import javax.ws.rs.core.Response;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +44,10 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     @Test
     public void adding_a_relation_returns_correct_response_status() throws Exception{
         ClientResponse response = addRelationBetweenVertexAAndC();
-        assertThat(response.getStatus(), is(201));
+        assertThat(
+                response.getStatus(), is(
+                Response.Status.CREATED.getStatusCode()
+        ));
     }
 
     @Test
@@ -93,7 +98,10 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     @Test
     public void removing_a_relation_returns_correct_status() throws Exception{
         ClientResponse response = edgeUtils().removeEdgeBetweenVertexAAndB();
-        assertThat(response.getStatus(), is(200));
+        assertThat(
+                response.getStatus(), is(
+                Response.Status.OK.getStatusCode()
+        ));
     }
 
     @Test
@@ -114,7 +122,10 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     @Test
     public void updating_label_returns_correct_status() throws Exception {
         ClientResponse response = updateEdgeLabelBetweenAAndB("new edge label");
-        assertThat(response.getStatus(), is(200));
+        assertThat(
+                response.getStatus(), is(
+                Response.Status.OK.getStatusCode()
+        ));
     }
 
     private ClientResponse updateEdgeLabelBetweenAAndB(String label)throws Exception{
@@ -199,5 +210,67 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
                 resultsForA,
                 "between vertex A and vertex B"
         ));
+    }
+
+    @Test
+    public void inverseReturnsCorrectStatus(){
+        assertThat(
+                inverseRelationBetweenAAndB().getStatus(),is(
+                Response.Status.OK.getStatusCode()
+        ));
+    }
+
+    @Test
+    public void can_inverse(){
+        JSONArray allEdges = graphUtils().wholeGraph().optJSONArray(
+                GraphJsonFields.EDGES
+        );
+        JSONObject edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                allEdges
+        );
+        assertThat(
+                edgeBetweenAAndC.optString(EdgeJson.SOURCE_VERTEX_ID),is(
+                vertexAUri().toString()
+        ));
+        assertThat(
+                edgeBetweenAAndC.optString(EdgeJson.DESTINATION_VERTEX_ID),is(
+                vertexBUri().toString()
+        ));
+        inverseRelationBetweenAAndB();
+        allEdges = graphUtils().wholeGraph().optJSONArray(
+                GraphJsonFields.EDGES
+        );
+        edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                allEdges
+        );
+        assertThat(
+                edgeBetweenAAndC.optString(EdgeJson.SOURCE_VERTEX_ID),is(
+                vertexBUri().toString()
+        ));
+        assertThat(
+                edgeBetweenAAndC.optString(EdgeJson.DESTINATION_VERTEX_ID),is(
+                vertexAUri().toString()
+        ));
+    }
+
+    private ClientResponse inverseRelationBetweenAAndB(){
+        JSONArray allEdges = graphUtils().wholeGraph().optJSONArray(
+                GraphJsonFields.EDGES
+        );
+        JSONObject edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                allEdges
+        );
+        ClientResponse response = resource
+                .path(edgeBetweenAAndC.optString(EdgeJson.URI))
+                .path("inverse")
+                .cookie(authCookie)
+                .put(ClientResponse.class);
+        return response;
     }
 }
