@@ -2,6 +2,7 @@ package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.json.graph.VertexJson;
@@ -35,7 +36,7 @@ public class VertexGroupResourceTest extends GraphManipulationRestTest{
     }
 
     @Test
-    public void can_list_included_vertices_when_getting_group_vertex(){
+    public void can_list_included_graph_elements_when_getting_group_vertex(){
         URI groupVertexUri = URI.create(createVertexBAndCGroup()
                 .getHeaders()
                 .get("Location")
@@ -43,25 +44,45 @@ public class VertexGroupResourceTest extends GraphManipulationRestTest{
         JSONObject newVertex = vertexUtils().vertexWithUriOfCurrentUser(
                 groupVertexUri
         );
-        JSONArray includedVerticesUri = newVertex.optJSONArray(
+        JSONObject includedVerticesUri = newVertex.optJSONObject(
                 VertexJson.INCLUDED_VERTICES
         );
         assertThat(
                 includedVerticesUri.length(),
                 is(2)
         );
+        JSONArray includedEdges = newVertex.optJSONArray(
+                VertexJson.INCLUDED_EDGES
+        );
+        assertThat(
+                includedEdges.length(),
+                is(0)
+        );
     }
 
     private ClientResponse createVertexBAndCGroup(){
-        JSONArray bAndCUris = new JSONArray().put(
-                vertexBUri().toString()
-        ).put(
-                vertexCUri().toString()
-        );
-        return resource
-                .path(groupVerticesUri())
-                .cookie(authCookie)
-                .post(ClientResponse.class, bAndCUris);
+        try{
+            JSONObject vertices = new JSONObject().put(
+                    vertexBUri().toString(),
+                    ""
+            ).put(
+                    vertexCUri().toString(),
+                    ""
+            );
+            JSONObject uris = new JSONObject().put(
+                    "vertices",
+                    vertices
+            ).put(
+                    "edges",
+                    new JSONObject()
+            );
+            return resource
+                    .path(groupVerticesUri())
+                    .cookie(authCookie)
+                    .post(ClientResponse.class, uris);
+        }catch(JSONException e){
+            throw new RuntimeException(e);
+        }
     }
 
     private String groupVerticesUri(){
