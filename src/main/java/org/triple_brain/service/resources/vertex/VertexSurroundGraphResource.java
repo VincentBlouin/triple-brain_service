@@ -8,11 +8,12 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
-import org.triple_brain.service.resources.DrawnGraphResource;
-import org.triple_brain.service.resources.DrawnGraphResourceFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Iterator;
@@ -22,9 +23,6 @@ import java.util.Iterator;
 public class VertexSurroundGraphResource {
     @Inject
     GraphFactory graphFactory;
-
-    @Inject
-    DrawnGraphResourceFactory drawnGraphResourceFactory;
 
     private Vertex centerVertex;
     private Integer depthOfSubVertices;
@@ -50,14 +48,6 @@ public class VertexSurroundGraphResource {
                         getGraph()
                 )
         ).build();
-    }
-
-    @Path("/drawn")
-    @GraphTransactional
-    public DrawnGraphResource getDrawnGraphResource(){
-        return drawnGraphResourceFactory.ofGraph(
-                getGraph()
-        );
     }
 
     private SubGraph getGraph(){

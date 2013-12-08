@@ -50,9 +50,6 @@ public class UserResource{
     GraphResourceFactory graphResourceFactory;
 
     @Inject
-    DrawnGraphResourceFactory drawnGraphResourceFactory;
-
-    @Inject
     SearchResourceFactory searchResourceFactory;
 
     @Inject
