@@ -9,6 +9,7 @@ import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.search.GraphIndexer;
@@ -30,6 +31,7 @@ import static org.triple_brain.module.model.json.StatementJsonFields.*;
  * Copyright Mozilla Public License 1.1
  */
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class VertexResource {
 
     @Inject
@@ -153,22 +155,24 @@ public class VertexResource {
     @POST
     @GraphTransactional
     @Path("{shortId}/label")
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.TEXT_PLAIN)
     public Response updateVertexLabel(
             @PathParam("shortId") String shortId,
-            @QueryParam("label") String label
+            JSONObject localizedLabel
     ) {
         URI vertexId = uriFromShortId(shortId);
         Vertex vertex = userGraph.vertexWithUri(
                 vertexId
         );
-        vertex.label(label);
+        vertex.label(
+                localizedLabel.optString(
+                        LocalizedStringJson.content.name()
+                )
+        );
         graphIndexer.indexVertex(
                 vertex
         );
         graphIndexer.commit();
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @POST
@@ -216,8 +220,8 @@ public class VertexResource {
 
     @Path("{shortId}/identification")
     @GraphTransactional
-    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String
-                                                                                      shortId) {
+    public GraphElementIdentificationResource getVertexIdentificationResource(
+            @PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forGraphElement(
                 vertexFromShortId(shortId),
                 true

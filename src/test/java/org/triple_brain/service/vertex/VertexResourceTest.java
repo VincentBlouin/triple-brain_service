@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
+import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
@@ -132,16 +133,19 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     @Test
     public void updating_label_returns_correct_status() throws Exception {
         ClientResponse response = updateVertexALabelUsingRest("new vertex label");
-        assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
+        assertThat(response.getStatus(), is(Response.Status.NO_CONTENT.getStatusCode()));
     }
 
     private ClientResponse updateVertexALabelUsingRest(String label) throws Exception {
+        JSONObject localizedLabel = new JSONObject().put(
+                LocalizedStringJson.content.name(),
+                label
+        );
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("label")
-                .queryParam("label", label)
                 .cookie(authCookie)
-                .post(ClientResponse.class);
+                .post(ClientResponse.class, localizedLabel);
         return response;
     }
 
