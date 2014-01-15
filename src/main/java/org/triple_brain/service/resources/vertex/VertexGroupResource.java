@@ -5,6 +5,10 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.graph.*;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.edge.EdgeFactory;
+import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexFactory;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

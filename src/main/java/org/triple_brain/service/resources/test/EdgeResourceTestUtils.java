@@ -1,6 +1,6 @@
 package org.triple_brain.service.resources.test;
 
-import org.triple_brain.module.model.graph.Edge;
+import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;

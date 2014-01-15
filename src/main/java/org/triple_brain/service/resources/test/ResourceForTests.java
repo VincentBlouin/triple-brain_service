@@ -5,8 +5,11 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.*;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.scenarios.TestScenarios;
 import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.repository.user.UserRepository;
@@ -96,10 +99,10 @@ public class ResourceForTests {
         ).build();
     }
 
-    private void addALotOfVerticesToVertex(Vertex vertex){
-        Vertex destinationVertex = vertex;
+    private void addALotOfVerticesToVertex(VertexOperator vertex){
+        VertexOperator destinationVertex = vertex;
         for (int i = 0; i < 100; i++) {
-            Edge edge = destinationVertex.addVertexAndRelation();
+            EdgeOperator edge = destinationVertex.addVertexAndRelation();
             destinationVertex = edge.destinationVertex();
         }
     }
@@ -150,7 +153,7 @@ public class ResourceForTests {
                 currentUser
         );
         SubGraph subGraph = userGraph.graphWithDefaultVertexAndDepth(10);
-        for (Vertex vertex : subGraph.vertices()) {
+        for (VertexOperator vertex : subGraph.vertices()) {
             graphIndexer.indexVertex(vertex);
         }
         for (Edge edge : subGraph.edges()) {

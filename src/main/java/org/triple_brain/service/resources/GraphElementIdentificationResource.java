@@ -4,10 +4,10 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.*;
-import org.triple_brain.module.model.graph.Edge;
-import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.GraphElementOperator;
 import org.triple_brain.module.model.graph.GraphTransactional;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.validator.FriendlyResourceValidator;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ResourceServiceUtils;
@@ -42,12 +42,12 @@ public class GraphElementIdentificationResource {
     @Inject
     GraphTransaction graphTransaction;
 
-    private GraphElement graphElement;
+    private GraphElementOperator graphElement;
     private boolean isVertex;
 
     @AssistedInject
     public GraphElementIdentificationResource(
-            @Assisted GraphElement graphElement,
+            @Assisted GraphElementOperator graphElement,
             @Assisted boolean isVertex
     ) {
         this.graphElement = graphElement;
@@ -141,7 +141,7 @@ public class GraphElementIdentificationResource {
     private void reindexGraphElement(){
         if(isVertex){
             graphIndexer.indexVertex(
-                    (Vertex) graphElement
+                    (VertexOperator) graphElement
             );
         }else{
             graphIndexer.indexRelation(

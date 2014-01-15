@@ -5,10 +5,11 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.graph.Edge;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.edge.EdgeOperator;
+import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
@@ -96,11 +97,11 @@ public class VertexResource {
     public Response addVertexAndEdgeToSourceVertex(
             @Context HttpServletRequest request
     ) {
-        Vertex sourceVertex = userGraph.vertexWithUri(URI.create(
+        VertexOperator sourceVertex = userGraph.vertexWithUri(URI.create(
                 request.getRequestURI()
         ));
-        Edge createdEdge = sourceVertex.addVertexAndRelation();
-        Vertex createdVertex = createdEdge.destinationVertex();
+        EdgeOperator createdEdge = sourceVertex.addVertexAndRelation();
+        VertexOperator createdVertex = createdEdge.destinationVertex();
         graphIndexer.indexVertex(
                 createdVertex
         );
@@ -129,21 +130,21 @@ public class VertexResource {
     public Response removeVertex(
             @Context HttpServletRequest request
     ) {
-        Vertex vertex = userGraph.vertexWithUri(URI.create(
+        VertexOperator vertex = userGraph.vertexWithUri(URI.create(
                 request.getRequestURI()
         ));
-        Set<Vertex> connectedVertices = new HashSet<>();
+        Set<VertexOperator> connectedVertices = new HashSet<VertexOperator>();
         graphIndexer.deleteGraphElement(
                 vertex
         );
-        for(Edge edge : vertex.connectedEdges()){
+        for(EdgeOperator edge : vertex.connectedEdges()){
             graphIndexer.deleteGraphElement(
                     edge
             );
             connectedVertices.add(edge.otherVertex(vertex));
         }
         vertex.remove();
-        for(Vertex connectedVertex : connectedVertices){
+        for(VertexOperator connectedVertex : connectedVertices){
             graphIndexer.indexVertex(
                     connectedVertex
             );
@@ -160,7 +161,7 @@ public class VertexResource {
             JSONObject localizedLabel
     ) {
         URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithUri(
+        VertexOperator vertex = userGraph.vertexWithUri(
                 vertexId
         );
         vertex.label(
@@ -185,7 +186,7 @@ public class VertexResource {
             String comment
     ) {
         URI vertexId = uriFromShortId(shortId);
-        Vertex vertex = userGraph.vertexWithUri(
+        VertexOperator vertex = userGraph.vertexWithUri(
                 vertexId
         );
         vertex.comment(comment);
@@ -256,7 +257,7 @@ public class VertexResource {
         );
     }
 
-    private Vertex vertexFromShortId(String shortId) {
+    private VertexOperator vertexFromShortId(String shortId) {
         URI vertexId = uriFromShortId(shortId);
         return userGraph.vertexWithUri(
                 vertexId

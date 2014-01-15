@@ -3,6 +3,9 @@ package org.triple_brain.service.resources.test;
 import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.graph.*;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 
@@ -44,7 +47,7 @@ public class VertexResourceTestUtils {
     @GET
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
-        Vertex vertex = userGraph.vertexWithUri(new URI(vertexId));
+        VertexOperator vertex = userGraph.vertexWithUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
         for(Edge edge : vertex.connectedEdges()){
             edges.put(
@@ -62,7 +65,7 @@ public class VertexResourceTestUtils {
     @GET
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
-        Vertex vertex = userGraph.vertexWithUri(new URI(Uris.decodeURL(vertexId)));
+        VertexOperator vertex = userGraph.vertexWithUri(new URI(Uris.decodeURL(vertexId)));
         Vertex otherVertex = userGraph.vertexWithUri(new URI(Uris.decodeURL(otherVertexId)));
         return Response.ok(
                 vertex.hasDestinationVertex(otherVertex).toString()

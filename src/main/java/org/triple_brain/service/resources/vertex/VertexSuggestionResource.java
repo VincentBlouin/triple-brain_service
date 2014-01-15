@@ -6,7 +6,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.graph.GraphTransactional;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.model.json.graph.VertexJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
@@ -24,14 +24,14 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexSuggestionResource {
 
-    private Vertex vertex;
+    private VertexOperator vertex;
 
     @Inject
     SuggestionFactory suggestionFactory;
 
     @AssistedInject
     public VertexSuggestionResource(
-            @Assisted Vertex vertex
+            @Assisted VertexOperator vertex
     ){
         this.vertex = vertex;
     }

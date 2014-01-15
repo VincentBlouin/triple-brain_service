@@ -4,7 +4,12 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.graph.*;
+import org.triple_brain.module.model.graph.GraphFactory;
+import org.triple_brain.module.model.graph.GraphTransactional;
+import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.edge.EdgeOperator;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
@@ -58,10 +63,10 @@ public class EdgeResource {
         }catch (UnsupportedEncodingException e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Vertex sourceVertex = userGraph.vertexWithUri(URI.create(
+        VertexOperator sourceVertex = userGraph.vertexWithUri(URI.create(
                 sourceVertexId
         ));
-        Vertex destinationVertex = userGraph.vertexWithUri(URI.create(
+        VertexOperator destinationVertex = userGraph.vertexWithUri(URI.create(
                 destinationVertexId
         ));
         Edge createdEdge = sourceVertex.addRelationToVertex(destinationVertex);
@@ -77,11 +82,11 @@ public class EdgeResource {
     public Response removeRelation(
        @Context HttpServletRequest request
     ){
-        Edge edge = userGraph.edgeWithUri(Uris.get(
+        EdgeOperator edge = userGraph.edgeWithUri(Uris.get(
                 request.getRequestURI()
         ));
-        Vertex sourceVertex = edge.sourceVertex();
-        Vertex destinationVertex = edge.destinationVertex();
+        VertexOperator sourceVertex = edge.sourceVertex();
+        VertexOperator destinationVertex = edge.destinationVertex();
         graphIndexer.deleteGraphElement(
                 edge
         );
@@ -131,7 +136,7 @@ public class EdgeResource {
         );
     }
 
-    private Edge edgeFromShortId(String shortId){
+    private EdgeOperator edgeFromShortId(String shortId){
         return userGraph.edgeWithUri(
                 edgeUriFromShortId(
                         shortId

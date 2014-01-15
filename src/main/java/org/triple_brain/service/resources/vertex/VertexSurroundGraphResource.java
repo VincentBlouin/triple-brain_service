@@ -6,7 +6,14 @@ package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import org.triple_brain.module.model.graph.*;
+import org.triple_brain.module.model.graph.GraphFactory;
+import org.triple_brain.module.model.graph.GraphTransactional;
+import org.triple_brain.module.model.graph.SubGraph;
+import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraphOperator;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
 
 import javax.inject.Inject;
@@ -62,9 +69,9 @@ public class VertexSurroundGraphResource {
     }
 
     public void removeVerticesAndEdgesNotAllowedToAccess(SubGraph graph) {
-        Iterator<VertexInSubGraph> iterator = graph.vertices().iterator();
+        Iterator<VertexInSubGraphOperator> iterator = graph.vertices().iterator();
         while (iterator.hasNext()) {
-            Vertex vertex = iterator.next();
+            VertexOperator vertex = iterator.next();
             if (!canAccessVertex(vertex)) {
                 for (Edge edge : vertex.connectedEdges()) {
                     graph.edges().remove(

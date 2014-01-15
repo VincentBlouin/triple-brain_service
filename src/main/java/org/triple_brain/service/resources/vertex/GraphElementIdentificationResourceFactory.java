@@ -1,6 +1,6 @@
 package org.triple_brain.service.resources.vertex;
 
-import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.GraphElementOperator;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
 
 /*
@@ -8,7 +8,7 @@ import org.triple_brain.service.resources.GraphElementIdentificationResource;
 */
 public interface GraphElementIdentificationResourceFactory {
     public GraphElementIdentificationResource forGraphElement(
-            GraphElement graphElement,
+            GraphElementOperator graphElement,
             boolean isVertex
     );
 }

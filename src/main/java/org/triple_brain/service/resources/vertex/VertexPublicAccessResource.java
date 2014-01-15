@@ -3,7 +3,7 @@ package org.triple_brain.service.resources.vertex;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.model.graph.GraphTransactional;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.search.GraphIndexer;
 
 import javax.inject.Inject;
@@ -21,11 +21,11 @@ public class VertexPublicAccessResource {
     @Inject
     GraphIndexer graphIndexer;
 
-    private Vertex vertex;
+    private VertexOperator vertex;
 
     @AssistedInject
     public VertexPublicAccessResource(
-            @Assisted Vertex vertex
+            @Assisted VertexOperator vertex
     ){
         this.vertex = vertex;
     }

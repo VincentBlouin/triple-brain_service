@@ -11,7 +11,7 @@ import org.imgscalr.Scalr;
 import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.graph.GraphTransactional;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.imageio.ImageIO;
@@ -35,7 +35,7 @@ import java.util.*;
 */
 public class VertexImageResource {
 
-    private Vertex vertex;
+    private VertexOperator vertex;
 
     public static final String IMAGES_FOLDER_PATH = "/var/lib/triple_brain/image";
 
@@ -47,7 +47,7 @@ public class VertexImageResource {
 
     @AssistedInject
     public VertexImageResource(
-            @Assisted Vertex vertex
+            @Assisted VertexOperator vertex
     ) {
         this.vertex = vertex;
     }

@@ -5,7 +5,7 @@ import org.triple_brain.module.model.WholeGraph;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexOperator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,9 +62,9 @@ public class GraphResourceTestUtils {
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
-        Iterator<Vertex> vertexIt = wholeGraph.getAllVertices();
+        Iterator<VertexOperator> vertexIt = wholeGraph.getAllVertices();
         while(vertexIt.hasNext()){
-            Vertex vertex = vertexIt.next();
+            VertexOperator vertex = vertexIt.next();
             vertex.setNumberOfConnectedEdges(0);
         }
         return Response.ok().build();

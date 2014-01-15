@@ -31,7 +31,7 @@ public class ResourceServiceUtils {
                 updatedResource = friendlyResourceFactory.createOrLoadFromUri(
                         resourceCached.uri()
                 );
-                updatedResource.addImages(
+                updatedResource.images().addAll(
                         images
                 );
                 BayeuxInitializer.notificationService.notifyChannelMessage(
