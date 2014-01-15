@@ -109,7 +109,7 @@ public class EdgeResource {
             @PathParam("edgeShortId") String edgeShortId,
             @QueryParam("label") String label){
         URI edgeId = edgeUriFromShortId(edgeShortId);
-        Edge edge = userGraph.edgeWithUri(
+        EdgeOperator edge = userGraph.edgeWithUri(
             edgeId
         );
         edge.label(label);
