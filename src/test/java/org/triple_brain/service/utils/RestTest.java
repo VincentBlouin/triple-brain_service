@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.json.UserJsonFields;
-import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4JModule;
+import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import org.triple_brain.service.Launcher;
 
 import javax.ws.rs.core.MediaType;
@@ -41,7 +41,7 @@ public abstract class RestTest {
 
     @BeforeClass
     static public void startServer() throws Exception {
-        Neo4JModule.clearDb();
+        Neo4jModule.clearDb();
         BASE_URI = new URI("http://localhost:8786");
 
         launcher = new Launcher(BASE_URI.getPort());

@@ -10,7 +10,7 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import org.triple_brain.module.model.graph.GraphComponentTest;
 import org.triple_brain.module.model.graph.neo4j.Neo4JGraphComponentTest;
-import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4JModule;
+import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import org.triple_brain.module.repository_sql.SQLModule;
 import org.triple_brain.module.solr_search.SolrSearchModule;
 import org.triple_brain.service.MessagesDistributorServlet;
@@ -79,7 +79,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bind(DataSource.class)
                         .annotatedWith(Names.named("nonRdfDb"))
                         .toProvider(fromJndi(DataSource.class, "jdbc/nonRdfTripleBrainDB"));
-                install(new Neo4JModule());
+                install(new Neo4jModule());
                 try{
                     final InitialContext jndiContext = new InitialContext();
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
