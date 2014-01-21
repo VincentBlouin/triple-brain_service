@@ -2,6 +2,7 @@ package org.triple_brain.service;
 
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.*;
+import org.triple_brain.module.model.graph.FriendlyResourceOperator;
 import org.triple_brain.module.model.json.FriendlyResourceJson;
 
 import javax.inject.Inject;
@@ -23,15 +24,15 @@ public class ResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
-            FriendlyResourceCached resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
+            FriendlyResource resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             Set<Image> images = (Set<Image>) o;
-            FriendlyResource updatedResource = resourceCached;
+            FriendlyResourceOperator updatedResource;
             Object state = graphTransaction.before();
             try {
                 updatedResource = friendlyResourceFactory.createOrLoadFromUri(
                         resourceCached.uri()
                 );
-                updatedResource.images().addAll(
+                updatedResource.addImages(
                         images
                 );
                 BayeuxInitializer.notificationService.notifyChannelMessage(
@@ -55,10 +56,10 @@ public class ResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
-            FriendlyResourceCached resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
+            FriendlyResource resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             String description = (String) o;
             Object state = graphTransaction.before();
-            FriendlyResource updatedResource = resourceCached;
+            FriendlyResourceOperator updatedResource;
             try {
                 updatedResource = friendlyResourceFactory.createOrLoadFromUri(
                         resourceCached.uri()

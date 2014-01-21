@@ -4,6 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.*;
+import org.triple_brain.module.model.graph.FriendlyResourcePojo;
 import org.triple_brain.module.model.graph.GraphElementOperator;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.edge.Edge;
@@ -60,7 +61,7 @@ public class GraphElementIdentificationResource {
     @Path("/")
     public Response add(JSONObject identification) {
         FriendlyResourceValidator validator = new FriendlyResourceValidator();
-        if(!validator.validate(identification).isEmpty()){
+        if (!validator.validate(identification).isEmpty()) {
             throw new WebApplicationException(
                     Response.Status.NOT_ACCEPTABLE
             );
@@ -77,7 +78,7 @@ public class GraphElementIdentificationResource {
             graphElement.addType(
                     friendlyResource
             );
-        } else if(type.equalsIgnoreCase(identification_types.GENERIC.name())){
+        } else if (type.equalsIgnoreCase(identification_types.GENERIC.name())) {
             graphElement.addGenericIdentification(
                     friendlyResource
             );
@@ -85,9 +86,15 @@ public class GraphElementIdentificationResource {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         reindexGraphElement();
-        FriendlyResourceCached friendlyResourceCached = FriendlyResourceCached.fromFriendlyResource(
-                friendlyResource
+        FriendlyResource friendlyResourceCached = new FriendlyResourcePojo(
+                friendlyResource.uri(),
+                friendlyResource.label(),
+                friendlyResource.images(),
+                friendlyResource.comment(),
+                friendlyResource.creationDate(),
+                friendlyResource.lastModificationDate()
         );
+
         updateImagesOfExternalResourceIfNecessary(
                 friendlyResourceCached
         );
@@ -112,20 +119,21 @@ public class GraphElementIdentificationResource {
         return Response.ok().build();
     }
 
-    private void updateImagesOfExternalResourceIfNecessary(FriendlyResourceCached friendlyResource) {
-        if (!friendlyResource.gotTheImages()) {
-            if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
-                FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
-                        friendlyResource
-                );
-                freebaseResource.getImages(
-                        resourceServiceUtils.imagesUpdateHandler
-                );
-            }
+    private void updateImagesOfExternalResourceIfNecessary(FriendlyResource friendlyResource) {
+        if (friendlyResource.gotImages()) {
+            return;
+        }
+        if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
+            FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
+                    friendlyResource
+            );
+            freebaseResource.getImages(
+                    resourceServiceUtils.imagesUpdateHandler
+            );
         }
     }
 
-    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResourceCached friendlyResource) {
+    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResource friendlyResource) {
         if (!friendlyResource.gotComments()) {
             if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
                 FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
@@ -138,12 +146,12 @@ public class GraphElementIdentificationResource {
         }
     }
 
-    private void reindexGraphElement(){
-        if(isVertex){
+    private void reindexGraphElement() {
+        if (isVertex) {
             graphIndexer.indexVertex(
                     (VertexOperator) graphElement
             );
-        }else{
+        } else {
             graphIndexer.indexRelation(
                     (Edge) graphElement
             );

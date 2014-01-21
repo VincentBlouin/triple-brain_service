@@ -12,7 +12,8 @@ import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
-import org.triple_brain.module.model.graph.vertex.VertexInSubGraphOperator;
+import org.triple_brain.module.model.graph.vertex.VertexFactory;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.GraphJsonFields;
 
@@ -30,6 +31,9 @@ import java.util.Iterator;
 public class VertexSurroundGraphResource {
     @Inject
     GraphFactory graphFactory;
+
+    @Inject
+    VertexFactory vertexFactory;
 
     private Vertex centerVertex;
     private Integer depthOfSubVertices;
@@ -69,11 +73,14 @@ public class VertexSurroundGraphResource {
     }
 
     public void removeVerticesAndEdgesNotAllowedToAccess(SubGraph graph) {
-        Iterator<VertexInSubGraphOperator> iterator = graph.vertices().iterator();
+        Iterator<VertexInSubGraph> iterator = graph.vertices().iterator();
         while (iterator.hasNext()) {
-            VertexOperator vertex = iterator.next();
+            Vertex vertex = iterator.next();
             if (!canAccessVertex(vertex)) {
-                for (Edge edge : vertex.connectedEdges()) {
+                VertexOperator vertexOperator = vertexFactory.createOrLoadUsingUri(
+                        vertex.uri()
+                );
+                for (Edge edge : vertexOperator.connectedEdges()) {
                     graph.edges().remove(
                             edge
                     );

@@ -9,6 +9,8 @@ import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.scenarios.TestScenarios;
 import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
+import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.UserJsonFields;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
@@ -59,6 +61,9 @@ public class ResourceForTests {
 
     @Inject
     GraphComponentTest graphComponentTest;
+
+    @Inject
+    VertexFactory vertexFactory;
 
     @Path("login")
     @GraphTransactional
@@ -153,8 +158,12 @@ public class ResourceForTests {
                 currentUser
         );
         SubGraph subGraph = userGraph.graphWithDefaultVertexAndDepth(10);
-        for (VertexOperator vertex : subGraph.vertices()) {
-            graphIndexer.indexVertex(vertex);
+        for (Vertex vertex : subGraph.vertices()) {
+            graphIndexer.indexVertex(
+                    vertexFactory.createOrLoadUsingUri(
+                            vertex.uri()
+                    )
+            );
         }
         for (Edge edge : subGraph.edges()) {
             graphIndexer.indexRelation(
