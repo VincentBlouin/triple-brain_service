@@ -1,5 +1,6 @@
 package org.triple_brain.service.resources;
 
+import com.google.gson.Gson;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.model.User;
@@ -24,6 +25,8 @@ public class SearchResource {
 
     private User user;
 
+    private Gson gson = new Gson();
+
     @AssistedInject
     public SearchResource(
             @Assisted User user
@@ -38,9 +41,11 @@ public class SearchResource {
             @QueryParam("text") String searchText
     ) {
         return Response.ok(
-                graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
-                        searchText,
-                        user
+                gson.toJson(
+                        graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                                searchText,
+                                user
+                        )
                 )).build();
     }
 
@@ -50,11 +55,11 @@ public class SearchResource {
     public Response searchVerticesForAutoComplete(
             @QueryParam("text") String searchText
     ) {
-        return Response.ok(
+        return Response.ok(gson.toJson(
                 graphSearch.searchOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                         searchText,
                         user
-                )).build();
+                ))).build();
     }
 
     @GET
@@ -63,11 +68,11 @@ public class SearchResource {
     public Response searchRelationsForAutoComplete(
             @QueryParam("text") String searchText
     ) {
-        return Response.ok(
+        return Response.ok(gson.toJson(
                 graphSearch.searchRelationsForAutoCompletionByLabel(
                         searchText,
                         user
-                )).build();
+                ))).build();
     }
 
     @GET
@@ -76,10 +81,11 @@ public class SearchResource {
     public Response getByUri(
             @QueryParam("uri") String uri
     ) {
-        return Response.ok(
+        return Response.ok(gson.toJson(
                 graphSearch.getByUri(
                         URI.create(uri),
                         user
-                )).build();
+                )
+        )).build();
     }
 }

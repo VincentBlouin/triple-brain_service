@@ -1,15 +1,17 @@
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.json.graph.VertexJson;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -41,21 +43,17 @@ public class VertexGroupResourceTest extends GraphManipulationRestTest{
                 .getHeaders()
                 .get("Location")
                 .get(0));
-        JSONObject newVertex = vertexUtils().vertexWithUriOfCurrentUser(
+        VertexInSubGraph newVertex = vertexUtils().vertexWithUriOfCurrentUser(
                 groupVertexUri
         );
-        JSONObject includedVerticesUri = newVertex.optJSONObject(
-                VertexJson.INCLUDED_VERTICES
-        );
+        Set<Vertex> includedVertices = newVertex.getIncludedVertices();
         assertThat(
-                includedVerticesUri.length(),
+                includedVertices.size(),
                 is(2)
         );
-        JSONArray includedEdges = newVertex.optJSONArray(
-                VertexJson.INCLUDED_EDGES
-        );
+        Set<Edge> includedEdges = newVertex.getIncludedEdges();
         assertThat(
-                includedEdges.length(),
+                includedEdges.size(),
                 is(0)
         );
     }

@@ -6,14 +6,20 @@ import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
-import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
+import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
-import org.triple_brain.module.model.json.graph.VertexJson;
+import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
+import org.triple_brain.module.search.EdgeSearchResult;
+import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
 
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,8 +27,6 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
-import static org.triple_brain.module.model.json.FriendlyResourceJson.COMMENT;
-import static org.triple_brain.module.model.json.FriendlyResourceJson.LABEL;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 
 /**
@@ -43,11 +47,11 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     public void can_add_a_vertex() throws Exception {
         int numberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
-        ).length();
+        ).size();
         vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
         int updatedNumberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
-        ).length();
+        ).size();
         assertThat(updatedNumberOfConnectedEdges, is(numberOfConnectedEdges + 1));
     }
 
@@ -55,30 +59,33 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
         ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
-        JSONObject subject = createdStatement.getJSONObject(SOURCE_VERTEX);
-        assertThat(subject.getString(VertexJson.URI), is(vertexAUri().toString()));
-        JSONObject newEdge = edgeUtils().edgeWithUri(
-                Uris.get(
-                        createdStatement.getJSONObject(EDGE).getString(
-                                EdgeJson.URI
-                        )
-                )
+        Vertex subject = VertexInSubGraphJson.fromJson(
+                createdStatement.getJSONObject(SOURCE_VERTEX)
         );
-        JSONObject newVertex = vertexUtils().vertexWithUriOfCurrentUser(
-                Uris.get(
-                        createdStatement.getJSONObject(END_VERTEX).getString(
-                                VertexJson.URI
-                        )
-                )
+        assertThat(
+                subject.uri().toString(),
+                is(vertexAUri().toString())
         );
-        JSONArray edgesOfVertexA = vertexUtils().connectedEdgesOfVertexWithURI(
+        Edge newEdge = EdgeJson.fromJson(
+                createdStatement.getJSONObject(EDGE)
+        );
+        Vertex newVertex = VertexInSubGraphJson.fromJson(
+                createdStatement.getJSONObject(END_VERTEX)
+        );
+        Set<Edge> edgesOfVertexA = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         );
-        assertTrue(edgeUtils().edgeIsInEdges(newEdge, edgesOfVertexA));
-        assertTrue(vertexUtils().vertexWithUriHasDestinationVertexWithUri(
-                vertexAUri(),
-                vertexUtils().uriOfVertex(newVertex)
-        ));
+        assertTrue(
+                edgesOfVertexA.contains(
+                        newEdge
+                )
+        );
+        assertTrue(
+                vertexUtils().vertexWithUriHasDestinationVertexWithUri(
+                        vertexAUri(),
+                        newVertex.uri()
+                )
+        );
     }
 
     @Test
@@ -114,19 +121,19 @@ public class VertexResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_update_label() throws Exception {
-        String vertexALabel = vertexA().getString(VertexJson.LABEL);
+        String vertexALabel = vertexA().label();
         assertThat(vertexALabel, is(not("new vertex label")));
         updateVertexALabelUsingRest("new vertex label");
-        vertexALabel = vertexA().getString(VertexJson.LABEL);
+        vertexALabel = vertexA().label();
         assertThat(vertexALabel, is("new vertex label"));
     }
 
     @Test
     public void can_update_note() throws Exception {
-        String vertexANote = vertexA().getString(VertexJson.COMMENT);
+        String vertexANote = vertexA().comment();
         assertThat(vertexANote, is(not("some note")));
         vertexUtils().updateVertexANote("some note");
-        vertexANote = vertexA().getString(VertexJson.COMMENT);
+        vertexANote = vertexA().comment();
         assertThat(vertexANote, is("some note"));
     }
 
@@ -152,33 +159,41 @@ public class VertexResourceTest extends GraphManipulationRestTest {
     @Test
     public void updating_note_updates_search() throws Exception {
         indexGraph();
-        JSONObject resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexA().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0);
-        Assert.assertThat(resultsForA.getString(COMMENT), Is.is(""));
+        GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexA().label()
+        ).get(0).getGraphElement();
+        assertThat(resultsForA.comment(), is(""));
         vertexUtils().updateVertexANote(
                 "A description"
         );
-        resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexA().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0);
-        Assert.assertThat(resultsForA.getString(COMMENT), Is.is("A description"));
+        resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexA().label()
+        ).get(0).getGraphElement();
+        assertThat(
+                resultsForA.comment(), is("A description")
+        );
     }
 
     @Test
-    public void when_deleting_a_vertex_its_relations_are_also_removed_from_search(){
+    public void when_deleting_a_vertex_its_relations_are_also_removed_from_search() {
         indexGraph();
-        JSONArray relations = searchUtils().searchForRelations(
+        List<EdgeSearchResult> relations = searchUtils().searchForRelations(
                 "between",
                 defaultAuthenticatedUserAsJson
-        ).getEntity(JSONArray.class);
-        Assert.assertThat(relations.length(), Is.is(2));
+        );
+        assertThat(
+                relations.size(),
+                is(2)
+        );
         vertexUtils().removeVertexB();
         relations = searchUtils().searchForRelations(
                 "between",
                 defaultAuthenticatedUserAsJson
-        ).getEntity(JSONArray.class);
-        Assert.assertThat(relations.length(), Is.is(0));
+        );
+        assertThat(
+                relations.size(),
+                is(0)
+        );
     }
 
     @Test
@@ -188,21 +203,26 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         authenticate(
                 anotherUser
         );
-        JSONArray results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
-                vertexA().getString(LABEL),
+        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+                vertexA().label(),
                 anotherUser
-        ).getEntity(JSONArray.class);
-        Assert.assertThat(results.length(), Is.is(0));
+        );
+        assertThat(
+                results.size(), is(0)
+        );
         authenticate(defaultAuthenticatedUser);
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
         authenticate(anotherUser);
-        results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
-                vertexA().getString(LABEL),
+        results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+                vertexA().label(),
                 anotherUser
-        ).getEntity(JSONArray.class);
-        Assert.assertThat(results.length(), Is.is(1));
+        );
+        assertThat(
+                results.size(),
+                is(1)
+        );
     }
 
     @Test
@@ -213,8 +233,8 @@ public class VertexResourceTest extends GraphManipulationRestTest {
         indexGraph();
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
-        JSONArray results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
-                vertexA().getString(LABEL),
+        JSONArray results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
+                vertexA().label(),
                 anotherUser
         ).getEntity(JSONArray.class);
         Assert.assertThat(results.length(), Is.is(greaterThan(0)));
@@ -223,17 +243,17 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                 vertexAUri()
         );
         authenticate(anotherUser);
-        results = searchUtils().searchOwnVerticesAndPublicOnesForAutoCompleteUsingRestAndUser(
-                vertexA().getString(LABEL),
+        results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
+                vertexA().label(),
                 anotherUser
         ).getEntity(JSONArray.class);
         Assert.assertThat(results.length(), Is.is(0));
     }
 
     @Test
-    public void number_of_connected_vertices_are_included()throws Exception{
+    public void number_of_connected_vertices_are_included() throws Exception {
         assertThat(
-                vertexB().getInt(VertexJson.NUMBER_OF_CONNECTED_EDGES),
+                vertexB().getNumberOfConnectedEdges(),
                 is(2)
         );
     }

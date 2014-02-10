@@ -11,8 +11,9 @@ import org.triple_brain.module.model.graph.scenarios.TestScenarios;
 import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraphPojo;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.UserJsonFields;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
@@ -185,7 +186,7 @@ public class ResourceForTests {
                 .password("password");
         userRepository.save(user);
         return Response.ok(
-                UserJsonFields.toJson(user)
+                UserJson.toJson(user)
         ).build();
     }
 
@@ -203,16 +204,16 @@ public class ResourceForTests {
         verticesCalledABAndCAsJsonArray
                 .put(
                         VertexInSubGraphJson.toJson(
-                                verticesCalledABAndC.vertexA()
+                                new VertexInSubGraphPojo(verticesCalledABAndC.vertexA())
                         )
                 )
                 .put(
                         VertexInSubGraphJson.toJson(
-                                verticesCalledABAndC.vertexB()
+                                new VertexInSubGraphPojo(verticesCalledABAndC.vertexB())
                         ))
                 .put(
                         VertexInSubGraphJson.toJson(
-                                verticesCalledABAndC.vertexC()
+                                new VertexInSubGraphPojo(verticesCalledABAndC.vertexC())
                         ));
 
         return Response.ok(verticesCalledABAndCAsJsonArray).build();

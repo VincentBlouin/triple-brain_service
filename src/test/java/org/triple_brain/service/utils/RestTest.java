@@ -11,7 +11,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.json.UserJsonFields;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import org.triple_brain.service.Launcher;
 
@@ -117,10 +117,10 @@ public abstract class RestTest {
         try {
             JSONObject loginInfo = new JSONObject()
                     .put(
-                            UserJsonFields.EMAIL,
+                            UserJson.EMAIL,
                             user.email()
                     )
-                    .put(UserJsonFields.PASSWORD, DEFAULT_PASSWORD);
+                    .put(UserJson.PASSWORD, DEFAULT_PASSWORD);
             ClientResponse response = resource
                     .path("service")
                     .path("users")
@@ -139,10 +139,10 @@ public abstract class RestTest {
         try {
             JSONObject loginInfo = new JSONObject()
                     .put(
-                            UserJsonFields.EMAIL,
-                            user.getString(UserJsonFields.EMAIL)
+                            UserJson.EMAIL,
+                            user.getString(UserJson.EMAIL)
                     )
-                    .put(UserJsonFields.PASSWORD, DEFAULT_PASSWORD);
+                    .put(UserJson.PASSWORD, DEFAULT_PASSWORD);
             ClientResponse response = resource
                     .path("service")
                     .path("users")

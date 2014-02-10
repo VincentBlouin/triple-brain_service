@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.Map;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static org.triple_brain.module.model.json.UserJsonFields.*;
+import static org.triple_brain.module.model.json.UserJson.*;
 import static org.triple_brain.module.model.validator.UserValidator.*;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.isUserInSession;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;

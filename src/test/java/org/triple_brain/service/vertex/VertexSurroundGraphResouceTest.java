@@ -5,8 +5,9 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.triple_brain.module.model.json.graph.GraphJsonFields;
-import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
+import org.triple_brain.module.model.graph.SubGraph;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
+import org.triple_brain.module.model.json.graph.SubGraphJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.NewCookie;
@@ -15,7 +16,6 @@ import java.net.URI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.triple_brain.module.model.json.graph.GraphJsonFields.VERTICES;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -32,12 +32,9 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_get_graph() {
-        JSONObject graph = getGraph().getEntity(JSONObject.class);
-        JSONObject vertexAFromGraph = graph.optJSONObject(
-                GraphJsonFields.VERTICES
-        );
+        SubGraph graph = SubGraphJson.fromJson(getGraph().getEntity(JSONObject.class));
         assertThat(
-                vertexAFromGraph.length(),
+                graph.vertices().size(),
                 is(3)
         );
     }
@@ -66,35 +63,36 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_get_sub_graph() throws Exception {
-        JSONObject graph = getGraphOfCentralVertexUriAtDepth(
+        SubGraph graph = SubGraphJson.fromJson(getGraphOfCentralVertexUriAtDepth(
                 vertexAUri(),
                 2
-        ).getEntity(JSONObject.class);
+        ).getEntity(JSONObject.class));
         assertThat(
-                graph.getJSONObject(VERTICES).length(),
+                graph.vertices().size(),
                 is(3)
         );
-        graph = getGraphOfCentralVertexUriAtDepth(
+        graph = SubGraphJson.fromJson(getGraphOfCentralVertexUriAtDepth(
                 vertexAUri(),
                 1
-        ).getEntity(JSONObject.class);
+        ).getEntity(JSONObject.class));
         assertThat(
-                graph.getJSONObject(VERTICES).length(),
+                graph.vertices().size(),
                 is(2)
         );
     }
 
     @Test
     public void distance_from_center_vertex_is_included() throws Exception{
-        JSONObject graph = getGraphOfCentralVertexUriAtDepth(
+        SubGraph subGraph = SubGraphJson.fromJson(
+                getGraphOfCentralVertexUriAtDepth(
                 vertexAUri(),
                 2
-        ).getEntity(JSONObject.class);
-        JSONObject vertexC = graph.getJSONObject(VERTICES).getJSONObject(
-                vertexCUri().toString()
+        ).getEntity(JSONObject.class));
+        VertexInSubGraph vertexCFromSubGraph = subGraph.vertexWithIdentifier(
+                vertexCUri()
         );
         assertThat(
-                vertexC.getInt(VertexInSubGraphJson.DISTANCE_FROM_CENTER_VERTEX),
+                vertexCFromSubGraph.minDistanceFromCenterVertex(),
                 is(2)
         );
     }
@@ -118,10 +116,10 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
         );
         JSONObject graph = clientResponse.getEntity(JSONObject.class);
         JSONObject vertices = graph.optJSONObject(
-                GraphJsonFields.VERTICES
+                SubGraphJson.VERTICES
         );
         JSONObject edges = graph.optJSONObject(
-                GraphJsonFields.EDGES
+                SubGraphJson.EDGES
         );
         assertThat(
                 vertices.length(),

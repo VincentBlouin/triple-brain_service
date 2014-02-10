@@ -1,5 +1,6 @@
 package org.triple_brain.service.conf;
 
+import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -40,6 +41,7 @@ public class GuiceConfig extends GuiceServletContextListener {
             @Override
             protected void configureServlets() {
                 bind(Context.class).to(InitialContext.class);
+                bind(Gson.class).toInstance(new Gson());
                 RestInterceptor restInterceptor = new RestInterceptor();
                 requestInjection(restInterceptor);
 

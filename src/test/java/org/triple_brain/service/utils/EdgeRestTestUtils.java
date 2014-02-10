@@ -1,17 +1,17 @@
 package org.triple_brain.service.utils;
 
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.json.graph.EdgeJson;
-import org.triple_brain.module.model.json.graph.GraphJsonFields;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.edge.EdgePojo;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
+import java.util.Set;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -21,6 +21,7 @@ public class EdgeRestTestUtils {
     private WebResource resource;
     private NewCookie authCookie;
     private GraphRestTestUtils graphUtils;
+    private Gson gson = new Gson();
     public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
         return new EdgeRestTestUtils(resource, authCookie, authenticatedUser);
     }
@@ -34,17 +35,9 @@ public class EdgeRestTestUtils {
         );
     }
 
-    public URI uriOfEdge(JSONObject jsonObject){
-        try{
-            return Uris.get(jsonObject.getString(EdgeJson.URI));
-        }catch(JSONException e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ClientResponse updateEdgeLabel(String label, JSONObject edge)throws Exception{
+    public ClientResponse updateEdgeLabel(String label, Edge edge)throws Exception{
         ClientResponse response = resource
-                .path(edge.getString(EdgeJson.URI))
+                .path(edge.uri().toString())
                 .path("label")
                 .queryParam("label", label)
                 .cookie(authCookie)
@@ -53,15 +46,15 @@ public class EdgeRestTestUtils {
     }
 
     public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception{
-        JSONObject edgeBetweenAAndB = edgeBetweenAAndB();
+        Edge edgeBetweenAAndB = edgeBetweenAAndB();
         ClientResponse response = resource
-                .path(edgeBetweenAAndB.getString(EdgeJson.URI))
+                .path(edgeBetweenAAndB.uri().toString())
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
         return response;
     }
 
-    public JSONObject edgeWithUri(URI edgeUri){
+    public Edge edgeWithUri(URI edgeUri){
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -70,33 +63,21 @@ public class EdgeRestTestUtils {
                 .path(Uris.encodeURL(edgeUri.toString()))
                 .cookie(authCookie)
                 .get(ClientResponse.class);
-        return response.getEntity(JSONObject.class);
+        return gson.fromJson(
+                response.getEntity(JSONObject.class).toString(),
+                EdgePojo.class
+        );
     }
 
-    public boolean edgeIsInEdges(JSONObject edge, JSONArray edges){
+    public Edge edgeBetweenTwoVerticesUriGivenEdges(
+            URI firstVertexUri,
+            URI secondVertexUri,
+            Set<Edge> edges
+    ){
         try{
-            for(int i = 0 ; i < edges.length() ; i++){
-                JSONObject edgeToCompare = edges.getJSONObject(i);
-                if(uriOfEdge(edgeToCompare).equals(uriOfEdge(edge))){
-                    return true;
-                }
-            }
-        }catch(JSONException e){
-            throw new RuntimeException(e);
-        }
-        return false;
-    }
-
-    public JSONObject edgeBetweenTwoVerticesUriGivenEdges(URI firstVertexUri, URI secondVertexUri, JSONArray edges){
-        try{
-            for(int i = 0 ; i < edges.length(); i++){
-                JSONObject edge = edges.getJSONObject(i);
-                URI sourceVertexId = URI.create(
-                        edge.getString(EdgeJson.SOURCE_VERTEX_ID)
-                );
-                URI destinationVertexId = URI.create(
-                        edge.getString(EdgeJson.DESTINATION_VERTEX_ID)
-                );
+            for(Edge edge : edges){
+                URI sourceVertexId = edge.sourceVertex().uri();
+                URI destinationVertexId = edge.destinationVertex().uri();
                 if(oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&
                         oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, destinationVertexId)){
                     return edge;
@@ -108,14 +89,11 @@ public class EdgeRestTestUtils {
         throw new RuntimeException("none found !");
     }
 
-    public JSONObject edgeBetweenAAndB()throws Exception{
-        JSONArray allEdges = graphUtils.wholeGraph().getJSONArray(
-                GraphJsonFields.EDGES
-        );
+    public Edge edgeBetweenAAndB()throws Exception{
         return edgeBetweenTwoVerticesUriGivenEdges(
                 graphUtils.vertexAUri(),
                 graphUtils.vertexBUri(),
-                allEdges
+                graphUtils.wholeGraph().edges()
         );
     }
 

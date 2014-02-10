@@ -3,7 +3,7 @@ package org.triple_brain.service.resources;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.json.UserJsonFields;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.repository.user.NonExistingUserException;
 import org.triple_brain.module.repository.user.UserRepository;
 
@@ -39,7 +39,7 @@ public class UserSessionResource {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         return Response.ok(
-                UserJsonFields.toJson(
+                UserJson.toJson(
                         userFromSession(request.getSession())
                 )
         ).build();
@@ -54,14 +54,14 @@ public class UserSessionResource {
     ){
         try {
             User user = userRepository.findByEmail(
-                    loginInfo.getString(UserJsonFields.EMAIL)
+                    loginInfo.getString(UserJson.EMAIL)
             );
             if (user.hasPassword(
-                    loginInfo.getString(UserJsonFields.PASSWORD)
+                    loginInfo.getString(UserJson.PASSWORD)
             )) {
                 authenticateUserInSession(user, request.getSession());
                 return Response.ok(
-                        UserJsonFields.toJson(user)
+                        UserJson.toJson(user)
                 ).build();
             }
         } catch (NonExistingUserException e) {

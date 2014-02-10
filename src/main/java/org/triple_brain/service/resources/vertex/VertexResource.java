@@ -8,7 +8,8 @@ import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
-import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.edge.EdgePojo;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraphPojo;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
@@ -70,7 +71,9 @@ public class VertexResource {
     @Path("/{shortId}")
     public Response getVertex(@PathParam("shortId") String shortId){
         return Response.ok(VertexInSubGraphJson.toJson(
-                vertexFromShortId(shortId)
+                new VertexInSubGraphPojo(
+                        vertexFromShortId(shortId)
+                )
         )).build();
     }
 
@@ -78,9 +81,11 @@ public class VertexResource {
     @GraphTransactional
     @Path("/")
     public Response createVertex() {
-        Vertex newVertex = userGraph.createVertex();
+        VertexOperator newVertex = userGraph.createVertex();
         return Response.ok()
-                .entity(VertexInSubGraphJson.toJson(newVertex))
+                .entity(VertexInSubGraphJson.toJson(
+                        new VertexInSubGraphPojo(newVertex)
+                ))
                 .build();
     }
 
@@ -108,13 +113,19 @@ public class VertexResource {
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
             jsonCreatedStatement.put(
-                    SOURCE_VERTEX, VertexInSubGraphJson.toJson(sourceVertex)
+                    SOURCE_VERTEX, VertexInSubGraphJson.toJson(
+                    new VertexInSubGraphPojo(sourceVertex)
+            )
             );
             jsonCreatedStatement.put(
-                    EDGE, EdgeJson.toJson(createdEdge)
+                    EDGE, EdgeJson.toJson(
+                        new EdgePojo(createdEdge)
+            )
             );
             jsonCreatedStatement.put(
-                    END_VERTEX, VertexInSubGraphJson.toJson(createdVertex)
+                    END_VERTEX, VertexInSubGraphJson.toJson(
+                    new VertexInSubGraphPojo(createdVertex)
+            )
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);

@@ -1,9 +1,10 @@
 package org.triple_brain.service.resources.test;
 
-import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.edge.EdgeOperator;
+import org.triple_brain.module.model.graph.edge.EdgePojo;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 
 import javax.inject.Inject;
@@ -33,8 +34,10 @@ public class EdgeResourceTestUtils {
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(userFromSession(request.getSession()));
-        Edge edge = userGraph.edgeWithUri(new URI(edgeId));
-        return Response.ok(EdgeJson.toJson(edge)).build();
+        EdgeOperator edge = userGraph.edgeWithUri(new URI(edgeId));
+        return Response.ok(EdgeJson.toJson(
+                new EdgePojo(edge)
+        )).build();
     }
 
 }

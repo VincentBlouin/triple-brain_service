@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 
-import static org.triple_brain.module.model.json.UserJsonFields.*;
+import static org.triple_brain.module.model.json.UserJson.*;
 
 /*
 * Copyright Mozilla Public License 1.1

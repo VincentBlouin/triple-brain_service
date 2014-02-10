@@ -1,19 +1,24 @@
 package org.triple_brain.service.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.json.graph.VertexJson;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.edge.EdgePojo;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraphPojo;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -26,6 +31,7 @@ public class VertexRestTestUtils {
     private WebResource resource;
     private NewCookie authCookie;
     private User authenticatedUser;
+    private Gson gson = new Gson();
 
     public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
         return new VertexRestTestUtils(resource, authCookie, authenticatedUser);
@@ -36,7 +42,7 @@ public class VertexRestTestUtils {
         this.authenticatedUser = authenticatedUser;
     }
 
-    public JSONObject vertexWithUriOfAnyUser(URI vertexUri){
+    public VertexInSubGraph vertexWithUriOfAnyUser(URI vertexUri){
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -45,10 +51,13 @@ public class VertexRestTestUtils {
                 .path(Uris.encodeURL(vertexUri.toString()))
                 .cookie(authCookie)
                 .get(ClientResponse.class);
-        return response.getEntity(JSONObject.class);
+        JSONObject jsonObject = response.getEntity(JSONObject.class);
+        return vertexFromJson(
+                jsonObject
+        );
     }
 
-    public JSONObject vertexWithUriOfCurrentUser(URI vertexUri){
+    public VertexInSubGraph vertexWithUriOfCurrentUser(URI vertexUri){
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .cookie(authCookie)
@@ -58,10 +67,13 @@ public class VertexRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return response.getEntity(JSONObject.class);
+        JSONObject jsonObject = response.getEntity(JSONObject.class);
+        return vertexFromJson(
+                jsonObject
+        );
     }
 
-    public JSONArray connectedEdgesOfVertexWithURI(URI vertexUri) {
+    public Set<Edge> connectedEdgesOfVertexWithURI(URI vertexUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -71,7 +83,12 @@ public class VertexRestTestUtils {
                 .path("connected_edges")
                 .cookie(authCookie)
                 .get(ClientResponse.class);
-        return response.getEntity(JSONArray.class);
+        JSONArray jsonArray = response.getEntity(JSONArray.class);
+        return gson.fromJson(
+                jsonArray.toString(),
+                new TypeToken<Set<EdgePojo>>() {
+                }.getType()
+        );
     }
 
     public boolean vertexWithUriHasDestinationVertexWithUri(URI vertexUri, URI destinationVertexUri){
@@ -90,11 +107,9 @@ public class VertexRestTestUtils {
     }
 
     public URI uriOfVertex(JSONObject jsonObject){
-        try{
-            return Uris.get(jsonObject.getString(VertexJson.URI));
-        }catch(JSONException e){
-            throw new RuntimeException(e);
-        }
+        return vertexFromJson(
+                jsonObject
+        ).uri();
     }
 
     public ClientResponse updateVertexANote(String note) throws Exception {
@@ -105,14 +120,6 @@ public class VertexRestTestUtils {
                 .type(MediaType.TEXT_PLAIN)
                 .post(ClientResponse.class, note);
         return response;
-    }
-
-    public boolean vertexIsInVertices(JSONObject vertex, JSONObject vertices){
-        try{
-            return vertices.has(vertex.getString(VertexJson.URI));
-        }catch(JSONException e){
-            throw new RuntimeException(e);
-        }
     }
 
     public ClientResponse addAVertexToVertexAWithUri(URI vertexUri) throws Exception {
@@ -168,6 +175,13 @@ public class VertexRestTestUtils {
                 resource,
                 authCookie,
                 authenticatedUser
+        );
+    }
+
+    protected VertexInSubGraph vertexFromJson(JSONObject jsonObject){
+        return gson.fromJson(
+                jsonObject.toString(),
+                VertexInSubGraphPojo.class
         );
     }
 }

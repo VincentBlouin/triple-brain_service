@@ -1,11 +1,15 @@
 package org.triple_brain.service.utils;
 
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.SubGraph;
+import org.triple_brain.module.model.graph.SubGraphPojo;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -28,6 +32,7 @@ public class GraphRestTestUtils {
     static JSONObject vertexB;
     static JSONObject vertexC;
     private User authenticatedUser;
+    protected Gson gson = new Gson();
     public static GraphRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
         return new GraphRestTestUtils(resource, authCookie, authenticatedUser);
     }
@@ -42,7 +47,7 @@ public class GraphRestTestUtils {
         );
     }
 
-    public JSONObject wholeGraph(){
+    public SubGraph wholeGraph(){
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("surround_graph")
@@ -56,7 +61,10 @@ public class GraphRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return response.getEntity(JSONObject.class);
+        return gson.fromJson(
+                response.getEntity(JSONObject.class).toString(),
+                SubGraphPojo.class
+        );
     }
 
     public JSONArray makeGraphHave3SerialVerticesWithLongLabels() {
@@ -102,13 +110,13 @@ public class GraphRestTestUtils {
         );
     }
 
-    public JSONObject vertexA(){
+    public VertexInSubGraph vertexA(){
         return vertexUtils.vertexWithUriOfAnyUser(vertexAUri());
     }
-    public JSONObject vertexB(){
+    public VertexInSubGraph vertexB(){
         return vertexUtils.vertexWithUriOfAnyUser(vertexBUri());
     }
-    public JSONObject vertexC(){
+    public VertexInSubGraph vertexC(){
         return vertexUtils.vertexWithUriOfAnyUser(vertexCUri());
     }
 }

@@ -1,11 +1,13 @@
 package org.triple_brain.service.utils;
 
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.json.UserJsonFields;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
+import org.triple_brain.module.model.json.UserJson;
 
 import java.net.URI;
 
@@ -21,7 +23,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     protected User defaultAuthenticatedUser;
     protected JSONObject defaultAuthenticatedUserAsJson;
-
+    protected Gson gson = new Gson();
     @Before
     public void before_graph_manipulator_rest_test() throws Exception {
         JSONObject userAsJson = userUtils().validForCreation();
@@ -29,8 +31,8 @@ public class GraphManipulationRestTest extends RestTest {
         authenticate(userAsJson);
         defaultAuthenticatedUserAsJson = userAsJson;
         defaultAuthenticatedUser = User.withUsernameEmailAndLocales(
-                userAsJson.getString(UserJsonFields.USER_NAME),
-                userAsJson.getString(UserJsonFields.EMAIL),
+                userAsJson.getString(UserJson.USER_NAME),
+                userAsJson.getString(UserJson.EMAIL),
                 "[fr]"
         );
         defaultAuthenticatedUser.password(DEFAULT_PASSWORD);
@@ -124,15 +126,15 @@ public class GraphManipulationRestTest extends RestTest {
         return Boolean.valueOf(boolStr);
     }
 
-    protected JSONObject vertexA() {
+    protected VertexInSubGraph vertexA() {
         return graphUtils().vertexA();
     }
 
-    protected JSONObject vertexB() {
+    protected VertexInSubGraph vertexB() {
         return graphUtils().vertexB();
     }
 
-    protected JSONObject vertexC() {
+    protected VertexInSubGraph vertexC() {
         return graphUtils().vertexC();
     }
 
@@ -147,4 +149,5 @@ public class GraphManipulationRestTest extends RestTest {
     protected URI vertexCUri() {
         return graphUtils().vertexCUri();
     }
+
 }

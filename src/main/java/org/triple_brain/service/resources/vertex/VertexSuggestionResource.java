@@ -2,20 +2,19 @@ package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
-import org.triple_brain.module.model.json.graph.VertexJson;
-import org.triple_brain.module.model.suggestion.Suggestion;
+import org.triple_brain.module.model.json.SuggestionJson;
 import org.triple_brain.module.model.suggestion.SuggestionFactory;
+import org.triple_brain.module.model.suggestion.SuggestionOperator;
+import org.triple_brain.module.model.suggestion.SuggestionPojo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -32,7 +31,7 @@ public class VertexSuggestionResource {
     @AssistedInject
     public VertexSuggestionResource(
             @Assisted VertexOperator vertex
-    ){
+    ) {
         this.vertex = vertex;
     }
 
@@ -40,40 +39,28 @@ public class VertexSuggestionResource {
     @Path("/")
     @GraphTransactional
     public Response getSuggestions() {
-        try {
-            JSONArray suggestions = VertexInSubGraphJson.toJson(vertex)
-                    .getJSONArray(VertexJson.SUGGESTIONS);
-            return Response.ok(suggestions).build();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        return Response.ok(
+                SuggestionJson.inVertex(vertex)
+        ).build();
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     @GraphTransactional
-    public Response addSuggestions(JSONArray suggestions) {
-        vertex.addSuggestions(
-                suggestionsSetFromJSONArray(suggestions)
-        );
-        return Response.ok().build();
+    public Response addSuggestions(String suggestions) {
+        vertex.addSuggestions(createSuggestions(
+                SuggestionJson.fromJsonArray(suggestions)
+        ));
+        return Response.noContent().build();
     }
 
-    private Suggestion[] suggestionsSetFromJSONArray(JSONArray jsonSuggestions) {
-        Suggestion[] suggestionImpls = new Suggestion[
-                jsonSuggestions.length()
-                ];
-        for (int i = 0; i < jsonSuggestions.length(); i++) {
-            try {
-                JSONObject jsonSuggestion = jsonSuggestions.getJSONObject(i);
-                suggestionImpls[i] = suggestionFactory.createFromJsonObject(
-                    jsonSuggestion
-                );
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+    private Set<SuggestionOperator> createSuggestions(Set<SuggestionPojo> suggestions){
+        Set<SuggestionOperator> suggestionsOperator = new HashSet<>();
+        for(SuggestionPojo suggestion : suggestions){
+            suggestionsOperator.add(
+                    suggestionFactory.createFromPojo(suggestion)
+            );
         }
-        return suggestionImpls;
+        return suggestionsOperator;
     }
 }

@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.json.UserJsonFields;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.triple_brain.module.model.json.UserJsonFields.*;
+import static org.triple_brain.module.model.json.UserJson.*;
 import static org.triple_brain.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
 import static org.triple_brain.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
 
@@ -33,25 +33,25 @@ public class UserResourceTest extends GraphManipulationRestTest {
                 "roger.lamothe@example.org",
                 new JSONArray().put("fr").toString()
         );
-        JSONObject rogerLamotheAsJson = UserJsonFields.toJson(
+        JSONObject rogerLamotheAsJson = UserJson.toJson(
                 rogerLamothe
         );
         rogerLamotheAsJson.put(
-                UserJsonFields.PASSWORD,
+                UserJson.PASSWORD,
                 DEFAULT_PASSWORD
         );
         rogerLamotheAsJson.put(
-                UserJsonFields.PASSWORD_VERIFICATION,
+                UserJson.PASSWORD_VERIFICATION,
                 DEFAULT_PASSWORD
         );
         rogerLamotheAsJson.put(
-                UserJsonFields.PREFERRED_LOCALES,
+                UserJson.PREFERRED_LOCALES,
                 new JSONArray().put("fr")
         );
         createUser(rogerLamotheAsJson);
         JSONObject loginInfo = new JSONObject()
-                .put(UserJsonFields.EMAIL, "roger.lamothe@example.org")
-                .put(UserJsonFields.PASSWORD, "password");
+                .put(UserJson.EMAIL, "roger.lamothe@example.org")
+                .put(UserJson.PASSWORD, "password");
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -104,10 +104,10 @@ public class UserResourceTest extends GraphManipulationRestTest {
         createUser(user);
         JSONObject loginInfo = new JSONObject()
                 .put(
-                        UserJsonFields.EMAIL,
-                        user.getString(UserJsonFields.EMAIL)
+                        UserJson.EMAIL,
+                        user.getString(UserJson.EMAIL)
                 )
-                .put(UserJsonFields.PASSWORD, DEFAULT_PASSWORD);
+                .put(UserJson.PASSWORD, DEFAULT_PASSWORD);
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -116,7 +116,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, loginInfo);
         JSONObject userFromResponse = response.getEntity(JSONObject.class);
-        String originalUserUsername = user.getString(UserJsonFields.USER_NAME);
+        String originalUserUsername = user.getString(UserJson.USER_NAME);
         assertThat(
                 userFromResponse.getString(USER_NAME),
                 is(originalUserUsername)
@@ -163,7 +163,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
                 is(Response.Status.CREATED.getStatusCode())
         );
         jsonUser = authenticate(jsonUser).getEntity(JSONObject.class);
-        String username = jsonUser.getString(UserJsonFields.USER_NAME);
+        String username = jsonUser.getString(UserJson.USER_NAME);
         assertThat(
                 response.getHeaders().get("Location").get(0),
                 is(BASE_URI + "/service/users/" + username)
@@ -175,7 +175,7 @@ public class UserResourceTest extends GraphManipulationRestTest {
         JSONObject validUser = userUtils().validForCreation();
         User user = User.withUsernameEmailAndLocales(
                 validUser.getString(USER_NAME),
-                validUser.getString(UserJsonFields.EMAIL),
+                validUser.getString(UserJson.EMAIL),
                 "[fr]"
         );
         assertFalse(
@@ -274,13 +274,13 @@ public class UserResourceTest extends GraphManipulationRestTest {
 
     private void createUserWithEmail(String email) throws Exception {
         JSONObject user = userUtils().validForCreation();
-        user.put(UserJsonFields.EMAIL, email);
+        user.put(UserJson.EMAIL, email);
         createUser(user);
     }
 
     private JSONObject createUserWithUsername(String username) throws Exception {
         JSONObject user = userUtils().validForCreation();
-        user.put(UserJsonFields.USER_NAME, username);
+        user.put(UserJson.USER_NAME, username);
         createUser(user);
         return user;
     }

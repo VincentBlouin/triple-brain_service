@@ -3,12 +3,15 @@ package org.triple_brain.service.resources;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.*;
+import org.triple_brain.module.model.FreebaseFriendlyResource;
+import org.triple_brain.module.model.FriendlyResource;
+import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.graph.FriendlyResourcePojo;
 import org.triple_brain.module.model.graph.GraphElementOperator;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
+import org.triple_brain.module.model.json.FriendlyResourceJson;
 import org.triple_brain.module.model.validator.FriendlyResourceValidator;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ResourceServiceUtils;
@@ -40,9 +43,6 @@ public class GraphElementIdentificationResource {
     @Inject
     ResourceServiceUtils resourceServiceUtils;
 
-    @Inject
-    GraphTransaction graphTransaction;
-
     private GraphElementOperator graphElement;
     private boolean isVertex;
 
@@ -56,20 +56,22 @@ public class GraphElementIdentificationResource {
     }
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
     @GraphTransactional
     @Path("/")
-    public Response add(JSONObject identification) {
+    public Response add(JSONObject identificationJson) {
         FriendlyResourceValidator validator = new FriendlyResourceValidator();
+        FriendlyResourcePojo identification = FriendlyResourceJson.fromJson(
+                identificationJson
+        );
         if (!validator.validate(identification).isEmpty()) {
             throw new WebApplicationException(
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingJson(
+        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingPojo(
                 identification
         );
-        String type = identification.optString("type");
+        String type = identificationJson.optString("type");
         if (type.equalsIgnoreCase(identification_types.SAME_AS.name())) {
             graphElement.addSameAs(
                     friendlyResource
@@ -101,7 +103,7 @@ public class GraphElementIdentificationResource {
         updateDescriptionOfExternalResourceIfNecessary(
                 friendlyResourceCached
         );
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @DELETE

@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
-import static org.triple_brain.module.common_utils.Uris.decodeURL;
+import static org.triple_brain.module.common_utils.Uris.decodeUrlSafe;
 
 
 /**
@@ -58,8 +58,8 @@ public class EdgeResource {
             @QueryParam("destinationVertexId") String destinationVertexId
         ){
         try{
-            sourceVertexId = decodeURL(sourceVertexId);
-            destinationVertexId = decodeURL(destinationVertexId);
+            sourceVertexId = decodeUrlSafe(sourceVertexId);
+            destinationVertexId = decodeUrlSafe(destinationVertexId);
         }catch (UnsupportedEncodingException e){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

@@ -5,8 +5,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.json.UserJsonFields;
-import org.triple_brain.module.model.json.graph.VertexJson;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
@@ -66,7 +65,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
     public void can_refresh_number_of_connected_edges()throws Exception{
         setNumberOfConnectedOfAllVerticesToZero();
         assertThat(
-                vertexB().getInt(VertexJson.NUMBER_OF_CONNECTED_EDGES),
+                vertexB().getNumberOfConnectedEdges(),
                 is(0)
         );
         refreshNumberOfConnectedEdges(
@@ -74,7 +73,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
         );
         authenticate(defaultAuthenticatedUserAsJson);
         assertThat(
-                vertexB().getInt(VertexJson.NUMBER_OF_CONNECTED_EDGES),
+                vertexB().getNumberOfConnectedEdges(),
                 is(2)
         );
     }
@@ -126,7 +125,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
     private JSONObject userVince(){
         try{
             return userUtils().validForCreation().put(
-                    UserJsonFields.USER_NAME,
+                    UserJson.USER_NAME,
                     "vince"
             );
         }catch(JSONException e){

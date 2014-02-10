@@ -3,6 +3,7 @@ package org.triple_brain.service;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.*;
 import org.triple_brain.module.model.graph.FriendlyResourceOperator;
+import org.triple_brain.module.model.graph.FriendlyResourcePojo;
 import org.triple_brain.module.model.json.FriendlyResourceJson;
 
 import javax.inject.Inject;
@@ -40,13 +41,14 @@ public class ResourceServiceUtils {
                                 Uris.encodeURL(updatedResource.uri()) +
                                 "/updated",
                         FriendlyResourceJson.toJson(
-                                updatedResource
+                                new FriendlyResourcePojo(
+                                        updatedResource
+                                )
                         )
                 );
             } catch (Exception e) {
                 throw new RuntimeException(e);
-            }
-            finally{
+            } finally {
                 graphTransaction.after(state);
             }
         }
@@ -72,13 +74,14 @@ public class ResourceServiceUtils {
                                 Uris.encodeURL(updatedResource.uri()) +
                                 "/updated",
                         FriendlyResourceJson.toJson(
-                                updatedResource
+                                new FriendlyResourcePojo(
+                                        updatedResource
+                                )
                         )
                 );
             } catch (Exception e) {
                 throw new RuntimeException(e);
-            }
-            finally{
+            } finally {
                 graphTransaction.after(state);
             }
         }

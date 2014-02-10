@@ -6,16 +6,13 @@ package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.GraphTransactional;
-import org.triple_brain.module.model.graph.SubGraph;
-import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.graph.GraphJsonFields;
+import org.triple_brain.module.model.json.graph.SubGraphJson;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -55,14 +52,14 @@ public class VertexSurroundGraphResource {
     @GraphTransactional
     public Response get() {
         return Response.ok(
-                GraphJsonFields.toJson(
+                SubGraphJson.toJson(
                         getGraph()
                 )
         ).build();
     }
 
-    private SubGraph getGraph(){
-        SubGraph graph = userGraph.graphWithDepthAndCenterVertexId(
+    private SubGraphPojo getGraph(){
+        SubGraphPojo graph = userGraph.graphWithDepthAndCenterVertexId(
                 depthOfSubVertices,
                 centerVertex.uri()
         );

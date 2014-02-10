@@ -1,16 +1,11 @@
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
-import org.triple_brain.module.common_utils.JsonUtils;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.module.model.json.graph.EdgeJson;
-import org.triple_brain.module.model.json.graph.GraphJsonFields;
-import org.triple_brain.module.solr_search.json.SearchJsonConverter;
+import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
@@ -21,7 +16,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
-import static org.triple_brain.module.model.json.FriendlyResourceJson.LABEL;
 
 /**
  * Copyright Mozilla Public License 1.1
@@ -42,7 +36,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void adding_a_relation_returns_correct_response_status() throws Exception{
+    public void adding_a_relation_returns_correct_response_status() throws Exception {
         ClientResponse response = addRelationBetweenVertexAAndC();
         assertThat(
                 response.getStatus(), is(
@@ -51,27 +45,22 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void adding_a_relation_returns_correct_headers()throws JSONException{
+    public void adding_a_relation_returns_correct_headers() throws JSONException {
         ClientResponse response = addRelationBetweenVertexAAndC();
-        JSONArray allEdges = graphUtils().wholeGraph().getJSONArray(
-                GraphJsonFields.EDGES
-        );
-        JSONObject edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexCUri(),
-                allEdges
+                graphUtils().wholeGraph().edges()
         );
         assertThat(
-            response.getHeaders().get("Location").get(0),
-            is(
-                BASE_URI + edgeBetweenAAndC.getString(
-                        EdgeJson.URI
+                response.getHeaders().get("Location").get(0),
+                is(
+                        BASE_URI + edgeBetweenAAndC.uri().toString()
                 )
-            )
         );
     }
 
-    private ClientResponse addRelationBetweenVertexAAndC(){
+    private ClientResponse addRelationBetweenVertexAAndC() {
         ClientResponse response = resource
                 .path(new UserUris(defaultAuthenticatedUser).baseEdgeUri().getPath())
                 .queryParam("sourceVertexId", encodeURL(vertexAUri().toString()))
@@ -83,20 +72,17 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_remove_a_relation() throws Exception {
-        JSONObject edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         edgeUtils().removeEdgeBetweenVertexAAndB();
-        JSONArray allEdges = graphUtils().wholeGraph().getJSONArray(
-                GraphJsonFields.EDGES
-        );
         assertFalse(
-                edgeUtils().edgeIsInEdges(
-                        edgeBetweenAAndB, allEdges
+                graphUtils().wholeGraph().edges().contains(
+                        edgeBetweenAAndB
                 )
         );
     }
 
     @Test
-    public void removing_a_relation_returns_correct_status() throws Exception{
+    public void removing_a_relation_returns_correct_status() throws Exception {
         ClientResponse response = edgeUtils().removeEdgeBetweenVertexAAndB();
         assertThat(
                 response.getStatus(), is(
@@ -106,15 +92,15 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_update_label() throws Exception {
-        JSONObject edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         assertThat(
-                edgeBetweenAAndB.getString(EdgeJson.LABEL),
+                edgeBetweenAAndB.label(),
                 is(not("new edge label"))
         );
         updateEdgeLabelBetweenAAndB("new edge label");
         edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         assertThat(
-                edgeBetweenAAndB.getString(EdgeJson.LABEL),
+                edgeBetweenAAndB.label(),
                 is("new edge label")
         );
     }
@@ -128,7 +114,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         ));
     }
 
-    private ClientResponse updateEdgeLabelBetweenAAndB(String label)throws Exception{
+    private ClientResponse updateEdgeLabelBetweenAAndB(String label) throws Exception {
         return edgeUtils().updateEdgeLabel(
                 label,
                 edgeUtils().edgeBetweenAAndB()
@@ -138,52 +124,38 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     @Test
     public void updating_edge_labels_reflects_in_search_for_connected_vertices() throws Exception {
         indexGraph();
-        JSONArray resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexA().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
-                SearchJsonConverter.RELATIONS_NAME
-        );
-        Assert.assertTrue(JsonUtils.containsString(
-                resultsForA,
+        VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexA().label()
+        ).get(0);
+        assertTrue(searchResultA.getRelationsName().contains(
                 "between vertex A and vertex B"
         ));
-        JSONArray resultsForB = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexB().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
-                SearchJsonConverter.RELATIONS_NAME
-        );
-        Assert.assertTrue(JsonUtils.containsString(
-                resultsForB,
+        VertexSearchResult searchResultB = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexB().label()
+        ).get(0);
+        assertTrue(searchResultB.getRelationsName().contains(
                 "between vertex A and vertex B"
         ));
         edgeUtils().updateEdgeLabel(
                 "new edge text !",
                 edgeUtils().edgeBetweenAAndB()
         );
-        resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexA().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
-                SearchJsonConverter.RELATIONS_NAME
-        );
-        assertFalse(JsonUtils.containsString(
-                resultsForA,
+        searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexA().label()
+        ).get(0);
+        assertFalse(searchResultA.getRelationsName().contains(
                 "between vertex A and vertex B"
         ));
-        Assert.assertTrue(JsonUtils.containsString(
-                resultsForA,
+        assertTrue(searchResultA.getRelationsName().contains(
                 "new edge text !"
         ));
-        resultsForB = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexB().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
-                SearchJsonConverter.RELATIONS_NAME
-        );
-        assertFalse(JsonUtils.containsString(
-                resultsForB,
+        searchResultB = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexB().label()
+        ).get(0);
+        assertFalse(searchResultB.getRelationsName().contains(
                 "between vertex A and vertex B"
         ));
-        Assert.assertTrue(JsonUtils.containsString(
-                resultsForB,
+        assertTrue(searchResultB.getRelationsName().contains(
                 "new edge text !"
         ));
     }
@@ -191,83 +163,68 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     @Test
     public void deleting_edge_removes_relations_name_of_connected_vertices_in_search() throws Exception {
         indexGraph();
-        JSONArray resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexA().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
-                SearchJsonConverter.RELATIONS_NAME
+        VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexA().label()
+        ).get(0);
+        assertTrue(
+                searchResultA.hasRelations()
         );
-        Assert.assertTrue(JsonUtils.containsString(
-                resultsForA,
-                "between vertex A and vertex B"
-        ));
         edgeUtils().removeEdgeBetweenVertexAAndB();
-        resultsForA = searchUtils().searchOwnVerticesOnlyForAutoCompleteUsingRest(
-                vertexA().getString(LABEL)
-        ).getEntity(JSONArray.class).getJSONObject(0).getJSONArray(
-                SearchJsonConverter.RELATIONS_NAME
+        searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                vertexA().label()
+        ).get(0);
+        assertFalse(
+                searchResultA.hasRelations()
         );
-        assertFalse(JsonUtils.containsString(
-                resultsForA,
-                "between vertex A and vertex B"
-        ));
     }
 
     @Test
-    public void inverseReturnsCorrectStatus(){
+    public void inverseReturnsCorrectStatus() {
         assertThat(
-                inverseRelationBetweenAAndB().getStatus(),is(
+                inverseRelationBetweenAAndB().getStatus(), is(
                 Response.Status.OK.getStatusCode()
         ));
     }
 
     @Test
-    public void can_inverse(){
-        JSONArray allEdges = graphUtils().wholeGraph().optJSONArray(
-                GraphJsonFields.EDGES
-        );
-        JSONObject edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+    public void can_inverse() {
+        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                allEdges
+                graphUtils().wholeGraph().edges()
         );
         assertThat(
-                edgeBetweenAAndC.optString(EdgeJson.SOURCE_VERTEX_ID),is(
+                edgeBetweenAAndC.sourceVertex().uri().toString(), is(
                 vertexAUri().toString()
         ));
         assertThat(
-                edgeBetweenAAndC.optString(EdgeJson.DESTINATION_VERTEX_ID),is(
+                edgeBetweenAAndC.destinationVertex().uri().toString(), is(
                 vertexBUri().toString()
         ));
         inverseRelationBetweenAAndB();
-        allEdges = graphUtils().wholeGraph().optJSONArray(
-                GraphJsonFields.EDGES
-        );
         edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                allEdges
+                graphUtils().wholeGraph().edges()
         );
         assertThat(
-                edgeBetweenAAndC.optString(EdgeJson.SOURCE_VERTEX_ID),is(
+                edgeBetweenAAndC.sourceVertex().uri().toString(), is(
                 vertexBUri().toString()
         ));
         assertThat(
-                edgeBetweenAAndC.optString(EdgeJson.DESTINATION_VERTEX_ID),is(
+                edgeBetweenAAndC.destinationVertex().uri().toString(), is(
                 vertexAUri().toString()
         ));
     }
 
-    private ClientResponse inverseRelationBetweenAAndB(){
-        JSONArray allEdges = graphUtils().wholeGraph().optJSONArray(
-                GraphJsonFields.EDGES
-        );
-        JSONObject edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+    private ClientResponse inverseRelationBetweenAAndB() {
+        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                allEdges
+                graphUtils().wholeGraph().edges()
         );
         ClientResponse response = resource
-                .path(edgeBetweenAAndC.optString(EdgeJson.URI))
+                .path(edgeBetweenAAndC.uri().toString())
                 .path("inverse")
                 .cookie(authCookie)
                 .put(ClientResponse.class);
