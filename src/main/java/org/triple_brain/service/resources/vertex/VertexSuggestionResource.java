@@ -2,6 +2,7 @@ package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.SuggestionJson;
@@ -47,20 +48,10 @@ public class VertexSuggestionResource {
     @POST
     @Path("/")
     @GraphTransactional
-    public Response addSuggestions(String suggestions) {
-        vertex.addSuggestions(createSuggestions(
-                SuggestionJson.fromJsonArray(suggestions)
-        ));
+    public Response addSuggestions(JSONArray suggestions) {
+        vertex.addSuggestions(
+                SuggestionJson.fromJsonArray(suggestions.toString())
+        );
         return Response.noContent().build();
-    }
-
-    private Set<SuggestionOperator> createSuggestions(Set<SuggestionPojo> suggestions){
-        Set<SuggestionOperator> suggestionsOperator = new HashSet<>();
-        for(SuggestionPojo suggestion : suggestions){
-            suggestionsOperator.add(
-                    suggestionFactory.createFromPojo(suggestion)
-            );
-        }
-        return suggestionsOperator;
     }
 }

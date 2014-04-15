@@ -6,10 +6,6 @@ import org.eclipse.jetty.xml.XmlConfiguration;
 
 import java.io.File;
 
-/**
- * @author VincentBlouin
- */
-
 public class Launcher {
     private Server server;
 

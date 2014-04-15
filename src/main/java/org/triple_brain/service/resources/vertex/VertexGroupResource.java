@@ -70,7 +70,7 @@ public class VertexGroupResource {
         Iterator<String> keysIt = uris.keys();
         while(keysIt.hasNext()){
             String uri = keysIt.next();
-            Vertex vertex = vertexFactory.createOrLoadUsingUri(
+            Vertex vertex = vertexFactory.withUri(
                     URI.create(uri)
             );
             vertices.add(

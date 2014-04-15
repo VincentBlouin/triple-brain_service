@@ -11,6 +11,7 @@ import org.triple_brain.module.model.graph.edge.EdgePojo;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 
 /*
@@ -72,10 +73,10 @@ public class EdgeRestTestUtils {
     public Edge edgeBetweenTwoVerticesUriGivenEdges(
             URI firstVertexUri,
             URI secondVertexUri,
-            Set<Edge> edges
+            Map<URI, ? extends Edge> edges
     ){
         try{
-            for(Edge edge : edges){
+            for(Edge edge : edges.values()){
                 URI sourceVertexId = edge.sourceVertex().uri();
                 URI destinationVertexId = edge.destinationVertex().uri();
                 if(oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&

@@ -9,9 +9,8 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import org.triple_brain.module.model.graph.GraphComponentTest;
-import org.triple_brain.module.model.graph.neo4j.Neo4JGraphComponentTest;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
+import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jOperator;
 import org.triple_brain.module.repository_sql.SQLModule;
 import org.triple_brain.module.solr_search.SolrSearchModule;
 import org.triple_brain.service.MessagesDistributorServlet;
@@ -66,9 +65,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                 install(new FactoryModuleBuilder()
                         .build(SearchResourceFactory.class));
                 install(new FactoryModuleBuilder()
-                       .build(VertexSurroundGraphResourceFactory.class));
+                        .build(VertexSurroundGraphResourceFactory.class));
                 install(new FactoryModuleBuilder()
-                        .build(VertexImageResourceFactory.class)
+                                .build(VertexImageResourceFactory.class)
                 );
                 install(new FactoryModuleBuilder()
                         .build(VertexGroupResourceFactory.class));
@@ -81,11 +80,15 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bind(DataSource.class)
                         .annotatedWith(Names.named("nonRdfDb"))
                         .toProvider(fromJndi(DataSource.class, "jdbc/nonRdfTripleBrainDB"));
-                install(new Neo4jModule());
                 try{
                     final InitialContext jndiContext = new InitialContext();
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
+                    install(
+                            isTesting ?
+                                    Neo4jModule.forTestingUsingEmbedded() :
+                                    Neo4jModule.notForTestingUsingEmbedded()
+                    );
                     SolrSearchModule searchModule;
                     if(isTesting){
                         searchModule = new SolrSearchModule(isTesting);
@@ -107,9 +110,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
-                        bind(GraphComponentTest.class).toInstance(
-                                new Neo4JGraphComponentTest()
-                        );
                     }
                 }catch(NamingException e){
                     throw new RuntimeException(e);

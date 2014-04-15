@@ -1,10 +1,10 @@
 package org.triple_brain.service.resources.test;
-
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.triple_brain.module.model.WholeGraph;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.vertex.VertexInSubGraphOperator;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 
 import javax.inject.Inject;
@@ -26,14 +26,15 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
 @Path("/test/graph")
 @Singleton
 public class GraphResourceTestUtils {
+
     @Inject
     GraphFactory graphFactory;
 
     @Inject
-    GraphDatabaseService graphDb;
+    WholeGraph wholeGraph;
 
     @Inject
-    WholeGraph wholeGraph;
+    GraphDatabaseService graphDb;
 
     @Path("graph_element/{graphElementId}/exists")
     @GraphTransactional
@@ -49,6 +50,18 @@ public class GraphResourceTestUtils {
     }
 
 
+    @Path("set_all_number_of_connected_edges_to_zero")
+    @GraphTransactional
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
+        Iterator<VertexInSubGraphOperator> vertexIt = wholeGraph.getAllVertices();
+        while(vertexIt.hasNext()){
+            VertexOperator vertex = vertexIt.next();
+            vertex.setNumberOfConnectedEdges(0);
+        }
+        return Response.ok().build();
+    }
+
     @Path("server")
     @GraphTransactional
     @DELETE
@@ -57,19 +70,5 @@ public class GraphResourceTestUtils {
         graphDb.shutdown();
         return Response.ok().build();
     }
-
-    @Path("set_all_number_of_connected_edges_to_zero")
-    @GraphTransactional
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
-        Iterator<VertexOperator> vertexIt = wholeGraph.getAllVertices();
-        while(vertexIt.hasNext()){
-            VertexOperator vertex = vertexIt.next();
-            vertex.setNumberOfConnectedEdges(0);
-        }
-        return Response.ok().build();
-    }
-
-
 
 }

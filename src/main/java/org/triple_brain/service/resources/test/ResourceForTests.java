@@ -1,5 +1,4 @@
 package org.triple_brain.service.resources.test;
-
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.codehaus.jettison.json.JSONArray;
@@ -7,14 +6,15 @@ import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
-import org.triple_brain.module.model.graph.scenarios.TestScenarios;
-import org.triple_brain.module.model.graph.scenarios.VerticesCalledABAndC;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraphPojo;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
+import org.triple_brain.module.model.test.GraphComponentTest;
+import org.triple_brain.module.model.test.scenarios.TestScenarios;
+import org.triple_brain.module.model.test.scenarios.VerticesCalledABAndC;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.module.solr_search.SearchUtils;
@@ -159,14 +159,14 @@ public class ResourceForTests {
                 currentUser
         );
         SubGraph subGraph = userGraph.graphWithDefaultVertexAndDepth(10);
-        for (Vertex vertex : subGraph.vertices()) {
+        for (Vertex vertex : subGraph.vertices().values()) {
             graphIndexer.indexVertex(
-                    vertexFactory.createOrLoadUsingUri(
+                    vertexFactory.withUri(
                             vertex.uri()
                     )
             );
         }
-        for (Edge edge : subGraph.edges()) {
+        for (Edge edge : subGraph.edges().values()) {
             graphIndexer.indexRelation(
                     edge
             );

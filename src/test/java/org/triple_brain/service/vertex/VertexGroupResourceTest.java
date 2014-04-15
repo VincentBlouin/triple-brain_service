@@ -11,6 +11,7 @@ import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -46,12 +47,12 @@ public class VertexGroupResourceTest extends GraphManipulationRestTest{
         VertexInSubGraph newVertex = vertexUtils().vertexWithUriOfCurrentUser(
                 groupVertexUri
         );
-        Set<Vertex> includedVertices = newVertex.getIncludedVertices();
+        Map<URI, ?extends Vertex> includedVertices = newVertex.getIncludedVertices();
         assertThat(
                 includedVertices.size(),
                 is(2)
         );
-        Set<Edge> includedEdges = newVertex.getIncludedEdges();
+        Map<URI, ?extends  Edge> includedEdges = newVertex.getIncludedEdges();
         assertThat(
                 includedEdges.size(),
                 is(0)

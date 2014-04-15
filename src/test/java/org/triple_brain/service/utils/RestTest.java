@@ -48,7 +48,10 @@ public abstract class RestTest {
         launcher.launch();
 
         DefaultApacheHttpClientConfig clientConfig = new DefaultApacheHttpClientConfig();
-        clientConfig.getProperties().put("com.sun.jersey.impl.client.httpclient.handleCookies", true);
+        clientConfig.getProperties().put(
+                "com.sun.jersey.impl.client.httpclient.handleCookies",
+                true
+        );
         client = Client.create(clientConfig);
         cleanTables();
         resource = client.resource(BASE_URI);

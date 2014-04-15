@@ -15,6 +15,7 @@ import java.util.Set;
 * Copyright Mozilla Public License 1.1
 */
 public class ResourceServiceUtils {
+
     @Inject
     GraphTransaction graphTransaction;
 
@@ -25,25 +26,24 @@ public class ResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
-            FriendlyResource resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
+            FriendlyResourcePojo resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             Set<Image> images = (Set<Image>) o;
             FriendlyResourceOperator updatedResource;
             Object state = graphTransaction.before();
             try {
-                updatedResource = friendlyResourceFactory.createOrLoadFromUri(
+                updatedResource = friendlyResourceFactory.withUri(
                         resourceCached.uri()
                 );
                 updatedResource.addImages(
                         images
                 );
+                resourceCached.images().addAll(images);
                 BayeuxInitializer.notificationService.notifyChannelMessage(
                         "/identification/" +
                                 Uris.encodeURL(updatedResource.uri()) +
                                 "/updated",
                         FriendlyResourceJson.toJson(
-                                new FriendlyResourcePojo(
-                                        updatedResource
-                                )
+                                resourceCached
                         )
                 );
             } catch (Exception e) {
@@ -58,25 +58,24 @@ public class ResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
-            FriendlyResource resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
+            FriendlyResourcePojo resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             String description = (String) o;
             Object state = graphTransaction.before();
             FriendlyResourceOperator updatedResource;
             try {
-                updatedResource = friendlyResourceFactory.createOrLoadFromUri(
+                updatedResource = friendlyResourceFactory.withUri(
                         resourceCached.uri()
                 );
                 updatedResource.comment(
                         description
                 );
+                resourceCached.setComment(description);
                 BayeuxInitializer.notificationService.notifyChannelMessage(
                         "/identification/" +
                                 Uris.encodeURL(updatedResource.uri()) +
                                 "/updated",
                         FriendlyResourceJson.toJson(
-                                new FriendlyResourcePojo(
-                                        updatedResource
-                                )
+                                resourceCached
                         )
                 );
             } catch (Exception e) {

@@ -11,6 +11,7 @@ import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.edge.EdgePojo;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraphPojo;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
+import org.triple_brain.module.model.graph.vertex.VertexPojo;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
@@ -81,10 +82,12 @@ public class VertexResource {
     @GraphTransactional
     @Path("/")
     public Response createVertex() {
-        VertexOperator newVertex = userGraph.createVertex();
+        VertexPojo newVertex = userGraph.createVertex();
         return Response.ok()
                 .entity(VertexInSubGraphJson.toJson(
-                        new VertexInSubGraphPojo(newVertex)
+                        new VertexInSubGraphPojo(
+                                newVertex
+                        )
                 ))
                 .build();
     }

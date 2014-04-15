@@ -11,6 +11,7 @@ import org.triple_brain.service.utils.GraphManipulationRestTest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -70,7 +71,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void can_add_same_as_to_an_edge() throws Exception {
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
-        Set<FriendlyResource> sameAs = vertexA().getSameAs();
+        Map<URI, ?extends FriendlyResource> sameAs = vertexA().getSameAs();
         assertThat(
                 sameAs.size(),
                 is(0)

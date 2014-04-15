@@ -23,7 +23,6 @@ public class GraphManipulationRestTest extends RestTest {
 
     protected User defaultAuthenticatedUser;
     protected JSONObject defaultAuthenticatedUserAsJson;
-    protected Gson gson = new Gson();
     @Before
     public void before_graph_manipulator_rest_test() throws Exception {
         JSONObject userAsJson = userUtils().validForCreation();

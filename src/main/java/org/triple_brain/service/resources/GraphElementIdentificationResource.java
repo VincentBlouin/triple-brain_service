@@ -68,40 +68,28 @@ public class GraphElementIdentificationResource {
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadUsingPojo(
-                identification
-        );
         String type = identificationJson.optString("type");
         if (type.equalsIgnoreCase(identification_types.SAME_AS.name())) {
-            graphElement.addSameAs(
-                    friendlyResource
+            identification = graphElement.addSameAs(
+                    identification
             );
         } else if (type.equalsIgnoreCase(identification_types.TYPE.name())) {
-            graphElement.addType(
-                    friendlyResource
+            identification = graphElement.addType(
+                    identification
             );
         } else if (type.equalsIgnoreCase(identification_types.GENERIC.name())) {
-            graphElement.addGenericIdentification(
-                    friendlyResource
+            identification = graphElement.addGenericIdentification(
+                    identification
             );
         } else {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         reindexGraphElement();
-        FriendlyResource friendlyResourceCached = new FriendlyResourcePojo(
-                friendlyResource.uri(),
-                friendlyResource.label(),
-                friendlyResource.images(),
-                friendlyResource.comment(),
-                friendlyResource.creationDate(),
-                friendlyResource.lastModificationDate()
-        );
-
         updateImagesOfExternalResourceIfNecessary(
-                friendlyResourceCached
+                identification
         );
         updateDescriptionOfExternalResourceIfNecessary(
-                friendlyResourceCached
+                identification
         );
         return Response.noContent().build();
     }
@@ -113,7 +101,7 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        FriendlyResource friendlyResource = friendlyResourceFactory.createOrLoadFromUri(
+        FriendlyResource friendlyResource = friendlyResourceFactory.withUri(
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(friendlyResource);
@@ -121,7 +109,7 @@ public class GraphElementIdentificationResource {
         return Response.ok().build();
     }
 
-    private void updateImagesOfExternalResourceIfNecessary(FriendlyResource friendlyResource) {
+    private void updateImagesOfExternalResourceIfNecessary(FriendlyResourcePojo friendlyResource) {
         if (friendlyResource.gotImages()) {
             return;
         }
@@ -135,7 +123,7 @@ public class GraphElementIdentificationResource {
         }
     }
 
-    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResource friendlyResource) {
+    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResourcePojo friendlyResource) {
         if (!friendlyResource.gotComments()) {
             if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
                 FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(

@@ -2,6 +2,7 @@ package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.json.SuggestionJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
@@ -10,6 +11,8 @@ import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +35,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_add_suggestions_to_vertex() throws Exception {
-        Set<Suggestion> suggestions = vertexA().suggestions();
+        Map<URI, ?extends Suggestion> suggestions = vertexA().suggestions();
         assertThat(
                 suggestions.size(),
                 is(0)
@@ -58,7 +61,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_get_suggestions_of_vertex() throws Exception {
-        JSONArray suggestions = getSuggestionsOfVertex();
+        JSONObject suggestions = getSuggestionsOfVertex();
         assertThat(
                 suggestions.length(),
                 is(0)
@@ -89,7 +92,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
         return response;
     }
 
-    private JSONArray getSuggestionsOfVertex() throws Exception {
+    private JSONObject getSuggestionsOfVertex() throws Exception {
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
@@ -100,6 +103,6 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return response.getEntity(JSONArray.class);
+        return response.getEntity(JSONObject.class);
     }
 }

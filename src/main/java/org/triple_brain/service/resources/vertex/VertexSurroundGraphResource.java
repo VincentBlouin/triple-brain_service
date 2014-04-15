@@ -70,11 +70,11 @@ public class VertexSurroundGraphResource {
     }
 
     public void removeVerticesAndEdgesNotAllowedToAccess(SubGraph graph) {
-        Iterator<VertexInSubGraph> iterator = graph.vertices().iterator();
+        Iterator<? extends VertexInSubGraph> iterator = graph.vertices().values().iterator();
         while (iterator.hasNext()) {
             Vertex vertex = iterator.next();
             if (!canAccessVertex(vertex)) {
-                VertexOperator vertexOperator = vertexFactory.createOrLoadUsingUri(
+                VertexOperator vertexOperator = vertexFactory.withUri(
                         vertex.uri()
                 );
                 for (Edge edge : vertexOperator.connectedEdges()) {
