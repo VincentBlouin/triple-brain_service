@@ -77,7 +77,6 @@ public abstract class RestTest {
     private static void closeGraphDatabase(){
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("graph")
                 .path("server")
@@ -88,7 +87,6 @@ public abstract class RestTest {
     private static void closeSearchEngine() {
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("search")
                 .path("close")

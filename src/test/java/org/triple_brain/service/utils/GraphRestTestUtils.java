@@ -76,7 +76,6 @@ public class GraphRestTestUtils {
     public JSONArray makeGraphHave3SerialVerticesWithLongLabelsUsingCookie(NewCookie authCookie) {
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("make_graph_have_3_serial_vertices_with_long_labels")
                 .cookie(authCookie)

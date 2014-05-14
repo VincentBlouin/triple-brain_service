@@ -3,12 +3,14 @@ package org.triple_brain.service.conf;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import org.cometd.server.CometdServlet;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jOperator;
 import org.triple_brain.module.repository_sql.SQLModule;
@@ -49,50 +51,75 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 install(new SQLModule());
 
+                FactoryModuleBuilder builder = new FactoryModuleBuilder();
+
                 bind(UserResource.class);
-                install(new FactoryModuleBuilder()
-                        .build(GraphResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(VertexResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(VertexSuggestionResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(VertexPublicAccessResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(GraphElementIdentificationResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(EdgeResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(SearchResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                        .build(VertexSurroundGraphResourceFactory.class));
-                install(new FactoryModuleBuilder()
-                                .build(VertexImageResourceFactory.class)
+                bind(ServerConfigResource.class);
+
+                install(builder.build(
+                        GraphResourceFactory.class
+                ));
+                install(builder.build(
+                        VertexResourceFactory.class
+                ));
+                install(builder.build(
+                        VertexSuggestionResourceFactory.class
+                ));
+                install(builder.build(
+                        VertexPublicAccessResourceFactory.class
+                ));
+                install(builder.build(
+                        GraphElementIdentificationResourceFactory.class
+                ));
+                install(builder.build(
+                        EdgeResourceFactory.class
+                ));
+                install(builder.build(
+                        SearchResourceFactory.class
+                ));
+                install(builder.build(
+                        VertexSurroundGraphResourceFactory.class
+                ));
+                install(builder.build(
+                        VertexImageResourceFactory.class
+                ));
+                install(builder.build(
+                        VertexGroupResourceFactory.class
+                ));
+
+                final Map<String, String> cometdParams = new HashMap<>();
+                cometdParams.put(
+                        "transports",
+                        "org.cometd.websocket.server.WebSocketTransport"
                 );
-                install(new FactoryModuleBuilder()
-                        .build(VertexGroupResourceFactory.class));
-                serve("/MessageWebSocket").with(MessagesDistributorServlet.class);
 
-                final Map<String, String> params = new HashMap<String, String>();
+                serve("/cometd").with(
+                        CometdServletSingleton.class,
+                        cometdParams
+                );
+                final Map<String, String> params = new HashMap<>();
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
-                serve("/users*").with(GuiceContainer.class, params);
+                serve("/*").with(GuiceContainer.class, params);
 
+                serve("/MessageWebSocket").with(MessagesDistributorServlet.class);
                 bind(DataSource.class)
                         .annotatedWith(Names.named("nonRdfDb"))
                         .toProvider(fromJndi(DataSource.class, "jdbc/nonRdfTripleBrainDB"));
-                try{
+                try {
                     final InitialContext jndiContext = new InitialContext();
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
+                    bind(Boolean.class)
+                            .annotatedWith(Names.named("isTesting")).toInstance(isTesting);
                     install(
                             isTesting ?
                                     Neo4jModule.forTestingUsingEmbedded() :
                                     Neo4jModule.notForTestingUsingEmbedded()
                     );
                     SolrSearchModule searchModule;
-                    if(isTesting){
+                    if (isTesting) {
                         searchModule = new SolrSearchModule(isTesting);
-                    }else{
+                    } else {
                         String solrHomePath = (String) jndiContext.lookup("solr_home_path");
                         String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
                         searchModule = isTesting ?
@@ -104,14 +131,14 @@ public class GuiceConfig extends GuiceServletContextListener {
                                 );
                     }
                     install(searchModule);
-                    if(isTesting){
+                    if (isTesting) {
                         bind(ResourceForTests.class);
                         bind(VertexResourceTestUtils.class);
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
                     }
-                }catch(NamingException e){
+                } catch (NamingException e) {
                     throw new RuntimeException(e);
                 }
 

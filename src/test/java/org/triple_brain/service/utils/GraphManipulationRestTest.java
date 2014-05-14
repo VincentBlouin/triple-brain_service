@@ -88,7 +88,6 @@ public class GraphManipulationRestTest extends RestTest {
     private void deleteAllDocumentsFromSearch() {
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("search")
                 .path("delete_all_documents")
@@ -100,7 +99,6 @@ public class GraphManipulationRestTest extends RestTest {
     protected void indexGraph() {
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("search")
                 .path("index_graph")
@@ -113,7 +111,6 @@ public class GraphManipulationRestTest extends RestTest {
     public boolean graphElementWithIdExistsInCurrentGraph(URI graphElementId) {
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("graph")
                 .path("graph_element")

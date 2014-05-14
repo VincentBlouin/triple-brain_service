@@ -45,7 +45,6 @@ public class VertexRestTestUtils {
     public VertexInSubGraph vertexWithUriOfAnyUser(URI vertexUri){
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("vertex")
                 .path(Uris.encodeURL(vertexUri.toString()))
@@ -76,7 +75,6 @@ public class VertexRestTestUtils {
     public Set<Edge> connectedEdgesOfVertexWithURI(URI vertexUri) {
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("vertex")
                 .path(Uris.encodeURL(vertexUri.toString()))
@@ -94,7 +92,6 @@ public class VertexRestTestUtils {
     public boolean vertexWithUriHasDestinationVertexWithUri(URI vertexUri, URI destinationVertexUri){
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("vertex")
                 .path(Uris.encodeURL(vertexUri.toString()))

@@ -82,7 +82,6 @@ public class AdminResourceTest extends GraphManipulationRestTest {
     private ClientResponse setNumberOfConnectedOfAllVerticesToZero(){
         return resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("graph")
                 .path("set_all_number_of_connected_edges_to_zero")

@@ -58,7 +58,6 @@ public class EdgeRestTestUtils {
     public Edge edgeWithUri(URI edgeUri){
         ClientResponse response = resource
                 .path("service")
-                .path("users")
                 .path("test")
                 .path("edge")
                 .path(Uris.encodeURL(edgeUri.toString()))

@@ -31,7 +31,7 @@ import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.u
  * Copyright Mozilla Public License 1.1
  */
 
-@Path("/")
+@Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Singleton
