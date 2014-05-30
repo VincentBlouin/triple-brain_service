@@ -39,4 +39,14 @@ public class AdminResource {
         return Response.ok().build();
     }
 
+//    @Path("convert_small_images_to_base_64")
+//    @GraphTransactional
+//    @POST
+//    public Response convertSmallImagesToBase64(){
+//        new WholeGraphAdmin(
+//                wholeGraph
+//        ).convertAllSmallImagesToBase64();
+//        return Response.ok().build();
+//    }
+
 }

@@ -2,16 +2,19 @@ package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.codehaus.jettison.json.JSONObject;
 import org.imgscalr.Scalr;
 import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
+import org.triple_brain.module.model.json.ImageJson;
 import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.imageio.ImageIO;
@@ -52,20 +55,6 @@ public class VertexImageResource {
         this.vertex = vertex;
     }
 
-    @GET
-    @Path("/{imageId}/small")
-    @Produces("application/octet-stream")
-    public byte[] getSmall(@PathParam("imageId") String imageId) {
-        try{
-            return Files.readAllBytes(
-                    Paths.get(
-                            IMAGES_FOLDER_PATH + "/" + imageId  + "_small"
-                    )
-            );
-        }catch(IOException e){
-            throw new RuntimeException(e);
-        }
-    }
 
     @GET
     @Produces("application/octet-stream")
@@ -85,11 +74,10 @@ public class VertexImageResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @GraphTransactional
-    @Produces("text/plain")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
     public Response add(@Context HttpServletRequest request) {
         Set<Image> uploadedImages = new HashSet<>();
-        String imageId = "";
         if (ServletFileUpload.isMultipartContent(request)) {
             final FileItemFactory factory = new DiskFileItemFactory();
             final ServletFileUpload fileUpload = new ServletFileUpload(factory);
@@ -104,7 +92,7 @@ public class VertexImageResource {
                     final Iterator iter = items.iterator();
                     while (iter.hasNext()) {
                         final FileItem item = (FileItem) iter.next();
-                        imageId = UUID.randomUUID().toString();
+                        String imageId = UUID.randomUUID().toString();
                         final File savedFile = new File(
                                 IMAGES_FOLDER_PATH
                                         + File.separator +
@@ -112,12 +100,14 @@ public class VertexImageResource {
                         );
                         System.out.println("Saving the file: " + savedFile.getName());
                         item.write(savedFile);
-                        saveSmallImage(savedFile);
                         saveBigImage(savedFile);
                         String imageBaseUrl = request.getRequestURI() + "/" + imageId + "/";
+                        String base64ForSmallImage = Base64.encodeBase64String(
+                                resizedSmallImage(savedFile)
+                        );
                         uploadedImages.add(
-                                Image.withUriForSmallAndBigger(
-                                        URI.create(imageBaseUrl + "small"),
+                                Image.withBase64ForSmallAndUriForBigger(
+                                        base64ForSmallImage,
                                         URI.create(imageBaseUrl + "big")
                                 )
                         );
@@ -126,35 +116,18 @@ public class VertexImageResource {
                 vertex.addImages(
                         uploadedImages
                 );
-                return Response.created(
-                       URI.create(
-                               imageId
-                       )
+
+                return Response.ok().entity(
+                        ImageJson.toJsonArray(uploadedImages)
                 ).build();
-            } catch (FileUploadException fue) {
-                fue.printStackTrace();
-                throw new WebApplicationException(Response.Status.BAD_REQUEST);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
         }
         throw new WebApplicationException(
                 Response.Status.INTERNAL_SERVER_ERROR
         );
-    }
-
-    private void saveSmallImage(File rawImageFile){
-        try{
-            Files.write(
-                    Paths.get(
-                            rawImageFile.getAbsolutePath() + "_small"
-                    ),
-                    resizedSmallImage(rawImageFile)
-            );
-        }catch(IOException e){
-            throw new RuntimeException(e);
-        }
     }
 
     private void saveBigImage(File rawImageFile){

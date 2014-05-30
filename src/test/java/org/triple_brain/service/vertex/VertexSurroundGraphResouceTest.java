@@ -100,35 +100,7 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
     @Test
     @Ignore("Getting graph of another user not implemented yet")
     public void cant_get_private_surround_vertices_of_public_vertex() {
-        vertexUtils().makePublicVertexWithUri(
-                vertexAUri()
-        );
-        authenticate(
-                createAUser()
-        );
-        ClientResponse clientResponse = getGraphOfCentralVertexUriAtDepth(
-                vertexAUri(),
-                5
-        );
-        assertThat(
-                clientResponse.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-        JSONObject graph = clientResponse.getEntity(JSONObject.class);
-        JSONObject vertices = graph.optJSONObject(
-                SubGraphJson.VERTICES
-        );
-        JSONObject edges = graph.optJSONObject(
-                SubGraphJson.EDGES
-        );
-        assertThat(
-                vertices.length(),
-                is(1)
-        );
-        assertThat(
-                edges.length(),
-                is(0)
-        );
+        //todo
     }
 
     private ClientResponse getGraph() {
