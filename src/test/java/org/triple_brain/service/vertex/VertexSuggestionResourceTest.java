@@ -54,7 +54,8 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                         "http://rdf.freebase.com/rdf/time/event/start_date",
                         "http://rdf.freebase.com/rdf/type/datetime",
                         "Start date",
-                        "http://rdf.freebase.com/rdf/time/event"
+                        "http://rdf.freebase.com/rdf/time/event",
+                        defaultAuthenticatedUser
                 )
         );
     }
