@@ -35,13 +35,13 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_add_suggestions_to_vertex() throws Exception {
-        Map<URI, ?extends Suggestion> suggestions = vertexA().suggestions();
+        Set<?extends Suggestion> suggestions = vertexA().getSuggestions();
         assertThat(
                 suggestions.size(),
                 is(0)
         );
         addStartDateSuggestionToVertexA();
-        suggestions = vertexA().suggestions();
+        suggestions = vertexA().getSuggestions();
         assertThat(
                 suggestions.size(),
                 is(greaterThan(0))
