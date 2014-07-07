@@ -41,7 +41,9 @@ public class VertexSuggestionResource {
     @GraphTransactional
     public Response getSuggestions() {
         return Response.ok(
-                SuggestionJson.inVertex(vertex)
+                SuggestionJson.multipleToJson(
+                        vertex.getSuggestions()
+                )
         ).build();
     }
 

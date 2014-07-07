@@ -62,7 +62,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_get_suggestions_of_vertex() throws Exception {
-        JSONObject suggestions = getSuggestionsOfVertex();
+        JSONArray suggestions = getSuggestionsOfVertex();
         assertThat(
                 suggestions.length(),
                 is(0)
@@ -93,7 +93,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
         return response;
     }
 
-    private JSONObject getSuggestionsOfVertex() throws Exception {
+    private JSONArray getSuggestionsOfVertex() throws Exception {
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
@@ -104,6 +104,6 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return response.getEntity(JSONObject.class);
+        return response.getEntity(JSONArray.class);
     }
 }
