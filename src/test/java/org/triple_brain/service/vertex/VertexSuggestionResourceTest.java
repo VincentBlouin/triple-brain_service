@@ -51,8 +51,8 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
     private ClientResponse addStartDateSuggestionToVertexA() {
         return addSuggestionToVertex(
                 SuggestionPojo.fromSameAsAndDomainUriLabelAndOrigin(
-                        "http://rdf.freebase.com/rdf/time/event/start_date",
-                        "http://rdf.freebase.com/rdf/type/datetime",
+                        URI.create("http://rdf.freebase.com/rdf/time/event/start_date"),
+                        URI.create("http://rdf.freebase.com/rdf/type/datetime"),
                         "Start date",
                         "http://rdf.freebase.com/rdf/time/event",
                         defaultAuthenticatedUser

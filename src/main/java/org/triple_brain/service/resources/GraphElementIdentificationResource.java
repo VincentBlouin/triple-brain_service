@@ -4,15 +4,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.FreebaseFriendlyResource;
-import org.triple_brain.module.model.FriendlyResource;
-import org.triple_brain.module.model.FriendlyResourceFactory;
-import org.triple_brain.module.model.graph.FriendlyResourcePojo;
-import org.triple_brain.module.model.graph.GraphElementOperator;
-import org.triple_brain.module.model.graph.GraphTransactional;
+import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.FriendlyResourceJson;
-import org.triple_brain.module.model.validator.FriendlyResourceValidator;
+import org.triple_brain.module.model.json.IdentificationJson;
+import org.triple_brain.module.model.validator.IdentificationValidator;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.ResourceServiceUtils;
 
@@ -35,7 +31,7 @@ public class GraphElementIdentificationResource {
     public static final String IDENTIFICATION_TYPE_STRING = "type";
 
     @Inject
-    FriendlyResourceFactory friendlyResourceFactory;
+    IdentificationFactory identificationFactory;
 
     @Inject
     GraphIndexer graphIndexer;
@@ -59,8 +55,8 @@ public class GraphElementIdentificationResource {
     @GraphTransactional
     @Path("/")
     public Response add(JSONObject identificationJson) {
-        FriendlyResourceValidator validator = new FriendlyResourceValidator();
-        FriendlyResourcePojo identification = FriendlyResourceJson.fromJson(
+        IdentificationValidator validator = new IdentificationValidator();
+        IdentificationPojo identification = IdentificationJson.fromJson(
                 identificationJson
         );
         if (!validator.validate(identification).isEmpty()) {
@@ -101,7 +97,7 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        FriendlyResource friendlyResource = friendlyResourceFactory.withUri(
+        Identification friendlyResource = identificationFactory.withUri(
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(friendlyResource);
@@ -109,13 +105,13 @@ public class GraphElementIdentificationResource {
         return Response.ok().build();
     }
 
-    private void updateImagesOfExternalResourceIfNecessary(FriendlyResourcePojo friendlyResource) {
-        if (friendlyResource.gotImages()) {
+    private void updateImagesOfExternalResourceIfNecessary(IdentificationPojo identification) {
+        if (identification.gotImages()) {
             return;
         }
-        if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
-            FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
-                    friendlyResource
+        if (FreebaseFriendlyResource.isFromFreebase(identification)) {
+            FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromIdentification(
+                    identification
             );
             freebaseResource.getImages(
                     resourceServiceUtils.imagesUpdateHandler
@@ -123,11 +119,11 @@ public class GraphElementIdentificationResource {
         }
     }
 
-    private void updateDescriptionOfExternalResourceIfNecessary(FriendlyResourcePojo friendlyResource) {
-        if (!friendlyResource.gotComments()) {
-            if (FreebaseFriendlyResource.isFromFreebase(friendlyResource)) {
-                FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromFriendlyResource(
-                        friendlyResource
+    private void updateDescriptionOfExternalResourceIfNecessary(IdentificationPojo identification) {
+        if (!identification.gotComments()) {
+            if (FreebaseFriendlyResource.isFromFreebase(identification)) {
+                FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromIdentification(
+                        identification
                 );
                 freebaseResource.getDescription(
                         resourceServiceUtils.descriptionUpdateHandler

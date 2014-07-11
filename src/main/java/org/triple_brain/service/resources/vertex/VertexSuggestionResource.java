@@ -7,15 +7,11 @@ import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.SuggestionJson;
 import org.triple_brain.module.model.suggestion.SuggestionFactory;
-import org.triple_brain.module.model.suggestion.SuggestionOperator;
-import org.triple_brain.module.model.suggestion.SuggestionPojo;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashSet;
-import java.util.Set;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -25,9 +21,6 @@ import java.util.Set;
 public class VertexSuggestionResource {
 
     private VertexOperator vertex;
-
-    @Inject
-    SuggestionFactory suggestionFactory;
 
     @AssistedInject
     public VertexSuggestionResource(

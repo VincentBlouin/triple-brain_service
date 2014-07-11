@@ -4,7 +4,10 @@ import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.*;
 import org.triple_brain.module.model.graph.FriendlyResourceOperator;
 import org.triple_brain.module.model.graph.FriendlyResourcePojo;
+import org.triple_brain.module.model.graph.Identification;
+import org.triple_brain.module.model.graph.IdentificationPojo;
 import org.triple_brain.module.model.json.FriendlyResourceJson;
+import org.triple_brain.module.model.json.IdentificationJson;
 
 import javax.inject.Inject;
 import java.util.Observable;
@@ -26,7 +29,7 @@ public class ResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
-            FriendlyResourcePojo resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
+            IdentificationPojo resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             Set<Image> images = (Set<Image>) o;
             FriendlyResourceOperator updatedResource;
             Object state = graphTransaction.before();
@@ -40,9 +43,9 @@ public class ResourceServiceUtils {
                 resourceCached.images().addAll(images);
                 BayeuxInitializer.notificationService.notifyChannelMessage(
                         "/identification/" +
-                                Uris.encodeURL(updatedResource.uri()) +
+                                Uris.encodeURL(resourceCached.getExternalResourceUri()) +
                                 "/updated",
-                        FriendlyResourceJson.toJson(
+                        IdentificationJson.toJson(
                                 resourceCached
                         )
                 );
@@ -58,7 +61,7 @@ public class ResourceServiceUtils {
         @Override
         public void update(Observable observable, Object o) {
             FreebaseFriendlyResource freebaseFriendlyResource = (FreebaseFriendlyResource) observable;
-            FriendlyResourcePojo resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
+            IdentificationPojo resourceCached = freebaseFriendlyResource.getCachedFriendlyResource();
             String description = (String) o;
             Object state = graphTransaction.before();
             FriendlyResourceOperator updatedResource;
@@ -72,9 +75,9 @@ public class ResourceServiceUtils {
                 resourceCached.setComment(description);
                 BayeuxInitializer.notificationService.notifyChannelMessage(
                         "/identification/" +
-                                Uris.encodeURL(updatedResource.uri()) +
+                                Uris.encodeURL(resourceCached.uri()) +
                                 "/updated",
-                        FriendlyResourceJson.toJson(
+                        IdentificationJson.toJson(
                                 resourceCached
                         )
                 );

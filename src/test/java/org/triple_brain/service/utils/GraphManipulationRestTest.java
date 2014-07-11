@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.ModelTestScenarios;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.json.UserJson;
 
@@ -20,6 +21,7 @@ import static org.junit.Assert.assertThat;
 public class GraphManipulationRestTest extends RestTest {
 
     public static final Integer DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES = 10;
+    protected static ModelTestScenarios modelTestScenarios = new ModelTestScenarios();
 
     protected User defaultAuthenticatedUser;
     protected JSONObject defaultAuthenticatedUserAsJson;
