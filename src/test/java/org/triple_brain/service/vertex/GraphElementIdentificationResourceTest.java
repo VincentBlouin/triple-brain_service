@@ -1,10 +1,13 @@
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.FriendlyResource;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.Identification;
+import org.triple_brain.module.model.graph.IdentificationPojo;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
@@ -26,19 +29,52 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
 
     @Test
     public void setting_type_of_a_vertex_returns_correct_response_status() throws Exception {
-        ClientResponse response = addFoafPersonTypeToVertexA();
+        ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 response.getStatus(),
-                is(Response.Status.NO_CONTENT.getStatusCode())
+                is(Response.Status.CREATED.getStatusCode())
         );
     }
 
     @Test
-    public void status_is_no_content_when_adding_identification() throws Exception {
-        ClientResponse clientResponse = addFoafPersonTypeToVertexA();
+    public void status_is_created_when_adding_identification() {
+        ClientResponse clientResponse = graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 clientResponse.getStatus(),
-                is(Response.Status.NO_CONTENT.getStatusCode())
+                is(Response.Status.CREATED.getStatusCode())
+        );
+    }
+
+    @Test
+    public void identification_is_returned_when_adding() {
+        ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
+        IdentificationPojo identification = IdentificationJson.fromJson(
+                response.getEntity(JSONObject.class)
+        );
+        assertThat(
+                identification.getExternalResourceUri(),
+                is(URI.create("http://xmlns.com/foaf/0.1/Person"))
+        );
+    }
+
+    @Test
+    public void uri_is_returned_when_adding_identification() {
+        assertThat(
+                vertexA().getAdditionalTypes().size(),
+                is(0)
+        );
+        ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
+        String shortId = UserUris.graphElementShortId(
+                vertexA().getAdditionalTypes().values().iterator().next().uri()
+        );
+        String responseShortId = UserUris.graphElementShortId(URI.create(
+                response.getHeaders().get("Location").get(0)
+        ));
+        assertThat(
+                responseShortId,
+                is(
+                        shortId
+                )
         );
     }
 
@@ -48,7 +84,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 vertexA().getAdditionalTypes().size(),
                 is(0)
         );
-        addFoafPersonTypeToVertexA();
+        graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 vertexA().getAdditionalTypes().size(),
                 is(greaterThan(0))
@@ -57,7 +93,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
 
     @Test
     public void can_remove_the_additional_type_of_vertex() throws Exception {
-        addFoafPersonTypeToVertexA();
+        graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 vertexA().getAdditionalTypes().size(),
                 is(greaterThan(0))
@@ -88,7 +124,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
 
     @Test
     public void if_invalid_identification_it_throws_an_exception() throws Exception {
-        ClientResponse clientResponse = addIdentificationToGraphElementWithUri(
+        ClientResponse clientResponse = graphElementUtils().addIdentificationToGraphElementWithUri(
                 new JSONObject(),
                 vertexAUri()
         );
@@ -104,46 +140,19 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 GraphElementIdentificationResource.identification_types.SAME_AS
         );
 
-        return addIdentificationToGraphElementWithUri(
+        return graphElementUtils().addIdentificationToGraphElementWithUri(
                 creatorPredicate,
                 URI.create(edge.uri().toString())
         );
     }
 
-    private ClientResponse addFoafPersonTypeToVertexA() throws Exception {
-        JSONObject personType = IdentificationJson.toJson(modelTestScenarios.personType()).put(
-                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                GraphElementIdentificationResource.identification_types.TYPE
-        ).put(
-                "externalResourceUri",
-                "http://xmlns.com/foaf/0.1/Person"
-        )
-                .put(
-                        GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                        GraphElementIdentificationResource.identification_types.TYPE
-                );
-        return addIdentificationToGraphElementWithUri(
-                personType,
-                vertexAUri()
-        );
-    }
-
-    private ClientResponse addIdentificationToGraphElementWithUri(JSONObject identification, URI graphElementUri) {
-        return resource
-                .path(graphElementUri.getPath())
-                .path("identification")
-                .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, identification);
-    }
-
-    private ClientResponse removeIdentificationOfVertexA(Identification idenficiation) throws Exception {
+    private ClientResponse removeIdentificationOfVertexA(Identification identification) throws Exception {
         return resource
                 .path(vertexAUri().getPath())
                 .path("identification")
                 .queryParam(
                         "uri",
-                        idenficiation.uri().toString()
+                        identification.uri().toString()
                 )
                 .cookie(authCookie)
                 .delete(ClientResponse.class);

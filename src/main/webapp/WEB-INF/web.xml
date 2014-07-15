@@ -9,12 +9,6 @@
         <session-timeout>60</session-timeout>
     </session-config>
 
-    <servlet>
-        <servlet-name>initializer</servlet-name>
-        <servlet-class>org.triple_brain.service.BayeuxInitializer</servlet-class>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-
     <listener>
         <listener-class>org.triple_brain.service.conf.GuiceConfig</listener-class>
     </listener>

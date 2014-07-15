@@ -3,14 +3,13 @@ package org.triple_brain.service.resources;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.FreebaseFriendlyResource;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.validator.IdentificationValidator;
 import org.triple_brain.module.search.GraphIndexer;
-import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -35,9 +34,6 @@ public class GraphElementIdentificationResource {
 
     @Inject
     GraphIndexer graphIndexer;
-
-    @Inject
-    ResourceServiceUtils resourceServiceUtils;
 
     private GraphElementOperator graphElement;
     private boolean isVertex;
@@ -81,18 +77,15 @@ public class GraphElementIdentificationResource {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         reindexGraphElement();
-        updateImagesOfExternalResourceIfNecessary(
-                identification
-        );
-        updateDescriptionOfExternalResourceIfNecessary(
-                identification
-        );
-        return Response.noContent().build();
+        return Response.created(URI.create(
+                UserUris.graphElementShortId(identification.uri())
+        )).entity(
+                IdentificationJson.toJson(identification)
+        ).build();
     }
 
     @DELETE
     @GraphTransactional
-    @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
@@ -102,34 +95,27 @@ public class GraphElementIdentificationResource {
         );
         graphElement.removeIdentification(friendlyResource);
         reindexGraphElement();
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
-    private void updateImagesOfExternalResourceIfNecessary(IdentificationPojo identification) {
-        if (identification.gotImages()) {
-            return;
-        }
-        if (FreebaseFriendlyResource.isFromFreebase(identification)) {
-            FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromIdentification(
-                    identification
-            );
-            freebaseResource.getImages(
-                    resourceServiceUtils.imagesUpdateHandler
-            );
-        }
+    @GraphTransactional
+    @Path("image")
+    public GraphElementIdentificationImageResource images(@QueryParam("uri") String identificationUri) {
+        return new GraphElementIdentificationImageResource(
+                identificationFactory.withUri(
+                        URI.create(identificationUri)
+                )
+        );
     }
 
-    private void updateDescriptionOfExternalResourceIfNecessary(IdentificationPojo identification) {
-        if (!identification.gotComments()) {
-            if (FreebaseFriendlyResource.isFromFreebase(identification)) {
-                FreebaseFriendlyResource freebaseResource = FreebaseFriendlyResource.fromIdentification(
-                        identification
-                );
-                freebaseResource.getDescription(
-                        resourceServiceUtils.descriptionUpdateHandler
-                );
-            }
-        }
+    @GraphTransactional
+    @Path("description")
+    public GraphElementIdentificationDescriptionResource description(@QueryParam("uri") String identificationUri) {
+        return new GraphElementIdentificationDescriptionResource(
+                identificationFactory.withUri(
+                        URI.create(identificationUri)
+                )
+        );
     }
 
     private void reindexGraphElement() {

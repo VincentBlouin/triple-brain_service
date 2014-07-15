@@ -5,17 +5,14 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.codehaus.jettison.json.JSONObject;
 import org.imgscalr.Scalr;
 import org.triple_brain.module.model.FriendlyResourceFactory;
 import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.ImageJson;
-import org.triple_brain.service.ResourceServiceUtils;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -41,9 +38,6 @@ public class VertexImageResource {
     private VertexOperator vertex;
 
     public static final String IMAGES_FOLDER_PATH = "/var/lib/triple_brain/image";
-
-    @Inject
-    ResourceServiceUtils resourceServiceUtils;
 
     @Inject
     FriendlyResourceFactory friendlyResourceFactory;

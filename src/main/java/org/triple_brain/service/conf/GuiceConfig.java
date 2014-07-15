@@ -3,19 +3,15 @@ package org.triple_brain.service.conf;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import org.cometd.server.CometdServlet;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
-import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jOperator;
 import org.triple_brain.module.repository_sql.SQLModule;
 import org.triple_brain.module.solr_search.SolrSearchModule;
-import org.triple_brain.service.MessagesDistributorServlet;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
 import org.triple_brain.service.resources.test.*;
@@ -87,21 +83,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexGroupResourceFactory.class
                 ));
 
-                final Map<String, String> cometdParams = new HashMap<>();
-                cometdParams.put(
-                        "transports",
-                        "org.cometd.websocket.server.WebSocketTransport"
-                );
-
-                serve("/cometd").with(
-                        CometdServletSingleton.class,
-                        cometdParams
-                );
                 final Map<String, String> params = new HashMap<>();
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
                 serve("/*").with(GuiceContainer.class, params);
 
-                serve("/MessageWebSocket").with(MessagesDistributorServlet.class);
                 bind(DataSource.class)
                         .annotatedWith(Names.named("nonRdfDb"))
                         .toProvider(fromJndi(DataSource.class, "jdbc/nonRdfTripleBrainDB"));

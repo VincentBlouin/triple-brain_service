@@ -49,6 +49,14 @@ public class GraphManipulationRestTest extends RestTest {
         );
     }
 
+    protected GraphElementRestTestUtils graphElementUtils(){
+        return GraphElementRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                defaultAuthenticatedUser
+        );
+    }
+
     protected EdgeRestTestUtils edgeUtils() {
         return EdgeRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
