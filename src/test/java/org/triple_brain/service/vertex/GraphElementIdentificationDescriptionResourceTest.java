@@ -39,7 +39,7 @@ public class GraphElementIdentificationDescriptionResourceTest extends GraphMani
                 .path("description")
                 .queryParam("uri", uri.getPath())
                 .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
+                .type(MediaType.TEXT_PLAIN)
                 .put(
                         ClientResponse.class,
                         "Dummy description"
