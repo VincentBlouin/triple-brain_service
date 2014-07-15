@@ -32,7 +32,6 @@ public class GraphElementIdentificationDescriptionResourceTest extends GraphMani
     }
 
     private ClientResponse setDescriptionToIdentificationWithUriForVertexA(URI uri) {
-
         return resource
                 .path(vertexAUri().getPath())
                 .path("identification")
@@ -44,6 +43,5 @@ public class GraphElementIdentificationDescriptionResourceTest extends GraphMani
                         ClientResponse.class,
                         "Dummy description"
                 );
-
     }
 }
