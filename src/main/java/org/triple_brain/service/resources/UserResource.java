@@ -5,11 +5,14 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
+import org.triple_brain.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -68,6 +71,34 @@ public class UserResource{
             );
         }
         throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
+    @Path("{username}/non_owned/vertex/{shortId}/surround_graph")
+    @GraphTransactional
+    public VertexNonOwnedSurroundGraphResource surroundGraphResource(
+            @PathParam("username") String username,
+            @PathParam("shortId") String shortId
+    ) {
+        UserGraph userGraph = graphFactory.loadForUser(
+                userRepository.findByUsername(username)
+        );
+        URI centerVertexUri = new UserUris(
+                username
+        ).vertexUriFromShortId(
+                shortId
+        );
+        Vertex centerVertex = userGraph.vertexWithUri(
+                centerVertexUri
+        );
+        User userInSession = userFromSession(request.getSession());
+        Boolean skipVerification = userInSession.username().equals(
+                centerVertex.ownerUsername()
+        );
+        return new VertexNonOwnedSurroundGraphResource(
+                userGraph,
+                centerVertex,
+                skipVerification
+        );
     }
 
     @Path("{username}/search")

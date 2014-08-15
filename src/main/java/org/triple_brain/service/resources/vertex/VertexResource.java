@@ -50,9 +50,6 @@ public class VertexResource {
     GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
 
     @Inject
-    VertexSurroundGraphResourceFactory vertexSurroundGraphResourceFactory;
-
-    @Inject
     VertexGroupResourceFactory vertexGroupResourceFactory;
 
     @Inject
@@ -222,11 +219,11 @@ public class VertexResource {
 
     @Path("{shortId}/surround_graph/{depthOfSubVertices}")
     @GraphTransactional
-    public VertexSurroundGraphResource getVertexSurroundGraphResource(
+    public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
             @PathParam("shortId") String shortId,
             @PathParam("depthOfSubVertices") Integer depth
     ) {
-        return vertexSurroundGraphResourceFactory.ofUserGraphCenterVertexAndDepth(
+        return new VertexOwnedSurroundGraphResource(
                 userGraph,
                 vertexFromShortId(shortId),
                 depth

@@ -3,7 +3,6 @@ package org.triple_brain.service.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
@@ -20,7 +19,7 @@ import static org.hamcrest.Matchers.is;
 /*
 * Copyright Mozilla Public License 1.1
 */
-public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
+public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTest {
 
     @Test
     public void response_status_is_ok_for_getting_graph() {
@@ -95,12 +94,6 @@ public class VertexSurroundGraphResouceTest extends GraphManipulationRestTest {
                 vertexCFromSubGraph.minDistanceFromCenterVertex(),
                 is(2)
         );
-    }
-
-    @Test
-    @Ignore("Getting graph of another user not implemented yet")
-    public void cant_get_private_surround_vertices_of_public_vertex() {
-        //todo
     }
 
     private ClientResponse getGraph() {
