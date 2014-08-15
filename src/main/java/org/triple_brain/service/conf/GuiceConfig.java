@@ -65,6 +65,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexPublicAccessResourceFactory.class
                 ));
                 install(builder.build(
+                        VertexCollectionPublicAccessResourceFactory.class
+                ));
+                install(builder.build(
                         GraphElementIdentificationResourceFactory.class
                 ));
                 install(builder.build(

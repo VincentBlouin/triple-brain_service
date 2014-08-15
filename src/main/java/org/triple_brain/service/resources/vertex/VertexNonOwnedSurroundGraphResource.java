@@ -13,9 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Iterator;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
-
 /*
 * Copyright Mozilla Public License 1.1
 */
@@ -60,10 +57,13 @@ public class VertexNonOwnedSurroundGraphResource {
 
 
     public void removeVerticesNotAllowedToAccess(SubGraph graph) {
+        if(skipVerification){
+            return;
+        }
         Iterator<? extends VertexInSubGraph> iterator = graph.vertices().values().iterator();
         while (iterator.hasNext()) {
             Vertex vertex = iterator.next();
-            if (!canAccessVertex(vertex)) {
+            if (!vertex.isPublic()) {
                /* I would like to verify if the center vertex is accessible
                before getting the graph but I get an NotInTransaction Exception */
                 if (vertex.equals(centerVertex)) {
@@ -74,11 +74,5 @@ public class VertexNonOwnedSurroundGraphResource {
                 iterator.remove();
             }
         }
-
-    }
-
-    private boolean canAccessVertex(Vertex vertex) {
-        return skipVerification ||
-                vertex.isPublic();
     }
 }

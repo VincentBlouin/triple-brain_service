@@ -4,12 +4,15 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphFactory;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.service.resources.vertex.VertexPublicAccessResource;
 import org.triple_brain.service.resources.vertex.VertexResource;
 import org.triple_brain.service.resources.vertex.VertexResourceFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 

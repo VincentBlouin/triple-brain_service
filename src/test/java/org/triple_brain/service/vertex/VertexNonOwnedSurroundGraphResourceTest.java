@@ -135,9 +135,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 vertex.uri()
         );
         return resource
-                .path("service")
-                .path("users")
-                .path(vertex.ownerUsername())
+                .path(getUsersBaseUri(vertex.ownerUsername()))
                 .path("non_owned")
                 .path("vertex")
                 .path(shortId)

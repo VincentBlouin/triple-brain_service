@@ -47,6 +47,9 @@ public class VertexResource {
     VertexPublicAccessResourceFactory vertexPublicAccessResourceFactory;
 
     @Inject
+    VertexCollectionPublicAccessResourceFactory vertexCollectionPublicAccessResourceFactory;
+
+    @Inject
     GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
 
     @Inject
@@ -247,6 +250,16 @@ public class VertexResource {
     ) {
         return vertexSuggestionResourceFactory.ofVertex(
                 vertexFromShortId(shortId)
+        );
+    }
+
+    @Path("collection/public_access")
+    @GraphTransactional
+    public VertexCollectionPublicAccessResource getCollectionPublicAccessResource(
+            @PathParam("shortId") String shortId
+    ) {
+        return vertexCollectionPublicAccessResourceFactory.withUserGraph(
+                userGraph
         );
     }
 

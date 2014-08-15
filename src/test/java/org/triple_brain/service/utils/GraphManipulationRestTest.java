@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.ModelTestScenarios;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.json.UserJson;
@@ -25,6 +26,7 @@ public class GraphManipulationRestTest extends RestTest {
 
     protected User defaultAuthenticatedUser;
     protected JSONObject defaultAuthenticatedUserAsJson;
+
     @Before
     public void before_graph_manipulator_rest_test() throws Exception {
         JSONObject userAsJson = userUtils().validForCreation();
@@ -49,7 +51,7 @@ public class GraphManipulationRestTest extends RestTest {
         );
     }
 
-    protected GraphElementRestTestUtils graphElementUtils(){
+    protected GraphElementRestTestUtils graphElementUtils() {
         return GraphElementRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
@@ -130,6 +132,14 @@ public class GraphManipulationRestTest extends RestTest {
                 .get(ClientResponse.class);
         String boolStr = response.getEntity(String.class);
         return Boolean.valueOf(boolStr);
+    }
+
+    protected String getVertexBaseUri() {
+        return new UserUris(defaultAuthenticatedUser).baseVertexUri().toString();
+    }
+
+    protected String getUsersBaseUri(String username) {
+        return new UserUris(username).baseUri().toString();
     }
 
     protected VertexInSubGraph vertexA() {
