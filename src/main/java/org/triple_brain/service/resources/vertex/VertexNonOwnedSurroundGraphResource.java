@@ -4,8 +4,8 @@ import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.SubGraphPojo;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
-import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 
 import javax.ws.rs.*;
@@ -49,30 +49,45 @@ public class VertexNonOwnedSurroundGraphResource {
                 1,
                 centerVertex.uri()
         );
-        removeVerticesNotAllowedToAccess(
+        removeGraphElementsNotAllowedToAccess(
                 graph
         );
         return graph;
     }
 
-
-    public void removeVerticesNotAllowedToAccess(SubGraph graph) {
-        if(skipVerification){
+    private void removeGraphElementsNotAllowedToAccess(SubGraph graph) {
+        if (skipVerification) {
             return;
         }
-        Iterator<? extends VertexInSubGraph> iterator = graph.vertices().values().iterator();
+        Iterator<? extends Edge> iterator = graph.edges().values().iterator();
         while (iterator.hasNext()) {
-            Vertex vertex = iterator.next();
-            if (!vertex.isPublic()) {
-               /* I would like to verify if the center vertex is accessible
-               before getting the graph but I get an NotInTransaction Exception */
-                if (vertex.equals(centerVertex)) {
-                    throw new WebApplicationException(
-                            Response.Status.FORBIDDEN
-                    );
-                }
+            Edge edge = iterator.next();
+            Vertex sourceVertex = graph.vertexWithIdentifier(
+                    edge.sourceVertex().uri()
+            );
+            if (!sourceVertex.isPublic()) {
+                throwExceptionIfCenterVertex(sourceVertex);
+                graph.vertices().remove(sourceVertex.uri());
                 iterator.remove();
             }
+            Vertex destinationVertex = graph.vertexWithIdentifier(
+                    edge.destinationVertex().uri()
+            );
+            if (!destinationVertex.isPublic()) {
+                throwExceptionIfCenterVertex(destinationVertex);
+                graph.vertices().remove(destinationVertex.uri());
+                iterator.remove();
+            }
+        }
+    }
+
+    private void throwExceptionIfCenterVertex(Vertex vertex){
+        /* I would like to verify if the center vertex is accessible
+               before getting the graph but I get an NotInTransaction Exception */
+        if (vertex.equals(centerVertex)) {
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
         }
     }
 }

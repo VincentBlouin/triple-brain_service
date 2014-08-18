@@ -89,7 +89,7 @@ public class EdgeRestTestUtils {
         throw new RuntimeException("none found !");
     }
 
-    public Edge edgeBetweenAAndB()throws Exception{
+    public Edge edgeBetweenAAndB(){
         return edgeBetweenTwoVerticesUriGivenEdges(
                 graphUtils.vertexAUri(),
                 graphUtils.vertexBUri(),

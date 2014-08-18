@@ -134,10 +134,6 @@ public class GraphManipulationRestTest extends RestTest {
         return Boolean.valueOf(boolStr);
     }
 
-    protected String getVertexBaseUri() {
-        return new UserUris(defaultAuthenticatedUser).baseVertexUri().toString();
-    }
-
     protected String getUsersBaseUri(String username) {
         return new UserUris(username).baseUri().toString();
     }

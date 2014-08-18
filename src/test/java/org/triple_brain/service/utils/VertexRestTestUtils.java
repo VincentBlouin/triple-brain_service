@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
@@ -151,6 +152,30 @@ public class VertexRestTestUtils {
                 is(Response.Status.OK.getStatusCode())
         );
         return clientResponse;
+    }
+
+    public ClientResponse makePublicVerticesWithUri(URI... vertexUri) {
+        return makePublicOrPrivateVerticesWithUri(true, vertexUri);
+    }
+
+    public ClientResponse makePrivateVerticesWithUri(URI... vertexUri) {
+        return makePublicOrPrivateVerticesWithUri(false, vertexUri);
+    }
+
+    public String getVertexBaseUri() {
+        return new UserUris(authenticatedUser).baseVertexUri().toString();
+    }
+
+    private ClientResponse makePublicOrPrivateVerticesWithUri(Boolean makePublic, URI... vertexUri) {
+        return resource
+                .path(getVertexBaseUri())
+                .path("collection")
+                .path("public_access")
+                .queryParam("type", makePublic ? "public" : "private")
+                .cookie(authCookie).post(
+                        ClientResponse.class,
+                        new JSONArray(Arrays.asList(vertexUri))
+                );
     }
 
     public ClientResponse removeVertexB(){

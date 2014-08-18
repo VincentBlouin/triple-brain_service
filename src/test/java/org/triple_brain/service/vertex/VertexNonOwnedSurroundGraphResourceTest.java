@@ -5,6 +5,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.SubGraph;
+import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -127,6 +129,35 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         assertThat(
                 subGraph.vertices().size(),
                 is(3)
+        );
+    }
+
+    @Test
+    public void relations_related_to_private_vertices_are_absent() {
+        vertexUtils().makePublicVerticesWithUri(
+                vertexAUri(),
+                vertexBUri(),
+                vertexCUri()
+        );
+        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        SubGraph subGraph = SubGraphJson.fromJson(
+                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+        );
+        assertTrue(
+                subGraph.hasEdgeWithUri(
+                        edgeBetweenAAndB.uri()
+                )
+        );
+        vertexUtils().makePrivateVertexWithUri(vertexAUri());
+        JSONObject anotherUser = createAUser();
+        authenticate(anotherUser);
+        subGraph = SubGraphJson.fromJson(
+                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+        );
+        assertFalse(
+                subGraph.hasEdgeWithUri(
+                        edgeBetweenAAndB.uri()
+                )
         );
     }
 
