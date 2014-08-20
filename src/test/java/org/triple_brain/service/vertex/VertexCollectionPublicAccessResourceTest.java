@@ -17,7 +17,7 @@ public class VertexCollectionPublicAccessResourceTest extends GraphManipulationR
     public void making_public_returns_correct_status() {
         assertThat(
                 vertexUtils().makePublicVerticesWithUri().getStatus(),
-                is(Response.Status.OK.getStatusCode())
+                is(Response.Status.NO_CONTENT.getStatusCode())
         );
     }
 

@@ -73,6 +73,6 @@ public class VertexCollectionPublicAccessResource {
             );
         }
         graphIndexer.commit();
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 }
