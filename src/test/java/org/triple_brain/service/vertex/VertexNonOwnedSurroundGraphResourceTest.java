@@ -12,6 +12,8 @@ import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
 
+import java.net.URI;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -46,6 +48,18 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 getNonOwnedGraphOfCentralVertex(vertexA()).getStatus(),
                 is(
                         Response.Status.FORBIDDEN.getStatusCode()
+                )
+        );
+    }
+
+    @Test
+    public void error_404_when_trying_to_access_deleted_bubble(){
+        URI vertexBUri = vertexB().uri();
+        vertexUtils().removeVertexB();
+        assertThat(
+                getNonOwnedGraphOfCentralVertexWithUri(vertexBUri).getStatus(),
+                is(
+                        Response.Status.NOT_FOUND.getStatusCode()
                 )
         );
     }
@@ -176,11 +190,17 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
     }
 
     private ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
-        String shortId = UserUris.graphElementShortId(
+        return getNonOwnedGraphOfCentralVertexWithUri(
                 vertex.uri()
         );
+    }
+
+    private ClientResponse getNonOwnedGraphOfCentralVertexWithUri(URI vertexUri) {
+        String shortId = UserUris.graphElementShortId(
+                vertexUri
+        );
         return resource
-                .path(getUsersBaseUri(vertex.ownerUsername()))
+                .path(getUsersBaseUri(UserUris.ownerUserNameFromUri(vertexUri)))
                 .path("non_owned")
                 .path("vertex")
                 .path(shortId)

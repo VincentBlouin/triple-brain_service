@@ -87,6 +87,9 @@ public class UserResource{
         ).vertexUriFromShortId(
                 shortId
         );
+        if(!userGraph.haveElementWithId(centerVertexUri)){
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
         Vertex centerVertex = userGraph.vertexWithUri(
                 centerVertexUri
         );
