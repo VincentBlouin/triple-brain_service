@@ -12,7 +12,7 @@ public class GraphManipulatorResourceUtils {
         return (User) session.getAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY);
     }
 
-    public static boolean isUserInSession(HttpSession session){
+    public static Boolean isUserInSession(HttpSession session){
         return session.getAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY) != null;
     }
 }

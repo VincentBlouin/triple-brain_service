@@ -90,10 +90,13 @@ public class UserResource{
         Vertex centerVertex = userGraph.vertexWithUri(
                 centerVertexUri
         );
-        User userInSession = userFromSession(request.getSession());
-        Boolean skipVerification = userInSession.username().equals(
-                centerVertex.ownerUsername()
-        );
+        Boolean skipVerification = false;
+        if(isUserInSession(request.getSession())){
+            User userInSession = userFromSession(request.getSession());
+            skipVerification = userInSession.username().equals(
+                    centerVertex.ownerUsername()
+            );
+        }
         return new VertexNonOwnedSurroundGraphResource(
                 userGraph,
                 centerVertex,
@@ -200,10 +203,7 @@ public class UserResource{
             return false;
         }
         User authenticatedUser = userFromSession(request.getSession());
-        if (!authenticatedUser.username().equals(userName)) {
-            return false;
-        }
-        return true;
+        return authenticatedUser.username().equals(userName);
     }
 
 }

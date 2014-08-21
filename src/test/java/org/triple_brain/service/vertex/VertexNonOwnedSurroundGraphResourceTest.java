@@ -1,6 +1,8 @@
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.xml.internal.bind.v2.runtime.IllegalAnnotationsException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.UserUris;
@@ -161,6 +163,23 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         );
     }
 
+    @Test
+    public void anonymous_users_can_get_it_too() {
+        vertexUtils().makePublicVerticesWithUri(
+                vertexAUri(),
+                vertexBUri(),
+                vertexCUri()
+        );
+        SubGraph subGraph = SubGraphJson.fromJson(
+                getNonOwnedGraphOfCentralVertexNotAuthenticated(
+                        vertexB()
+                ).getEntity(JSONObject.class)
+        );
+        assertFalse(
+                subGraph.vertices().isEmpty()
+        );
+    }
+
     private ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
         String shortId = UserUris.graphElementShortId(
                 vertex.uri()
@@ -172,8 +191,19 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 .path(shortId)
                 .path("surround_graph")
                 .cookie(authCookie)
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_JSON_TYPE)
+                .get(ClientResponse.class);
+    }
+
+    private ClientResponse getNonOwnedGraphOfCentralVertexNotAuthenticated(Vertex vertex) {
+        String shortId = UserUris.graphElementShortId(
+                vertex.uri()
+        );
+        return resource
+                .path(getUsersBaseUri(vertex.ownerUsername()))
+                .path("non_owned")
+                .path("vertex")
+                .path(shortId)
+                .path("surround_graph")
                 .get(ClientResponse.class);
     }
 }
