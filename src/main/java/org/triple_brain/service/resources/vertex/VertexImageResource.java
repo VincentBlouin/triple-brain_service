@@ -91,7 +91,7 @@ public class VertexImageResource {
                                 IMAGES_FOLDER_PATH
                                         + File.separator +
                                         imageId
-                        );
+                            );
                         System.out.println("Saving the file: " + savedFile.getName());
                         item.write(savedFile);
                         saveBigImage(savedFile);
