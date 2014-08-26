@@ -62,30 +62,31 @@ public class VertexNonOwnedSurroundGraphResource {
         Iterator<? extends Edge> iterator = graph.edges().values().iterator();
         while (iterator.hasNext()) {
             Edge edge = iterator.next();
-            if(graph.containsVertex(edge.sourceVertex())){
-                Vertex sourceVertex = graph.vertexWithIdentifier(
-                        edge.sourceVertex().uri()
-                );
-                if (!sourceVertex.isPublic()) {
-                    throwExceptionIfCenterVertex(sourceVertex);
-                    graph.vertices().remove(sourceVertex.uri());
-                    iterator.remove();
-                }
-            }else{
+            removeVertexFromEdgesAndGraphIfApplicable(
+                    edge.sourceVertex(),
+                    iterator,
+                    graph
+            );
+            removeVertexFromEdgesAndGraphIfApplicable(
+                    edge.destinationVertex(),
+                    iterator,
+                    graph
+            );
+        }
+    }
+
+    private void removeVertexFromEdgesAndGraphIfApplicable(Vertex vertex, Iterator<? extends Edge> iterator, SubGraph graph){
+        if(graph.containsVertex(vertex)){
+            Vertex vertexInVertices = graph.vertexWithIdentifier(
+                    vertex.uri()
+            );
+            if (!vertexInVertices.isPublic()) {
+                throwExceptionIfCenterVertex(vertexInVertices);
+                graph.vertices().remove(vertexInVertices.uri());
                 iterator.remove();
             }
-            if(graph.containsVertex(edge.destinationVertex())){
-                Vertex destinationVertex = graph.vertexWithIdentifier(
-                        edge.destinationVertex().uri()
-                );
-                if (!destinationVertex.isPublic()) {
-                    throwExceptionIfCenterVertex(destinationVertex);
-                    graph.vertices().remove(destinationVertex.uri());
-                    iterator.remove();
-                }
-            }else{
-                iterator.remove();
-            }
+        }else{
+            iterator.remove();
         }
     }
 
