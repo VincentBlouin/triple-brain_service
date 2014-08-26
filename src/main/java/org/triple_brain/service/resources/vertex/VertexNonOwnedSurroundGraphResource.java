@@ -62,21 +62,25 @@ public class VertexNonOwnedSurroundGraphResource {
         Iterator<? extends Edge> iterator = graph.edges().values().iterator();
         while (iterator.hasNext()) {
             Edge edge = iterator.next();
-            Vertex sourceVertex = graph.vertexWithIdentifier(
-                    edge.sourceVertex().uri()
-            );
-            if (!sourceVertex.isPublic()) {
-                throwExceptionIfCenterVertex(sourceVertex);
-                graph.vertices().remove(sourceVertex.uri());
-                iterator.remove();
+            if(graph.containsVertex(edge.sourceVertex())){
+                Vertex sourceVertex = graph.vertexWithIdentifier(
+                        edge.sourceVertex().uri()
+                );
+                if (!sourceVertex.isPublic()) {
+                    throwExceptionIfCenterVertex(sourceVertex);
+                    graph.vertices().remove(sourceVertex.uri());
+                    iterator.remove();
+                }
             }
-            Vertex destinationVertex = graph.vertexWithIdentifier(
-                    edge.destinationVertex().uri()
-            );
-            if (!destinationVertex.isPublic()) {
-                throwExceptionIfCenterVertex(destinationVertex);
-                graph.vertices().remove(destinationVertex.uri());
-                iterator.remove();
+            if(graph.containsVertex(edge.destinationVertex())){
+                Vertex destinationVertex = graph.vertexWithIdentifier(
+                        edge.destinationVertex().uri()
+                );
+                if (!destinationVertex.isPublic()) {
+                    throwExceptionIfCenterVertex(destinationVertex);
+                    graph.vertices().remove(destinationVertex.uri());
+                    iterator.remove();
+                }
             }
         }
     }

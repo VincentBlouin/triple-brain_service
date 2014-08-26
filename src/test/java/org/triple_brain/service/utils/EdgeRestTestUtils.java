@@ -6,6 +6,7 @@ import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgePojo;
 
@@ -13,6 +14,8 @@ import javax.ws.rs.core.NewCookie;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
+
+import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
 /*
 * Copyright Mozilla Public License 1.1
@@ -95,6 +98,32 @@ public class EdgeRestTestUtils {
                 graphUtils.vertexBUri(),
                 graphUtils.wholeGraph().edges()
         );
+    }
+
+    public ClientResponse addRelationBetweenVertexAAndC() {
+        return addRelationBetweenSourceAndDestinationVertexUri(
+                graphUtils.vertexAUri(),
+                graphUtils.vertexCUri()
+        );
+    }
+
+    public ClientResponse addRelationBetweenSourceAndDestinationVertexUri(
+            URI sourceVertexUri,
+            URI destinationVertexUri
+    ) {
+        UserUris userUris = new UserUris(
+                UserUris.ownerUserNameFromUri(sourceVertexUri)
+        );
+        return resource
+                .path(userUris.baseEdgeUri().getPath())
+                .queryParam("sourceVertexId", encodeURL(
+                        sourceVertexUri.toString()
+                ))
+                .queryParam("destinationVertexId", encodeURL(
+                        destinationVertexUri.toString()
+                ))
+                .cookie(authCookie)
+                .post(ClientResponse.class);
     }
 
     private boolean oneOfTwoUriIsUri(URI first, URI second, URI toCompare){

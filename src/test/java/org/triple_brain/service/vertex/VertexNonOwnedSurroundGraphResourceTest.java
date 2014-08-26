@@ -189,6 +189,30 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         );
     }
 
+    @Test
+    public void works_if_vertices_have_more_than_one_relation_to_each_other() {
+        vertexUtils().makePublicVerticesWithUri(
+                vertexBUri()
+        );
+        vertexUtils().makePrivateVerticesWithUri(
+                vertexAUri(),
+                vertexCUri()
+        );
+        edgeUtils().addRelationBetweenSourceAndDestinationVertexUri(
+                vertexBUri(),
+                vertexCUri()
+        );
+        SubGraph subGraph = SubGraphJson.fromJson(
+                getNonOwnedGraphOfCentralVertexNotAuthenticated(
+                        vertexB()
+                ).getEntity(JSONObject.class)
+        );
+        assertThat(
+                subGraph.vertices().size(),
+                is(1)
+        );
+    }
+
     private ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
         return getNonOwnedGraphOfCentralVertexWithUri(
                 vertex.uri()

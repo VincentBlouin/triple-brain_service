@@ -28,7 +28,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
                 vertexAUri(),
                 vertexCUri()
         ));
-        addRelationBetweenVertexAAndC();
+        edgeUtils().addRelationBetweenVertexAAndC();
         assertTrue(vertexUtils().vertexWithUriHasDestinationVertexWithUri(
                 vertexAUri(),
                 vertexCUri()
@@ -37,7 +37,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void adding_a_relation_returns_correct_response_status() throws Exception {
-        ClientResponse response = addRelationBetweenVertexAAndC();
+        ClientResponse response = edgeUtils().addRelationBetweenVertexAAndC();
         assertThat(
                 response.getStatus(), is(
                 Response.Status.CREATED.getStatusCode()
@@ -46,7 +46,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void adding_a_relation_returns_correct_headers() throws JSONException {
-        ClientResponse response = addRelationBetweenVertexAAndC();
+        ClientResponse response = edgeUtils().addRelationBetweenVertexAAndC();
         Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexCUri(),
@@ -60,15 +60,6 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         );
     }
 
-    private ClientResponse addRelationBetweenVertexAAndC() {
-        ClientResponse response = resource
-                .path(new UserUris(defaultAuthenticatedUser).baseEdgeUri().getPath())
-                .queryParam("sourceVertexId", encodeURL(vertexAUri().toString()))
-                .queryParam("destinationVertexId", encodeURL(vertexCUri().toString()))
-                .cookie(authCookie)
-                .post(ClientResponse.class);
-        return response;
-    }
 
     @Test
     public void can_remove_a_relation() throws Exception {
