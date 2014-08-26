@@ -53,7 +53,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
     }
 
     @Test
-    public void error_404_when_trying_to_access_deleted_bubble(){
+    public void error_404_when_trying_to_access_deleted_bubble() {
         URI vertexBUri = vertexB().uri();
         vertexUtils().removeVertexB();
         assertThat(
@@ -202,6 +202,29 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 vertexBUri(),
                 vertexCUri()
         );
+        assertThat(
+                getNonOwnedGraphOfCentralVertexNotAuthenticated(
+                        vertexB()
+                ).getStatus(),
+                is(
+                        Response.Status.OK.getStatusCode()
+                )
+        );
+    }
+
+    @Test
+    public void all_edges_are_removed_when_vertices_have_more_than_one_relation_to_each_other() {
+        vertexUtils().makePublicVerticesWithUri(
+                vertexBUri()
+        );
+        vertexUtils().makePrivateVerticesWithUri(
+                vertexAUri(),
+                vertexCUri()
+        );
+        edgeUtils().addRelationBetweenSourceAndDestinationVertexUri(
+                vertexBUri(),
+                vertexCUri()
+        );
         SubGraph subGraph = SubGraphJson.fromJson(
                 getNonOwnedGraphOfCentralVertexNotAuthenticated(
                         vertexB()
@@ -210,6 +233,10 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         assertThat(
                 subGraph.vertices().size(),
                 is(1)
+        );
+        assertThat(
+                subGraph.edges().size(),
+                is(0)
         );
     }
 

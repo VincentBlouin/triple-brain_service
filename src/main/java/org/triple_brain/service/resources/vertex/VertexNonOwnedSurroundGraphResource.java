@@ -71,6 +71,8 @@ public class VertexNonOwnedSurroundGraphResource {
                     graph.vertices().remove(sourceVertex.uri());
                     iterator.remove();
                 }
+            }else{
+                iterator.remove();
             }
             if(graph.containsVertex(edge.destinationVertex())){
                 Vertex destinationVertex = graph.vertexWithIdentifier(
@@ -81,6 +83,8 @@ public class VertexNonOwnedSurroundGraphResource {
                     graph.vertices().remove(destinationVertex.uri());
                     iterator.remove();
                 }
+            }else{
+                iterator.remove();
             }
         }
     }
