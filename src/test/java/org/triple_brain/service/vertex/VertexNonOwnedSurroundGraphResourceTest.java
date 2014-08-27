@@ -240,6 +240,20 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         );
     }
 
+    @Test
+    public void cannot_get_private_vertex_when_no_relations() {
+        vertexUtils().removeVertexB();
+        vertexUtils().makePrivateVertexWithUri(
+                vertexAUri()
+        );
+        authenticate(createAUser());
+        ClientResponse response = getNonOwnedGraphOfCentralVertex(vertexA());
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.FORBIDDEN.getStatusCode())
+        );
+    }
+
     private ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
         return getNonOwnedGraphOfCentralVertexWithUri(
                 vertex.uri()

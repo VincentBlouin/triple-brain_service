@@ -59,15 +59,22 @@ public class VertexNonOwnedSurroundGraphResource {
         if (skipVerification) {
             return;
         }
+        if(graph.edges().isEmpty()){
+            removeVertexFromGraphIfPrivate(
+                    centerVertex,
+                    graph
+            );
+            return;
+        }
         Iterator<? extends Edge> iterator = graph.edges().values().iterator();
         while (iterator.hasNext()) {
             Edge edge = iterator.next();
-            removeVertexFromEdgesAndGraphIfApplicable(
+            removeVertexFromEdgesAndGraphIfPrivate(
                     edge.sourceVertex(),
                     iterator,
                     graph
             );
-            removeVertexFromEdgesAndGraphIfApplicable(
+            removeVertexFromEdgesAndGraphIfPrivate(
                     edge.destinationVertex(),
                     iterator,
                     graph
@@ -75,19 +82,26 @@ public class VertexNonOwnedSurroundGraphResource {
         }
     }
 
-    private void removeVertexFromEdgesAndGraphIfApplicable(Vertex vertex, Iterator<? extends Edge> iterator, SubGraph graph){
+    private void removeVertexFromEdgesAndGraphIfPrivate(Vertex vertex, Iterator<? extends Edge> iterator, SubGraph graph){
         if(graph.containsVertex(vertex)){
-            Vertex vertexInVertices = graph.vertexWithIdentifier(
-                    vertex.uri()
-            );
-            if (!vertexInVertices.isPublic()) {
-                throwExceptionIfCenterVertex(vertexInVertices);
-                graph.vertices().remove(vertexInVertices.uri());
+            if(removeVertexFromGraphIfPrivate(vertex, graph)){
                 iterator.remove();
             }
         }else{
             iterator.remove();
         }
+    }
+
+    private Boolean removeVertexFromGraphIfPrivate(Vertex vertex, SubGraph graph){
+        Vertex vertexInVertices = graph.vertexWithIdentifier(
+                vertex.uri()
+        );
+        if (!vertexInVertices.isPublic()) {
+            throwExceptionIfCenterVertex(vertexInVertices);
+            graph.vertices().remove(vertexInVertices.uri());
+            return true;
+        }
+        return false;
     }
 
     private void throwExceptionIfCenterVertex(Vertex vertex){
