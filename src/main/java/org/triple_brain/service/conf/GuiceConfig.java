@@ -14,6 +14,8 @@ import org.triple_brain.module.repository_sql.SQLModule;
 import org.triple_brain.module.solr_search.SolrSearchModule;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
+import org.triple_brain.service.resources.schema.SchemaPropertyResourceFactory;
+import org.triple_brain.service.resources.schema.SchemaResourceFactory;
 import org.triple_brain.service.resources.test.*;
 import org.triple_brain.service.resources.vertex.*;
 
@@ -81,6 +83,12 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         VertexGroupResourceFactory.class
+                ));
+                install(builder.build(
+                        SchemaResourceFactory.class
+                ));
+                install(builder.build(
+                        SchemaPropertyResourceFactory.class
                 ));
 
                 final Map<String, String> params = new HashMap<>();

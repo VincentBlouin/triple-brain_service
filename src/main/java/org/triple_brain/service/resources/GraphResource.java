@@ -4,15 +4,15 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.service.resources.vertex.VertexPublicAccessResource;
+import org.triple_brain.service.resources.schema.SchemaResource;
+import org.triple_brain.service.resources.schema.SchemaResourceFactory;
 import org.triple_brain.service.resources.vertex.VertexResource;
 import org.triple_brain.service.resources.vertex.VertexResourceFactory;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
  * Copyright Mozilla Public License 1.1
  */
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class GraphResource {
 
     @Inject
@@ -30,6 +31,9 @@ public class GraphResource {
 
     @Inject
     EdgeResourceFactory edgeResourceFactory;
+
+    @Inject
+    SchemaResourceFactory schemaResourceFactory;
 
     private User user;
 
@@ -50,6 +54,13 @@ public class GraphResource {
     @Path("/edge")
     public EdgeResource edgeResource() {
         return edgeResourceFactory.withUserGraph(
+                userGraph()
+        );
+    }
+
+    @Path("/schema")
+    public SchemaResource schemaResource() {
+        return schemaResourceFactory.fromUserGraph(
                 userGraph()
         );
     }

@@ -36,15 +36,15 @@ public class GraphElementIdentificationResource {
     GraphIndexer graphIndexer;
 
     private GraphElementOperator graphElement;
-    private boolean isVertex;
+    private GraphElementType graphElementType;
 
     @AssistedInject
     public GraphElementIdentificationResource(
             @Assisted GraphElementOperator graphElement,
-            @Assisted boolean isVertex
+            @Assisted GraphElementType graphElementType
     ) {
         this.graphElement = graphElement;
-        this.isVertex = isVertex;
+        this.graphElementType = graphElementType;
     }
 
     @POST
@@ -119,15 +119,16 @@ public class GraphElementIdentificationResource {
     }
 
     private void reindexGraphElement() {
-        if (isVertex) {
+        if (GraphElementType.VERTEX == graphElementType) {
             graphIndexer.indexVertex(
                     (VertexOperator) graphElement
             );
-        } else {
+            graphIndexer.commit();
+        } else if(GraphElementType.EDGE == graphElementType){
             graphIndexer.indexRelation(
                     (Edge) graphElement
             );
+            graphIndexer.commit();
         }
-        graphIndexer.commit();
     }
 }

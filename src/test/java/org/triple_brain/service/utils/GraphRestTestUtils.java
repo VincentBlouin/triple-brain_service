@@ -7,6 +7,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.SubGraphPojo;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
@@ -117,5 +118,19 @@ public class GraphRestTestUtils {
     }
     public VertexInSubGraph vertexC(){
         return vertexUtils.vertexWithUriOfAnyUser(vertexCUri());
+    }
+
+    public String getCurrentGraphUri(){
+        return new UserUris(
+                authenticatedUser
+        ).graphUri().toString();
+    }
+
+    public URI getElementUriInResponse(ClientResponse response) {
+        return URI.create(
+                URI.create(
+                        response.getHeaders().get("Location").get(0)
+                ).getPath()
+        );
     }
 }

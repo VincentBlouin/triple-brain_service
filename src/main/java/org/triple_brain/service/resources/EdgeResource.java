@@ -4,6 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
+import org.triple_brain.module.model.graph.GraphElementType;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
@@ -132,7 +133,7 @@ public class EdgeResource {
     public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
         return graphElementIdentificationResourceFactory.forGraphElement(
                 edgeFromShortId(shortId),
-                false
+                GraphElementType.EDGE
         );
     }
 

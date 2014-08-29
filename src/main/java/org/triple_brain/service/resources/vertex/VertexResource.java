@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
+import org.triple_brain.module.model.graph.GraphElementType;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
@@ -239,7 +240,7 @@ public class VertexResource {
             @PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forGraphElement(
                 vertexFromShortId(shortId),
-                true
+                GraphElementType.VERTEX
         );
     }
 
