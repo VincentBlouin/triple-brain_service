@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -28,10 +32,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
-
-/**
- * Copyright Mozilla Public License 1.1
- */
 
 public class VertexResourceTest extends GraphManipulationRestTest {
 

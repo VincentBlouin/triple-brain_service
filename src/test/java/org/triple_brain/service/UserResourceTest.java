@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -21,9 +25,6 @@ import static org.triple_brain.module.model.json.UserJson.*;
 import static org.triple_brain.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
 import static org.triple_brain.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class UserResourceTest extends GraphManipulationRestTest {
 
     @Test

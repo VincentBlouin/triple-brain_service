@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -9,20 +13,19 @@ import org.triple_brain.module.model.graph.schema.Schema;
 import org.triple_brain.module.model.graph.schema.SchemaPojo;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.SchemaJson;
+import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class SchemaResourceTest extends GraphManipulationRestTest {
 
     @Test
@@ -54,6 +57,24 @@ public class SchemaResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
+    public void non_owner_cannot_access_resource() {
+        URI uri = schemaUtils().uriOfCreatedSchema();
+        assertThat(
+                getSchemaWithUri(uri).getStatus(),
+                is(
+                        Response.Status.OK.getStatusCode()
+                )
+        );
+        authenticate(createAUser());
+        assertThat(
+                getSchemaWithUri(uri).getStatus(),
+                is(
+                        Response.Status.FORBIDDEN.getStatusCode()
+                )
+        );
+    }
+
+    @Test
     public void can_get_schema() {
         URI uri = schemaUtils().uriOfCreatedSchema();
         SchemaPojo schemaPojo = SchemaJson.fromJson(
@@ -71,7 +92,10 @@ public class SchemaResourceTest extends GraphManipulationRestTest {
         SchemaPojo schemaPojo = SchemaJson.fromJson(
                 getSchemaWithUri(uri).getEntity(String.class)
         );
-        ClientResponse response = updateSchemaLabel(schemaPojo, "patate");
+        ClientResponse response = schemaUtils().updateSchemaLabel(
+                schemaPojo,
+                "patate"
+        );
         assertThat(
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
@@ -88,7 +112,10 @@ public class SchemaResourceTest extends GraphManipulationRestTest {
                 schemaPojo.label(),
                 is(not("patate"))
         );
-        updateSchemaLabel(schemaPojo, "patate");
+        schemaUtils().updateSchemaLabel(
+                schemaPojo,
+                "patate"
+        );
         schemaPojo = SchemaJson.fromJson(
                 getSchemaWithUri(uri).getEntity(String.class)
         );
@@ -98,21 +125,30 @@ public class SchemaResourceTest extends GraphManipulationRestTest {
         );
     }
 
-
-    private ClientResponse updateSchemaLabel(Schema schema, String newLabel) {
-        try {
-            JSONObject localizedLabel = new JSONObject().put(
-                    LocalizedStringJson.content.name(),
-                    newLabel
-            );
-            return resource
-                    .path(schema.uri().toString())
-                    .path("label")
-                    .cookie(authCookie)
-                    .post(ClientResponse.class, localizedLabel);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    public void can_get_schema_by_searching_with_its_label() {
+        URI schemaUri = schemaUtils().uriOfCreatedSchema();
+        schemaUtils().updateSchemaLabelWithUri(
+                schemaUri,
+                "schema1"
+        );
+        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+                "schema1",
+                defaultAuthenticatedUserAsJson
+        );
+        assertThat(
+                results.size(),
+                is(
+                        1
+                )
+        );
+        VertexSearchResult result = results.iterator().next();
+        assertThat(
+                result.getGraphElement().uri(),
+                is(
+                        schemaUri
+                )
+        );
     }
 
     private ClientResponse getSchemaWithUri(URI uri) {

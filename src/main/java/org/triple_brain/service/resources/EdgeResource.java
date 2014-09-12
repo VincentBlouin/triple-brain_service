@@ -1,7 +1,12 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.GraphElementType;
@@ -11,6 +16,7 @@ import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
+import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
@@ -26,9 +32,6 @@ import java.net.URI;
 import static org.triple_brain.module.common_utils.Uris.decodeUrlSafe;
 
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 @Produces(MediaType.APPLICATION_JSON)
 public class EdgeResource {
 
@@ -86,18 +89,10 @@ public class EdgeResource {
         EdgeOperator edge = userGraph.edgeWithUri(Uris.get(
                 request.getRequestURI()
         ));
-        VertexOperator sourceVertex = edge.sourceVertex();
-        VertexOperator destinationVertex = edge.destinationVertex();
         graphIndexer.deleteGraphElement(
                 edge
         );
         edge.remove();
-        graphIndexer.indexVertex(
-                sourceVertex
-        );
-        graphIndexer.indexVertex(
-                destinationVertex
-        );
         graphIndexer.commit();
         return Response.ok().build();
     }
@@ -108,13 +103,17 @@ public class EdgeResource {
     @GraphTransactional
     public Response modifyEdgeLabel(
             @PathParam("edgeShortId") String edgeShortId,
-            @QueryParam("label") String label){
+            JSONObject localizedLabel){
         URI edgeId = edgeUriFromShortId(edgeShortId);
         EdgeOperator edge = userGraph.edgeWithUri(
             edgeId
         );
-        edge.label(label);
-        graphIndexer.handleEdgeLabelUpdated(edge);
+        edge.label(
+                localizedLabel.optString(
+                        LocalizedStringJson.content.name()
+                )
+        );
+        graphIndexer.indexRelation(edge);
         graphIndexer.commit();
         return Response.ok().build();
     }

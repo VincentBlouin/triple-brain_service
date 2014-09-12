@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.Inject;
@@ -20,9 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class VertexGroupResource {
 
     @Inject

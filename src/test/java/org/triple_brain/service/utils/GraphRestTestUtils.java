@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.google.gson.Gson;
@@ -19,9 +23,6 @@ import java.net.URI;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class GraphRestTestUtils {
 
     private WebResource resource;
@@ -48,14 +49,10 @@ public class GraphRestTestUtils {
         );
     }
 
-    public SubGraph wholeGraph(){
+    public SubGraph graphWithCenterVertexUri(URI vertexUri){
         ClientResponse response = resource
-                .path(vertexAUri().getPath())
+                .path(vertexUri.getPath())
                 .path("surround_graph")
-                .path(GraphManipulationRestTest
-                        .DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES
-                        .toString()
-                )
                 .cookie(authCookie)
                 .get(ClientResponse.class);
         assertThat(

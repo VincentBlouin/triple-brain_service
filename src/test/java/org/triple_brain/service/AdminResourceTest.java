@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -6,63 +10,36 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.json.UserJson;
+import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
+
+import java.net.URI;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class AdminResourceTest extends GraphManipulationRestTest {
 
     @Test
-    public void vertices_are_indexed_when_indexing_whole_graph(){
-        reindexAll(
-                loginAsVince()
+    public void indexing_whole_graph_returns_no_content_status() {
+        assertThat(
+                reindexAll(
+                        loginAsVince()
+                ).getStatus(),
+                is(
+                        Response.Status.NO_CONTENT.getStatusCode()
+                )
         );
-        authenticate(defaultAuthenticatedUserAsJson);
-        ClientResponse clientResponse = resource
-                .path("service")
-                .path("users")
-                .path(defaultAuthenticatedUser.username())
-                .path("search")
-                .path("own_vertices")
-                .path("auto_complete")
-                .queryParam("text", "vert")
-                .cookie(authCookie)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(ClientResponse.class);
-        JSONArray searchResults = clientResponse.getEntity(JSONArray.class);
-        assertThat(searchResults.length(), is(3));
     }
 
     @Test
-    public void edges_are_indexed_when_indexing_whole_graph(){
-        reindexAll(
-                loginAsVince()
-        );
-        authenticate(defaultAuthenticatedUserAsJson);
-        ClientResponse clientResponse = resource
-                .path("service")
-                .path("users")
-                .path(defaultAuthenticatedUser.username())
-                .path("search")
-                .path("relations")
-                .path("auto_complete")
-                .queryParam("text", "between")
-                .cookie(authCookie)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(ClientResponse.class);
-        JSONArray searchResults = clientResponse.getEntity(JSONArray.class);
-        assertThat(searchResults.length(), is(2));
-    }
-
-    @Test
-    public void can_refresh_number_of_connected_edges()throws Exception{
+    public void can_refresh_number_of_connected_edges() throws Exception {
         setNumberOfConnectedOfAllVerticesToZero();
         assertThat(
                 vertexB().getNumberOfConnectedEdges(),
@@ -79,7 +56,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
     }
 
 
-    private ClientResponse setNumberOfConnectedOfAllVerticesToZero(){
+    private ClientResponse setNumberOfConnectedOfAllVerticesToZero() {
         return resource
                 .path("service")
                 .path("test")
@@ -89,7 +66,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
                 .post(ClientResponse.class);
     }
 
-    private ClientResponse refreshNumberOfConnectedEdges(NewCookie vinceCookie){
+    private ClientResponse refreshNumberOfConnectedEdges(NewCookie vinceCookie) {
         return resource
                 .path("service")
                 .path("users")
@@ -100,7 +77,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
                 .post(ClientResponse.class);
     }
 
-    private ClientResponse reindexAll(NewCookie vinceCookie){
+    private ClientResponse reindexAll(NewCookie vinceCookie) {
         return resource
                 .path("service")
                 .path("users")
@@ -111,7 +88,7 @@ public class AdminResourceTest extends GraphManipulationRestTest {
                 .post(ClientResponse.class);
     }
 
-    private NewCookie loginAsVince(){
+    private NewCookie loginAsVince() {
         JSONObject vince = userVince();
         createUser(
                 vince
@@ -121,13 +98,13 @@ public class AdminResourceTest extends GraphManipulationRestTest {
         ).getCookies().get(0);
     }
 
-    private JSONObject userVince(){
-        try{
+    private JSONObject userVince() {
+        try {
             return userUtils().validForCreation().put(
                     UserJson.USER_NAME,
                     "vince"
             );
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }

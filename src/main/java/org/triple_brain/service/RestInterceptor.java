@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -7,9 +11,6 @@ import org.triple_brain.module.model.graph.GraphTransactional;
 
 import javax.inject.Inject;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class RestInterceptor implements MethodInterceptor {
 
     @Inject

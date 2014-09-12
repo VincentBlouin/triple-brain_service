@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.schema;
 
 import com.google.inject.Inject;
@@ -8,33 +12,35 @@ import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.schema.SchemaOperator;
 import org.triple_brain.module.model.json.LocalizedStringJson;
+import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
 import org.triple_brain.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class SchemaPropertyResource {
 
     private SchemaOperator schemaOperator;
-    private GraphElementOperatorFactory graphElementOperatorFactory;
+    private UserGraph userGraph;
+
+    @Inject
+    GraphIndexer graphIndexer;
 
     @Inject
     GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
 
+    @Inject
+    GraphElementOperatorFactory graphElementOperatorFactory;
+
     @AssistedInject
     public SchemaPropertyResource(
-            GraphElementOperatorFactory graphElementOperatorFactory,
-            @Assisted SchemaOperator schemaOperator
+            @Assisted SchemaOperator schemaOperator,
+            @Assisted UserGraph userGraph
     ){
-        this.graphElementOperatorFactory = graphElementOperatorFactory;
         this.schemaOperator = schemaOperator;
+        this.userGraph = userGraph;
     }
 
     @POST
@@ -53,11 +59,27 @@ public class SchemaPropertyResource {
     @GraphTransactional
     @Path("/{shortId}/label")
     public Response updateLabel(@PathParam("shortId") String shortId, JSONObject label) {
+        URI uri = uriFromShortId(shortId);
+        if(!userGraph.haveElementWithId(uri)){
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
         graphElementOperatorFromShortId(shortId).label(
                 label.optString(
                         LocalizedStringJson.content.name()
                 )
         );
+        graphIndexer.indexSchema(schemaOperator);
+        graphIndexer.commit();
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @GraphTransactional
+    @Path("/{shortId}")
+    public Response delete(@PathParam("shortId") String shortId) {
+        graphElementOperatorFromShortId(shortId).remove();
+        graphIndexer.indexSchema(schemaOperator);
+        graphIndexer.commit();
         return Response.noContent().build();
     }
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources;
 
 import com.google.inject.Injector;
@@ -12,6 +16,8 @@ import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
+import org.triple_brain.service.resources.schema.SchemaNonOwnedResource;
+import org.triple_brain.service.resources.schema.SchemaNonOwnedResourceFactory;
 import org.triple_brain.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
 
 import javax.inject.Inject;
@@ -30,15 +36,11 @@ import static org.triple_brain.module.model.validator.UserValidator.*;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.isUserInSession;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
-
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Singleton
-public class UserResource{
+public class UserResource {
 
     @Inject
     UserRepository userRepository;
@@ -54,6 +56,9 @@ public class UserResource{
 
     @Inject
     SearchResourceFactory searchResourceFactory;
+
+    @Inject
+    SchemaNonOwnedResourceFactory schemaNonOwnedResourceFactory;
 
     @Inject
     private Injector injector;
@@ -87,23 +92,34 @@ public class UserResource{
         ).vertexUriFromShortId(
                 shortId
         );
-        if(!userGraph.haveElementWithId(centerVertexUri)){
+        if (!userGraph.haveElementWithId(centerVertexUri)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         Vertex centerVertex = userGraph.vertexWithUri(
                 centerVertexUri
         );
         Boolean skipVerification = false;
-        if(isUserInSession(request.getSession())){
+        if (isUserInSession(request.getSession())) {
             User userInSession = userFromSession(request.getSession());
             skipVerification = userInSession.username().equals(
-                    centerVertex.ownerUsername()
+                    centerVertex.getOwnerUsername()
             );
         }
         return new VertexNonOwnedSurroundGraphResource(
                 userGraph,
                 centerVertex,
                 skipVerification
+        );
+    }
+
+    @Path("{username}/non_owned/schema")
+    public SchemaNonOwnedResource schemaNonOwnedResource(
+            @PathParam("username") String username
+    ) {
+        return schemaNonOwnedResourceFactory.fromUserGraph(
+                graphFactory.loadForUser(
+                        userRepository.findByUsername(username)
+                )
         );
     }
 
@@ -123,7 +139,7 @@ public class UserResource{
     public AdminResource adminResource(
             @PathParam("username") String username
     ) {
-        if(isUserNameTheOneInSession(username) && username.equals("vince")){
+        if (isUserNameTheOneInSession(username) && username.equals("vince")) {
             return injector.getInstance(
                     AdminResource.class
             );
@@ -132,8 +148,9 @@ public class UserResource{
                 Response.Status.FORBIDDEN
         );
     }
+
     @Path("session")
-    public UserSessionResource sessionResource(){
+    public UserSessionResource sessionResource() {
         return injector.getInstance(
                 UserSessionResource.class
         );
@@ -143,12 +160,12 @@ public class UserResource{
     @Produces(MediaType.WILDCARD)
     @GraphTransactional
     @Path("/")
-    public Response createUser(JSONObject jsonUser){
+    public Response createUser(JSONObject jsonUser) {
         User user = User.withUsernameEmailAndLocales(
                 jsonUser.optString(USER_NAME, ""),
                 jsonUser.optString(EMAIL, ""),
                 jsonUser.optJSONArray(PREFERRED_LOCALES).toString()
-       )
+        )
                 .password(jsonUser.optString(PASSWORD, ""));
 
         JSONArray jsonMessages = new JSONArray();
@@ -162,13 +179,13 @@ public class UserResource{
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> entry : errors.entrySet()) {
-                try{
+                try {
                     jsonMessages.put(new JSONObject().put(
                             "field", entry.getKey()
                     ).put(
                             "reason", entry.getValue()
                     ));
-                }catch(JSONException e){
+                } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -197,12 +214,12 @@ public class UserResource{
     @Path("/is_authenticated")
     public Response isAuthenticated(@Context HttpServletRequest request) throws JSONException {
         return Response.ok(new JSONObject()
-                .put("is_authenticated", isUserInSession(request.getSession()))
+                        .put("is_authenticated", isUserInSession(request.getSession()))
         ).build();
     }
 
     private Boolean isUserNameTheOneInSession(String userName) {
-        if(!isUserInSession(request.getSession())){
+        if (!isUserInSession(request.getSession())) {
             return false;
         }
         User authenticatedUser = userFromSession(request.getSession());

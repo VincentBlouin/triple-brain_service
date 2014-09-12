@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources;
 
 import org.codehaus.jettison.json.JSONException;
@@ -12,10 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
-/*
-* Copyright Mozilla Public License 1.1
-*/
 
 @Path("/server_config")
 @Produces(MediaType.APPLICATION_JSON)

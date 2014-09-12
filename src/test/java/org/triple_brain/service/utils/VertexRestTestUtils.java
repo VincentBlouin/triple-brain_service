@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.google.gson.Gson;
@@ -24,9 +28,6 @@ import java.util.Set;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class VertexRestTestUtils {
 
     private WebResource resource;

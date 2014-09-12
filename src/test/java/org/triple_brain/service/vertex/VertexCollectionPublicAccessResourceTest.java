@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.vertex;
 
 import org.junit.Test;
@@ -8,9 +12,6 @@ import javax.ws.rs.core.Response;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class VertexCollectionPublicAccessResourceTest extends GraphManipulationRestTest {
 
     @Test

@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.google.gson.Gson;
@@ -16,12 +20,8 @@ import java.net.URI;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class GraphManipulationRestTest extends RestTest {
 
-    public static final Integer DEPTH_OF_SUB_VERTICES_COVERING_ALL_GRAPH_VERTICES = 10;
     protected static ModelTestScenarios modelTestScenarios = new ModelTestScenarios();
 
     protected User defaultAuthenticatedUser;

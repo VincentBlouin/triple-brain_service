@@ -1,8 +1,8 @@
-package org.triple_brain.service.resources.vertex;
-
 /*
-* Copyright Mozilla Public License 1.1
-*/
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
+package org.triple_brain.service.resources.vertex;
 
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.SubGraphPojo;
@@ -22,17 +22,14 @@ import javax.ws.rs.core.Response;
 public class VertexOwnedSurroundGraphResource {
 
     private Vertex centerVertex;
-    private Integer depthOfSubVertices;
     private UserGraph userGraph;
 
     public VertexOwnedSurroundGraphResource(
             UserGraph userGraph,
-            Vertex centerVertex,
-            Integer depth
+            Vertex centerVertex
     ) {
         this.userGraph = userGraph;
         this.centerVertex = centerVertex;
-        this.depthOfSubVertices = depth;
     }
 
     @GET
@@ -48,7 +45,7 @@ public class VertexOwnedSurroundGraphResource {
 
     private SubGraphPojo getGraph(){
         return userGraph.graphWithDepthAndCenterVertexId(
-                depthOfSubVertices,
+                1,
                 centerVertex.uri()
         );
     }

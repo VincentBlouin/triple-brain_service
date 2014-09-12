@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
@@ -31,9 +35,6 @@ import java.util.Set;
 
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexResource {
@@ -114,6 +115,7 @@ public class VertexResource {
         graphIndexer.indexVertex(
                 createdVertex
         );
+        graphIndexer.commit();
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
             jsonCreatedStatement.put(
@@ -221,16 +223,14 @@ public class VertexResource {
         );
     }
 
-    @Path("{shortId}/surround_graph/{depthOfSubVertices}")
+    @Path("{shortId}/surround_graph")
     @GraphTransactional
     public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
-            @PathParam("shortId") String shortId,
-            @PathParam("depthOfSubVertices") Integer depth
+            @PathParam("shortId") String shortId
     ) {
         return new VertexOwnedSurroundGraphResource(
                 userGraph,
-                vertexFromShortId(shortId),
-                depth
+                vertexFromShortId(shortId)
         );
     }
 

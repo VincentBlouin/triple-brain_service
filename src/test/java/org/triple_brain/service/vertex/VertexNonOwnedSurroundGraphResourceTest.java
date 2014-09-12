@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -17,9 +21,6 @@ import java.net.URI;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRestTest {
 
     @Test
@@ -279,7 +280,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 vertex.uri()
         );
         return resource
-                .path(getUsersBaseUri(vertex.ownerUsername()))
+                .path(getUsersBaseUri(vertex.getOwnerUsername()))
                 .path("non_owned")
                 .path("vertex")
                 .path(shortId)

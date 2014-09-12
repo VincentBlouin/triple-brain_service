@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.vertex;
 
 import org.triple_brain.module.model.graph.GraphTransactional;
@@ -13,9 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Iterator;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexNonOwnedSurroundGraphResource {

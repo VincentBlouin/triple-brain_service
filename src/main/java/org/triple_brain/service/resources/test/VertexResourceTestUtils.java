@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.test;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -27,9 +31,6 @@ import java.net.URI;
 
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 @Path("/test/vertex/")
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)

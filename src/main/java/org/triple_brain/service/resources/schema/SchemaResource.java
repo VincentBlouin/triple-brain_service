@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.schema;
 
 import com.google.inject.assistedinject.Assisted;
@@ -10,35 +14,38 @@ import org.triple_brain.module.model.graph.schema.SchemaOperator;
 import org.triple_brain.module.model.graph.schema.SchemaPojo;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.SchemaJson;
+import org.triple_brain.module.search.GraphIndexer;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SchemaResource {
 
+    @Inject
+    GraphIndexer graphIndexer;
+
+    @Inject
+    SchemaPropertyResourceFactory schemaPropertyResourceFactory;
+
     private UserGraph userGraph;
-    private SchemaPropertyResourceFactory schemaPropertyResourceFactory;
+
 
     @AssistedInject
     public SchemaResource(
-            SchemaPropertyResourceFactory schemaPropertyResourceFactory,
             @Assisted UserGraph userGraph
     ){
-        this.schemaPropertyResourceFactory = schemaPropertyResourceFactory;
         this.userGraph = userGraph;
     }
 
     @POST
     @GraphTransactional
     @Path("/")
-    public Response createSchema() {
+    public Response create() {
         SchemaPojo schema = userGraph.createSchema();
         return Response.created(
                 URI.create(
@@ -52,7 +59,7 @@ public class SchemaResource {
     @GET
     @GraphTransactional
     @Path("/{shortId}")
-    public Response createSchema(@PathParam("shortId") String shortId) {
+    public Response get(@PathParam("shortId") String shortId) {
         return Response.ok().entity(SchemaJson.toJson(
                 userGraph.schemaPojoWithUri(schemaUriFromShortId(
                         shortId
@@ -72,6 +79,8 @@ public class SchemaResource {
                         LocalizedStringJson.content.name()
                 )
         );
+        graphIndexer.indexSchema(schema);
+        graphIndexer.commit();
         return Response.noContent().build();
     }
 
@@ -82,7 +91,8 @@ public class SchemaResource {
                 shortId
         ));
         return schemaPropertyResourceFactory.forSchema(
-                schema
+                schema,
+                userGraph
         );
     }
 

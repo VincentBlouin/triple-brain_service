@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
@@ -30,9 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class VertexImageResource {
 
     private VertexOperator vertex;

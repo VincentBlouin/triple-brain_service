@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.google.gson.Gson;
@@ -9,27 +13,26 @@ import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgePojo;
+import org.triple_brain.module.model.json.LocalizedStringJson;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
 import java.util.Map;
-import java.util.Set;
 
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class EdgeRestTestUtils {
 
     private WebResource resource;
     private NewCookie authCookie;
     private GraphRestTestUtils graphUtils;
     private Gson gson = new Gson();
-    public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
+
+    public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         return new EdgeRestTestUtils(resource, authCookie, authenticatedUser);
     }
-    protected EdgeRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser){
+
+    protected EdgeRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         this.resource = resource;
         this.authCookie = authCookie;
         graphUtils = GraphRestTestUtils.withWebResourceAndAuthCookie(
@@ -39,26 +42,27 @@ public class EdgeRestTestUtils {
         );
     }
 
-    public ClientResponse updateEdgeLabel(String label, Edge edge)throws Exception{
-        ClientResponse response = resource
+    public ClientResponse updateEdgeLabel(String label, Edge edge) throws Exception {
+        JSONObject localizedLabel = new JSONObject().put(
+                LocalizedStringJson.content.name(),
+                label
+        );
+        return resource
                 .path(edge.uri().toString())
                 .path("label")
-                .queryParam("label", label)
                 .cookie(authCookie)
-                .post(ClientResponse.class);
-        return response;
+                .post(ClientResponse.class, localizedLabel);
     }
 
-    public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception{
+    public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception {
         Edge edgeBetweenAAndB = edgeBetweenAAndB();
-        ClientResponse response = resource
+        return resource
                 .path(edgeBetweenAAndB.uri().toString())
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
-        return response;
     }
 
-    public Edge edgeWithUri(URI edgeUri){
+    public Edge edgeWithUri(URI edgeUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -76,27 +80,27 @@ public class EdgeRestTestUtils {
             URI firstVertexUri,
             URI secondVertexUri,
             Map<URI, ? extends Edge> edges
-    ){
-        try{
-            for(Edge edge : edges.values()){
+    ) {
+        try {
+            for (Edge edge : edges.values()) {
                 URI sourceVertexId = edge.sourceVertex().uri();
                 URI destinationVertexId = edge.destinationVertex().uri();
-                if(oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&
-                        oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, destinationVertexId)){
+                if (oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&
+                        oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, destinationVertexId)) {
                     return edge;
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         throw new RuntimeException("none found !");
     }
 
-    public Edge edgeBetweenAAndB(){
+    public Edge edgeBetweenAAndB() {
         return edgeBetweenTwoVerticesUriGivenEdges(
                 graphUtils.vertexAUri(),
                 graphUtils.vertexBUri(),
-                graphUtils.wholeGraph().edges()
+                graphUtils.graphWithCenterVertexUri(graphUtils.vertexAUri()).edges()
         );
     }
 
@@ -126,7 +130,7 @@ public class EdgeRestTestUtils {
                 .post(ClientResponse.class);
     }
 
-    private boolean oneOfTwoUriIsUri(URI first, URI second, URI toCompare){
+    private boolean oneOfTwoUriIsUri(URI first, URI second, URI toCompare) {
         return first.equals(toCompare) ||
                 second.equals(toCompare);
     }

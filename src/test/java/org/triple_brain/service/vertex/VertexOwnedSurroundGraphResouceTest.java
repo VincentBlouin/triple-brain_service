@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -16,9 +20,6 @@ import java.net.URI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTest {
 
     @Test
@@ -31,10 +32,12 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
 
     @Test
     public void can_get_graph() {
-        SubGraph graph = SubGraphJson.fromJson(getGraph().getEntity(JSONObject.class));
+        SubGraph graph = SubGraphJson.fromJson(
+                getGraph().getEntity(JSONObject.class)
+        );
         assertThat(
                 graph.vertices().size(),
-                is(3)
+                is(2)
         );
     }
 
@@ -50,9 +53,8 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
                 vertices.optJSONObject(0)
         );
         authenticate(defaultAuthenticatedUser);
-        ClientResponse response = getGraphOfCentralVertexUriAtDepth(
-                anotherUserVertexUri,
-                5
+        ClientResponse response = getGraphOfCentralVertexUri(
+                anotherUserVertexUri
         );
         assertThat(
                 response.getStatus(),
@@ -62,17 +64,15 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
 
     @Test
     public void can_get_sub_graph() throws Exception {
-        SubGraph graph = SubGraphJson.fromJson(getGraphOfCentralVertexUriAtDepth(
-                vertexAUri(),
-                2
+        SubGraph graph = SubGraphJson.fromJson(getGraphOfCentralVertexUri(
+                vertexBUri()
         ).getEntity(JSONObject.class));
         assertThat(
                 graph.vertices().size(),
                 is(3)
         );
-        graph = SubGraphJson.fromJson(getGraphOfCentralVertexUriAtDepth(
-                vertexAUri(),
-                1
+        graph = SubGraphJson.fromJson(getGraphOfCentralVertexUri(
+                vertexAUri()
         ).getEntity(JSONObject.class));
         assertThat(
                 graph.vertices().size(),
@@ -80,34 +80,16 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
         );
     }
 
-    @Test
-    public void distance_from_center_vertex_is_included() throws Exception{
-        SubGraph subGraph = SubGraphJson.fromJson(
-                getGraphOfCentralVertexUriAtDepth(
-                vertexAUri(),
-                2
-        ).getEntity(JSONObject.class));
-        VertexInSubGraph vertexCFromSubGraph = subGraph.vertexWithIdentifier(
-                vertexCUri()
-        );
-        assertThat(
-                vertexCFromSubGraph.minDistanceFromCenterVertex(),
-                is(2)
-        );
-    }
-
     private ClientResponse getGraph() {
-        return getGraphOfCentralVertexUriAtDepth(
-                vertexAUri(),
-                5
+        return getGraphOfCentralVertexUri(
+                vertexAUri()
         );
     }
 
-    private ClientResponse getGraphOfCentralVertexUriAtDepth(URI centralVertexUri, Integer depth) {
+    private ClientResponse getGraphOfCentralVertexUri(URI centralVertexUri) {
         return resource
                 .path(centralVertexUri.getPath())
                 .path("surround_graph")
-                .path(depth.toString())
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }

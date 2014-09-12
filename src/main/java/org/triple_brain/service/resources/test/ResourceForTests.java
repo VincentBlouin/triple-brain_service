@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.test;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -37,9 +41,6 @@ import static org.triple_brain.service.SecurityInterceptor.AUTHENTICATED_USER_KE
 import static org.triple_brain.service.SecurityInterceptor.AUTHENTICATION_ATTRIBUTE_KEY;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 @Path("/test")
 @Produces(MediaType.APPLICATION_JSON)
 @Singleton

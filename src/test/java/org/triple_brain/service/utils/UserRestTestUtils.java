@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -11,9 +15,6 @@ import java.util.UUID;
 
 import static org.triple_brain.module.model.json.UserJson.*;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class UserRestTestUtils {
 
     private WebResource resource;

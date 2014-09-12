@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources.test;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.triple_brain.module.model.WholeGraph;
@@ -18,10 +22,6 @@ import java.net.URI;
 import java.util.Iterator;
 
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
-
-/*
-* Copyright Mozilla Public License 1.1
-*/
 
 @Path("/test/graph")
 @Singleton

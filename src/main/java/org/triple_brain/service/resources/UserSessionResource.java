@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources;
 
 import org.codehaus.jettison.json.JSONException;
@@ -20,9 +24,6 @@ import static org.triple_brain.service.SecurityInterceptor.AUTHENTICATION_ATTRIB
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.isUserInSession;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserSessionResource {

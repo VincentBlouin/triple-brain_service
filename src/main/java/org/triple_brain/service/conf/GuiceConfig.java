@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.conf;
 
 import com.google.gson.Gson;
@@ -14,6 +18,7 @@ import org.triple_brain.module.repository_sql.SQLModule;
 import org.triple_brain.module.solr_search.SolrSearchModule;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
+import org.triple_brain.service.resources.schema.SchemaNonOwnedResourceFactory;
 import org.triple_brain.service.resources.schema.SchemaPropertyResourceFactory;
 import org.triple_brain.service.resources.schema.SchemaResourceFactory;
 import org.triple_brain.service.resources.test.*;
@@ -29,9 +34,6 @@ import java.util.Map;
 
 import static com.google.inject.jndi.JndiIntegration.fromJndi;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class GuiceConfig extends GuiceServletContextListener {
 
     @Override
@@ -89,6 +91,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         SchemaPropertyResourceFactory.class
+                ));
+                install(builder.build(
+                        SchemaNonOwnedResourceFactory.class
                 ));
 
                 final Map<String, String> params = new HashMap<>();

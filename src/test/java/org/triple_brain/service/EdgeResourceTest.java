@@ -1,9 +1,12 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Test;
-import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
@@ -17,9 +20,6 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class EdgeResourceTest extends GraphManipulationRestTest {
 
     @Test
@@ -50,7 +50,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexCUri(),
-                graphUtils().wholeGraph().edges()
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
                 response.getHeaders().get("Location").get(0),
@@ -66,7 +66,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         edgeUtils().removeEdgeBetweenVertexAAndB();
         assertFalse(
-                graphUtils().wholeGraph().containsEdge(
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).containsEdge(
                         edgeBetweenAAndB
                 )
         );
@@ -113,63 +113,6 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void updating_edge_labels_reflects_in_search_for_connected_vertices() throws Exception {
-        indexGraph();
-        VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexA().label()
-        ).get(0);
-        assertTrue(searchResultA.getRelationsName().contains(
-                "between vertex A and vertex B"
-        ));
-        VertexSearchResult searchResultB = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexB().label()
-        ).get(0);
-        assertTrue(searchResultB.getRelationsName().contains(
-                "between vertex A and vertex B"
-        ));
-        edgeUtils().updateEdgeLabel(
-                "new edge text !",
-                edgeUtils().edgeBetweenAAndB()
-        );
-        searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexA().label()
-        ).get(0);
-        assertFalse(searchResultA.getRelationsName().contains(
-                "between vertex A and vertex B"
-        ));
-        assertTrue(searchResultA.getRelationsName().contains(
-                "new edge text !"
-        ));
-        searchResultB = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexB().label()
-        ).get(0);
-        assertFalse(searchResultB.getRelationsName().contains(
-                "between vertex A and vertex B"
-        ));
-        assertTrue(searchResultB.getRelationsName().contains(
-                "new edge text !"
-        ));
-    }
-
-    @Test
-    public void deleting_edge_removes_relations_name_of_connected_vertices_in_search() throws Exception {
-        indexGraph();
-        VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexA().label()
-        ).get(0);
-        assertTrue(
-                searchResultA.hasRelations()
-        );
-        edgeUtils().removeEdgeBetweenVertexAAndB();
-        searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexA().label()
-        ).get(0);
-        assertFalse(
-                searchResultA.hasRelations()
-        );
-    }
-
-    @Test
     public void inverseReturnsCorrectStatus() {
         assertThat(
                 inverseRelationBetweenAAndB().getStatus(), is(
@@ -182,7 +125,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                graphUtils().wholeGraph().edges()
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
                 edgeBetweenAAndC.sourceVertex().uri().toString(), is(
@@ -196,7 +139,7 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                graphUtils().wholeGraph().edges()
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
                 edgeBetweenAAndC.sourceVertex().uri().toString(), is(
@@ -212,13 +155,12 @@ public class EdgeResourceTest extends GraphManipulationRestTest {
         Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                graphUtils().wholeGraph().edges()
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
-        ClientResponse response = resource
+        return resource
                 .path(edgeBetweenAAndC.uri().toString())
                 .path("inverse")
                 .cookie(authCookie)
                 .put(ClientResponse.class);
-        return response;
     }
 }

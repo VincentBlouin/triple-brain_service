@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.google.gson.Gson;
@@ -8,19 +12,18 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.search.EdgeSearchResult;
+import org.triple_brain.module.search.GraphElementSearchResult;
 import org.triple_brain.module.search.VertexSearchResult;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class SearchRestTestUtils {
     private WebResource resource;
     private NewCookie authCookie;
@@ -129,6 +132,35 @@ public class SearchRestTestUtils {
                 user,
                 true
         );
+    }
+
+    public GraphElementSearchResult searchByUri(URI uri) {
+        JSONObject jsonObject = searchByUriClientResponse(
+                uri
+        ).getEntity(JSONObject.class);
+        Gson gson = new Gson();
+        return jsonObject.has("edge") ?
+                gson.fromJson(
+                        jsonObject.toString(),
+                        EdgeSearchResult.class
+                ) :
+                gson.fromJson(
+                        jsonObject.toString(),
+                        VertexSearchResult.class
+                );
+    }
+
+    public ClientResponse searchByUriClientResponse(URI uri) {
+        return resource
+                .path("service")
+                .path("users")
+                .path(authenticatedUserAsJson.optString(UserJson.USER_NAME))
+                .path("search")
+                .path("uri")
+                .queryParam("uri", uri.toString())
+                .cookie(authCookie)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(ClientResponse.class);
     }
 
     private ClientResponse clientResponseOfAutoCompletionForVerticesOfUser(String textToSearchWith, JSONObject user, Boolean onlyOwnVertices) {

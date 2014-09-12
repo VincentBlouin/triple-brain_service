@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -11,9 +15,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class ServerConfigResourceTest extends RestTest {
 
     @Test

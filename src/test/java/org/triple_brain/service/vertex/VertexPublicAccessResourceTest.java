@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -8,9 +12,6 @@ import org.triple_brain.service.utils.GraphManipulationRestTest;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class VertexPublicAccessResourceTest extends GraphManipulationRestTest{
 
     @Test

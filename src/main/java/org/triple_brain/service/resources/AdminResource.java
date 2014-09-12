@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.resources;
 
 import com.google.inject.Inject;
@@ -10,9 +14,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class AdminResource {
 
     @Inject
@@ -26,7 +27,7 @@ public class AdminResource {
     @POST
     public Response reindexAll(){
         graphIndexer.indexWholeGraph();
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @Path("refresh_number_of_connected_edges")

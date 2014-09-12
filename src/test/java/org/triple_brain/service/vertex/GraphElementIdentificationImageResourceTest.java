@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -15,9 +19,6 @@ import java.util.Set;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/*
-* Copyright Mozilla Public License 1.1
-*/
 public class GraphElementIdentificationImageResourceTest extends GraphManipulationRestTest {
 
     @Test

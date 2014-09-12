@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service.utils;
 
 import com.sun.jersey.api.client.Client;
@@ -26,9 +30,6 @@ import static org.junit.Assert.assertThat;
 import static org.triple_brain.module.repository_sql.SQLConnection.*;
 
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public abstract class RestTest {
 
     protected static URI BASE_URI;

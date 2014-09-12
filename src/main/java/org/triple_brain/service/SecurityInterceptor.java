@@ -1,3 +1,7 @@
+/*
+ * Copyright Vincent Blouin under the Mozilla Public License 1.1
+ */
+
 package org.triple_brain.service;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -16,9 +20,6 @@ import java.net.URI;
 import static org.triple_brain.service.ServiceUtils.usernameInURI;
 import static org.triple_brain.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
-/**
- * Copyright Mozilla Public License 1.1
- */
 public class SecurityInterceptor implements MethodInterceptor {
 
     public static final String AUTHENTICATION_ATTRIBUTE_KEY = "authentified";
