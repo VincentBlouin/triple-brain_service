@@ -83,7 +83,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                         suggestionsPojo
                 )
         );
-        ClientResponse response = resource
+        return resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
                 .cookie(authCookie)
@@ -91,7 +91,6 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                         ClientResponse.class,
                         suggestionsArray
                 );
-        return response;
     }
 
     private JSONArray getSuggestionsOfVertex() throws Exception {

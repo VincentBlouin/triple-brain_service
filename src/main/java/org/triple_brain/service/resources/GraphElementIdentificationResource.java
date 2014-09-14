@@ -111,8 +111,8 @@ public class GraphElementIdentificationResource {
 
     @GraphTransactional
     @Path("description")
-    public GraphElementIdentificationDescriptionResource description(@QueryParam("uri") String identificationUri) {
-        return new GraphElementIdentificationDescriptionResource(
+    public FriendlyResourceDescriptionService description(@QueryParam("uri") String identificationUri) {
+        return new FriendlyResourceDescriptionService(
                 identificationFactory.withUri(
                         URI.create(identificationUri)
                 )

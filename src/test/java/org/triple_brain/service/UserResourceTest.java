@@ -75,13 +75,12 @@ public class UserResourceTest extends GraphManipulationRestTest {
     }
 
     private ClientResponse logoutUsingCookie(NewCookie cookie) {
-        ClientResponse response = resource
+        return resource
                 .path("service")
                 .path("users")
                 .path("session")
                 .cookie(cookie)
                 .delete(ClientResponse.class);
-        return response;
     }
 
     private boolean isUserAuthenticated(NewCookie cookie) {

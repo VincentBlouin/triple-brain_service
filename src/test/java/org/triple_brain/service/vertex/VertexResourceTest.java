@@ -148,12 +148,11 @@ public class VertexResourceTest extends GraphManipulationRestTest {
                 LocalizedStringJson.content.name(),
                 label
         );
-        ClientResponse response = resource
+        return resource
                 .path(vertexAUri().getPath())
                 .path("label")
                 .cookie(authCookie)
                 .post(ClientResponse.class, localizedLabel);
-        return response;
     }
 
     @Test

@@ -4,6 +4,7 @@
 
 package org.triple_brain.service.resources;
 
+import org.triple_brain.module.model.graph.FriendlyResourceOperator;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.IdentificationOperator;
 
@@ -16,17 +17,17 @@ import javax.ws.rs.core.Response;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.TEXT_PLAIN)
-public class GraphElementIdentificationDescriptionResource {
-    private IdentificationOperator identificationOperator;
-    public GraphElementIdentificationDescriptionResource(IdentificationOperator identificationOperator){
-        this.identificationOperator = identificationOperator;
+public class FriendlyResourceDescriptionService {
+    private FriendlyResourceOperator friendlyResourceOperator;
+    public FriendlyResourceDescriptionService(FriendlyResourceOperator friendlyResourceOperator){
+        this.friendlyResourceOperator = friendlyResourceOperator;
     }
 
     @PUT
     @GraphTransactional
     @Path("/")
     public Response add(String description) {
-        identificationOperator.comment(
+        friendlyResourceOperator.comment(
                 description
         );
         return Response.noContent().build();

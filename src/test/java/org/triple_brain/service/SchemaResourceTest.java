@@ -5,19 +5,14 @@
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
-import org.triple_brain.module.model.graph.schema.Schema;
 import org.triple_brain.module.model.graph.schema.SchemaPojo;
-import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.SchemaJson;
 import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 import java.util.List;
 
@@ -151,10 +146,55 @@ public class SchemaResourceTest extends GraphManipulationRestTest {
         );
     }
 
+    @Test
+    public void updating_description_returns_no_content_status() {
+        assertThat(
+                updateDescription(
+                        schemaUtils().uriOfCreatedSchema(),
+                        "dummy description"
+                ).getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void can_update_description() {
+        URI uri = schemaUtils().uriOfCreatedSchema();
+        SchemaPojo schemaPojo = SchemaJson.fromJson(
+                getSchemaWithUri(uri).getEntity(String.class)
+        );
+        assertThat(
+                schemaPojo.comment(),
+                is(not("dummy description"))
+        );
+        updateDescription(
+                uri,
+                "dummy description"
+        );
+        schemaPojo = SchemaJson.fromJson(
+                getSchemaWithUri(uri).getEntity(String.class)
+        );
+        assertThat(
+                schemaPojo.comment(),
+                is("dummy description")
+        );
+    }
+
     private ClientResponse getSchemaWithUri(URI uri) {
         return resource
                 .path(uri.toString())
                 .cookie(authCookie)
                 .get(ClientResponse.class);
+    }
+
+    private ClientResponse updateDescription(URI uri, String description) {
+        return resource
+                .path(uri.toString())
+                .path("comment")
+                .cookie(authCookie)
+                .post(
+                        ClientResponse.class,
+                        description
+                );
     }
 }

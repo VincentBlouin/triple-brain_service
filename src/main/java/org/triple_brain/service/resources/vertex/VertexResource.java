@@ -196,7 +196,6 @@ public class VertexResource {
     @POST
     @GraphTransactional
     @Path("{shortId}/comment")
-    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateVertexComments(
             @PathParam("shortId") String shortId,
@@ -209,7 +208,7 @@ public class VertexResource {
         vertex.comment(comment);
         graphIndexer.indexVertex(vertex);
         graphIndexer.commit();
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
 

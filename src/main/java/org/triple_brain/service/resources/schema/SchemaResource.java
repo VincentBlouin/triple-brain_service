@@ -96,6 +96,23 @@ public class SchemaResource {
         );
     }
 
+    @POST
+    @GraphTransactional
+    @Path("{shortId}/comment")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response updateDescription(
+            @PathParam("shortId") String shortId,
+            String comment
+    ) {
+        SchemaOperator schema = userGraph.schemaOperatorWithUri(schemaUriFromShortId(
+                shortId
+        ));
+        schema.comment(comment);
+        graphIndexer.indexSchema(schema);
+        graphIndexer.commit();
+        return Response.noContent().build();
+    }
+
     private URI schemaUriFromShortId(String shortId){
         return new UserUris(userGraph.user()).schemaUriFromShortId(
                 shortId

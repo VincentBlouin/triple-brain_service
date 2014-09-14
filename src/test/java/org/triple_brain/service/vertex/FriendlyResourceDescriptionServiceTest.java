@@ -15,7 +15,7 @@ import java.net.URI;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class GraphElementIdentificationDescriptionResourceTest extends GraphManipulationRestTest {
+public class FriendlyResourceDescriptionServiceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_set_description() {

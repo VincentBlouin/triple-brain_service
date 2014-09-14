@@ -112,21 +112,19 @@ public class VertexRestTestUtils {
     }
 
     public ClientResponse updateVertexANote(String note) throws Exception {
-        ClientResponse response = resource
+        return resource
                 .path(graphUtils().vertexAUri().getPath())
                 .path("comment")
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
                 .post(ClientResponse.class, note);
-        return response;
     }
 
     public ClientResponse addAVertexToVertexAWithUri(URI vertexUri) throws Exception {
-        ClientResponse response = resource
+        return resource
                 .path(vertexUri.getPath())
                 .cookie(authCookie)
                 .post(ClientResponse.class);
-        return response;
     }
 
     public ClientResponse makePublicVertexWithUri(URI vertexUri){
@@ -180,11 +178,10 @@ public class VertexRestTestUtils {
     }
 
     public ClientResponse removeVertexB(){
-        ClientResponse response = resource
+        return resource
                 .path(graphUtils().vertexBUri().getPath())
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
-        return response;
     }
 
     public URI baseVertexUri(){
