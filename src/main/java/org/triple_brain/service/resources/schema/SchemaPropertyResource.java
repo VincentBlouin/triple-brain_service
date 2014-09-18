@@ -38,7 +38,7 @@ public class SchemaPropertyResource {
     public SchemaPropertyResource(
             @Assisted SchemaOperator schemaOperator,
             @Assisted UserGraph userGraph
-    ){
+    ) {
         this.schemaOperator = schemaOperator;
         this.userGraph = userGraph;
     }
@@ -60,7 +60,7 @@ public class SchemaPropertyResource {
     @Path("/{shortId}/label")
     public Response updateLabel(@PathParam("shortId") String shortId, JSONObject label) {
         URI uri = uriFromShortId(shortId);
-        if(!userGraph.haveElementWithId(uri)){
+        if (!userGraph.haveElementWithId(uri)) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         graphElementOperatorFromShortId(shortId).label(
@@ -68,7 +68,11 @@ public class SchemaPropertyResource {
                         LocalizedStringJson.content.name()
                 )
         );
-        graphIndexer.indexSchema(schemaOperator);
+        graphIndexer.indexSchema(
+                userGraph.schemaPojoWithUri(
+                        schemaOperator.uri()
+                )
+        );
         graphIndexer.commit();
         return Response.noContent().build();
     }
@@ -78,7 +82,11 @@ public class SchemaPropertyResource {
     @Path("/{shortId}")
     public Response delete(@PathParam("shortId") String shortId) {
         graphElementOperatorFromShortId(shortId).remove();
-        graphIndexer.indexSchema(schemaOperator);
+        graphIndexer.indexSchema(
+                userGraph.schemaPojoWithUri(
+                        schemaOperator.uri()
+                )
+        );
         graphIndexer.commit();
         return Response.noContent().build();
     }
@@ -86,19 +94,20 @@ public class SchemaPropertyResource {
     @GraphTransactional
     @Path("/{shortId}/identification")
     public GraphElementIdentificationResource getGraphElementIdentificationResource(@PathParam("shortId") String shortId) {
-        return graphElementIdentificationResourceFactory.forGraphElement(
+        return graphElementIdentificationResourceFactory.forSchemaProperty(
                 graphElementOperatorFromShortId(shortId),
-                GraphElementType.SCHEMA_PROPERTY
+                schemaOperator.uri(),
+                userGraph
         );
     }
 
-    private GraphElementOperator graphElementOperatorFromShortId(String shortId){
+    private GraphElementOperator graphElementOperatorFromShortId(String shortId) {
         return graphElementOperatorFactory.withUri(
                 uriFromShortId(shortId)
         );
     }
 
-    private URI uriFromShortId(String shortId){
+    private URI uriFromShortId(String shortId) {
         return UserUris.schemaPropertyUriFromShortIdAndSchema(
                 schemaOperator,
                 shortId

@@ -79,7 +79,11 @@ public class SchemaResource {
                         LocalizedStringJson.content.name()
                 )
         );
-        graphIndexer.indexSchema(schema);
+        graphIndexer.indexSchema(
+                userGraph.schemaPojoWithUri(
+                        schema.uri()
+                )
+        );
         graphIndexer.commit();
         return Response.noContent().build();
     }
@@ -108,7 +112,11 @@ public class SchemaResource {
                 shortId
         ));
         schema.comment(comment);
-        graphIndexer.indexSchema(schema);
+        graphIndexer.indexSchema(
+                userGraph.schemaPojoWithUri(
+                        schema.uri()
+                )
+        );
         graphIndexer.commit();
         return Response.noContent().build();
     }

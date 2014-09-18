@@ -10,6 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.Edge;
+import org.triple_brain.module.model.graph.schema.SchemaPojo;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.validator.IdentificationValidator;
@@ -38,6 +39,8 @@ public class GraphElementIdentificationResource {
 
     private GraphElementOperator graphElement;
     private GraphElementType graphElementType;
+    private URI schemaUri;
+    private UserGraph userGraph;
 
     @AssistedInject
     public GraphElementIdentificationResource(
@@ -46,6 +49,20 @@ public class GraphElementIdentificationResource {
     ) {
         this.graphElement = graphElement;
         this.graphElementType = graphElementType;
+    }
+
+    @AssistedInject
+    public GraphElementIdentificationResource(
+            @Assisted GraphElementOperator graphElement,
+            @Assisted URI schemaUri,
+            @Assisted UserGraph userGraph
+    ) {
+        this(
+                graphElement,
+                GraphElementType.SCHEMA_PROPERTY
+        );
+        this.schemaUri = schemaUri;
+        this.userGraph = userGraph;
     }
 
     @POST
@@ -125,9 +142,16 @@ public class GraphElementIdentificationResource {
                     (VertexOperator) graphElement
             );
             graphIndexer.commit();
-        } else if(GraphElementType.EDGE == graphElementType){
+        } else if (GraphElementType.EDGE == graphElementType) {
             graphIndexer.indexRelation(
                     (Edge) graphElement
+            );
+            graphIndexer.commit();
+        } else if (GraphElementType.SCHEMA_PROPERTY == graphElementType) {
+            graphIndexer.indexSchema(
+                    userGraph.schemaPojoWithUri(
+                            schemaUri
+                    )
             );
             graphIndexer.commit();
         }
