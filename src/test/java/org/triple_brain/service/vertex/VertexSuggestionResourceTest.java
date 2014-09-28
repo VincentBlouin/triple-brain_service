@@ -75,7 +75,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
     }
 
     @Test
-    public void accepting_suggestions_returns_no_content_status() {
+    public void accepting_suggestions_returns_ok_status() {
         SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
                 defaultAuthenticatedUser
         );
@@ -89,7 +89,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
         assertThat(
                 response.getStatus(),
                 is(
-                        Response.Status.NO_CONTENT.getStatusCode()
+                        Response.Status.OK.getStatusCode()
                 )
         );
     }
