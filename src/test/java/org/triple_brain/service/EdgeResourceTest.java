@@ -8,7 +8,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.edge.Edge;
-import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.Response;
@@ -18,7 +17,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
-import static org.triple_brain.module.common_utils.Uris.encodeURL;
 
 public class EdgeResourceTest extends GraphManipulationRestTest {
 

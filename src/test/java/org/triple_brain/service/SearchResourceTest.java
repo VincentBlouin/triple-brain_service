@@ -4,25 +4,20 @@
 
 package org.triple_brain.service;
 
-import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.GraphElement;
-import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.search.EdgeSearchResult;
-import org.triple_brain.module.search.GraphElementSearchResult;
 import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class SearchResourceTest extends GraphManipulationRestTest {
 

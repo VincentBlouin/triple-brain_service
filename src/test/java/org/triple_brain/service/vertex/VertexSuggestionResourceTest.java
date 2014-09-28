@@ -11,17 +11,19 @@ import org.junit.Test;
 import org.triple_brain.module.model.json.SuggestionJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
 import org.triple_brain.module.model.suggestion.SuggestionPojo;
+import org.triple_brain.module.search.EdgeSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 
 public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
@@ -36,7 +38,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     @Test
     public void can_add_suggestions_to_vertex() throws Exception {
-        Set<?extends Suggestion> suggestions = vertexA().getSuggestions();
+        Set<? extends Suggestion> suggestions = vertexA().getSuggestions();
         assertThat(
                 suggestions.size(),
                 is(0)
@@ -51,11 +53,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
 
     private ClientResponse addStartDateSuggestionToVertexA() {
         return addSuggestionToVertex(
-                SuggestionPojo.fromSameAsAndDomainUriLabelAndOrigin(
-                        URI.create("http://rdf.freebase.com/rdf/time/event/start_date"),
-                        URI.create("http://rdf.freebase.com/rdf/type/datetime"),
-                        "Start date",
-                        "http://rdf.freebase.com/rdf/time/event",
+                modelTestScenarios.startDateSuggestionFromEventIdentification(
                         defaultAuthenticatedUser
                 )
         );
@@ -76,6 +74,59 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
         );
     }
 
+    @Test
+    public void accepting_suggestions_returns_no_content_status() {
+        SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
+                defaultAuthenticatedUser
+        );
+        addSuggestionToVertex(
+                startDateSuggestion
+        );
+        ClientResponse response = acceptSuggestion(
+                startDateSuggestion,
+                vertexAUri()
+        );
+        assertThat(
+                response.getStatus(),
+                is(
+                        Response.Status.NO_CONTENT.getStatusCode()
+                )
+        );
+    }
+
+    @Test
+    public void can_search_new_edge_created_from_accepting_suggestion() {
+        SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
+                defaultAuthenticatedUser
+        );
+        List<EdgeSearchResult> relations = searchUtils().searchForRelations(
+                startDateSuggestion.label(),
+                defaultAuthenticatedUserAsJson
+        );
+        assertThat(relations.size(), is(0));
+        acceptSuggestion(
+                startDateSuggestion,
+                vertexAUri()
+        );
+        relations = searchUtils().searchForRelations(
+                startDateSuggestion.label(),
+                defaultAuthenticatedUserAsJson
+        );
+        assertThat(relations.size(), is(1));
+    }
+
+    @Test
+    public void accepting_suggestion_returns_edge_and_vertex_new_uri() {
+        JSONObject newEdgeAndVertexUri = acceptSuggestion(
+                modelTestScenarios.startDateSuggestionFromEventIdentification(
+                        defaultAuthenticatedUser
+                ),
+                vertexAUri()
+        ).getEntity(JSONObject.class);
+        assertTrue(newEdgeAndVertexUri.has("edge_uri"));
+        assertTrue(newEdgeAndVertexUri.has("vertex_uri"));
+    }
+
     private ClientResponse addSuggestionToVertex(SuggestionPojo suggestionsPojo) {
         JSONArray suggestionsArray = new JSONArray();
         suggestionsArray.put(
@@ -93,7 +144,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                 );
     }
 
-    private JSONArray getSuggestionsOfVertex() throws Exception {
+    private JSONArray getSuggestionsOfVertex() {
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
@@ -105,5 +156,17 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
                 is(Response.Status.OK.getStatusCode())
         );
         return response.getEntity(JSONArray.class);
+    }
+
+    private ClientResponse acceptSuggestion(SuggestionPojo suggestion, URI vertexUri) {
+        return resource
+                .path(vertexUri.getPath())
+                .path("suggestions")
+                .path("accept")
+                .cookie(authCookie)
+                .post(
+                        ClientResponse.class,
+                        SuggestionJson.toJson(suggestion)
+                );
     }
 }
