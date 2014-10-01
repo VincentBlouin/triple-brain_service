@@ -13,6 +13,7 @@ import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTest;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -80,6 +81,17 @@ public class SearchResourceTest extends GraphManipulationRestTest {
                 anotherUser
         );
         assertThat(results.size(), is(0));
+    }
+
+    @Test
+    public void searching_for_only_owned_schemas_or_vertices_returns_correct_status() throws Exception {
+        assertThat(
+                searchUtils().autoCompletionResultsForUserVerticesOnly(
+                        defaultAuthenticatedUserAsJson,
+                        "test"
+                ).getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
     }
 
     @Test

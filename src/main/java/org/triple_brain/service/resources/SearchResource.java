@@ -49,6 +49,20 @@ public class SearchResource {
                         )
                 )).build();
     }
+    @GET
+    @Path("own_vertices_and_schemas/auto_complete")
+    @GraphTransactional
+    public Response searchOwnVerticesAndSchemasForAutoComplete(
+            @QueryParam("text") String searchText
+    ) {
+        return Response.ok(
+                gson.toJson(
+                        graphSearch.searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
+                                searchText,
+                                user
+                        )
+                )).build();
+    }
 
     @GET
     @Path("vertices/auto_complete")

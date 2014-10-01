@@ -95,6 +95,19 @@ public class SearchRestTestUtils {
         );
     }
 
+    public ClientResponse autoCompletionResultsForUserVerticesOnly(JSONObject user, String text){
+        return resource
+                .path("service")
+                .path("users")
+                .path(user.optString(UserJson.USER_NAME))
+                .path("search")
+                .path("own_vertices_and_schemas")
+                .path("auto_complete")
+                .queryParam("text", text)
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+    }
+
     public List<VertexSearchResult> autoCompletionResultsForCurrentUserVerticesOnly(String textToSearchWith) {
         return vertexSearchResultsFromResponse(
                 clientResponseOfAutoCompletionOfCurrentUserVerticesOnly(
