@@ -44,8 +44,8 @@ public class UserRestTestUtils {
         try{
             user.put(USER_NAME, randomUsername());
             user.put(EMAIL, randomEmail());
-            user.put(PASSWORD, RestTest.DEFAULT_PASSWORD);
-            user.put(PASSWORD_VERIFICATION, RestTest.DEFAULT_PASSWORD);
+            user.put(PASSWORD, RestTestUtils.DEFAULT_PASSWORD);
+            user.put(PASSWORD_VERIFICATION, RestTestUtils.DEFAULT_PASSWORD);
             user.put(PREFERRED_LOCALES, new JSONArray().put("fr"));
         }catch(JSONException e){
             throw new RuntimeException(e);

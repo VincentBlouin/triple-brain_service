@@ -5,7 +5,6 @@
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.FriendlyResource;
@@ -15,9 +14,8 @@ import org.triple_brain.module.model.graph.IdentificationPojo;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
@@ -26,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-public class GraphElementIdentificationResourceTest extends GraphManipulationRestTest {
+public class GraphElementIdentificationResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void setting_type_of_a_vertex_returns_correct_response_status() throws Exception {

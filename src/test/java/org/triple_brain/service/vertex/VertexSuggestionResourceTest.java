@@ -12,7 +12,7 @@ import org.triple_brain.module.model.json.SuggestionJson;
 import org.triple_brain.module.model.suggestion.Suggestion;
 import org.triple_brain.module.model.suggestion.SuggestionPojo;
 import org.triple_brain.module.search.EdgeSearchResult;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 
-public class VertexSuggestionResourceTest extends GraphManipulationRestTest {
+public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void status_code_is_ok_for_adding_suggestions() {

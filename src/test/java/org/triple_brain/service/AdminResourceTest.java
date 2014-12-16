@@ -5,26 +5,20 @@
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.json.UserJson;
-import org.triple_brain.module.search.VertexSearchResult;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-
-import java.net.URI;
-import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class AdminResourceTest extends GraphManipulationRestTest {
+public class AdminResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void indexing_whole_graph_returns_no_content_status() {

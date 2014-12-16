@@ -7,7 +7,7 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Test;
 import org.triple_brain.module.model.UserUris;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -15,7 +15,7 @@ import java.net.URI;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class SchemaNonOwnedResourceTest extends GraphManipulationRestTest {
+public class SchemaNonOwnedResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void getting_not_owned_schema_returns_ok_status(){

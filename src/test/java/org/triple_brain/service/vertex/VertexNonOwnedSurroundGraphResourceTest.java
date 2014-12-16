@@ -12,7 +12,7 @@ import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 
@@ -21,7 +21,7 @@ import java.net.URI;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRestTest {
+public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void getting_graph_of_another_user_returns_correct_status() {

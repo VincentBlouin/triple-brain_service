@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.search.EdgeSearchResult;
 import org.triple_brain.module.search.VertexSearchResult;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class SearchResourceTest extends GraphManipulationRestTest {
+public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_search_vertices_for_auto_complete() throws Exception {

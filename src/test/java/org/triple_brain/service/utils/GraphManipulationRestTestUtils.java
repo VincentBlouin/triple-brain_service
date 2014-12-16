@@ -4,7 +4,6 @@
 
 package org.triple_brain.service.utils;
 
-import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
@@ -20,7 +19,7 @@ import java.net.URI;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class GraphManipulationRestTest extends RestTest {
+public class GraphManipulationRestTestUtils extends RestTestUtils {
 
     protected static ModelTestScenarios modelTestScenarios = new ModelTestScenarios();
 

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.graph.Identification;
 import org.triple_brain.module.model.json.ImageJson;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
@@ -19,7 +19,7 @@ import java.util.Set;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class GraphElementIdentificationImageResourceTest extends GraphManipulationRestTest {
+public class GraphElementIdentificationImageResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_add_image() {

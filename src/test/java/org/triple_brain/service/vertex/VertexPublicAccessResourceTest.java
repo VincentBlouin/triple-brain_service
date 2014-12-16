@@ -7,12 +7,12 @@ package org.triple_brain.service.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Test;
 
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class VertexPublicAccessResourceTest extends GraphManipulationRestTest{
+public class VertexPublicAccessResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_make_public(){

@@ -67,7 +67,7 @@ public class GraphResourceTestUtils {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     public Response shutDown()throws Exception{
-        graphDb.shutdown();
+//        graphDb.shutdown();
         return Response.ok().build();
     }
 

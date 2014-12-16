@@ -5,14 +5,14 @@
 package org.triple_brain.service.vertex;
 
 import org.junit.Test;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-public class VertexCollectionPublicAccessResourceTest extends GraphManipulationRestTest {
+public class VertexCollectionPublicAccessResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void making_public_returns_correct_status() {

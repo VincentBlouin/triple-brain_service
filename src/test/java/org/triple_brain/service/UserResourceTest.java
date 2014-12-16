@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.json.UserJson;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
@@ -25,7 +25,7 @@ import static org.triple_brain.module.model.json.UserJson.*;
 import static org.triple_brain.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
 import static org.triple_brain.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
 
-public class UserResourceTest extends GraphManipulationRestTest {
+public class UserResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_authenticate_user() throws Exception {

@@ -8,7 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.edge.Edge;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 
-public class EdgeResourceTest extends GraphManipulationRestTest {
+public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_add_a_relation() throws Exception {

@@ -7,7 +7,7 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.service.utils.RestTest;
+import org.triple_brain.service.utils.RestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 
@@ -15,7 +15,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class ServerConfigResourceTest extends RestTest {
+public class ServerConfigResourceTest extends RestTestUtils {
 
     @Test
     public void can_get() throws Exception{

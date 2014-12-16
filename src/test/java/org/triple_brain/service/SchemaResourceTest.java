@@ -9,9 +9,8 @@ import org.junit.Test;
 import org.triple_brain.module.model.graph.schema.SchemaPojo;
 import org.triple_brain.module.model.json.graph.SchemaJson;
 import org.triple_brain.module.search.VertexSearchResult;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
@@ -21,7 +20,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class SchemaResourceTest extends GraphManipulationRestTest {
+public class SchemaResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void correct_status_is_returned_upon_creation() {

@@ -19,7 +19,7 @@ import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.search.EdgeSearchResult;
 import org.triple_brain.module.search.VertexSearchResult;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -33,7 +33,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 
-public class VertexResourceTest extends GraphManipulationRestTest {
+public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void adding_a_vertex_returns_correct_status() throws Exception {

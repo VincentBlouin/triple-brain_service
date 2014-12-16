@@ -11,18 +11,17 @@ import org.junit.Test;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
-import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-public class VertexGroupResourceTest extends GraphManipulationRestTest{
+public class VertexGroupResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void create_group_returns_correct_status(){

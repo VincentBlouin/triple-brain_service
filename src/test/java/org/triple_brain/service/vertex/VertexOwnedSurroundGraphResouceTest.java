@@ -9,9 +9,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.SubGraph;
-import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -20,7 +19,7 @@ import java.net.URI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTest {
+public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void response_status_is_ok_for_getting_graph() {

@@ -7,7 +7,7 @@ package org.triple_brain.service.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.Identification;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
@@ -15,7 +15,7 @@ import java.net.URI;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class FriendlyResourceDescriptionServiceTest extends GraphManipulationRestTest {
+public class FriendlyResourceDescriptionServiceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_set_description() {

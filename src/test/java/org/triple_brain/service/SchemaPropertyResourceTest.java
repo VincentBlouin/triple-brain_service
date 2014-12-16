@@ -13,7 +13,7 @@ import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
-import org.triple_brain.service.utils.GraphManipulationRestTest;
+import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
 
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class SchemaPropertyResourceTest extends GraphManipulationRestTest {
+public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void creation_returns_created_status() {
