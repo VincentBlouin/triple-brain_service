@@ -11,6 +11,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
+import org.triple_brain.module.model.graph.IdentificationPojo;
+import org.triple_brain.module.model.graph.IdentificationType;
 import org.triple_brain.module.model.graph.ModelTestScenarios;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.service.resources.GraphElementIdentificationResource;
@@ -26,10 +28,11 @@ public class GraphElementRestTestUtils {
     private User authenticatedUser;
     private Gson gson = new Gson();
 
-    public static GraphElementRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
+    public static GraphElementRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         return new GraphElementRestTestUtils(resource, authCookie, authenticatedUser);
     }
-    protected GraphElementRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser){
+
+    protected GraphElementRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
@@ -45,25 +48,14 @@ public class GraphElementRestTestUtils {
     }
 
     public ClientResponse addFoafPersonTypeToVertexA() {
-        try {
-            JSONObject personType = IdentificationJson.toJson(new ModelTestScenarios().personType()).put(
-                    GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                    GraphElementIdentificationResource.identification_types.TYPE
-            ).put(
-                    "externalResourceUri",
-                    "http://xmlns.com/foaf/0.1/Person"
-            )
-                    .put(
-                            GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                            GraphElementIdentificationResource.identification_types.TYPE
-                    );
-            return addIdentificationToGraphElementWithUri(
-                    personType,
-                    graphUtils().vertexAUri()
-            );
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        IdentificationPojo identification = new ModelTestScenarios().personType();
+        identification.setType(IdentificationType.type);
+        JSONObject personType = IdentificationJson.singleToJson(identification);
+        return addIdentificationToGraphElementWithUri(
+                personType,
+                graphUtils().vertexAUri()
+        );
+
     }
 
     public URI identificationUriFromResponse(ClientResponse response) {
@@ -74,7 +66,7 @@ public class GraphElementRestTestUtils {
         ));
     }
 
-    private GraphRestTestUtils graphUtils(){
+    private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,

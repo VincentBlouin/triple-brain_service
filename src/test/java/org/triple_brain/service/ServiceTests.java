@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 @SuiteClasses("**/*Test.class")
 public class ServiceTests extends RunListener {
     @BeforeClass
-    public static void doYourOneTimeSetup() throws Exception{
+    public static void beforeAllTests() throws Exception{
         Neo4jModule.clearDb();
         RestTestUtils.BASE_URI = new URI("http://localhost:8786");
         RestTestUtils.launcher = new Launcher(
@@ -43,7 +43,7 @@ public class ServiceTests extends RunListener {
     }
 
     @AfterClass
-    public static void doYourOneTimeTeardown() throws Exception{
+    public static void afterAllTests() throws Exception{
         closeSearchEngine();
         closeGraphDatabase();
         RestTestUtils.launcher.stop();

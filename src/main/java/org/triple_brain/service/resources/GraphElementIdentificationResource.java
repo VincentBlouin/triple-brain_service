@@ -10,7 +10,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.Edge;
-import org.triple_brain.module.model.graph.schema.SchemaPojo;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.validator.IdentificationValidator;
@@ -25,14 +24,6 @@ import java.net.URI;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GraphElementIdentificationResource {
-    public static enum identification_types {
-        SAME_AS, TYPE, GENERIC
-    }
-
-    public static final String IDENTIFICATION_TYPE_STRING = "type";
-
-    @Inject
-    IdentificationFactory identificationFactory;
 
     @Inject
     GraphIndexer graphIndexer;
@@ -70,37 +61,41 @@ public class GraphElementIdentificationResource {
     @Path("/")
     public Response add(JSONObject identificationJson) {
         IdentificationValidator validator = new IdentificationValidator();
-        IdentificationPojo identification = IdentificationJson.fromJson(
-                identificationJson
+        IdentificationPojo identification = IdentificationJson.singleFromJson(
+                identificationJson.toString()
         );
         if (!validator.validate(identification).isEmpty()) {
             throw new WebApplicationException(
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        String type = identificationJson.optString("type");
-        if (type.equalsIgnoreCase(identification_types.SAME_AS.name())) {
-            identification = graphElement.addSameAs(
-                    identification
-            );
-        } else if (type.equalsIgnoreCase(identification_types.TYPE.name())) {
-            identification = graphElement.addType(
-                    identification
-            );
-        } else if (type.equalsIgnoreCase(identification_types.GENERIC.name())) {
-            identification = graphElement.addGenericIdentification(
-                    identification
-            );
-        } else {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        switch (identification.getType()) {
+            case same_as:
+                identification = graphElement.addSameAs(
+                        identification
+                );
+                break;
+            case type:
+                identification = graphElement.addType(
+                        identification
+                );
+                break;
+            case generic:
+                identification = graphElement.addGenericIdentification(
+                        identification
+                );
+                break;
+            default:
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         reindexGraphElement();
         return Response.created(URI.create(
                 UserUris.graphElementShortId(identification.uri())
         )).entity(
-                IdentificationJson.toJson(identification)
+                IdentificationJson.singleToJson(identification)
         ).build();
     }
+
 
     @DELETE
     @GraphTransactional
@@ -108,32 +103,14 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        Identification friendlyResource = identificationFactory.withUri(
-                URI.create(identificationUri)
+        Identification friendlyResource = new IdentificationPojo(
+                new FriendlyResourcePojo(
+                        URI.create(identificationUri)
+                )
         );
         graphElement.removeIdentification(friendlyResource);
         reindexGraphElement();
         return Response.noContent().build();
-    }
-
-    @GraphTransactional
-    @Path("image")
-    public GraphElementIdentificationImageResource images(@QueryParam("uri") String identificationUri) {
-        return new GraphElementIdentificationImageResource(
-                identificationFactory.withUri(
-                        URI.create(identificationUri)
-                )
-        );
-    }
-
-    @GraphTransactional
-    @Path("description")
-    public FriendlyResourceDescriptionService description(@QueryParam("uri") String identificationUri) {
-        return new FriendlyResourceDescriptionService(
-                identificationFactory.withUri(
-                        URI.create(identificationUri)
-                )
-        );
     }
 
     private void reindexGraphElement() {

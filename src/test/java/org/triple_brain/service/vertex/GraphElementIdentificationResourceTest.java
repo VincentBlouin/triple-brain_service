@@ -11,9 +11,9 @@ import org.triple_brain.module.model.FriendlyResource;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.Identification;
 import org.triple_brain.module.model.graph.IdentificationPojo;
+import org.triple_brain.module.model.graph.IdentificationType;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.json.IdentificationJson;
-import org.triple_brain.service.resources.GraphElementIdentificationResource;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
@@ -47,8 +47,8 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void identification_is_returned_when_adding() {
         ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentificationPojo identification = IdentificationJson.fromJson(
-                response.getEntity(JSONObject.class)
+        IdentificationPojo identification = IdentificationJson.singleFromJson(
+                response.getEntity(String.class)
         );
         assertThat(
                 identification.getExternalResourceUri(),
@@ -95,7 +95,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 vertexA().getAdditionalTypes().size(),
-                is(greaterThan(0))
+                is(1)
         );
         Identification addedIdentification = vertexA().getAdditionalTypes().values().iterator().next();
         removeIdentificationOfVertexA(addedIdentification);
@@ -134,10 +134,11 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
-        JSONObject creatorPredicate = IdentificationJson.toJson(modelTestScenarios.creatorPredicate()).put(
-                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                GraphElementIdentificationResource.identification_types.SAME_AS
+        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
+        identification.setType(
+                IdentificationType.same_as
         );
+        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
 
         return graphElementUtils().addIdentificationToGraphElementWithUri(
                 creatorPredicate,

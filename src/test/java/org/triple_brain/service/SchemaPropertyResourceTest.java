@@ -9,6 +9,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.GraphElement;
+import org.triple_brain.module.model.graph.Identification;
+import org.triple_brain.module.model.graph.IdentificationPojo;
+import org.triple_brain.module.model.graph.IdentificationType;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.VertexSearchResult;
@@ -50,7 +53,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void removing_property_returns_no_content_status(){
+    public void removing_property_returns_no_content_status() {
         assertThat(
                 removeProperty(uriOfCreatedProperty()).getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
@@ -58,7 +61,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void accessing_removed_property_returns_not_found_status(){
+    public void accessing_removed_property_returns_not_found_status() {
         URI propertyUri = uriOfCreatedProperty();
         removeProperty(propertyUri);
         assertThat(
@@ -91,17 +94,18 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
                         "new label"
                 ).getStatus(),
                 is(
-                    Response.Status.FORBIDDEN.getStatusCode()
+                        Response.Status.FORBIDDEN.getStatusCode()
                 )
         );
     }
 
     @Test
     public void adding_identification_returns_created_status() throws Exception {
-        JSONObject creatorPredicate = IdentificationJson.toJson(modelTestScenarios.creatorPredicate()).put(
-                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                GraphElementIdentificationResource.identification_types.SAME_AS
+        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
+        identification.setType(
+                IdentificationType.same_as
         );
+        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
         ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
                 creatorPredicate,
                 uriOfCreatedProperty()
@@ -113,7 +117,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_label_of_property_updates_properties_name_of_schema_in_search(){
+    public void updating_label_of_property_updates_properties_name_of_schema_in_search() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
         //updating schema label so that it gets reindex
         schemaUtils().updateSchemaLabelWithUri(
@@ -131,7 +135,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void deleting_property_also_removes_it_from_schema_in_search(){
+    public void deleting_property_also_removes_it_from_schema_in_search() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
         //updating schema label so that it gets reindex
         schemaUtils().updateSchemaLabelWithUri(
@@ -156,13 +160,14 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void when_adding_an_identification_to_a_property_its_then_present_in_schema_search()throws Exception{
+    public void when_adding_an_identification_to_a_property_its_then_present_in_schema_search() throws Exception {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
         URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
-        JSONObject creatorPredicate = IdentificationJson.toJson(modelTestScenarios.creatorPredicate()).put(
-                GraphElementIdentificationResource.IDENTIFICATION_TYPE_STRING,
-                GraphElementIdentificationResource.identification_types.SAME_AS
+        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
+        identification.setType(
+                IdentificationType.same_as
         );
+        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
         //updating schema label so that it gets reindex
         schemaUtils().updateSchemaLabelWithUri(
                 schemaUri,
@@ -210,7 +215,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-    private URI uriOfCreatedPropertyForSchemaUri(URI schemaUri){
+    private URI uriOfCreatedPropertyForSchemaUri(URI schemaUri) {
         return graphUtils().getElementUriInResponse(
                 addProperty(
                         schemaUri
