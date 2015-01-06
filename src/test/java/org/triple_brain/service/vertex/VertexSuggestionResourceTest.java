@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -37,8 +37,8 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
     }
 
     @Test
-    public void can_add_suggestions_to_vertex() throws Exception {
-        Set<? extends Suggestion> suggestions = vertexA().getSuggestions();
+    public void can_add_suggestions_to_vertex() {
+        Map<URI, ? extends Suggestion> suggestions = vertexA().getSuggestions();
         assertThat(
                 suggestions.size(),
                 is(0)
@@ -52,7 +52,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
     }
 
     private ClientResponse addStartDateSuggestionToVertexA() {
-        return addSuggestionToVertex(
+        return addSuggestionToVertexA(
                 modelTestScenarios.startDateSuggestionFromEventIdentification(
                         defaultAuthenticatedUser
                 )
@@ -61,7 +61,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
 
     @Test
     public void can_get_suggestions_of_vertex() throws Exception {
-        JSONArray suggestions = getSuggestionsOfVertex();
+        JSONObject suggestions = getSuggestionsOfVertex();
         assertThat(
                 suggestions.length(),
                 is(0)
@@ -79,7 +79,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
         SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
                 defaultAuthenticatedUser
         );
-        addSuggestionToVertex(
+        addSuggestionToVertexA(
                 startDateSuggestion
         );
         ClientResponse response = acceptSuggestion(
@@ -92,6 +92,18 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
                         Response.Status.OK.getStatusCode()
                 )
         );
+    }
+
+    @Test
+    public void accepting_suggestion_returns_edge_and_vertex_new_uri() {
+        JSONObject newEdgeAndVertexUri = acceptSuggestion(
+                modelTestScenarios.startDateSuggestionFromEventIdentification(
+                        defaultAuthenticatedUser
+                ),
+                vertexAUri()
+        ).getEntity(JSONObject.class);
+        assertTrue(newEdgeAndVertexUri.has("edge_uri"));
+        assertTrue(newEdgeAndVertexUri.has("vertex_uri"));
     }
 
     @Test
@@ -116,35 +128,103 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
     }
 
     @Test
-    public void accepting_suggestion_returns_edge_and_vertex_new_uri() {
-        JSONObject newEdgeAndVertexUri = acceptSuggestion(
-                modelTestScenarios.startDateSuggestionFromEventIdentification(
-                        defaultAuthenticatedUser
-                ),
-                vertexAUri()
-        ).getEntity(JSONObject.class);
-        assertTrue(newEdgeAndVertexUri.has("edge_uri"));
-        assertTrue(newEdgeAndVertexUri.has("vertex_uri"));
+    public void deleting_suggestions_returns_ok_status() {
+        SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
+                defaultAuthenticatedUser
+        );
+
+        SuggestionPojo nameSuggestion = modelTestScenarios.nameSuggestionFromPersonIdentification(
+                defaultAuthenticatedUser
+        );
+        addSuggestionsToVertexA(
+                startDateSuggestion,
+                nameSuggestion
+        );
+        ClientResponse response = deleteSuggestions(
+                startDateSuggestion,
+                nameSuggestion
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
     }
 
-    private ClientResponse addSuggestionToVertex(SuggestionPojo suggestionsPojo) {
-        JSONArray suggestionsArray = new JSONArray();
-        suggestionsArray.put(
-                SuggestionJson.toJson(
-                        suggestionsPojo
-                )
+    @Test
+    public void can_delete_one_suggestion() {
+        SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
+                defaultAuthenticatedUser
         );
+
+        SuggestionPojo nameSuggestion = modelTestScenarios.nameSuggestionFromPersonIdentification(
+                defaultAuthenticatedUser
+        );
+        addSuggestionsToVertexA(
+                startDateSuggestion,
+                nameSuggestion
+        );
+        assertThat(
+                vertexA().getSuggestions().size(),
+                is(2)
+        );
+        deleteSuggestions(
+                startDateSuggestion
+        );
+        assertThat(
+                vertexA().getSuggestions().values().iterator().next().uri(),
+                is(nameSuggestion.uri())
+        );
+    }
+
+    @Test
+    public void can_delete_multiple_suggestions() {
+        SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
+                defaultAuthenticatedUser
+        );
+
+        SuggestionPojo nameSuggestion = modelTestScenarios.nameSuggestionFromPersonIdentification(
+                defaultAuthenticatedUser
+        );
+        addSuggestionsToVertexA(
+                startDateSuggestion,
+                nameSuggestion
+        );
+        assertThat(
+                vertexA().getSuggestions().size(),
+                is(2)
+        );
+        deleteSuggestions(
+                startDateSuggestion,
+                nameSuggestion
+        );
+        assertThat(
+                vertexA().getSuggestions().size(),
+                is(0)
+        );
+    }
+
+    private ClientResponse addSuggestionToVertexA(SuggestionPojo suggestionsPojo) {
+        return addSuggestionsToVertexA(
+                suggestionsPojo
+        );
+    }
+
+    private ClientResponse addSuggestionsToVertexA(SuggestionPojo... suggestions) {
         return resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
                 .cookie(authCookie)
                 .post(
                         ClientResponse.class,
-                        suggestionsArray
+                        SuggestionJson.multipleToJson(
+                                modelTestScenarios.suggestionsToMap(
+                                        suggestions
+                                )
+                        )
                 );
     }
 
-    private JSONArray getSuggestionsOfVertex() {
+    private JSONObject getSuggestionsOfVertex() {
         ClientResponse response = resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
@@ -155,7 +235,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return response.getEntity(JSONArray.class);
+        return response.getEntity(JSONObject.class);
     }
 
     private ClientResponse acceptSuggestion(SuggestionPojo suggestion, URI vertexUri) {
@@ -167,6 +247,24 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
                 .post(
                         ClientResponse.class,
                         SuggestionJson.toJson(suggestion)
+                );
+    }
+
+    private ClientResponse deleteSuggestions(SuggestionPojo... suggestions) {
+        JSONArray urisToDelete = new JSONArray();
+        for (SuggestionPojo suggestion : suggestions) {
+            urisToDelete.put(
+                    suggestion.uri()
+            );
+        }
+        return resource
+                .path(vertexAUri().getPath())
+                .path("suggestions")
+                .path("delete")
+                .cookie(authCookie)
+                .post(
+                        ClientResponse.class,
+                        urisToDelete
                 );
     }
 }

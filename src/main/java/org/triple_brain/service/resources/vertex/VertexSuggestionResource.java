@@ -13,12 +13,15 @@ import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.SuggestionJson;
+import org.triple_brain.module.model.suggestion.SuggestionPojo;
 import org.triple_brain.module.search.GraphIndexer;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -50,7 +53,7 @@ public class VertexSuggestionResource {
     @POST
     @Path("/")
     @GraphTransactional
-    public Response addSuggestions(JSONArray suggestions) {
+    public Response addSuggestions(JSONObject suggestions) {
         vertex.setSuggestions(
                 SuggestionJson.fromJsonArray(
                         suggestions.toString()
@@ -76,8 +79,35 @@ public class VertexSuggestionResource {
                             "vertex_uri", newEdge.destinationVertex().uri()
                     )
             ).build();
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @POST
+    @Path("/delete")
+    @GraphTransactional
+    public Response deleteSuggestions(JSONArray uris) {
+        /*
+        * @DELETE should be used instead but data cannot be sent to a DELETE operation
+        * because of a java bug fixed in version 8.
+        * see https://bugs.openjdk.java.net/browse/JDK-7157360
+        * todo Refactor once running on java 8 and greater
+        * */
+        Map<URI, SuggestionPojo> suggestions = vertex.getSuggestions();
+        for(int i = 0; i < uris.length(); i++){
+            try {
+                URI uriToRemove = URI.create(
+                        uris.getString(i)
+                );
+                if(suggestions.containsKey(uriToRemove)){
+                    suggestions.remove(uriToRemove);
+                }
+            }catch(JSONException e){
+                throw new RuntimeException(e);
+            }
+        }
+        vertex.setSuggestions(suggestions);
+        return Response.ok().build();
     }
 }
