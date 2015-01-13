@@ -38,16 +38,28 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
 
     @Test
     public void can_add_suggestions_to_vertex() {
-        Map<URI, ? extends Suggestion> suggestions = vertexA().getSuggestions();
         assertThat(
-                suggestions.size(),
+                vertexA().getSuggestions().size(),
                 is(0)
         );
         addStartDateSuggestionToVertexA();
-        suggestions = vertexA().getSuggestions();
         assertThat(
-                suggestions.size(),
+                vertexA().getSuggestions().size(),
                 is(greaterThan(0))
+        );
+    }
+
+    @Test
+    public void adding_suggestions_does_not_remove_the_previous_ones() {
+        addStartDateSuggestionToVertexA();
+        assertThat(
+                vertexA().getSuggestions().size(),
+                is(1)
+        );
+        addSuggestionsToVertexA(modelTestScenarios.nameSuggestionFromPersonIdentification(defaultAuthenticatedUser));
+        assertThat(
+                vertexA().getSuggestions().size(),
+                is(2)
         );
     }
 

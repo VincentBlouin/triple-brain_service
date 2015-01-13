@@ -54,7 +54,7 @@ public class VertexSuggestionResource {
     @Path("/")
     @GraphTransactional
     public Response addSuggestions(JSONObject suggestions) {
-        vertex.setSuggestions(
+        vertex.addSuggestions(
                 SuggestionJson.fromJsonArray(
                         suggestions.toString()
                 )
