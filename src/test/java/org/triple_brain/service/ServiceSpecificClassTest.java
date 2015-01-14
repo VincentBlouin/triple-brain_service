@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 import org.triple_brain.service.vertex.VertexResourceTest;
 import org.triple_brain.service.vertex.VertexSuggestionResourceTest;
 
+@Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         VertexResourceTest.class
