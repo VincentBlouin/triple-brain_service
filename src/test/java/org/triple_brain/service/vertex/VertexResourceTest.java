@@ -123,9 +123,23 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     public void can_update_label() throws Exception {
         String vertexALabel = vertexA().label();
         assertThat(vertexALabel, is(not("new vertex label")));
-        updateVertexALabelUsingRest("new vertex label");
+        vertexUtils().updateVertexLabelUsingRest(
+                vertexAUri(),
+                "new vertex label"
+        );
         vertexALabel = vertexA().label();
         assertThat(vertexALabel, is("new vertex label"));
+    }
+    @Test
+    public void label_can_have_special_characters() {
+        String vertexALabel = vertexA().label();
+        assertThat(vertexALabel, is(not("a(test*)")));
+        vertexUtils().updateVertexLabelUsingRest(
+                vertexAUri(),
+                "a(test*)"
+        );
+        vertexALabel = vertexA().label();
+        assertThat(vertexALabel, is("a(test*)"));
     }
 
     @Test
@@ -139,20 +153,11 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void updating_label_returns_correct_status() throws Exception {
-        ClientResponse response = updateVertexALabelUsingRest("new vertex label");
-        assertThat(response.getStatus(), is(Response.Status.NO_CONTENT.getStatusCode()));
-    }
-
-    private ClientResponse updateVertexALabelUsingRest(String label) throws Exception {
-        JSONObject localizedLabel = new JSONObject().put(
-                LocalizedStringJson.content.name(),
-                label
+        ClientResponse response = vertexUtils().updateVertexLabelUsingRest(
+                vertexAUri(),
+                "new vertex label"
         );
-        return resource
-                .path(vertexAUri().getPath())
-                .path("label")
-                .cookie(authCookie)
-                .post(ClientResponse.class, localizedLabel);
+        assertThat(response.getStatus(), is(Response.Status.NO_CONTENT.getStatusCode()));
     }
 
     @Test

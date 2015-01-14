@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
@@ -17,6 +18,7 @@ import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgePojo;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraph;
 import org.triple_brain.module.model.graph.vertex.VertexInSubGraphPojo;
+import org.triple_brain.module.model.json.LocalizedStringJson;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
@@ -42,6 +44,22 @@ public class VertexRestTestUtils {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
+    }
+
+    public ClientResponse updateVertexLabelUsingRest(URI vertexUri, String label){
+        try {
+            JSONObject localizedLabel = new JSONObject().put(
+                    LocalizedStringJson.content.name(),
+                    label
+            );
+            return resource
+                    .path(vertexUri.getPath())
+                    .path("label")
+                    .cookie(authCookie)
+                    .post(ClientResponse.class, localizedLabel);
+        }catch(JSONException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public VertexInSubGraph vertexWithUriOfAnyUser(URI vertexUri){

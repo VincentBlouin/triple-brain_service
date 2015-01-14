@@ -115,4 +115,17 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
                 is("vertex Azure")
         );
     }
+
+    @Test
+    public void can_index_and_search_bubbles_having_special_characters() throws Exception {
+        vertexUtils().updateVertexLabelUsingRest(
+                vertexAUri(),
+                "z(arg"
+        );
+        indexGraph();
+        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                "z(arg"
+        );
+        assertThat(results.size(), is(1));
+    }
 }
