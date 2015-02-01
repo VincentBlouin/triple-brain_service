@@ -8,11 +8,11 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.triple_brain.service.vertex.VertexResourceTest;
-import org.triple_brain.service.vertex.VertexSuggestionResourceTest;
 
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexResourceTest.class
+        VertexResourceTest.class,
+        EdgeResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner{}
