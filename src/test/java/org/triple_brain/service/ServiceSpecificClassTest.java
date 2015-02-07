@@ -7,12 +7,13 @@ package org.triple_brain.service;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.triple_brain.service.resources.vertex.VertexPublicAccessResource;
+import org.triple_brain.service.vertex.VertexPublicAccessResourceTest;
 import org.triple_brain.service.vertex.VertexResourceTest;
 
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexResourceTest.class,
-        EdgeResourceTest.class
+        VertexPublicAccessResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner{}

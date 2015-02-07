@@ -14,8 +14,8 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
+import org.triple_brain.module.neo4j_search.Neo4jGraphSearchModule;
 import org.triple_brain.module.repository_sql.SQLModule;
-import org.triple_brain.module.solr_search.SolrSearchModule;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
 import org.triple_brain.service.resources.schema.SchemaNonOwnedResourceFactory;
@@ -114,21 +114,8 @@ public class GuiceConfig extends GuiceServletContextListener {
                                     Neo4jModule.forTestingUsingEmbedded() :
                                     Neo4jModule.notForTestingUsingEmbedded()
                     );
-                    SolrSearchModule searchModule;
-                    if (isTesting) {
-                        searchModule = new SolrSearchModule(isTesting);
-                    } else {
-                        String solrHomePath = (String) jndiContext.lookup("solr_home_path");
-                        String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
-                        searchModule = isTesting ?
-                                new SolrSearchModule(isTesting) :
-                                new SolrSearchModule(
-                                        isTesting,
-                                        solrHomePath,
-                                        solrXMLPath
-                                );
-                    }
-                    install(searchModule);
+//                    installSolr();
+                    install(new Neo4jGraphSearchModule());
                     if (isTesting) {
                         bind(ResourceForTests.class);
                         bind(VertexResourceTestUtils.class);
@@ -142,5 +129,22 @@ public class GuiceConfig extends GuiceServletContextListener {
 
             }
         });
+    }
+    private void installSolr(){
+        //                    SolrSearchModule searchModule;
+//                    if (isTesting) {
+//                        searchModule = new SolrSearchModule(isTesting);
+//                    } else {
+//                        String solrHomePath = (String) jndiContext.lookup("solr_home_path");
+//                        String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
+//                        searchModule = isTesting ?
+//                                new SolrSearchModule(isTesting) :
+//                                new SolrSearchModule(
+//                                        isTesting,
+//                                        solrHomePath,
+//                                        solrXMLPath
+//                                );
+//                    }
+//                    install(searchModule);
     }
 }

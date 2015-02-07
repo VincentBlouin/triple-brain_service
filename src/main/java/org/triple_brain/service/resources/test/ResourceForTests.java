@@ -3,11 +3,13 @@
  */
 
 package org.triple_brain.service.resources.test;
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.*;
+import org.triple_brain.module.model.graph.GraphFactory;
+import org.triple_brain.module.model.graph.GraphTransactional;
+import org.triple_brain.module.model.graph.SubGraph;
+import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.vertex.Vertex;
@@ -21,7 +23,6 @@ import org.triple_brain.module.model.test.scenarios.TestScenarios;
 import org.triple_brain.module.model.test.scenarios.VerticesCalledABAndC;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
-import org.triple_brain.module.solr_search.SearchUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,7 +34,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
@@ -52,8 +52,8 @@ public class ResourceForTests {
     @Inject
     GraphIndexer graphIndexer;
 
-    @Inject
-    SearchUtils searchUtils;
+//    @Inject
+//    SearchUtils searchUtils;
 
     @Inject
     private GraphFactory graphFactory;
@@ -83,7 +83,7 @@ public class ResourceForTests {
             );
         }
         graphFactory.createForUser(user);
-        deleteAllUserDocumentsForSearch(user);
+//        deleteAllUserDocumentsForSearch(user);
         UserGraph userGraph = graphFactory.loadForUser(
                 user
         );
@@ -114,41 +114,41 @@ public class ResourceForTests {
         }
     }
 
-    @Path("search/close")
-    @Produces(MediaType.TEXT_PLAIN)
-    @GET
-    public Response closeSearchEngine() {
-        searchUtils.close();
-        return Response.ok().build();
-    }
+//    @Path("search/close")
+//    @Produces(MediaType.TEXT_PLAIN)
+//    @GET
+//    public Response closeSearchEngine() {
+//        searchUtils.close();
+//        return Response.ok().build();
+//    }
 
     @Path("search/delete_all_documents")
     @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response deleteAllUserDocuments(@Context HttpServletRequest request) {
-        removeSearchIndex();
+//        removeSearchIndex();
         return Response.ok().build();
     }
-    public void removeSearchIndex() {
-        SolrServer solrServer = searchUtils.getServer();
-        try {
-            solrServer.deleteByQuery("*:*");
-            solrServer.commit();
-        } catch (SolrServerException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void removeSearchIndex() {
+//        SolrServer solrServer = searchUtils.getServer();
+//        try {
+//            solrServer.deleteByQuery("*:*");
+//            solrServer.commit();
+//        } catch (SolrServerException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
-    private void deleteAllUserDocumentsForSearch(User user) {
-        SolrServer solrServer = searchUtils.getServer();
-        try {
-            solrServer.deleteByQuery("owner_username:" + user.username());
-            solrServer.commit();
-        } catch (SolrServerException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private void deleteAllUserDocumentsForSearch(User user) {
+//        SolrServer solrServer = searchUtils.getServer();
+//        try {
+//            solrServer.deleteByQuery("owner_username:" + user.username());
+//            solrServer.commit();
+//        } catch (SolrServerException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Path("search/index_graph")
     @Produces(MediaType.TEXT_PLAIN)

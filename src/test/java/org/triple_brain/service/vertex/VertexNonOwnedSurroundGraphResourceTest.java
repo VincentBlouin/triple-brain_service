@@ -14,6 +14,7 @@ import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.net.URI;
@@ -68,15 +69,15 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
     @Test
     public void can_get_graph_of_another_user() {
         vertexUtils().makePublicVertexWithUri(
-                vertexAUri()
+                vertexBUri()
         );
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         SubGraph subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexA()).getEntity(JSONObject.class)
+                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertTrue(
-                subGraph.vertices().containsKey(vertexAUri())
+                subGraph.vertices().containsKey(vertexBUri())
         );
     }
 
@@ -271,6 +272,8 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 .path("vertex")
                 .path(shortId)
                 .path("surround_graph")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }

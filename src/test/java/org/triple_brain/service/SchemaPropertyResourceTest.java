@@ -7,6 +7,7 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.graph.Identification;
@@ -117,6 +118,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    @Ignore
     public void updating_label_of_property_updates_properties_name_of_schema_in_search() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
         //updating schema label so that it gets reindex
@@ -156,40 +158,6 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         ).get(0);
         assertFalse(
                 searchResultA.hasProperties()
-        );
-    }
-
-    @Test
-    public void when_adding_an_identification_to_a_property_its_then_present_in_schema_search() throws Exception {
-        URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
-        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
-        identification.setType(
-                IdentificationType.same_as
-        );
-        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
-        //updating schema label so that it gets reindex
-        schemaUtils().updateSchemaLabelWithUri(
-                schemaUri,
-                "schema1"
-        );
-        VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                "schema1"
-        ).get(0);
-        GraphElement property = searchResultA.getProperties().values().iterator().next();
-        assertTrue(
-                property.getIdentifications().isEmpty()
-        );
-        graphElementUtils().addIdentificationToGraphElementWithUri(
-                creatorPredicate,
-                propertyUri
-        );
-        searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                "schema1"
-        ).get(0);
-        property = searchResultA.getProperties().values().iterator().next();
-        assertFalse(
-                property.getIdentifications().isEmpty()
         );
     }
 

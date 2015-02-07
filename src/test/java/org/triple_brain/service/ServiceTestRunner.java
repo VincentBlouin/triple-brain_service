@@ -40,7 +40,7 @@ public class ServiceTestRunner extends RunListener {
 
     @AfterClass
     public static void afterAllTests() throws Exception{
-        closeSearchEngine();
+//        closeSearchEngine();
         closeGraphDatabase();
         RestTestUtils.launcher.stop();
     }
@@ -55,13 +55,13 @@ public class ServiceTestRunner extends RunListener {
         assertThat(response.getStatus(), is(200));
     }
 
-    private static void closeSearchEngine() {
-        ClientResponse response = RestTestUtils.resource
-                .path("service")
-                .path("test")
-                .path("search")
-                .path("close")
-                .get(ClientResponse.class);
-        assertThat(response.getStatus(), is(200));
-    }
+//    private static void closeSearchEngine() {
+//        ClientResponse response = RestTestUtils.resource
+//                .path("service")
+//                .path("test")
+//                .path("search")
+//                .path("close")
+//                .get(ClientResponse.class);
+//        assertThat(response.getStatus(), is(200));
+//    }
 }

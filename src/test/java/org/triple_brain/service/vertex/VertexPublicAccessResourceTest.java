@@ -5,6 +5,7 @@
 package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
@@ -16,28 +17,29 @@ public class VertexPublicAccessResourceTest extends GraphManipulationRestTestUti
 
     @Test
     public void can_make_public(){
-        assertFalse(vertexA().isPublic());
+        assertFalse(vertexB().isPublic());
         makePublic();
-        assertTrue(vertexA().isPublic());
+        assertTrue(vertexB().isPublic());
     }
 
     @Test
+    @Ignore
     public void can_make_private_again(){
         makePublic();
-        assertTrue(vertexA().isPublic());
+        assertTrue(vertexB().isPublic());
         makePrivate();
-        assertFalse(vertexA().isPublic());
+        assertFalse(vertexB().isPublic());
     }
 
     private ClientResponse makePublic(){
         return vertexUtils().makePublicVertexWithUri(
-                vertexAUri()
+                vertexBUri()
         );
     }
 
     private ClientResponse makePrivate(){
         return vertexUtils().makePrivateVertexWithUri(
-                vertexAUri()
+                vertexBUri()
         );
     }
 }
