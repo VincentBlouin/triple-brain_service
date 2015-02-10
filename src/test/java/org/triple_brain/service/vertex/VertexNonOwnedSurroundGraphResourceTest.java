@@ -27,12 +27,12 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
     @Test
     public void getting_graph_of_another_user_returns_correct_status() {
         vertexUtils().makePublicVertexWithUri(
-                vertexAUri()
+                vertexBUri()
         );
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         assertThat(
-                getNonOwnedGraphOfCentralVertex(vertexA()).getStatus(),
+                getNonOwnedGraphOfCentralVertex(vertexB()).getStatus(),
                 is(
                         Response.Status.OK.getStatusCode()
                 )
