@@ -170,9 +170,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().updateVertexANote(
                 "A description"
         );
-        resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexA().label()
-        ).get(0).getGraphElement();
+        resultsForA = searchUtils().searchByUri(vertexAUri()).getGraphElement();
         assertThat(
                 resultsForA.comment(), is("A description")
         );
