@@ -97,7 +97,7 @@ public class SearchResource {
             @QueryParam("uri") String uri
     ) {
         return Response.ok(gson.toJson(
-                graphSearch.getByUri(
+                graphSearch.getDetails(
                         URI.create(uri),
                         user
                 )
