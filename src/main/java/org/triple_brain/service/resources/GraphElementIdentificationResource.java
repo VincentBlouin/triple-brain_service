@@ -50,7 +50,7 @@ public class GraphElementIdentificationResource {
     ) {
         this(
                 graphElement,
-                GraphElementType.SCHEMA_PROPERTY
+                GraphElementType.property
         );
         this.schemaUri = schemaUri;
         this.userGraph = userGraph;
@@ -114,17 +114,17 @@ public class GraphElementIdentificationResource {
     }
 
     private void reindexGraphElement() {
-        if (GraphElementType.VERTEX == graphElementType) {
+        if (GraphElementType.vertex == graphElementType) {
             graphIndexer.indexVertex(
                     (VertexOperator) graphElement
             );
             graphIndexer.commit();
-        } else if (GraphElementType.EDGE == graphElementType) {
+        } else if (GraphElementType.edge == graphElementType) {
             graphIndexer.indexRelation(
                     (Edge) graphElement
             );
             graphIndexer.commit();
-        } else if (GraphElementType.SCHEMA_PROPERTY == graphElementType) {
+        } else if (GraphElementType.property == graphElementType) {
             graphIndexer.indexSchema(
                     userGraph.schemaPojoWithUri(
                             schemaUri

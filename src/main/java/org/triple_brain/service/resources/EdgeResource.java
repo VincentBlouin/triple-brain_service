@@ -132,7 +132,7 @@ public class EdgeResource {
     public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
         return graphElementIdentificationResourceFactory.forGraphElement(
                 edgeFromShortId(shortId),
-                GraphElementType.EDGE
+                GraphElementType.edge
         );
     }
 

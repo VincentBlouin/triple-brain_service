@@ -239,7 +239,7 @@ public class VertexResource {
             @PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forGraphElement(
                 vertexFromShortId(shortId),
-                GraphElementType.VERTEX
+                GraphElementType.vertex
         );
     }
 
