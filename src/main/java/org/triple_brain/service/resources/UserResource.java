@@ -196,7 +196,7 @@ public class UserResource {
                     .build()
             );
         }
-        userRepository.save(user);
+        userRepository.createUser(user);
         graphFactory.createForUser(user);
         UserGraph userGraph = graphFactory.loadForUser(user);
         graphIndexer.indexVertex(

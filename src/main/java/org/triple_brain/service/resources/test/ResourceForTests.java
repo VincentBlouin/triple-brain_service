@@ -78,7 +78,7 @@ public class ResourceForTests {
         )
                 .password("password");
         if(!userRepository.emailExists(user.email())){
-            userRepository.save(
+            userRepository.createUser(
                     user
             );
         }
@@ -185,7 +185,7 @@ public class ResourceForTests {
                 "[fr]"
         )
                 .password("password");
-        userRepository.save(user);
+        userRepository.createUser(user);
         return Response.ok(
                 UserJson.toJson(user)
         ).build();
