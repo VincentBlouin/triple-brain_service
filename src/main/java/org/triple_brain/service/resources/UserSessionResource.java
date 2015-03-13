@@ -7,6 +7,7 @@ package org.triple_brain.service.resources;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.repository.user.NonExistingUserException;
 import org.triple_brain.module.repository.user.UserRepository;
@@ -48,12 +49,15 @@ public class UserSessionResource {
 
     @POST
     @Produces(MediaType.WILDCARD)
+    @GraphTransactional
     @Path("/")
     public Response authenticate(
             JSONObject loginInfo,
             @Context HttpServletRequest request
     ){
+        String email = "";
         try {
+            email = loginInfo.getString(UserJson.EMAIL);
             User user = userRepository.findByEmail(
                     loginInfo.getString(UserJson.EMAIL)
             );

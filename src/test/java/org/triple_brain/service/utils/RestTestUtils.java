@@ -9,9 +9,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.json.UserJson;
@@ -21,11 +19,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.sql.SQLException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.triple_brain.module.repository_sql.SQLConnection.*;
 
 
 public abstract class RestTestUtils {
@@ -45,22 +41,6 @@ public abstract class RestTestUtils {
     @AfterClass
     static public void stopServer() throws Exception {
 
-    }
-
-    @Before
-    public void before_rest_test() throws SQLException {
-        cleanTables();
-    }
-
-    @After
-    public void after_rest_test() throws SQLException {
-        closeConnection();
-    }
-
-
-    static protected void cleanTables() throws SQLException {
-        clearDatabases();
-        createTables();
     }
 
     protected ClientResponse createUser(JSONObject userAsJson) {

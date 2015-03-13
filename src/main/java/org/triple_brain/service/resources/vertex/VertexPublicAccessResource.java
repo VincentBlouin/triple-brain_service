@@ -35,7 +35,9 @@ public class VertexPublicAccessResource {
     @Path("/")
     @GraphTransactional
     public Response makePublic(){
+        System.out.println("making vertex public " + vertex.label() + " " + vertex.uri());
         vertex.makePublic();
+        System.out.println(vertex.isPublic());
         graphIndexer.indexVertex(
                 vertex
         );

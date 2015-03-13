@@ -137,7 +137,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
-                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
         );
         assertThat(
                 edgeBetweenAAndC.sourceVertex().uri().toString(), is(

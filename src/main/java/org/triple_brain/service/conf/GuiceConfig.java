@@ -15,7 +15,7 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import org.triple_brain.module.neo4j_search.Neo4jGraphSearchModule;
-import org.triple_brain.module.repository_sql.SQLModule;
+import org.triple_brain.module.neo4j_user_repository.Neo4jUserRepositoryModule;
 import org.triple_brain.service.RestInterceptor;
 import org.triple_brain.service.resources.*;
 import org.triple_brain.service.resources.schema.SchemaNonOwnedResourceFactory;
@@ -49,7 +49,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bindInterceptor(Matchers.any(), Matchers.annotatedWith(Path.class),
                         restInterceptor);
 
-                install(new SQLModule());
+                install(new Neo4jUserRepositoryModule());
 
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 

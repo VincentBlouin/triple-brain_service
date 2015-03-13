@@ -43,21 +43,21 @@
                 </configuration>
             </plugin>
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-remote-resources-plugin</artifactId>-->
-                <!--<version>1.4</version>-->
-                <!--<configuration>-->
-                    <!--<resourceBundles>-->
-                        <!--<resourceBundle>org.triple_brain.module:triple_brain-solr-search:1.0.0-SNAPSHOT</resourceBundle>-->
-                    <!--</resourceBundles>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>process</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-remote-resources-plugin</artifactId>-->
+            <!--<version>1.4</version>-->
+            <!--<configuration>-->
+            <!--<resourceBundles>-->
+            <!--<resourceBundle>org.triple_brain.module:triple_brain-solr-search:1.0.0-SNAPSHOT</resourceBundle>-->
+            <!--</resourceBundles>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>process</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -76,9 +76,14 @@
     </build>
 
     <dependencies>
+        <!--<dependency>-->
+        <!--<groupId>org.triple_brain.module</groupId>-->
+        <!--<artifactId>triple_brain-repository-sql</artifactId>-->
+        <!--<version>1.0.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-repository-sql</artifactId>
+            <artifactId>triple_brain-user-repository-neo4j</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -101,15 +106,15 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.triple_brain.module</groupId>-->
-            <!--<artifactId>triple_brain-solr-search</artifactId>-->
-            <!--<version>1.0.0-SNAPSHOT</version>-->
+        <!--<groupId>org.triple_brain.module</groupId>-->
+        <!--<artifactId>triple_brain-solr-search</artifactId>-->
+        <!--<version>1.0.0-SNAPSHOT</version>-->
         <!--</dependency>-->
 
         <dependency>
-        <groupId>org.triple_brain.module</groupId>
-        <artifactId>triple_brain-neo4j-search</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+            <groupId>org.triple_brain.module</groupId>
+            <artifactId>triple_brain-neo4j-search</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -305,13 +310,13 @@
             <classifier>tests</classifier>
         </dependency>
 
-        <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-repository-sql</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.triple_brain.module</groupId>-->
+        <!--<artifactId>triple_brain-repository-sql</artifactId>-->
+        <!--<version>1.0.0-SNAPSHOT</version>-->
+        <!--<classifier>tests</classifier>-->
+        <!--<scope>test</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

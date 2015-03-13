@@ -170,26 +170,26 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-    @Test
-    public void when_creating_a_user_a_mind_map_is_created_for_him() throws Exception {
-        JSONObject validUser = userUtils().validForCreation();
-        User user = User.withUsernameEmailAndLocales(
-                validUser.getString(USER_NAME),
-                validUser.getString(UserJson.EMAIL),
-                "[fr]"
-        );
-        assertFalse(
-                graphElementWithIdExistsInCurrentGraph(
-                        new UserUris(user).defaultVertexUri()
-                )
-        );
-        createUser(validUser);
-        assertTrue(
-                graphElementWithIdExistsInCurrentGraph(
-                        new UserUris(user).defaultVertexUri()
-                )
-        );
-    }
+//    @Test
+//    public void when_creating_a_user_a_mind_map_is_created_for_him() throws Exception {
+//        JSONObject validUser = userUtils().validForCreation();
+//        User user = User.withUsernameEmailAndLocales(
+//                validUser.getString(USER_NAME),
+//                validUser.getString(UserJson.EMAIL),
+//                "[fr]"
+//        );
+//        assertFalse(
+//                graphElementWithIdExistsInCurrentGraph(
+//                        new UserUris(user).defaultVertexUri()
+//                )
+//        );
+//        createUser(validUser);
+//        assertTrue(
+//                graphElementWithIdExistsInCurrentGraph(
+//                        new UserUris(user).defaultVertexUri()
+//                )
+//        );
+//    }
 
     @Test
     public void can_get_current_authenticated_user() throws Exception {

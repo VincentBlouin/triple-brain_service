@@ -93,9 +93,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         authenticate(createAUser());
         ClientResponse response = resource
                 .path(
-                        new UserUris(
-                                defaultAuthenticatedUser
-                        ).defaultVertexUri().getPath()
+                        vertexAUri().getPath()
                 )
                 .cookie(authCookie)
                 .post(ClientResponse.class);

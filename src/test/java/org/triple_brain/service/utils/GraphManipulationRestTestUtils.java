@@ -4,9 +4,11 @@
 
 package org.triple_brain.service.utils;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
@@ -18,6 +20,8 @@ import java.net.URI;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.triple_brain.module.model.json.UserJson.EMAIL;
+import static org.triple_brain.module.model.json.UserJson.USER_NAME;
 
 public class GraphManipulationRestTestUtils extends RestTestUtils {
 
@@ -28,6 +32,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
 
     @Before
     public void before_graph_manipulator_rest_test() throws Exception {
+        userUtils().deleteAllUsers();
         JSONObject userAsJson = userUtils().validForCreation();
         createUser(userAsJson);
         authenticate(userAsJson);
