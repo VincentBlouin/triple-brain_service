@@ -222,6 +222,16 @@ public class VertexResource {
         );
     }
 
+    @Path("any/surround_graph")
+    @GraphTransactional
+    public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
+    ) {
+        return new VertexOwnedSurroundGraphResource(
+                userGraph,
+                userGraph.defaultVertex()
+        );
+    }
+
     @Path("{shortId}/surround_graph")
     @GraphTransactional
     public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
