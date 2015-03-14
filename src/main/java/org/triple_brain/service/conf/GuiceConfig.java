@@ -27,12 +27,9 @@ import org.triple_brain.service.resources.vertex.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.DataSource;
 import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.google.inject.jndi.JndiIntegration.fromJndi;
 
 public class GuiceConfig extends GuiceServletContextListener {
 
@@ -100,9 +97,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
                 serve("/*").with(GuiceContainer.class, params);
 
-                bind(DataSource.class)
-                        .annotatedWith(Names.named("nonRdfDb"))
-                        .toProvider(fromJndi(DataSource.class, "jdbc/nonRdfTripleBrainDB"));
                 try {
                     final InitialContext jndiContext = new InitialContext();
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
@@ -114,7 +108,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                                     Neo4jModule.forTestingUsingEmbedded() :
                                     Neo4jModule.notForTestingUsingEmbedded()
                     );
-//                    installSolr();
                     install(new Neo4jGraphSearchModule());
                     if (isTesting) {
                         bind(ResourceForTests.class);
@@ -129,22 +122,5 @@ public class GuiceConfig extends GuiceServletContextListener {
 
             }
         });
-    }
-    private void installSolr(){
-        //                    SolrSearchModule searchModule;
-//                    if (isTesting) {
-//                        searchModule = new SolrSearchModule(isTesting);
-//                    } else {
-//                        String solrHomePath = (String) jndiContext.lookup("solr_home_path");
-//                        String solrXMLPath = (String) jndiContext.lookup("solr_xml_path_relative_to_home");
-//                        searchModule = isTesting ?
-//                                new SolrSearchModule(isTesting) :
-//                                new SolrSearchModule(
-//                                        isTesting,
-//                                        solrHomePath,
-//                                        solrXMLPath
-//                                );
-//                    }
-//                    install(searchModule);
     }
 }
