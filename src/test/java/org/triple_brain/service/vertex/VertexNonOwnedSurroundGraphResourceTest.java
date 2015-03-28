@@ -6,7 +6,6 @@ package org.triple_brain.service.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.SubGraph;
@@ -17,7 +16,6 @@ import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 
 import static org.hamcrest.core.Is.is;

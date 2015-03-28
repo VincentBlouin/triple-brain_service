@@ -24,21 +24,6 @@ import static org.junit.Assert.assertFalse;
 public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtils {
 
     @Test
-    public void can_get_random_surround_graph() throws Exception {
-        ClientResponse response = getRandomGraph();
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-        SubGraph graph = SubGraphJson.fromJson(
-                response.getEntity(JSONObject.class)
-        );
-        assertFalse(
-                graph.vertices().isEmpty()
-        );
-    }
-
-    @Test
     public void response_status_is_ok_for_getting_graph() {
         assertThat(
                 getGraph().getStatus(),
@@ -100,17 +85,6 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
         return getGraphOfCentralVertexUri(
                 vertexAUri()
         );
-    }
-
-    private ClientResponse getRandomGraph(){
-        return resource
-                .path(
-                        new UserUris(defaultAuthenticatedUser).baseVertexUri().getPath()
-                )
-                .path("any")
-                .path("surround_graph")
-                .cookie(authCookie)
-                .get(ClientResponse.class);
     }
 
     private ClientResponse getGraphOfCentralVertexUri(URI centralVertexUri) {

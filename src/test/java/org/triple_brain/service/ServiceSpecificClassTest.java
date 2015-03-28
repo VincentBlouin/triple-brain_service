@@ -13,10 +13,9 @@ import org.triple_brain.service.vertex.VertexOwnedSurroundGraphResouceTest;
 import org.triple_brain.service.vertex.VertexPublicAccessResourceTest;
 import org.triple_brain.service.vertex.VertexResourceTest;
 
-
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexOwnedSurroundGraphResouceTest.class
+        VertexResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner{}

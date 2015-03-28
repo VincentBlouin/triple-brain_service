@@ -14,7 +14,6 @@ import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.GraphElement;
 import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.vertex.Vertex;
-import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.EdgeJson;
 import org.triple_brain.module.model.json.graph.VertexInSubGraphJson;
 import org.triple_brain.module.search.EdgeSearchResult;
@@ -22,6 +21,7 @@ import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +31,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.triple_brain.module.model.json.StatementJsonFields.*;
 
 public class VertexResourceTest extends GraphManipulationRestTestUtils {
@@ -256,5 +257,31 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 vertexB().getNumberOfConnectedEdges(),
                 is(2)
         );
+    }
+
+    @Test
+    public void can_get_random_surround_graph() throws Exception {
+        ClientResponse response = getAnyVertexUri();
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        try{
+            URI.create(
+                    response.getEntity(String.class)
+            );
+        }catch(Exception e){
+            fail();
+        }
+    }
+
+    private ClientResponse getAnyVertexUri(){
+        return resource
+                .path(
+                        new UserUris(defaultAuthenticatedUser).baseVertexUri().getPath()
+                )
+                .path("any")
+                .cookie(authCookie)
+                .get(ClientResponse.class);
     }
 }

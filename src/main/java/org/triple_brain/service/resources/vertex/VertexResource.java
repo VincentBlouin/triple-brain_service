@@ -222,14 +222,15 @@ public class VertexResource {
         );
     }
 
-    @Path("any/surround_graph")
+    @Path("any")
+    @GET
     @GraphTransactional
-    public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getAnyVertexUri(
     ) {
-        return new VertexOwnedSurroundGraphResource(
-                userGraph,
-                userGraph.defaultVertex()
-        );
+        return Response.ok().entity(
+                userGraph.defaultVertex().uri().toString()
+        ).build();
     }
 
     @Path("{shortId}/surround_graph")
