@@ -91,9 +91,9 @@ public class SearchResource {
     }
 
     @GET
-    @Path("uri")
+    @Path("details")
     @GraphTransactional
-    public Response getByUri(
+    public Response getDetails(
             @QueryParam("uri") String uri
     ) {
         return Response.ok(gson.toJson(

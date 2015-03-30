@@ -105,6 +105,31 @@ public class SearchRestTestUtils {
                 .get(ClientResponse.class);
     }
 
+    public ClientResponse getSearchDetailsAnonymously(
+            URI uri
+    ) {
+        return resource
+                .path("service")
+                .path("search")
+                .path("details")
+                .queryParam("uri", uri.toString())
+                .get(ClientResponse.class);
+    }
+
+    public GraphElementSearchResult graphElementSearchResultFromClientResponse(ClientResponse clientResponse) {
+        JSONObject jsonObject = clientResponse.getEntity(JSONObject.class);
+        Gson gson = new Gson();
+        return jsonObject.has("edge") ?
+                gson.fromJson(
+                        jsonObject.toString(),
+                        EdgeSearchResult.class
+                ) :
+                gson.fromJson(
+                        jsonObject.toString(),
+                        VertexSearchResult.class
+                );
+    }
+
     public ClientResponse autoCompletionResultsForUserVerticesOnly(JSONObject user, String text) {
         return resource
                 .path("service")
@@ -157,20 +182,12 @@ public class SearchRestTestUtils {
         );
     }
 
-    public GraphElementSearchResult searchByUri(URI uri) {
-        JSONObject jsonObject = searchByUriClientResponse(
-                uri
-        ).getEntity(JSONObject.class);
-        Gson gson = new Gson();
-        return jsonObject.has("edge") ?
-                gson.fromJson(
-                        jsonObject.toString(),
-                        EdgeSearchResult.class
-                ) :
-                gson.fromJson(
-                        jsonObject.toString(),
-                        VertexSearchResult.class
-                );
+    public GraphElementSearchResult searchDetailsByUri(URI uri) {
+        return graphElementSearchResultFromClientResponse(
+                searchByUriClientResponse(
+                        uri
+                )
+        );
     }
 
     public ClientResponse searchByUriClientResponse(URI uri) {

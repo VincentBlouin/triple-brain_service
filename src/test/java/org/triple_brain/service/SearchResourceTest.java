@@ -105,9 +105,9 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_get_search_result_by_uri() {
+    public void can_get_search_details_by_uri() {
         indexGraph();
-        GraphElement result = searchUtils().searchByUri(
+        GraphElement result = searchUtils().searchDetailsByUri(
                 vertexAUri()
         ).getGraphElement();
         assertThat(

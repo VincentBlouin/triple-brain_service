@@ -6,6 +6,7 @@ package org.triple_brain.service.resources;
 
 import com.google.gson.Gson;
 import org.triple_brain.module.model.graph.GraphTransactional;
+import org.triple_brain.module.search.GraphElementSearchResult;
 import org.triple_brain.module.search.GraphSearch;
 
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 @Path("/search")
 @Singleton
@@ -34,6 +36,23 @@ public class PublicSearchResource {
                         graphSearch.searchPublicVerticesOnly(
                                 searchText
                         )
+                )
+        ).build();
+    }
+
+    @GET
+    @Path("/details")
+    @GraphTransactional
+    public Response searchDetails(@QueryParam("uri") String uri) {
+        GraphElementSearchResult searchResult = graphSearch.getDetailsAnonymously(
+                URI.create(uri)
+        );
+        if(null == searchResult){
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+        }
+        return Response.ok(
+                gson.toJson(
+                        searchResult
                 )
         ).build();
     }

@@ -129,7 +129,7 @@ public class VertexRestTestUtils {
         ).uri();
     }
 
-    public ClientResponse updateVertexANote(String note) throws Exception {
+    public ClientResponse updateVertexANote(String note){
         return resource
                 .path(graphUtils().vertexAUri().getPath())
                 .path("comment")

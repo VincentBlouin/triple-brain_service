@@ -9,14 +9,11 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.triple_brain.module.model.graph.GraphElement;
-import org.triple_brain.module.model.graph.Identification;
 import org.triple_brain.module.model.graph.IdentificationPojo;
 import org.triple_brain.module.model.graph.IdentificationType;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.VertexSearchResult;
-import org.triple_brain.service.resources.GraphElementIdentificationResource;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.Response;
@@ -128,7 +125,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         );
         URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
         updateLabel(propertyUri, "prop1");
-        VertexSearchResult result = (VertexSearchResult) searchUtils().searchByUri(
+        VertexSearchResult result = (VertexSearchResult) searchUtils().searchDetailsByUri(
                 schemaUri
         );
         assertTrue(
