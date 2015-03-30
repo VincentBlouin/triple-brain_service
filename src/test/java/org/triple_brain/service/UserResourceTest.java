@@ -74,30 +74,6 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
         ));
     }
 
-    private ClientResponse logoutUsingCookie(NewCookie cookie) {
-        return resource
-                .path("service")
-                .path("users")
-                .path("session")
-                .cookie(cookie)
-                .delete(ClientResponse.class);
-    }
-
-    private boolean isUserAuthenticated(NewCookie cookie) {
-        ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .path("is_authenticated")
-                .cookie(cookie)
-                .get(ClientResponse.class);
-        JSONObject jsonResponse = response.getEntity(JSONObject.class);
-        try{
-            return jsonResponse.getBoolean("is_authenticated");
-        }catch(JSONException e){
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     public void authentication_returns_user_as_json() throws Exception {
         JSONObject user = userUtils().validForCreation();

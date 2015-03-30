@@ -51,6 +51,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
                 bind(UserResource.class);
+                bind(PublicSearchResource.class);
                 bind(ServerConfigResource.class);
 
                 install(builder.build(

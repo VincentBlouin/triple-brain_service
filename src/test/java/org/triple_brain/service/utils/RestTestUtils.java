@@ -101,4 +101,28 @@ public abstract class RestTestUtils {
             throw new RuntimeException(e);
         }
     }
+
+    protected ClientResponse logoutUsingCookie(NewCookie cookie) {
+        return resource
+                .path("service")
+                .path("users")
+                .path("session")
+                .cookie(cookie)
+                .delete(ClientResponse.class);
+    }
+
+    protected Boolean isUserAuthenticated(NewCookie cookie) {
+        ClientResponse response = resource
+                .path("service")
+                .path("users")
+                .path("is_authenticated")
+                .cookie(cookie)
+                .get(ClientResponse.class);
+        JSONObject jsonResponse = response.getEntity(JSONObject.class);
+        try{
+            return jsonResponse.getBoolean("is_authenticated");
+        }catch(JSONException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

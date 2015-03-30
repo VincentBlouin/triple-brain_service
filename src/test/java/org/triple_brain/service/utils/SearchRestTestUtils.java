@@ -95,7 +95,17 @@ public class SearchRestTestUtils {
         );
     }
 
-    public ClientResponse autoCompletionResultsForUserVerticesOnly(JSONObject user, String text){
+    public ClientResponse autoCompletionForPublicVertices(
+            String textToSearch
+    ) {
+        return resource
+                .path("service")
+                .path("search")
+                .queryParam("text", textToSearch)
+                .get(ClientResponse.class);
+    }
+
+    public ClientResponse autoCompletionResultsForUserVerticesOnly(JSONObject user, String text) {
         return resource
                 .path("service")
                 .path("users")
