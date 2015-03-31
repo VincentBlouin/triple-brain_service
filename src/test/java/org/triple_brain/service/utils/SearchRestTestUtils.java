@@ -196,7 +196,7 @@ public class SearchRestTestUtils {
                 .path("users")
                 .path(authenticatedUserAsJson.optString(UserJson.USER_NAME))
                 .path("search")
-                .path("uri")
+                .path("details")
                 .queryParam("uri", uri.toString())
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)

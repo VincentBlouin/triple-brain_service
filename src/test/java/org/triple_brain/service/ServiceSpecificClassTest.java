@@ -16,6 +16,6 @@ import org.triple_brain.service.vertex.VertexResourceTest;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        PublicSearchResourceTest.class
+        SearchResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner{}
