@@ -39,10 +39,6 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 DEFAULT_PASSWORD
         );
         rogerLamotheAsJson.put(
-                UserJson.PASSWORD_VERIFICATION,
-                DEFAULT_PASSWORD
-        );
-        rogerLamotheAsJson.put(
                 UserJson.PREFERRED_LOCALES,
                 new JSONArray().put("fr")
         );
@@ -211,10 +207,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     public void returned_user_creation_error_messages_are_in_the_right_order() throws Exception {
         JSONObject jsonUser = new JSONObject();
         jsonUser.put(EMAIL, "");
-        jsonUser.put(USER_NAME, "");
         jsonUser.put(PASSWORD, "pass");
-        jsonUser.put(PASSWORD_VERIFICATION, "");
-        jsonUser.put(PREFERRED_LOCALES, new JSONArray().put("fr"));
         ClientResponse response = resource
                 .path("service")
                 .path("users")

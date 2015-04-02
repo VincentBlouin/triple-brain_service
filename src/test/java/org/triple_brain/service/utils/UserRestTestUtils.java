@@ -60,7 +60,6 @@ public class UserRestTestUtils {
         try{
             user.put(EMAIL, randomEmail());
             user.put(PASSWORD, RestTestUtils.DEFAULT_PASSWORD);
-            user.put(PASSWORD_VERIFICATION, RestTestUtils.DEFAULT_PASSWORD);
         }catch(JSONException e){
             throw new RuntimeException(e);
         }
