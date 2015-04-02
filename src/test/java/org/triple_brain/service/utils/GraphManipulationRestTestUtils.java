@@ -4,11 +4,10 @@
 
 package org.triple_brain.service.utils;
 
-import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Before;
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserUris;
@@ -20,8 +19,6 @@ import java.net.URI;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.triple_brain.module.model.json.UserJson.EMAIL;
-import static org.triple_brain.module.model.json.UserJson.USER_NAME;
 
 public class GraphManipulationRestTestUtils extends RestTestUtils {
 
@@ -34,13 +31,13 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
     public void before_graph_manipulator_rest_test() throws Exception {
         userUtils().deleteAllUsers();
         JSONObject userAsJson = userUtils().validForCreation();
-        createUser(userAsJson);
+        ClientResponse response = createUser(userAsJson);
+        userAsJson = response.getEntity(JSONObject.class);
         authenticate(userAsJson);
         defaultAuthenticatedUserAsJson = userAsJson;
-        defaultAuthenticatedUser = User.withUsernameEmailAndLocales(
-                userAsJson.getString(UserJson.USER_NAME),
+        defaultAuthenticatedUser = User.withEmailAndUsername(
                 userAsJson.getString(UserJson.EMAIL),
-                "[fr]"
+                userAsJson.getString(UserJson.USER_NAME)
         );
         defaultAuthenticatedUser.password(DEFAULT_PASSWORD);
         deleteAllDocumentsFromSearch();
@@ -103,9 +100,10 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
 
     protected JSONObject createAUser() {
         JSONObject newUser = userUtils().validForCreation();
-        createUser(
+        ClientResponse response = createUser(
                 newUser
         );
+        newUser = response.getEntity(JSONObject.class);
         return newUser;
     }
 

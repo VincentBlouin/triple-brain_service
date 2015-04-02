@@ -13,6 +13,7 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import org.triple_brain.module.model.ModelModule;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import org.triple_brain.module.neo4j_search.Neo4jGraphSearchModule;
 import org.triple_brain.module.neo4j_user_repository.Neo4jUserRepositoryModule;
@@ -38,6 +39,7 @@ public class GuiceConfig extends GuiceServletContextListener {
         return Guice.createInjector(new JerseyServletModule() {
             @Override
             protected void configureServlets() {
+                install(new ModelModule());
                 bind(Context.class).to(InitialContext.class);
                 bind(Gson.class).toInstance(new Gson());
                 RestInterceptor restInterceptor = new RestInterceptor();

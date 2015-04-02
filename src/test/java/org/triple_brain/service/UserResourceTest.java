@@ -1,3 +1,4 @@
+
 /*
  * Copyright Vincent Blouin under the Mozilla Public License 1.1
  */
@@ -10,12 +11,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -23,16 +22,14 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.triple_brain.module.model.json.UserJson.*;
 import static org.triple_brain.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
-import static org.triple_brain.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
+
 
 public class UserResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_authenticate_user() throws Exception {
-        User rogerLamothe = User.withUsernameEmailAndLocales(
-                "roger_lamothe",
-                "roger.lamothe@example.org",
-                new JSONArray().put("fr").toString()
+        User rogerLamothe = User.withEmail(
+                "roger.lamothe@example.org"
         );
         JSONObject rogerLamotheAsJson = UserJson.toJson(
                 rogerLamothe
@@ -92,10 +89,10 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, loginInfo);
         JSONObject userFromResponse = response.getEntity(JSONObject.class);
-        String originalUserUsername = user.getString(UserJson.USER_NAME);
+        String originalEmail = user.getString(UserJson.EMAIL);
         assertThat(
-                userFromResponse.getString(USER_NAME),
-                is(originalUserUsername)
+                userFromResponse.getString(EMAIL),
+                is(originalEmail)
         );
     }
 
@@ -169,7 +166,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_get_current_authenticated_user() throws Exception {
-        JSONObject user = createUserWithUsername("roger_lamothe");
+        JSONObject user = createUserWithEmail("roger_lamothe@example.org");
         authenticate(user);
         ClientResponse response = resource
                 .path("service")
@@ -179,7 +176,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
         JSONObject userFromResponse = response.getEntity(JSONObject.class);
-        assertThat(userFromResponse.getString(USER_NAME), is("roger_lamothe"));
+        assertThat(userFromResponse.getString(EMAIL), is("roger_lamothe@example.org"));
     }
 
     @Test
@@ -211,23 +208,6 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void cant_register_same_user_name_twice() throws Exception {
-        createUserWithUsername("roger_lamothe");
-        JSONObject jsonUser = userUtils().validForCreation().put(USER_NAME, "roger_lamothe");
-        ClientResponse response = resource
-                .path("service")
-                .path("users")
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(ClientResponse.class, jsonUser);
-        assertThat(response.getStatus(), is(400));
-        JSONArray errors = response.getEntity(JSONArray.class);
-        assertThat(errors.length(), greaterThan(0));
-        assertThat(errors.getJSONObject(0).get("field").toString(), is(USER_NAME));
-        assertThat(errors.getJSONObject(0).get("reason").toString(), is(USER_NAME_ALREADY_REGISTERED));
-    }
-
-    @Test
     public void returned_user_creation_error_messages_are_in_the_right_order() throws Exception {
         JSONObject jsonUser = new JSONObject();
         jsonUser.put(EMAIL, "");
@@ -244,19 +224,12 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .post(ClientResponse.class, jsonUser);
         JSONArray errors = response.getEntity(JSONArray.class);
         assertThat(errors.getJSONObject(0).get("field").toString(), is(EMAIL));
-        assertThat(errors.getJSONObject(1).get("field").toString(), is(USER_NAME));
-        assertThat(errors.getJSONObject(2).get("field").toString(), is(PASSWORD));
+        assertThat(errors.getJSONObject(1).get("field").toString(), is(PASSWORD));
     }
 
-    private void createUserWithEmail(String email) throws Exception {
+    private JSONObject createUserWithEmail(String email) throws Exception {
         JSONObject user = userUtils().validForCreation();
         user.put(UserJson.EMAIL, email);
-        createUser(user);
-    }
-
-    private JSONObject createUserWithUsername(String username) throws Exception {
-        JSONObject user = userUtils().validForCreation();
-        user.put(UserJson.USER_NAME, username);
         createUser(user);
         return user;
     }

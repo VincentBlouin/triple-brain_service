@@ -83,23 +83,19 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
     }
 
     private NewCookie loginAsVince() {
-        JSONObject vince = userVince();
-        createUser(
-                vince
-        );
         return authenticate(
-                vince
+                createUserVince().getEntity(JSONObject.class)
         ).getCookies().get(0);
     }
 
-    private JSONObject userVince() {
-        try {
-            return userUtils().validForCreation().put(
-                    UserJson.USER_NAME,
-                    "vince"
-            );
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+    private ClientResponse createUserVince() {
+        return resource
+                .path("service")
+                .path("test")
+                .path("users")
+                .path("vince")
+                .cookie(authCookie)
+                .post(ClientResponse.class);
     }
+
 }

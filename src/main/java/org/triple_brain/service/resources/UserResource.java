@@ -14,6 +14,7 @@ import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.repository.user.UserRepository;
 import org.triple_brain.module.search.GraphIndexer;
 import org.triple_brain.service.resources.schema.SchemaNonOwnedResource;
@@ -161,21 +162,15 @@ public class UserResource {
     @GraphTransactional
     @Path("/")
     public Response createUser(JSONObject jsonUser) {
-        User user = User.withUsernameEmailAndLocales(
-                jsonUser.optString(USER_NAME, ""),
-                jsonUser.optString(EMAIL, ""),
-                jsonUser.optJSONArray(PREFERRED_LOCALES).toString()
-        )
-                .password(jsonUser.optString(PASSWORD, ""));
-
+        User user = User.withEmail(
+                jsonUser.optString(EMAIL, "")
+        ).password(
+                jsonUser.optString(PASSWORD, "")
+        );
         JSONArray jsonMessages = new JSONArray();
         Map<String, String> errors = validate(jsonUser);
-
         if (userRepository.emailExists(jsonUser.optString(EMAIL, "")))
             errors.put(EMAIL, ALREADY_REGISTERED_EMAIL);
-
-        if (userRepository.usernameExists(jsonUser.optString(USER_NAME, "")))
-            errors.put(USER_NAME, USER_NAME_ALREADY_REGISTERED);
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> entry : errors.entrySet()) {
@@ -196,7 +191,7 @@ public class UserResource {
                     .build()
             );
         }
-        userRepository.createUser(user);
+        user = userRepository.createUser(user);
         graphFactory.createForUser(user);
         UserGraph userGraph = graphFactory.loadForUser(user);
         graphIndexer.indexVertex(
@@ -207,7 +202,7 @@ public class UserResource {
         );
         return Response.created(URI.create(
                 user.username()
-        )).build();
+        )).entity(UserJson.toJson(user)).build();
     }
 
     @GET

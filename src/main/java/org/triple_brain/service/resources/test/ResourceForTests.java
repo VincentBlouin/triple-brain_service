@@ -71,12 +71,9 @@ public class ResourceForTests {
     @GraphTransactional
     @GET
     public Response createUserAuthenticateAndRedirectToHomePage(@Context HttpServletRequest request) throws Exception {
-        User user = User.withUsernameEmailAndLocales(
-                "test_user",
-                "test@triple_brain.org",
-                "[fr]"
-        )
-                .password("password");
+        User user = User.withEmail(
+                "test@triple_brain.org"
+        ).password("password");
         if(!userRepository.emailExists(user.email())){
             userRepository.createUser(
                     user
@@ -179,12 +176,9 @@ public class ResourceForTests {
     @Path("create_user")
     @POST
     public Response createUserWithDefaultPassword() throws Exception {
-        User user = User.withUsernameEmailAndLocales(
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString() + "@triplebrain.org",
-                "[fr]"
-        )
-                .password("password");
+        User user = User.withEmail(
+                UUID.randomUUID().toString() + "@triplebrain.org"
+        ).password("password");
         userRepository.createUser(user);
         return Response.ok(
                 UserJson.toJson(user)

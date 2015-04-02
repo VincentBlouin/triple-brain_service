@@ -4,10 +4,11 @@
 
 package org.triple_brain.service.resources.test;
 
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.rest.graphdb.query.QueryEngine;
-import org.triple_brain.module.model.graph.GraphElementType;
+import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.UserNameGenerator;
 import org.triple_brain.module.model.graph.GraphTransactional;
+import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
@@ -26,6 +27,9 @@ public class UserResourceTestUtils {
 
     @Inject
     protected QueryEngine queryEngine;
+
+    @Inject
+    UserNameGenerator userNameGenerator;
 
     @Path("{email}")
     @GET
@@ -46,6 +50,36 @@ public class UserResourceTestUtils {
                 Collections.EMPTY_MAP
         );
         return Response.noContent().build();
+    }
+
+
+    @POST
+    @Path("/vince")
+    public Response createUserVince()throws Exception{
+        userNameGenerator.setOverride(new UserNameGenerator() {
+            @Override
+            public String generate() {
+                return "vince";
+            }
+
+            @Override
+            public void setOverride(UserNameGenerator userNameGenerator) {
+
+            }
+
+            @Override
+            public void reset() {
+
+            }
+        });
+        User user = User.withEmail(
+                "vince_email@example.org"
+        ).password("password");
+        userRepository.createUser(user);
+        userNameGenerator.reset();
+        return Response.ok().entity(
+                UserJson.toJson(user)
+        ).build();
     }
 
 }
