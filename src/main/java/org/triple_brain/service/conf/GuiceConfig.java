@@ -39,7 +39,6 @@ public class GuiceConfig extends GuiceServletContextListener {
         return Guice.createInjector(new JerseyServletModule() {
             @Override
             protected void configureServlets() {
-                install(new ModelModule());
                 bind(Context.class).to(InitialContext.class);
                 bind(Gson.class).toInstance(new Gson());
                 RestInterceptor restInterceptor = new RestInterceptor();
@@ -53,6 +52,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
                 bind(UserResource.class);
+                bind(ResetPasswordResource.class);
                 bind(PublicSearchResource.class);
                 bind(ServerConfigResource.class);
 
@@ -110,6 +110,11 @@ public class GuiceConfig extends GuiceServletContextListener {
                             isTesting ?
                                     Neo4jModule.forTestingUsingEmbedded() :
                                     Neo4jModule.notForTestingUsingEmbedded()
+                    );
+                    install(
+                            isTesting ?
+                                    ModelModule.forTesting() :
+                                    new ModelModule()
                     );
                     install(new Neo4jGraphSearchModule());
                     if (isTesting) {
