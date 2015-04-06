@@ -157,6 +157,13 @@ public class UserResource {
         );
     }
 
+    @Path("password")
+    public UserPasswordResource getPasswordResource() {
+        return injector.getInstance(
+                UserPasswordResource.class
+        );
+    }
+
     @POST
     @Produces(MediaType.WILDCARD)
     @GraphTransactional

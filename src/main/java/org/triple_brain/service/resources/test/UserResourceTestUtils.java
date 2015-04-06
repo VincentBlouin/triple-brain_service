@@ -4,9 +4,12 @@
 
 package org.triple_brain.service.resources.test;
 
+import com.google.gson.Gson;
+import org.codehaus.jettison.json.JSONObject;
 import org.neo4j.rest.graphdb.query.QueryEngine;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.UserNameGenerator;
+import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.module.repository.user.UserRepository;
@@ -30,6 +33,9 @@ public class UserResourceTestUtils {
 
     @Inject
     UserNameGenerator userNameGenerator;
+
+    @Inject
+    Gson gson;
 
     @Path("{email}")
     @GET
@@ -80,6 +86,31 @@ public class UserResourceTestUtils {
         return Response.ok().entity(
                 UserJson.toJson(user)
         ).build();
+    }
+
+    @Path("/{username}/forget-password-token")
+    @GET
+    public Response getForgetPasswordToken(@PathParam("username") String username)throws Exception{
+        User user = userRepository.findByUsername(username);
+        return Response.ok().entity(
+                gson.toJson(
+                        userRepository.getUserForgetPasswordToken(user)
+                )
+        ).build();
+    }
+
+    @Path("/{username}/forget-password-token")
+    @POST
+    public Response setForgetPasswordToken(@PathParam("username") String username, String userForgetPasswordTokenJson)throws Exception{
+        UserForgetPasswordToken userForgetPasswordToken = gson.fromJson(
+                userForgetPasswordTokenJson,
+                UserForgetPasswordToken.class
+        );
+        userRepository.generateForgetPasswordToken(
+                userRepository.findByUsername(username),
+                userForgetPasswordToken
+        );
+        return Response.noContent().build();
     }
 
 }

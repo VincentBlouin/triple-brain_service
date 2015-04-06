@@ -4,11 +4,15 @@
 
 package org.triple_brain.service.utils;
 
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.eclipse.jetty.util.ajax.JSON;
+import org.triple_brain.module.model.User;
+import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,15 +26,15 @@ public class UserRestTestUtils {
 
     private WebResource resource;
 
-    public static UserRestTestUtils withWebResource(WebResource resource){
+    public static UserRestTestUtils withWebResource(WebResource resource) {
         return new UserRestTestUtils(resource);
     }
 
-    protected UserRestTestUtils(WebResource resource){
+    protected UserRestTestUtils(WebResource resource) {
         this.resource = resource;
     }
 
-    public boolean emailExists(String email){
+    public boolean emailExists(String email) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -42,7 +46,7 @@ public class UserRestTestUtils {
         return Boolean.valueOf(emailExistsStr);
     }
 
-    public void deleteAllUsers(){
+    public void deleteAllUsers() {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -55,18 +59,58 @@ public class UserRestTestUtils {
         );
     }
 
-    public JSONObject validForCreation(){
+    public JSONObject validForCreation() {
         JSONObject user = new JSONObject();
-        try{
+        try {
             user.put(EMAIL, randomEmail());
             user.put(PASSWORD, RestTestUtils.DEFAULT_PASSWORD);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         return user;
     }
 
-    private String randomEmail(){
+    public UserForgetPasswordToken getUserForgetPasswordToken(User user) {
+        ClientResponse response = resource
+                .path("service")
+                .path("test")
+                .path("users")
+                .path(user.username())
+                .path("forget-password-token")
+                .get(ClientResponse.class);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        try {
+            return new Gson().fromJson(
+                    response.getEntity(String.class),
+                    UserForgetPasswordToken.class
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setUserForgetPasswordToken(User user, UserForgetPasswordToken userForgetPasswordToken) {
+        ClientResponse response = resource
+                .path("service")
+                .path("test")
+                .path("users")
+                .path(user.username())
+                .path("forget-password-token")
+                .post(
+                        ClientResponse.class,
+                        new Gson().toJson(userForgetPasswordToken)
+                );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+
+    private String randomEmail() {
         return UUID.randomUUID().toString() + "@example.org";
     }
 }

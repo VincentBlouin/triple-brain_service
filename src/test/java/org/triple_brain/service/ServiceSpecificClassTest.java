@@ -10,6 +10,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        ResetPasswordResourceTest.class
+        UserPasswordResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner{}
