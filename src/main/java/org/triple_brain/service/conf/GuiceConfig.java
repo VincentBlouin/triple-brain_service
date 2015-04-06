@@ -102,6 +102,9 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 try {
                     final InitialContext jndiContext = new InitialContext();
+                    bindConstant().annotatedWith(Names.named("AppUrl")).to(
+                            (String) jndiContext.lookup("appUrl")
+                    );
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
                     bind(Boolean.class)

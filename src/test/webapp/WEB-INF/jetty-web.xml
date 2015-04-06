@@ -15,19 +15,10 @@
         </Arg>
     </New>
 
-    <!-- used when running no testing-->
     <New class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>solr_home_path</Arg>
+        <Arg>appUrl</Arg>
         <Arg>
-            target/maven-shared-archive-resources/solr/
-        </Arg>
-    </New>
-
-    <!-- used when running no testing -->
-    <New class="org.eclipse.jetty.plus.jndi.Resource">
-        <Arg>solr_xml_path_relative_to_home</Arg>
-        <Arg>
-            conf/solr.xml
+            http://localhost:8080
         </Arg>
     </New>
 </Configure>

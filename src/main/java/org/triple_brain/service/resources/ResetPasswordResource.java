@@ -4,6 +4,7 @@
 
 package org.triple_brain.service.resources;
 
+import com.google.inject.name.Named;
 import com.sun.jersey.api.core.HttpContext;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -31,6 +32,10 @@ public class ResetPasswordResource {
     @Inject
     ForgetPasswordEmail forgetPasswordEmail;
 
+    @Inject
+    @Named("AppUrl")
+    String appUrl;
+
     @Path("/")
     @POST
     public Response reset(JSONObject emailWrap, @Context HttpContext context){
@@ -47,7 +52,7 @@ public class ResetPasswordResource {
             );
             forgetPasswordEmail.send(
                     user,
-                    ""
+                    appUrl + "?reset-token=" + userForgetPasswordToken + "&user=" + user.username()
             );
             return Response.noContent().build();
         }catch(JSONException e){
