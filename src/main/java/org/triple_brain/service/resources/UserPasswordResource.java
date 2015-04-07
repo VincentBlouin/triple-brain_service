@@ -7,7 +7,8 @@ package org.triple_brain.service.resources;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
+import org.triple_brain.module.model.forgot_password.UserForgotPasswordToken;
+import org.triple_brain.module.model.validator.UserValidator;
 import org.triple_brain.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
@@ -29,9 +30,14 @@ public class UserPasswordResource {
             String email = changePasswordInfo.getString("email"),
                     newPassword = changePasswordInfo.getString("password"),
                     forgetPasswordToken = changePasswordInfo.getString("token");
+            if(!UserValidator.errorsForPassword(newPassword).isEmpty()){
+                throw new WebApplicationException(
+                        Response.Status.BAD_REQUEST
+                );
+            }
             User user = userRepository.findByEmail(email);
-            UserForgetPasswordToken userForgetPasswordToken = userRepository.getUserForgetPasswordToken(user);
-            Boolean isTokenValid = userForgetPasswordToken.hasToken(forgetPasswordToken) && !userForgetPasswordToken.isExpired();
+            UserForgotPasswordToken userForgotPasswordToken = userRepository.getUserForgetPasswordToken(user);
+            Boolean isTokenValid = userForgotPasswordToken.hasToken(forgetPasswordToken) && !userForgotPasswordToken.isExpired();
             if(!isTokenValid){
                 throw new WebApplicationException(
                         Response.Status.UNAUTHORIZED

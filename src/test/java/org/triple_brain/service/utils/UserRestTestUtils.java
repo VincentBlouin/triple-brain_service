@@ -7,12 +7,10 @@ package org.triple_brain.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
+import org.triple_brain.module.model.forgot_password.UserForgotPasswordToken;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -70,7 +68,7 @@ public class UserRestTestUtils {
         return user;
     }
 
-    public UserForgetPasswordToken getUserForgetPasswordToken(User user) {
+    public UserForgotPasswordToken getUserForgetPasswordToken(User user) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -85,14 +83,14 @@ public class UserRestTestUtils {
         try {
             return new Gson().fromJson(
                     response.getEntity(String.class),
-                    UserForgetPasswordToken.class
+                    UserForgotPasswordToken.class
             );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void setUserForgetPasswordToken(User user, UserForgetPasswordToken userForgetPasswordToken) {
+    public void setUserForgetPasswordToken(User user, UserForgotPasswordToken userForgotPasswordToken) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -101,7 +99,7 @@ public class UserRestTestUtils {
                 .path("forget-password-token")
                 .post(
                         ClientResponse.class,
-                        new Gson().toJson(userForgetPasswordToken)
+                        new Gson().toJson(userForgotPasswordToken)
                 );
         assertThat(
                 response.getStatus(),

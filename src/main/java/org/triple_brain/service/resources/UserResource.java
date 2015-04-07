@@ -175,7 +175,7 @@ public class UserResource {
                 jsonUser.optString(PASSWORD, "")
         );
         JSONArray jsonMessages = new JSONArray();
-        Map<String, String> errors = validate(jsonUser);
+        Map<String, String> errors = errorsForUserAsJson(jsonUser);
         if (userRepository.emailExists(jsonUser.optString(EMAIL, "")))
             errors.put(EMAIL, ALREADY_REGISTERED_EMAIL);
 

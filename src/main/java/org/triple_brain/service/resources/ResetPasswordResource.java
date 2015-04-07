@@ -9,8 +9,8 @@ import com.sun.jersey.api.core.HttpContext;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
-import org.triple_brain.module.model.forget_password.email.ForgetPasswordEmail;
+import org.triple_brain.module.model.forgot_password.UserForgotPasswordToken;
+import org.triple_brain.module.model.forgot_password.email.ForgotPasswordEmail;
 import org.triple_brain.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class ResetPasswordResource {
     UserRepository userRepository;
 
     @Inject
-    ForgetPasswordEmail forgetPasswordEmail;
+    ForgotPasswordEmail forgotPasswordEmail;
 
     @Inject
     @Named("AppUrl")
@@ -45,14 +45,14 @@ public class ResetPasswordResource {
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
             User user = userRepository.findByEmail(email);
-            UserForgetPasswordToken userForgetPasswordToken = UserForgetPasswordToken.generate();
+            UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
             userRepository.generateForgetPasswordToken(
                     user,
-                    userForgetPasswordToken
+                    userForgotPasswordToken
             );
-            forgetPasswordEmail.send(
+            forgotPasswordEmail.send(
                     user,
-                    appUrl + "?reset-token=" + userForgetPasswordToken + "&user=" + user.username()
+                    appUrl + "?reset-token=" + userForgotPasswordToken + "&user=" + user.username()
             );
             return Response.noContent().build();
         }catch(JSONException e){

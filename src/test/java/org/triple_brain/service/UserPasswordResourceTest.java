@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
+import org.triple_brain.module.model.forgot_password.UserForgotPasswordToken;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
@@ -26,7 +26,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
         logoutUsingCookie(authCookie);
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
-                UserForgetPasswordToken.generate().setResetPasswordToken("token")
+                UserForgotPasswordToken.generate().setResetPasswordToken("token")
         );
         assertThat(
                 changePassword(
@@ -45,7 +45,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
         logoutUsingCookie(authCookie);
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
-                UserForgetPasswordToken.generate().setResetPasswordToken("token")
+                UserForgotPasswordToken.generate().setResetPasswordToken("token")
         );
         assertThat(
                 authenticateUsingEmailAndPassword(
@@ -80,11 +80,11 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.UNAUTHORIZED.getStatusCode())
         );
-        UserForgetPasswordToken userForgetPasswordToken = UserForgetPasswordToken.generate();
-        userForgetPasswordToken.setResetPasswordToken("token");
+        UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
+        userForgotPasswordToken.setResetPasswordToken("token");
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
-                userForgetPasswordToken
+                userForgotPasswordToken
         );
         response = changePassword(
                 defaultAuthenticatedUser.email(),
@@ -100,36 +100,55 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void cant_change_password_if_forget_password_token_is_expired(){
         logoutUsingCookie(authCookie);
-        UserForgetPasswordToken userForgetPasswordToken = UserForgetPasswordToken.generate();
-        userForgetPasswordToken.setResetPasswordExpirationDate(
+        UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
+        userForgotPasswordToken.setResetPasswordExpirationDate(
                 new DateTime().minusHours(1).toDate()
         );
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
-                userForgetPasswordToken
+                userForgotPasswordToken
         );
         ClientResponse response = changePassword(
                 defaultAuthenticatedUser.email(),
                 "new_password",
-                userForgetPasswordToken.getToken()
+                userForgotPasswordToken.getToken()
         );
         assertThat(
                 response.getStatus(),
                 is(Response.Status.UNAUTHORIZED.getStatusCode())
         );
-        userForgetPasswordToken = UserForgetPasswordToken.generate();
+        userForgotPasswordToken = UserForgotPasswordToken.generate();
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
-                userForgetPasswordToken
+                userForgotPasswordToken
         );
         response = changePassword(
                 defaultAuthenticatedUser.email(),
                 "new_password",
-                userForgetPasswordToken.getToken()
+                userForgotPasswordToken.getToken()
         );
         assertThat(
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void password_cant_be_too_short(){
+        logoutUsingCookie(authCookie);
+        UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
+        userUtils().setUserForgetPasswordToken(
+                defaultAuthenticatedUser,
+                userForgotPasswordToken
+        );
+        ClientResponse response = changePassword(
+                defaultAuthenticatedUser.email(),
+                "short",
+                userForgotPasswordToken.getToken()
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.BAD_REQUEST.getStatusCode())
         );
     }
 
