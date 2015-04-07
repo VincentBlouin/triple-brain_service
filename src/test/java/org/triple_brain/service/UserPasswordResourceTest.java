@@ -4,12 +4,11 @@
 
 package org.triple_brain.service;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.joda.time.DateTime;
 import org.junit.Test;
-import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.forget_password.UserForgetPasswordToken;
 import org.triple_brain.module.model.json.UserJson;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
@@ -91,6 +90,42 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
                 defaultAuthenticatedUser.email(),
                 "new_password",
                 "token"
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void cant_change_password_if_forget_password_token_is_expired(){
+        logoutUsingCookie(authCookie);
+        UserForgetPasswordToken userForgetPasswordToken = UserForgetPasswordToken.generate();
+        userForgetPasswordToken.setResetPasswordExpirationDate(
+                new DateTime().minusHours(1).toDate()
+        );
+        userUtils().setUserForgetPasswordToken(
+                defaultAuthenticatedUser,
+                userForgetPasswordToken
+        );
+        ClientResponse response = changePassword(
+                defaultAuthenticatedUser.email(),
+                "new_password",
+                userForgetPasswordToken.getToken()
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.UNAUTHORIZED.getStatusCode())
+        );
+        userForgetPasswordToken = UserForgetPasswordToken.generate();
+        userUtils().setUserForgetPasswordToken(
+                defaultAuthenticatedUser,
+                userForgetPasswordToken
+        );
+        response = changePassword(
+                defaultAuthenticatedUser.email(),
+                "new_password",
+                userForgetPasswordToken.getToken()
         );
         assertThat(
                 response.getStatus(),
