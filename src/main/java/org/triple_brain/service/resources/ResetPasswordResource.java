@@ -52,7 +52,7 @@ public class ResetPasswordResource {
             );
             forgotPasswordEmail.send(
                     user,
-                    appUrl + "?reset-token=" + userForgotPasswordToken.getToken()
+                    appUrl + "?email="+user.email().replace("@", "%40")+"&reset-token=" + userForgotPasswordToken.getToken()
             );
             return Response.noContent().build();
         }catch(JSONException e){

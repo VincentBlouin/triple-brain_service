@@ -35,6 +35,11 @@ public class UserPasswordResource {
                         Response.Status.BAD_REQUEST
                 );
             }
+            if(!userRepository.emailExists(email)){
+                throw new WebApplicationException(
+                        Response.Status.UNAUTHORIZED
+                );
+            }
             User user = userRepository.findByEmail(email);
             UserForgotPasswordToken userForgotPasswordToken = userRepository.getUserForgetPasswordToken(user);
             Boolean isTokenValid = userForgotPasswordToken.hasToken(forgetPasswordToken) && !userForgotPasswordToken.isExpired();
