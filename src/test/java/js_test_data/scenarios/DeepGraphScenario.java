@@ -19,11 +19,11 @@ import javax.inject.Inject;
 
 public class DeepGraphScenario implements JsTestScenario {
     /*
-                 b1-r1->b2
-                 b2-r2->b3
-                 b2<-r3-b4
-                 b1<-r4-b5
-                 */
+     b1-r1->b2
+     b2-r2->b3
+     b2<-r3-b4
+     b1<-r4-b5
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -44,14 +44,10 @@ public class DeepGraphScenario implements JsTestScenario {
     public JSONObject build() {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
-        EdgeOperator r1 = b1.addRelationToVertex(b2);
-        r1.label("r1");
-        EdgeOperator r2 = b2.addRelationToVertex(b3);
-        r2.label("r2");
-        EdgeOperator r3 = b4.addRelationToVertex(b2);
-        r3.label("r3");
-        EdgeOperator r4 = b5.addRelationToVertex(b1);
-        r4.label("r4");
+        b1.addRelationToVertex(b2).label("r1");
+        b2.addRelationToVertex(b3).label("r2");
+        b4.addRelationToVertex(b2).label("r3");
+        b5.addRelationToVertex(b1).label("r4");
         SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterVertexId(
                 2,
                 b1.uri()
