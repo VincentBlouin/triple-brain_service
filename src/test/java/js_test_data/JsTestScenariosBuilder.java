@@ -41,7 +41,8 @@ public class JsTestScenariosBuilder {
             new GraphWithAnInverseRelationScenario(),
             new GraphWithSimilarRelationsScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
-            new KaraokeSchemaGraphScenario()
+            new KaraokeSchemaGraphScenario(),
+            new ProjectSchemaSearchResultsScenario()
     );
 
     UserGraph userGraph;

@@ -11,15 +11,16 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.triple_brain.module.model.ModelModule;
 import org.triple_brain.module.model.graph.ModelTestScenarios;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.Neo4jModule;
+import org.triple_brain.module.neo4j_search.Neo4jGraphSearchModule;
 
 public class JsTestScenariosStarter {
 
     protected static Injector injector;
 
-    public static void main(String [] args)throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         injector = Guice.createInjector(
                 Neo4jModule.forTestingUsingEmbedded(),
+                new Neo4jGraphSearchModule(),
                 new ModelModule(),
                 new AbstractModule() {
                     @Override

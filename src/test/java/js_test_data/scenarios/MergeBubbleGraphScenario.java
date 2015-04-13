@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
 import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphFactory;
@@ -76,7 +77,6 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
                 subGraphPojo
         );
     }
-
 
     private void createVertices(){
         b1 = vertexFactory.createForOwnerUsername(

@@ -51,7 +51,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
             b5;
 
     @Override
-    public JSONObject build() {
+    public String build() {
 
         try {
             UserGraph userGraph = graphFactory.createForUser(user);
@@ -75,7 +75,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             subGraphForB3
                     )
-            );
+            ).toString();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

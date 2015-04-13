@@ -59,7 +59,6 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
                 subGraphForMe
         );
     }
-
     private void createVertices() {
         me = vertexFactory.createForOwnerUsername(
                 user.username()

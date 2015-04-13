@@ -7,5 +7,5 @@ package js_test_data;
 import org.codehaus.jettison.json.JSONObject;
 
 public interface JsTestScenario {
-    JSONObject build();
+    Object build();
 }
