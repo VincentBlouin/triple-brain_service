@@ -42,7 +42,8 @@ public class JsTestScenariosBuilder {
             new GraphWithHiddenSimilarRelationsScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
             new KaraokeSchemaGraphScenario(),
-            new ProjectSchemaSearchResultsScenario()
+            new ProjectSchemaSearchResultsScenario(),
+            new FreebaseSearchResultForProjectScenario()
     );
 
 
