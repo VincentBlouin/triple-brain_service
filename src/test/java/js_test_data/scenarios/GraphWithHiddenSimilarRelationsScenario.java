@@ -4,9 +4,11 @@
 
 package js_test_data.scenarios;
 
+import com.google.common.collect.Sets;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.triple_brain.module.model.Image;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
@@ -15,12 +17,14 @@ import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 
 import javax.inject.Inject;
+import java.net.URI;
 
 public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
 
     /*
      * b1-r1->b2
      * b2 has hidden relations
+     * b2 has an image
      * b2-T-shirt->shirt1
      * b2-T-shirt->shirt2
      * shirt2 has an image
@@ -100,6 +104,13 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 user.username()
         );
         b2.label("b2");
+        b2.addImages(Sets.newHashSet(
+                        Image.withBase64ForSmallAndUriForBigger(
+                                "base64ForB2",
+                                URI.create("http://example.org/bigImageForB2")
+                        )
+                )
+        );
         shirt1 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
@@ -108,6 +119,13 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 user.username()
         );
         shirt2.label("shirt2");
+        shirt2.addImages(Sets.newHashSet(
+                        Image.withBase64ForSmallAndUriForBigger(
+                                "base64ForShirt2",
+                                URI.create("http://example.org/bigImageForShirt2")
+                        )
+                )
+        );
         distantBubble = vertexFactory.createForOwnerUsername(
                 user.username()
         );
