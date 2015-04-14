@@ -3,6 +3,7 @@
  */
 
 package js_test_data;
+
 import com.google.common.collect.Sets;
 import com.google.inject.Injector;
 import js_test_data.scenarios.*;
@@ -10,9 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.test.GraphComponentTest;
 import org.triple_brain.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
 
@@ -45,19 +44,12 @@ public class JsTestScenariosBuilder {
             new ProjectSchemaSearchResultsScenario()
     );
 
-    UserGraph userGraph;
-
-    User user = User.withEmail(
-            "roger.lamothe@example.org"
-    ).setUsername("roger_lamothe");
-
 
     public void build(Injector injector) throws Exception {
         Transaction transaction = graphDb.beginTx();
-        graphComponentTest.removeWholeGraph();
-        userGraph = neo4jUserGraphFactory.withUser(user);
         JSONObject jsonObject = new JSONObject();
         for(JsTestScenario scenario :scenarios){
+            graphComponentTest.removeWholeGraph();
             injector.injectMembers(scenario);
             jsonObject.put(
                     jsonKeyNameFromTestScenario(scenario),

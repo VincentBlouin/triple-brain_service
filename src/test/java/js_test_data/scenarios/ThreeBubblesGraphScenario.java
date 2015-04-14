@@ -4,7 +4,9 @@
 
 package js_test_data.scenarios;
 
+import com.google.gson.Gson;
 import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
@@ -15,8 +17,11 @@ import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
+import org.triple_brain.module.search.GraphSearch;
+import org.triple_brain.module.search.VertexSearchResult;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class ThreeBubblesGraphScenario implements JsTestScenario {
 
@@ -36,10 +41,13 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
 
 
     @Inject
-    protected GraphFactory graphFactory;
+    GraphFactory graphFactory;
 
     @Inject
-    protected VertexFactory vertexFactory;
+    VertexFactory vertexFactory;
+
+    @Inject
+    GraphSearch graphSearch;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -51,7 +59,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
             b5;
 
     @Override
-    public String build() {
+    public JSONObject build() {
 
         try {
             UserGraph userGraph = graphFactory.createForUser(user);
@@ -65,17 +73,26 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                     1,
                     b3.uri()
             );
+            List<VertexSearchResult> searchResultsForB1 = graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                    "b1",
+                    user
+            );
             return new JSONObject().put(
                     "getGraph",
                     SubGraphJson.toJson(
                             subGraphForB1
                     )
             ).put(
+                    "searchResultsForB1",
+                    new JSONArray(
+                            new Gson().toJson(searchResultsForB1)
+                    )
+            ).put(
                     "getSurroundBubble3Graph",
                     SubGraphJson.toJson(
                             subGraphForB3
                     )
-            ).toString();
+            );
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
