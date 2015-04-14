@@ -17,6 +17,7 @@ import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
+import org.triple_brain.module.search.GraphElementSearchResult;
 import org.triple_brain.module.search.GraphSearch;
 import org.triple_brain.module.search.VertexSearchResult;
 
@@ -77,6 +78,10 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                     "b1",
                     user
             );
+            List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
+                    "r2",
+                    user
+            );
             return new JSONObject().put(
                     "getGraph",
                     SubGraphJson.toJson(
@@ -86,6 +91,11 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                     "searchResultsForB1",
                     new JSONArray(
                             new Gson().toJson(searchResultsForB1)
+                    )
+            ).put(
+                    "searchResultsForR2",
+                    new JSONArray(
+                            new Gson().toJson(searchResultsForR2)
                     )
             ).put(
                     "getSurroundBubble3Graph",
