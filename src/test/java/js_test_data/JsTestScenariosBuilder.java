@@ -39,6 +39,7 @@ public class JsTestScenariosBuilder {
             new ThreeBubblesGraphScenario(),
             new GraphWithAnInverseRelationScenario(),
             new GraphWithSimilarRelationsScenario(),
+            new GraphWithHiddenSimilarRelationsScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
             new KaraokeSchemaGraphScenario(),
             new ProjectSchemaSearchResultsScenario()

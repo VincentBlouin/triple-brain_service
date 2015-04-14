@@ -25,7 +25,7 @@ import java.util.List;
 public class ProjectSchemaSearchResultsScenario implements JsTestScenario {
 
     /*
-     * schema project
+     * schema project with comment 'A project is defined as a collaborative enterprise ...'
      * project -> impact on the individual
      * project -> impact on society
      * project -> has objective
@@ -59,6 +59,7 @@ public class ProjectSchemaSearchResultsScenario implements JsTestScenario {
                 user.username()
         );
         project.label("project");
+        project.comment("A project is defined as a collaborative enterprise ...");
         project.addProperty().label("impact on the individual");
         project.addProperty().label("impact on society");
         project.addProperty().label("has objective");
@@ -72,6 +73,10 @@ public class ProjectSchemaSearchResultsScenario implements JsTestScenario {
         );
         List<GraphElementSearchResult> resultsForImpact = graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
                 "impact",
+                user
+        );
+        GraphElementSearchResult projectSearchDetails = graphSearch.getDetails(
+                project.uri(),
                 user
         );
         try {
@@ -89,8 +94,15 @@ public class ProjectSchemaSearchResultsScenario implements JsTestScenario {
                                     resultsForImpact
                             )
                     )
+            ).put(
+                    "projectSearchDetails",
+                    new JSONObject(
+                            new Gson().toJson(
+                                    projectSearchDetails
+                            )
+                    )
             );
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
