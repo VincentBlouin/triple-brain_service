@@ -8,10 +8,7 @@ import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.ModelTestScenarios;
-import org.triple_brain.module.model.graph.SubGraphPojo;
-import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.*;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
@@ -26,8 +23,14 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
      * b2 has hidden relations
      * b2-T-shirt->shirt1
      * b2-T-shirt->shirt2
+     * shirt2 has an image
      * relations T-shirt are identified to Freebase T-shirt.
      */
+
+    /*
+    * Distant graph
+    * bubble labled "distant bubble" will eventually connect to b2
+    */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -44,7 +47,9 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
             b1,
             b2,
             shirt1,
-            shirt2;
+            shirt2,
+            distantBubble;
+
     @Override
     public JSONObject build() {
         UserGraph userGraph = graphFactory.createForUser(user);
@@ -58,6 +63,15 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 1,
                 b2.uri()
         );
+        SubGraphPojo distantBubbleGraph = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                distantBubble.uri()
+        );
+        distantBubble.addRelationToVertex(b2);
+        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                b2.uri()
+        );
         try {
             return new JSONObject().put(
                     "b1Graph",
@@ -65,13 +79,19 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
             ).put(
                     "b2Graph",
                     SubGraphJson.toJson(b2Graph)
+            ).put(
+                    "distantBubbleGraph",
+                    SubGraphJson.toJson(distantBubbleGraph)
+            ).put(
+                    "b2GraphWhenConnectedToDistantBubble",
+                    SubGraphJson.toJson(b2GraphWhenConnectedToDistantBubble)
             );
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void createVertices(){
+    private void createVertices() {
         b1 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
@@ -88,9 +108,13 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 user.username()
         );
         shirt2.label("shirt2");
+        distantBubble = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        distantBubble.label("distant bubble");
     }
 
-    private void createRelations(){
+    private void createRelations() {
         b1.addRelationToVertex(b2).label("r1");
         EdgeOperator shirt1Relation = b2.addRelationToVertex(shirt1);
         shirt1Relation.label("shirt1");
