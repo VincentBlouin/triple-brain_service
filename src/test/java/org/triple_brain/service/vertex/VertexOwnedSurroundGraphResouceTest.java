@@ -4,7 +4,9 @@
 
 package org.triple_brain.service.vertex;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import junit.framework.Assert;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -20,6 +22,7 @@ import java.net.URI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtils {
 
@@ -78,6 +81,21 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
         assertThat(
                 graph.vertices().size(),
                 is(2)
+        );
+    }
+
+    @Test
+    public void cannot_get_surround_graph_of_a_vertex_after_its_been_removed() throws Exception {
+        ClientResponse response = getGraphOfCentralVertexUri(vertexBUri());
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        vertexUtils().removeVertexB();
+        response = getGraphOfCentralVertexUri(vertexBUri());
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NOT_FOUND.getStatusCode())
         );
     }
 

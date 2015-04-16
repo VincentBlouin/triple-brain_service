@@ -7,6 +7,7 @@ package org.triple_brain.service.resources.vertex;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.SubGraphPojo;
 import org.triple_brain.module.model.graph.UserGraph;
+import org.triple_brain.module.model.graph.exceptions.NonExistingResourceException;
 import org.triple_brain.module.model.graph.vertex.Vertex;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 
@@ -36,9 +37,15 @@ public class VertexOwnedSurroundGraphResource {
     @Path("/")
     @GraphTransactional
     public Response get() {
+        SubGraphPojo subGraphPojo;
+        try {
+            subGraphPojo = getGraph();
+        }catch(NonExistingResourceException e){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         return Response.ok(
                 SubGraphJson.toJson(
-                        getGraph()
+                        subGraphPojo
                 )
         ).build();
     }
