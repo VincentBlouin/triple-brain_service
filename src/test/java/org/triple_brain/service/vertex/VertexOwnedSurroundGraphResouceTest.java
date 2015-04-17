@@ -4,13 +4,10 @@
 
 package org.triple_brain.service.vertex;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import junit.framework.Assert;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.SubGraph;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
@@ -21,8 +18,6 @@ import java.net.URI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtils {
 

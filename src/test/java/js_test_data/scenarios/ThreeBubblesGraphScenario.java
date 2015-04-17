@@ -61,27 +61,26 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-
+        UserGraph userGraph = graphFactory.createForUser(user);
+        createVertices();
+        createEdges();
+        SubGraphPojo subGraphForB1 = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                b1.uri()
+        );
+        SubGraphPojo subGraphForB3 = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                b3.uri()
+        );
+        List<VertexSearchResult> searchResultsForB1 = graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                "b1",
+                user
+        );
+        List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
+                "r2",
+                user
+        );
         try {
-            UserGraph userGraph = graphFactory.createForUser(user);
-            createVertices();
-            createEdges();
-            SubGraphPojo subGraphForB1 = userGraph.graphWithDepthAndCenterVertexId(
-                    1,
-                    b1.uri()
-            );
-            SubGraphPojo subGraphForB3 = userGraph.graphWithDepthAndCenterVertexId(
-                    1,
-                    b3.uri()
-            );
-            List<VertexSearchResult> searchResultsForB1 = graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
-                    "b1",
-                    user
-            );
-            List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
-                    "r2",
-                    user
-            );
             return new JSONObject().put(
                     "getGraph",
                     SubGraphJson.toJson(

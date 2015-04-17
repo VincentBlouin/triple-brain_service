@@ -43,7 +43,8 @@ public class JsTestScenariosBuilder {
             new OneBubbleHavingSuggestionsGraphScenario(),
             new KaraokeSchemaGraphScenario(),
             new ProjectSchemaSearchResultsScenario(),
-            new FreebaseSearchResultForProjectScenario()
+            new FreebaseSearchResultForProjectScenario(),
+            new GraphWithCircularityScenario()
     );
 
 
