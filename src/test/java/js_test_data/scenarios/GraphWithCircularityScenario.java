@@ -54,6 +54,10 @@ public class GraphWithCircularityScenario implements JsTestScenario {
                 1,
                 b2.uri()
         );
+        SubGraphPojo b3Graph = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                b3.uri()
+        );
         try {
             return new JSONObject().put(
                     "b1Graph",
@@ -65,6 +69,11 @@ public class GraphWithCircularityScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             b2Graph
                     )
+            ).put(
+                    "b3Graph",
+                    SubGraphJson.toJson(
+                            b3Graph
+                    )
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -75,12 +84,15 @@ public class GraphWithCircularityScenario implements JsTestScenario {
         b1 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
+        b1.label("b1");
         b2 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
+        b2.label("b2");
         b3 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
+        b3.label("b3");
     }
 
     private void createRelations() {
