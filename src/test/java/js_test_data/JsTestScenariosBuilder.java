@@ -35,6 +35,7 @@ public class JsTestScenariosBuilder {
 
     Set<JsTestScenario> scenarios = Sets.newHashSet(
             new DeepGraphScenario(),
+            new DeepGraphWithCircularityScenario(),
             new MergeBubbleGraphScenario(),
             new ThreeBubblesGraphScenario(),
             new GraphWithAnInverseRelationScenario(),
@@ -42,10 +43,9 @@ public class JsTestScenariosBuilder {
             new GraphWithHiddenSimilarRelationsScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
             new KaraokeSchemaGraphScenario(),
-            new ProjectSchemaSearchResultsScenario(),
+            new ProjectSchemaScenario(),
             new FreebaseSearchResultForProjectScenario(),
-            new GraphWithCircularityScenario(),
-            new RelationInTwoSimilarRelationsGroup()
+            new GraphWithCircularityScenario()
     );
 
 

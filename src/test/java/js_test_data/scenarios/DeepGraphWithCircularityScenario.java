@@ -4,32 +4,31 @@
 
 package js_test_data.scenarios;
 
-import com.google.common.collect.Sets;
 import js_test_data.JsTestScenario;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.User;
 import org.triple_brain.module.model.graph.GraphFactory;
 import org.triple_brain.module.model.graph.SubGraphPojo;
 import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgeOperator;
-import org.triple_brain.module.model.graph.vertex.Vertex;
+import org.triple_brain.module.model.graph.edge.EdgePojo;
 import org.triple_brain.module.model.graph.vertex.VertexFactory;
 import org.triple_brain.module.model.graph.vertex.VertexOperator;
 import org.triple_brain.module.model.json.graph.SubGraphJson;
 
 import javax.inject.Inject;
+import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class MergeBubbleGraphScenario implements JsTestScenario {
+public class DeepGraphWithCircularityScenario implements JsTestScenario {
 
     /*
-     one bubble labeled merge
-     merge contains bubbles
-     b1-r1->b2
-     b2-r2->b3
-     b1<-r4-b4
-     */
+    * Keep relations order
+    * b3<-r1-b2
+    * b4-r2->b1
+    * b1-r3->b2
+    */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -46,7 +45,7 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
     private EdgeOperator
             r1,
             r2,
-            r4;
+            r3;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -54,28 +53,30 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
     public JSONObject build() {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
-        createEdges();
-        VertexOperator mergeBubble = vertexFactory.createFromGraphElements(
-                Sets.<Vertex>newHashSet(
-                        b1,
-                        b2,
-                        b3,
-                        b4
-                ),
-                Sets.<Edge>newHashSet(
-                        r1,
-                        r2,
-                        r4
-                )
-        );
-        mergeBubble.label("merge");
+        createRelations();
         SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterVertexId(
-                1,
-                mergeBubble.uri()
+                3,
+                b3.uri()
         );
-        return SubGraphJson.toJson(
-                subGraphPojo
+        Map<URI, EdgePojo> relations = new LinkedHashMap<>();
+        relations.put(
+                r1.uri(),
+                (EdgePojo) subGraphPojo.edgeWithIdentifier(r1.uri())
         );
+        relations.put(
+                r2.uri(),
+                (EdgePojo) subGraphPojo.edgeWithIdentifier(r2.uri())
+        );
+        relations.put(
+                r3.uri(),
+                (EdgePojo) subGraphPojo.edgeWithIdentifier(r3.uri())
+        );
+        SubGraphPojo subGraphPojoWithSpecificRelationsOrder = SubGraphPojo.withVerticesAndEdges(
+                subGraphPojo.vertices(),
+                relations
+        );
+
+        return SubGraphJson.toJson(subGraphPojoWithSpecificRelationsOrder);
     }
 
     private void createVertices() {
@@ -97,12 +98,12 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
         b4.label("b4");
     }
 
-    private void createEdges() {
-        r1 = b1.addRelationToVertex(b2);
+    private void createRelations() {
+        r1 = b2.addRelationToVertex(b3);
         r1.label("r1");
-        r2 = b2.addRelationToVertex(b3);
+        r2 = b4.addRelationToVertex(b1);
         r2.label("r2");
-        r4 = b4.addRelationToVertex(b1);
-        r4.label("r4");
+        r3 = b1.addRelationToVertex(b2);
+        r3.label("r3");
     }
 }

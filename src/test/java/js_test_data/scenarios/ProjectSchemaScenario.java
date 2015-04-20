@@ -1,3 +1,4 @@
+
 /*
  * Copyright Vincent Blouin under the Mozilla Public License 1.1
  */
@@ -22,7 +23,7 @@ import org.triple_brain.module.search.VertexSearchResult;
 import javax.inject.Inject;
 import java.util.List;
 
-public class ProjectSchemaSearchResultsScenario implements JsTestScenario {
+public class ProjectSchemaScenario implements JsTestScenario {
 
     /*
      * schema project with comment 'A project is defined as a collaborative enterprise ...'
@@ -81,14 +82,14 @@ public class ProjectSchemaSearchResultsScenario implements JsTestScenario {
         );
         try {
             return new JSONObject().put(
-                    "getForProject",
+                    "searchResultsForProject",
                     new JSONArray(
                             new Gson().toJson(
                                     resultsForProject
                             )
                     )
             ).put(
-                    "resultsForImpact",
+                    "searchResultsForImpact",
                     new JSONArray(
                             new Gson().toJson(
                                     resultsForImpact
