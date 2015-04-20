@@ -156,7 +156,7 @@ public class ResourceForTests {
         UserGraph userGraph = graphFactory.loadForUser(
                 currentUser
         );
-        SubGraph subGraph = userGraph.graphWithDefaultVertexAndDepth(10);
+        SubGraph subGraph = userGraph.graphWithAnyVertexAndDepth(10);
         for (Vertex vertex : subGraph.vertices().values()) {
             graphIndexer.indexVertex(
                     vertexFactory.withUri(
