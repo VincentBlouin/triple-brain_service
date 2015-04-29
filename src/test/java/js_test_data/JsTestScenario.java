@@ -4,8 +4,6 @@
 
 package js_test_data;
 
-import org.codehaus.jettison.json.JSONObject;
-
 public interface JsTestScenario {
     Object build();
 }
