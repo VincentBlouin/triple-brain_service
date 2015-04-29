@@ -7,10 +7,13 @@ package org.triple_brain.service;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.graph.IdentificationPojo;
 import org.triple_brain.module.model.graph.IdentificationType;
+import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.VertexSearchResult;
@@ -115,7 +118,6 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    @Ignore
     public void updating_label_of_property_updates_properties_name_of_schema_in_search() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
         //updating schema label so that it gets reindex
@@ -125,9 +127,11 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         );
         URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
         updateLabel(propertyUri, "prop1");
-        VertexSearchResult result = (VertexSearchResult) searchUtils().searchDetailsByUri(
-                schemaUri
-        );
+        VertexSearchResult result = searchUtils().vertexSearchResultsFromResponse(
+                searchUtils().autoCompletionForPublicVertices(
+                        "schema1"
+                )
+        ).iterator().next();
         assertTrue(
                 result.getProperties().containsKey(propertyUri)
         );
@@ -157,6 +161,23 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
                 searchResultA.hasProperties()
         );
     }
+
+//    @Test
+//    public void updating_note_returns_correct_status() throws Exception {
+//        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+//                vertexAUri(),
+//                vertexBUri(),
+//                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+//        );
+//        ClientResponse response = edgeUtils().updateNoteOfEdge(
+//                "some note",
+//                edgeBetweenAAndC
+//        );
+//        MatcherAssert.assertThat(
+//                response.getStatus(),
+//                Matchers.is(Response.Status.NO_CONTENT.getStatusCode())
+//        );
+//    }
 
     private ClientResponse updateLabel(URI propertyUri, String label) {
         try {
