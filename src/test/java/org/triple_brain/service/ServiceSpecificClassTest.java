@@ -9,10 +9,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.triple_brain.service.vertex.VertexOwnedSurroundGraphResouceTest;
 import org.triple_brain.service.vertex.VertexResourceTest;
-
-@Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexOwnedSurroundGraphResouceTest.class
+        EdgeResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner{}

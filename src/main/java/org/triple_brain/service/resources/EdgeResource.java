@@ -48,8 +48,8 @@ public class EdgeResource {
 
     @AssistedInject
     public EdgeResource(
-        @Assisted UserGraph userGraph
-    ){
+            @Assisted UserGraph userGraph
+    ) {
         this.userGraph = userGraph;
     }
 
@@ -60,11 +60,11 @@ public class EdgeResource {
     public Response addRelation(
             @QueryParam("sourceVertexId") String sourceVertexId,
             @QueryParam("destinationVertexId") String destinationVertexId
-        ){
-        try{
+    ) {
+        try {
             sourceVertexId = decodeUrlSafe(sourceVertexId);
             destinationVertexId = decodeUrlSafe(destinationVertexId);
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         VertexOperator sourceVertex = userGraph.vertexWithUri(URI.create(
@@ -84,8 +84,8 @@ public class EdgeResource {
     @Path("/{edgeShortId}")
     @GraphTransactional
     public Response removeRelation(
-       @Context HttpServletRequest request
-    ){
+            @Context HttpServletRequest request
+    ) {
         EdgeOperator edge = userGraph.edgeWithUri(Uris.get(
                 request.getRequestURI()
         ));
@@ -103,10 +103,10 @@ public class EdgeResource {
     @GraphTransactional
     public Response modifyEdgeLabel(
             @PathParam("edgeShortId") String edgeShortId,
-            JSONObject localizedLabel){
+            JSONObject localizedLabel) {
         URI edgeId = edgeUriFromShortId(edgeShortId);
         EdgeOperator edge = userGraph.edgeWithUri(
-            edgeId
+                edgeId
         );
         edge.label(
                 localizedLabel.optString(
@@ -122,21 +122,36 @@ public class EdgeResource {
     @Path("{shortId}/inverse")
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
-    public Response inverse(@PathParam("shortId") String shortId){
+    public Response inverse(@PathParam("shortId") String shortId) {
         edgeFromShortId(shortId).inverse();
         return Response.ok().build();
     }
 
     @Path("{shortId}/identification")
     @GraphTransactional
-    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId){
+    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forGraphElement(
                 edgeFromShortId(shortId),
                 GraphElementType.edge
         );
     }
 
-    private EdgeOperator edgeFromShortId(String shortId){
+    @POST
+    @GraphTransactional
+    @Path("{shortId}/comment")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response updateComment(
+            @PathParam("shortId") String shortId,
+            String comment
+    ) {
+        EdgeOperator edgeOperator = edgeFromShortId(shortId);
+        edgeOperator.comment(comment);
+        graphIndexer.indexRelation(edgeOperator);
+        graphIndexer.commit();
+        return Response.noContent().build();
+    }
+
+    private EdgeOperator edgeFromShortId(String shortId) {
         return userGraph.edgeWithUri(
                 edgeUriFromShortId(
                         shortId
@@ -144,8 +159,8 @@ public class EdgeResource {
         );
     }
 
-    private URI edgeUriFromShortId(String shortId){
-        return  new UserUris(
+    private URI edgeUriFromShortId(String shortId) {
+        return new UserUris(
                 userGraph.user()
         ).edgeUriFromShortId(
                 shortId

@@ -15,6 +15,7 @@ import org.triple_brain.module.model.graph.edge.Edge;
 import org.triple_brain.module.model.graph.edge.EdgePojo;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
 import java.util.Map;
@@ -74,6 +75,15 @@ public class EdgeRestTestUtils {
                 response.getEntity(JSONObject.class).toString(),
                 EdgePojo.class
         );
+    }
+
+    public ClientResponse updateNoteOfEdge(String note, Edge edge){
+        return resource
+                .path(edge.uri().getPath())
+                .path("comment")
+                .cookie(authCookie)
+                .type(MediaType.TEXT_PLAIN)
+                .post(ClientResponse.class, note);
     }
 
     public Edge edgeBetweenTwoVerticesUriGivenEdges(

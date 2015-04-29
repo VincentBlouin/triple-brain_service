@@ -38,8 +38,8 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         ClientResponse response = edgeUtils().addRelationBetweenVertexAAndC();
         assertThat(
                 response.getStatus(), is(
-                Response.Status.CREATED.getStatusCode()
-        ));
+                        Response.Status.CREATED.getStatusCode()
+                ));
     }
 
     @Test
@@ -75,8 +75,8 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         ClientResponse response = edgeUtils().removeEdgeBetweenVertexAAndB();
         assertThat(
                 response.getStatus(), is(
-                Response.Status.OK.getStatusCode()
-        ));
+                        Response.Status.OK.getStatusCode()
+                ));
     }
 
     @Test
@@ -99,8 +99,8 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         ClientResponse response = updateEdgeLabelBetweenAAndB("new edge label");
         assertThat(
                 response.getStatus(), is(
-                Response.Status.OK.getStatusCode()
-        ));
+                        Response.Status.OK.getStatusCode()
+                ));
     }
 
     private ClientResponse updateEdgeLabelBetweenAAndB(String label) throws Exception {
@@ -114,8 +114,8 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     public void inverseReturnsCorrectStatus() {
         assertThat(
                 inverseRelationBetweenAAndB().getStatus(), is(
-                Response.Status.OK.getStatusCode()
-        ));
+                        Response.Status.OK.getStatusCode()
+                ));
     }
 
     @Test
@@ -127,12 +127,12 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(
                 edgeBetweenAAndC.sourceVertex().uri().toString(), is(
-                vertexAUri().toString()
-        ));
+                        vertexAUri().toString()
+                ));
         assertThat(
                 edgeBetweenAAndC.destinationVertex().uri().toString(), is(
-                vertexBUri().toString()
-        ));
+                        vertexBUri().toString()
+                ));
         inverseRelationBetweenAAndB();
         edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
@@ -141,12 +141,56 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(
                 edgeBetweenAAndC.sourceVertex().uri().toString(), is(
-                vertexBUri().toString()
-        ));
+                        vertexBUri().toString()
+                ));
         assertThat(
                 edgeBetweenAAndC.destinationVertex().uri().toString(), is(
-                vertexAUri().toString()
-        ));
+                        vertexAUri().toString()
+                ));
+    }
+
+    @Test
+    public void updating_note_returns_correct_status() throws Exception {
+        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+        );
+        ClientResponse response = edgeUtils().updateNoteOfEdge(
+                "some note",
+                edgeBetweenAAndC
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void can_update_note() throws Exception {
+        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+        );
+        assertThat(
+                edgeBetweenAAndC.comment(),
+                is(
+                        not("some note")
+                )
+        );
+        edgeUtils().updateNoteOfEdge("some note", edgeBetweenAAndC);
+        edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+        );
+        assertThat(
+                edgeBetweenAAndC.comment(),
+                is(
+                        "some note"
+                )
+        );
     }
 
     private ClientResponse inverseRelationBetweenAAndB() {
