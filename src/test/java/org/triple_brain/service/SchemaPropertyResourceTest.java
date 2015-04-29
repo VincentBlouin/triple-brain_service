@@ -4,6 +4,7 @@
 
 package org.triple_brain.service;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -19,6 +20,7 @@ import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.net.URI;
@@ -162,22 +164,16 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-//    @Test
-//    public void updating_note_returns_correct_status() throws Exception {
-//        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
-//                vertexAUri(),
-//                vertexBUri(),
-//                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
-//        );
-//        ClientResponse response = edgeUtils().updateNoteOfEdge(
-//                "some note",
-//                edgeBetweenAAndC
-//        );
-//        MatcherAssert.assertThat(
-//                response.getStatus(),
-//                Matchers.is(Response.Status.NO_CONTENT.getStatusCode())
-//        );
-//    }
+    @Test
+    public void updating_note_returns_correct_status() throws Exception {
+        URI schemaUri = schemaUtils().uriOfCreatedSchema();
+        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        ClientResponse response = updateNote(propertyUri, "some note");
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
 
     private ClientResponse updateLabel(URI propertyUri, String label) {
         try {
@@ -193,6 +189,15 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private ClientResponse updateNote(URI propertyUri, String note) {
+        return resource
+                .path(propertyUri.toString())
+                .path("comment")
+                .cookie(authCookie)
+                .type(MediaType.TEXT_PLAIN)
+                .post(ClientResponse.class, note);
     }
 
     private URI uriOfCreatedProperty() {
