@@ -30,7 +30,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
     /*
      * schema project with comment 'A project is defined as a collaborative enterprise ...'
      * project -> impact on the individual
-     * project -> impact on society
+     * project -> impact on society with comment 'impact on society comment'
      * project -> has objective
      * project -> has component
      *
@@ -90,6 +90,10 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 project.uri(),
                 user
         );
+        GraphElementSearchResult impactOnSocietySearchDetails = graphSearch.getDetails(
+                impactOnSocietyProperty.uri(),
+                user
+        );
         buildSomeProject();
         SubGraphPojo someProjectGraph = userGraph.graphWithDepthAndCenterVertexId(
                 1,
@@ -118,6 +122,13 @@ public class ProjectSchemaScenario implements JsTestScenario {
                             )
                     )
             ).put(
+                    "impactOnSocietySearchDetails",
+                    new JSONObject(
+                            new Gson().toJson(
+                                    impactOnSocietySearchDetails
+                            )
+                    )
+            ).put(
                     "someProjectGraph",
                     SubGraphJson.toJson(someProjectGraph)
             );
@@ -136,6 +147,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         impactOnTheIndividualProperty.label("impact on the individual");
         impactOnSocietyProperty = project.addProperty();
         impactOnSocietyProperty.label("impact on society");
+        impactOnSocietyProperty.comment("impact on society comment");
         project.addProperty().label("has objective");
         project.addProperty().label("has component");
     }
