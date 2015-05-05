@@ -8,6 +8,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
+import org.triple_brain.module.model.graph.GraphElementType;
 import org.triple_brain.module.model.graph.GraphTransactional;
 import org.triple_brain.module.model.graph.UserGraph;
 import org.triple_brain.module.model.graph.schema.SchemaOperator;
@@ -15,6 +16,8 @@ import org.triple_brain.module.model.graph.schema.SchemaPojo;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.model.json.graph.SchemaJson;
 import org.triple_brain.module.search.GraphIndexer;
+import org.triple_brain.service.resources.GraphElementIdentificationResource;
+import org.triple_brain.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -32,13 +35,16 @@ public class SchemaResource {
     @Inject
     SchemaPropertyResourceFactory schemaPropertyResourceFactory;
 
+    @Inject
+    GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
+
     private UserGraph userGraph;
 
 
     @AssistedInject
     public SchemaResource(
             @Assisted UserGraph userGraph
-    ){
+    ) {
         this.userGraph = userGraph;
     }
 
@@ -121,7 +127,19 @@ public class SchemaResource {
         return Response.noContent().build();
     }
 
-    private URI schemaUriFromShortId(String shortId){
+    @GraphTransactional
+    @Path("/{shortId}/identification")
+    public GraphElementIdentificationResource getGraphElementIdentificationResource(@PathParam("shortId") String shortId) {
+        SchemaOperator schema = userGraph.schemaOperatorWithUri(schemaUriFromShortId(
+                shortId
+        ));
+        return graphElementIdentificationResourceFactory.forGraphElement(
+                schema,
+                GraphElementType.schema
+        );
+    }
+
+    private URI schemaUriFromShortId(String shortId) {
         return new UserUris(userGraph.user()).schemaUriFromShortId(
                 shortId
         );

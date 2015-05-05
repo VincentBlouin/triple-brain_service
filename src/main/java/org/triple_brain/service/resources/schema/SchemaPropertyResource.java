@@ -10,7 +10,6 @@ import com.google.inject.assistedinject.AssistedInject;
 import org.codehaus.jettison.json.JSONObject;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.*;
-import org.triple_brain.module.model.graph.edge.EdgeOperator;
 import org.triple_brain.module.model.graph.schema.SchemaOperator;
 import org.triple_brain.module.model.json.LocalizedStringJson;
 import org.triple_brain.module.search.GraphIndexer;

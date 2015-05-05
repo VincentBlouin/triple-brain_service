@@ -5,8 +5,12 @@
 package org.triple_brain.service;
 
 import com.sun.jersey.api.client.ClientResponse;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
+import org.triple_brain.module.model.graph.IdentificationPojo;
+import org.triple_brain.module.model.graph.IdentificationType;
 import org.triple_brain.module.model.graph.schema.SchemaPojo;
+import org.triple_brain.module.model.json.IdentificationJson;
 import org.triple_brain.module.model.json.graph.SchemaJson;
 import org.triple_brain.module.search.VertexSearchResult;
 import org.triple_brain.service.utils.GraphManipulationRestTestUtils;
@@ -176,6 +180,23 @@ public class SchemaResourceTest extends GraphManipulationRestTestUtils {
         assertThat(
                 schemaPojo.comment(),
                 is("dummy description")
+        );
+    }
+
+    @Test
+    public void adding_identification_returns_created_status() throws Exception {
+        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
+        identification.setType(
+                IdentificationType.same_as
+        );
+        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
+        ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
+                creatorPredicate,
+                schemaUtils().uriOfCreatedSchema()
+        );
+        assertThat(
+                response.getStatus(),
+                is(ClientResponse.Status.CREATED.getStatusCode())
         );
     }
 
