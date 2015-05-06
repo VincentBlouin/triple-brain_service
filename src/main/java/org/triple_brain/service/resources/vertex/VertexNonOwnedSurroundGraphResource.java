@@ -98,7 +98,6 @@ public class VertexNonOwnedSurroundGraphResource {
                 vertex.uri()
         );
         if (!vertexInVertices.isPublic()) {
-            System.out.println("removing " + vertexInVertices.uri());
             throwExceptionIfCenterVertex(vertexInVertices);
             graph.vertices().remove(vertexInVertices.uri());
             return true;
