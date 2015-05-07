@@ -9,6 +9,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.triple_brain.module.model.UserUris;
 import org.triple_brain.module.model.graph.GraphElement;
@@ -24,6 +25,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -129,6 +131,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         vertexALabel = vertexA().label();
         assertThat(vertexALabel, is("new vertex label"));
     }
+
     @Test
     public void label_can_have_special_characters() {
         String vertexALabel = vertexA().label();
@@ -266,16 +269,40 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        try{
+        try {
             URI.create(
                     response.getEntity(String.class)
             );
-        }catch(Exception e){
+        } catch (Exception e) {
             fail();
         }
     }
 
-    private ClientResponse getAnyVertexUri(){
+    @Test
+    @Ignore(
+            "Using measures on the client side to avoid fast addition of multiple childs. " +
+                    "Also I consider it not dramatic that the number of connected edges is not totally accurate."
+    )
+    public void number_of_connected_edges_is_ok_after_adding_vertices_concurrently() throws Exception {
+        assertThat(
+                vertexA().getNumberOfConnectedEdges(),
+                is(1)
+        );
+        Integer numberOfVerticesToAdd = 5;
+        CountDownLatch latch = new CountDownLatch(numberOfVerticesToAdd);
+        for (int i = 0; i < numberOfVerticesToAdd; i++) {
+            new Thread(new AddChildToVertexARunner(latch)).start();
+//            Thread.sleep(50);
+        }
+        latch.await();
+        assertThat(
+                vertexA().getNumberOfConnectedEdges(),
+                is(6)
+        );
+
+    }
+
+    private ClientResponse getAnyVertexUri() {
         return resource
                 .path(
                         new UserUris(defaultAuthenticatedUser).baseVertexUri().getPath()
@@ -284,4 +311,22 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }
+
+    private class AddChildToVertexARunner implements Runnable {
+        CountDownLatch latch = null;
+
+        public AddChildToVertexARunner(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        public void run() {
+            resource.path(
+                    vertexAUri().getPath()
+            ).cookie(
+                    authCookie
+            ).post();
+            latch.countDown();
+        }
+    }
+
 }
