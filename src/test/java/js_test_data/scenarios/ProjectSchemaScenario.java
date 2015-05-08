@@ -78,7 +78,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         vertexFactory.createForOwnerUsername(
                 user.username()
         ).label("impact");
-        List<VertexSearchResult> resultsForProject = graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+        List<VertexSearchResult> searchResultsForProject = graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
                 "project",
                 user
         );
@@ -104,7 +104,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
                     "searchResultsForProject",
                     new JSONArray(
                             new Gson().toJson(
-                                    resultsForProject
+                                    searchResultsForProject
                             )
                     )
             ).put(
