@@ -28,6 +28,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
     * some project-has component 1->component 1
     * some project-has component 2->component 2
     * has component is identified to component which has no images
+    * some project-other relation->-other bubble
     */
 
     @Inject
@@ -41,7 +42,8 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
             idea1,
             idea2,
             component1,
-            component2;
+            component2,
+            otherBubble;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -80,6 +82,10 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                 user.username()
         );
         component2.label("component 2");
+        otherBubble = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        otherBubble.label("other bubble");
     }
 
     public void createEdges() {
@@ -121,5 +127,9 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         EdgeOperator rComponent2 = someProject.addRelationToVertex(component2);
         rComponent2.label("has component 2");
         rComponent2.addGenericIdentification(componentIdentification);
+
+        someProject.addRelationToVertex(
+                otherBubble
+        ).label("other relation");
     }
 }
