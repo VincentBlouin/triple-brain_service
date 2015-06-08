@@ -6,7 +6,6 @@ package org.triple_brain.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
-import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Before;
 import org.triple_brain.module.common_utils.Uris;
 import org.triple_brain.module.model.User;

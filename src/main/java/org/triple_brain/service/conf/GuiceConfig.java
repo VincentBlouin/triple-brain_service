@@ -54,7 +54,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bind(UserResource.class);
                 bind(ResetPasswordResource.class);
                 bind(PublicSearchResource.class);
-                bind(ServerConfigResource.class);
 
                 install(builder.build(
                         GraphResourceFactory.class
