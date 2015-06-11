@@ -32,6 +32,12 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:git@github.com:VincentBlouin/bubl.guru_service.git</connection>
+        <developerConnection>scm:git:git@github.com:VincentBlouin/bubl.guru_service.git</developerConnection>
+        <url>git@github.com:VincentBlouin/bubl.guru_service.git</url>
+    </scm>
+
     <developers>
         <developer>
             <id>vblouin</id>
@@ -41,15 +47,23 @@
             <roles>
                 <role>developer</role>
             </roles>
+            <organization>bubl.guru</organization>
+            <organizationUrl>about.bubl.guru</organizationUrl>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -80,9 +94,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>guru.bubl.module</groupId>
