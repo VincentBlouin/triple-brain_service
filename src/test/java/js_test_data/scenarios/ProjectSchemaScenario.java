@@ -6,21 +6,21 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
+import guru.bubl.module.model.graph.*;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.*;
-import org.triple_brain.module.model.graph.edge.EdgeOperator;
-import org.triple_brain.module.model.graph.schema.SchemaOperator;
-import org.triple_brain.module.model.graph.vertex.VertexFactory;
-import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.graph.SubGraphJson;
-import org.triple_brain.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
-import org.triple_brain.module.search.GraphElementSearchResult;
-import org.triple_brain.module.search.GraphSearch;
-import org.triple_brain.module.search.VertexSearchResult;
+import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.schema.SchemaOperator;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
+import guru.bubl.module.search.GraphElementSearchResult;
+import guru.bubl.module.search.GraphSearch;
+import guru.bubl.module.search.VertexSearchResult;
 
 import javax.inject.Inject;
 import java.util.List;

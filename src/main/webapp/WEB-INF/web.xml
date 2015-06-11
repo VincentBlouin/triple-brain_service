@@ -14,7 +14,7 @@
     </session-config>
 
     <listener>
-        <listener-class>org.triple_brain.service.conf.GuiceConfig</listener-class>
+        <listener-class>guru.bubl.service.conf.GuiceConfig</listener-class>
     </listener>
 
     <filter>

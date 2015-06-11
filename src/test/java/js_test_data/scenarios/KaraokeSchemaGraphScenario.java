@@ -6,14 +6,14 @@ package js_test_data.scenarios;
 
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.GraphElementOperator;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.ModelTestScenarios;
-import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.schema.SchemaOperator;
-import org.triple_brain.module.model.json.graph.SchemaJson;
-import org.triple_brain.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
+import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ModelTestScenarios;
+import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.schema.SchemaOperator;
+import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
 
 import javax.inject.Inject;
 

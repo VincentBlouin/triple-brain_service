@@ -6,18 +6,17 @@ package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
 import js_test_data.JsTestScenario;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.graph.SubGraphPojo;
-import org.triple_brain.module.model.graph.UserGraph;
-import org.triple_brain.module.model.graph.edge.Edge;
-import org.triple_brain.module.model.graph.edge.EdgeOperator;
-import org.triple_brain.module.model.graph.vertex.Vertex;
-import org.triple_brain.module.model.graph.vertex.VertexFactory;
-import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.SubGraphPojo;
+import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.json.graph.SubGraphJson;
 
 import javax.inject.Inject;
 

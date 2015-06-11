@@ -5,16 +5,19 @@
 package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ModelTestScenarios;
+import guru.bubl.module.model.graph.SubGraphPojo;
+import guru.bubl.module.model.graph.UserGraph;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.triple_brain.module.model.Image;
-import org.triple_brain.module.model.User;
-import org.triple_brain.module.model.graph.*;
-import org.triple_brain.module.model.graph.edge.EdgeOperator;
-import org.triple_brain.module.model.graph.vertex.VertexFactory;
-import org.triple_brain.module.model.graph.vertex.VertexOperator;
-import org.triple_brain.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.Image;
+import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.json.graph.SubGraphJson;
 
 import javax.inject.Inject;
 import java.net.URI;

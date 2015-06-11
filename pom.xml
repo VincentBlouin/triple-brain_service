@@ -9,15 +9,40 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.triple_brain</groupId>
+        <groupId>guru.bubl</groupId>
         <artifactId>parent-pom</artifactId>
         <version>1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.triple_brain.web</groupId>
-    <artifactId>triple_brain-service</artifactId>
+    <groupId>guru.bubl.web</groupId>
+    <artifactId>service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>
+        Service layer of bubl.guru
+    </description>
+    <url>about.bubl.guru</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL)</name>
+            <url>http://www.gnu.org/licenses/gpl.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>vblouin</id>
+            <name>Vincent Blouin</name>
+            <email>vincent.blouin@gmail.com</email>
+            <timezone>-5</timezone>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
@@ -60,38 +85,38 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-user-repository-neo4j</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>user-repository-neo4j</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-common-utils</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>common-utils</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-search</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>search</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-neo4j-graph-manipulator</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>neo4j-graph-manipulator</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-neo4j-search</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>neo4j-search</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-model</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>model</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -204,22 +229,22 @@
         <!-- Tests -->
 
         <dependency>
-            <groupId>org.triple_brain.test</groupId>
+            <groupId>guru.bubl.test</groupId>
             <artifactId>graph_model-test</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-neo4j-graph-manipulator</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>neo4j-graph-manipulator</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
         </dependency>
 
         <dependency>
-            <groupId>org.triple_brain.module</groupId>
-            <artifactId>triple_brain-model</artifactId>
+            <groupId>guru.bubl.module</groupId>
+            <artifactId>model</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
         </dependency>

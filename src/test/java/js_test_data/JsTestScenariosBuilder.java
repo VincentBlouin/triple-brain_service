@@ -11,9 +11,9 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.triple_brain.module.model.graph.GraphFactory;
-import org.triple_brain.module.model.test.GraphComponentTest;
-import org.triple_brain.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.test.GraphComponentTest;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
 
 import javax.inject.Inject;
 import java.io.File;
