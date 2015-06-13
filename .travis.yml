@@ -1,6 +1,6 @@
 before_install: git clone https://github.com/VincentBlouin/travis-maven-deploy.git
   target/travis
-script: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && mvn clean deploy --settings target/travis/settings.xml
+script: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && mvn clean deploy -Dmaven.test.skip=true --settings target/travis/settings.xml
   || mvn clean verify --settings target/travis/settings.xml"
 branches:
   only:
@@ -14,7 +14,7 @@ env:
   - secure: mbZD1WWTz5eQD9cwNjVLlsP5NLsW9Fe/Ah6gAcl98h2HOqXFvkCLbHQH477RxCcbcZY3120bCkkaqJz+4aZdKSN0Ro1SMJ+2MtDozNge5pR8eMXOOPnat1w9CzE7j9icD3dNssuvDNmpraCjqmbFUYILED9fASWBwyoYMvHbPLm1jkpTuD2Soeh/7B7CZX1nvk2shsWxcJIKjpwz5mhY6LQXrdQ2m83VOhZTiNPfLG5uhYFirbjut538GkAmFDpzDZNjYx6dvrvemRWitAHzRSrxBElb0ODU6/p8hmcRzeyGtslVGm4qGpubcQDsmaUc3wQtEQKL1kU9CdJ7eZJOj0hA/IL9t/wSYNCE2p7XC3l/1ajpwO8JT58qUjO7MguVMYM0BF7UXEib7fQDmU1BWbvGY6ZEZzkxMM1UEYRcU6SC/uKv1p/pFq6QAOxKuUTm+3VyrpiAKFXlmCmmKk0rvzMRpds/61yuRz9Y/TGWeb/KkAxxiPlLEvjnGKoMAS7ld2RxbxEaKuI67sL1l2BfqBsXiC0i2n4mO6rpaurqcvSEkJ7XXvzOA5TXrD/zfzYxktNgzFateBa3IDwuM+dK9JCtuZ0zDJzBHXK15pUyaGG0SApK3jbzrwy/3R6Z8TGppJKhqH9J7lmWkpABaknJzUqE6AtZps8EdgTTYPr61vo=
 after_success:
 - sudo apt-get -y install sshpass
-- sshpass -p $FTP_PASSWORD scp target/*.war $FTP_USER@bubl.guru:/builds
+- sshpass -p $FTP_PASSWORD scp target/*.war $FTP_USER@bubl.guru:builds
 - git clone https://github.com/VincentBlouin/travis-build-children target/travis-build-children
 - chmod 755 target/travis-build-children/build_children.sh
 - target/travis-build-children/build_children.sh VincentBlouin/bubl.guru_test-run-webapps
