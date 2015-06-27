@@ -13,6 +13,7 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import guru.bubl.module.identification.IdentificationModuleNeo4j;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_search.Neo4jGraphSearchModule;
@@ -48,6 +49,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                         restInterceptor);
 
                 install(new Neo4jUserRepositoryModule());
+                install(new IdentificationModuleNeo4j());
 
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
