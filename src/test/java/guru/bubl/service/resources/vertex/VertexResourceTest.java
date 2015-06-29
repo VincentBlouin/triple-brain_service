@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.vertex;
+package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.json.StatementJsonFields;

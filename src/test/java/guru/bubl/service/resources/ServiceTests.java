@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service;
+package guru.bubl.service.resources;
 
 import com.googlecode.junittoolbox.SuiteClasses;
 import com.googlecode.junittoolbox.WildcardPatternSuite;

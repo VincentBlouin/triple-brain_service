@@ -6,10 +6,6 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.json.StatementJsonFields;
-import guru.bubl.service.resources.GraphElementIdentificationResource;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphTransactional;
@@ -20,9 +16,13 @@ import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.json.graph.EdgeJson;
 import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
 import guru.bubl.module.search.GraphIndexer;
+import guru.bubl.service.resources.GraphElementIdentificationResource;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

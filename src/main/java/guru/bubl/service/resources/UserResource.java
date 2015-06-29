@@ -5,12 +5,6 @@
 package guru.bubl.service.resources;
 
 import com.google.inject.Injector;
-import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
-import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
-import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphFactory;
@@ -20,6 +14,12 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.module.search.GraphIndexer;
+import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
+import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
+import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,9 +31,11 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
 
+import static guru.bubl.module.model.json.UserJson.EMAIL;
+import static guru.bubl.module.model.json.UserJson.PASSWORD;
+import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
+import static guru.bubl.module.model.validator.UserValidator.errorsForUserAsJson;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static guru.bubl.module.model.json.UserJson.*;
-import static guru.bubl.module.model.validator.UserValidator.*;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

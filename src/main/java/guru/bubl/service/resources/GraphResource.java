@@ -8,6 +8,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.Identification;
 import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
@@ -65,6 +66,13 @@ public class GraphResource {
                 userGraph()
         );
     }
+
+//    @Path("/identification")
+//    public IdentificationResource identificationResource() {
+//        return schemaResourceFactory.fromUserGraph(
+//                userGraph()
+//        );
+//    }
 
     private UserGraph userGraph() {
         return graphFactory.loadForUser(

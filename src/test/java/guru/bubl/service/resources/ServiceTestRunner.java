@@ -2,11 +2,12 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service;
+package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
+import guru.bubl.service.Launcher;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
