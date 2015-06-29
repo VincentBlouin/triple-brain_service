@@ -19,6 +19,8 @@ import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_search.Neo4jGraphSearchModule;
 import guru.bubl.service.RestInterceptor;
 import guru.bubl.service.resources.*;
+import guru.bubl.service.resources.identification.IdentificationResource;
+import guru.bubl.service.resources.identification.IdentificationResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
@@ -91,6 +93,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                         SchemaResourceFactory.class
                 ));
                 install(builder.build(
+                        IdentificationResourceFactory.class
+                ));
+                install(builder.build(
                         SchemaPropertyResourceFactory.class
                 ));
                 install(builder.build(
@@ -127,6 +132,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
+                        bind(IdentificationResourceTestUtils.class);
                     }
                 } catch (NamingException e) {
                     throw new RuntimeException(e);

@@ -67,13 +67,6 @@ public class GraphResource {
         );
     }
 
-//    @Path("/identification")
-//    public IdentificationResource identificationResource() {
-//        return schemaResourceFactory.fromUserGraph(
-//                userGraph()
-//        );
-//    }
-
     private UserGraph userGraph() {
         return graphFactory.loadForUser(
                 user

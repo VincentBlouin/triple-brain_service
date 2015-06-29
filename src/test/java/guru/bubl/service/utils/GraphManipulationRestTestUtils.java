@@ -5,6 +5,7 @@
 package guru.bubl.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.graph.Identification;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import guru.bubl.module.common_utils.Uris;
@@ -94,6 +95,14 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
                 resource,
                 authCookie,
                 defaultAuthenticatedUserAsJson
+        );
+    }
+
+    protected IdentificationRestTestUtils identificationUtils() {
+        return IdentificationRestTestUtils.withWebResourceAndAuthCookie(
+                resource,
+                authCookie,
+                defaultAuthenticatedUser
         );
     }
 

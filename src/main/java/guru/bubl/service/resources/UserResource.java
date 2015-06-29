@@ -14,6 +14,8 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.module.search.GraphIndexer;
+import guru.bubl.service.resources.identification.IdentificationResource;
+import guru.bubl.service.resources.identification.IdentificationResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
@@ -36,6 +38,7 @@ import static guru.bubl.module.model.json.UserJson.PASSWORD;
 import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
 import static guru.bubl.module.model.validator.UserValidator.errorsForUserAsJson;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -56,6 +59,9 @@ public class UserResource {
 
     @Inject
     SearchResourceFactory searchResourceFactory;
+
+    @Inject
+    IdentificationResourceFactory identificationResourceFactory;
 
     @Inject
     SchemaNonOwnedResourceFactory schemaNonOwnedResourceFactory;
@@ -133,6 +139,15 @@ public class UserResource {
             );
         }
         throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
+    @Path("{username}/identification")
+    public IdentificationResource identificationResource(
+            @PathParam("username") String username
+    ) {
+        return identificationResourceFactory.forAuthenticatedUsername(
+                username
+        );
     }
 
     @Path("{username}/admin")
