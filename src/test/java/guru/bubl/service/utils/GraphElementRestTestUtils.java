@@ -7,6 +7,7 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.model.graph.Identification;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
@@ -34,6 +35,13 @@ public class GraphElementRestTestUtils {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
+    }
+
+    public ClientResponse addIdentificationToGraphElementWithUri(IdentificationPojo identification, URI graphElementUri) {
+        return addIdentificationToGraphElementWithUri(
+                IdentificationJson.singleToJson(identification),
+                graphElementUri
+        );
     }
 
     public ClientResponse addIdentificationToGraphElementWithUri(JSONObject identification, URI graphElementUri) {

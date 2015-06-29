@@ -5,14 +5,12 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.graph.*;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.Identification;
-import guru.bubl.module.model.graph.IdentificationPojo;
-import guru.bubl.module.model.graph.IdentificationType;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.json.IdentificationJson;
 
@@ -23,6 +21,8 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GraphElementIdentificationResourceTest extends GraphManipulationRestTestUtils {
 
@@ -133,16 +133,41 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
-    private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
+    @Test
+    public void identified_graph_element_is_part_of_related_identifications() throws Exception {
+        FriendlyResourcePojo edgeBetweenAAndB = new FriendlyResourcePojo(
+                edgeUtils().edgeBetweenAAndB().uri()
+        );
+        assertFalse(
+                identificationUtils().getRelatedResourcesForIdentification(
+                        new ModelTestScenarios().possessionIdentification()
+                ).contains(edgeBetweenAAndB)
+        );
         IdentificationPojo identification = modelTestScenarios.creatorPredicate();
         identification.setType(
                 IdentificationType.same_as
         );
-        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
+        IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
+        possession.setType(IdentificationType.same_as);
+        graphElementUtils().addIdentificationToGraphElementWithUri(
+                possession,
+                edgeBetweenAAndB.uri()
+        );
+        assertTrue(
+                identificationUtils().getRelatedResourcesForIdentification(
+                        new ModelTestScenarios().possessionIdentification()
+                ).contains(edgeBetweenAAndB)
+        );
+    }
 
+    private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
+        IdentificationPojo creatorPredicate = modelTestScenarios.creatorPredicate();
+        creatorPredicate.setType(
+                IdentificationType.same_as
+        );
         return graphElementUtils().addIdentificationToGraphElementWithUri(
                 creatorPredicate,
-                URI.create(edge.uri().toString())
+                edge.uri()
         );
     }
 

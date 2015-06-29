@@ -24,7 +24,7 @@ public class IdentificationResourceTestUtils {
     @Inject
     RelatedIdentificationOperator relatedIdentificationOperator;
 
-    @Path("relate/{resourceId}")
+    @Path("relate-to-tshirt/{resourceId}")
     @GraphTransactional
     @POST
     public Response vertexWithId(@PathParam("resourceId") String resourceId){

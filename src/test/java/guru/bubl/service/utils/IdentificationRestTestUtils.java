@@ -12,13 +12,9 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.Identification;
 import guru.bubl.module.model.json.FriendlyResourceJson;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import scala.util.parsing.json.JSON;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import java.net.URLEncoder;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -47,7 +43,7 @@ public class IdentificationRestTestUtils {
                 .path("service")
                 .path("test")
                 .path("identification")
-                .path("relate")
+                .path("relate-to-tshirt")
                 .path(
                         Uris.encodeURL(
                                 friendlyResource.uri()
