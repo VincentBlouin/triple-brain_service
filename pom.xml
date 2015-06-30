@@ -220,7 +220,6 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-plus</artifactId>
-            <version>9.2.11.v20150529</version>
         </dependency>
 
         <dependency>
@@ -298,13 +297,11 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-security</artifactId>
-            <version>9.2.11.v20150529</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.2.11.v20150529</version>
             <scope>test</scope>
         </dependency>
         <dependency>
