@@ -7,6 +7,7 @@ package guru.bubl.service.resources.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import guru.bubl.service.utils.RestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.FriendlyResource;
@@ -98,7 +99,10 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 is(1)
         );
         Identification addedIdentification = vertexA().getAdditionalTypes().values().iterator().next();
-        removeIdentificationOfVertexA(addedIdentification);
+        removeIdentificationToResource(
+                addedIdentification,
+                vertexA()
+        );
         assertThat(
                 vertexA().getAdditionalTypes().size(),
                 is(0)
@@ -162,16 +166,28 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 edgeUtils().edgeBetweenAAndB().uri()
         );
         IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
-        graphElementUtils().addIdentificationToGraphElementWithUri(
+        possession.setType(IdentificationType.same_as);
+        ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
                 possession,
                 edgeBetweenAAndB.uri()
         );
+        possession = graphElementUtils().getIdentificationFromResponse(
+                response
+        );
         assertTrue(
+                identificationUtils().getRelatedResourcesForIdentification(
+                        possession
+                ).contains(edgeBetweenAAndB)
+        );
+        removeIdentificationToResource(
+                possession,
+                edgeBetweenAAndB
+        );
+        assertFalse(
                 identificationUtils().getRelatedResourcesForIdentification(
                         new ModelTestScenarios().possessionIdentification()
                 ).contains(edgeBetweenAAndB)
         );
-
     }
 
 
@@ -186,9 +202,9 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
-    private ClientResponse removeIdentificationOfVertexA(Identification identification) throws Exception {
-        return resource
-                .path(vertexAUri().getPath())
+    private ClientResponse removeIdentificationToResource(Identification identification, FriendlyResource resource) throws Exception {
+        return RestTestUtils.resource
+                .path(resource.uri().getPath())
                 .path("identification")
                 .queryParam(
                         "uri",

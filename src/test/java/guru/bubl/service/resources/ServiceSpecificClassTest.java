@@ -13,6 +13,6 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        IdentificationResourceTest.class
+        GraphElementIdentificationResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {}

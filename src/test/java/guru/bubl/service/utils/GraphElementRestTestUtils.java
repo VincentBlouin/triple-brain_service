@@ -64,6 +64,12 @@ public class GraphElementRestTestUtils {
 
     }
 
+    public IdentificationPojo getIdentificationFromResponse(ClientResponse response) {
+        return IdentificationJson.singleFromJson(
+                response.getEntity(String.class)
+        );
+    }
+
     public URI identificationUriFromResponse(ClientResponse response) {
         URI responseUri = URI.create(response.getHeaders().get("Location").get(0));
         UserUris userUris = new UserUris(authenticatedUser);

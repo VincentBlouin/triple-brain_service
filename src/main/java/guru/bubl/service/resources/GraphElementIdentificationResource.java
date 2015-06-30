@@ -113,12 +113,16 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        Identification friendlyResource = new IdentificationPojo(
-                new FriendlyResourcePojo(
-                        URI.create(identificationUri)
-                )
+        Identification identification = getIdentificationHavingInternalUri(
+                URI.create(identificationUri)
         );
-        graphElement.removeIdentification(friendlyResource);
+        graphElement.removeIdentification(identification);
+        relatedIdentificationOperator.removeRelatedResourceToIdentification(
+                new FriendlyResourcePojo(
+                        graphElement.uri()
+                ),
+                identification
+        );
         reindexGraphElement();
         return Response.noContent().build();
     }
@@ -142,5 +146,14 @@ public class GraphElementIdentificationResource {
             );
             graphIndexer.commit();
         }
+    }
+
+    public Identification getIdentificationHavingInternalUri(URI uri){
+        for(Identification identification : graphElement.getIdentifications().values()){
+            if(identification.uri().equals(uri)){
+                return identification;
+            }
+        }
+        return null;
     }
 }
