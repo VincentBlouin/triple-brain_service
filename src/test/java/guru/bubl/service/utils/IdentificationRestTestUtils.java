@@ -69,10 +69,20 @@ public class IdentificationRestTestUtils {
     }
 
     public ClientResponse getRelatedResourcesForIdentificationClientResponse(Identification identification) {
-        ClientResponse clientResponse = resource
+        return getRelatedResourcesForIdentificationClientResponseForUsername(
+                identification,
+                authenticatedUser.username()
+        );
+    }
+
+    public ClientResponse getRelatedResourcesForIdentificationClientResponseForUsername(
+            Identification identification,
+            String username
+    ) {
+        return resource
                 .path("service")
                 .path("users")
-                .path(authenticatedUser.username())
+                .path(username)
                 .path("identification")
                 .path(
                         Uris.encodeURL(
@@ -81,10 +91,5 @@ public class IdentificationRestTestUtils {
                 )
                 .cookie(authCookie)
                 .get(ClientResponse.class);
-        assertThat(
-                clientResponse.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-        return clientResponse;
     }
 }

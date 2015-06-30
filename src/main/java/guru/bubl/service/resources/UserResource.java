@@ -145,8 +145,13 @@ public class UserResource {
     public IdentificationResource identificationResource(
             @PathParam("username") String username
     ) {
-        return identificationResourceFactory.forAuthenticatedUsername(
-                username
+        if (!isUserNameTheOneInSession(username)) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
+        return identificationResourceFactory.forAuthenticatedUser(
+                GraphManipulatorResourceUtils.userFromSession(
+                        request.getSession()
+                )
         );
     }
 

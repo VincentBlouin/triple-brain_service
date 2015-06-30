@@ -27,13 +27,13 @@ public class IdentificationResource {
     @Inject
     RelatedIdentificationOperator relatedIdentificationOperator;
 
-    protected String authenticatedUsername;
+    protected User authenticatedUser;
 
     @AssistedInject
     public IdentificationResource(
-            @Assisted String authenticatedUsername
+            @Assisted User authenticatedUser
     ) {
-        this.authenticatedUsername = authenticatedUsername;
+        this.authenticatedUser = authenticatedUser;
     }
 
     @GET
@@ -44,7 +44,7 @@ public class IdentificationResource {
                 new IdentificationPojo(
                         URI.create(identificationUri)
                 ),
-                User.withUsername(authenticatedUsername)
+                authenticatedUser
         );
         return Response.ok().entity(
                 FriendlyResourceJson.multipleToJson(

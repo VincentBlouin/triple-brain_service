@@ -143,10 +143,6 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                         new ModelTestScenarios().possessionIdentification()
                 ).contains(edgeBetweenAAndB)
         );
-        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
-        identification.setType(
-                IdentificationType.same_as
-        );
         IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setType(IdentificationType.same_as);
         graphElementUtils().addIdentificationToGraphElementWithUri(
@@ -159,6 +155,25 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 ).contains(edgeBetweenAAndB)
         );
     }
+
+    @Test
+    public void removing_identifications_to_graph_element_removes_it_from_related_identifications() throws Exception {
+        FriendlyResourcePojo edgeBetweenAAndB = new FriendlyResourcePojo(
+                edgeUtils().edgeBetweenAAndB().uri()
+        );
+        IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
+        graphElementUtils().addIdentificationToGraphElementWithUri(
+                possession,
+                edgeBetweenAAndB.uri()
+        );
+        assertTrue(
+                identificationUtils().getRelatedResourcesForIdentification(
+                        new ModelTestScenarios().possessionIdentification()
+                ).contains(edgeBetweenAAndB)
+        );
+
+    }
+
 
     private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
         IdentificationPojo creatorPredicate = modelTestScenarios.creatorPredicate();
