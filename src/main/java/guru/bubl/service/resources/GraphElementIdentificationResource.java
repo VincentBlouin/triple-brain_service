@@ -113,7 +113,7 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        Identification identification = getIdentificationHavingInternalUri(
+        Identification identification = graphElement.getIdentificationHavingInternalUri(
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(identification);
@@ -146,14 +146,5 @@ public class GraphElementIdentificationResource {
             );
             graphIndexer.commit();
         }
-    }
-
-    public Identification getIdentificationHavingInternalUri(URI uri){
-        for(Identification identification : graphElement.getIdentifications().values()){
-            if(identification.uri().equals(uri)){
-                return identification;
-            }
-        }
-        return null;
     }
 }
