@@ -3,6 +3,7 @@
  */
 
 package guru.bubl.service.resources.test;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.service.resources.GraphManipulatorResourceUtils;
 import org.neo4j.graphdb.GraphDatabaseService;
 import guru.bubl.module.model.WholeGraph;
@@ -53,9 +54,7 @@ public class GraphResourceTestUtils {
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
-        Iterator<VertexInSubGraphOperator> vertexIt = wholeGraph.getAllVertices();
-        while(vertexIt.hasNext()){
-            VertexOperator vertex = vertexIt.next();
+        for(VertexInSubGraphOperator vertex: wholeGraph.getAllVertices()){
             vertex.setNumberOfConnectedEdges(0);
         }
         return Response.ok().build();
