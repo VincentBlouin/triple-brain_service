@@ -6,7 +6,6 @@ package guru.bubl.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.identification.RelatedIdentificationOperator;
 import guru.bubl.module.model.graph.*;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.UserUris;
@@ -28,9 +27,6 @@ public class GraphElementIdentificationResource {
 
     @Inject
     GraphIndexer graphIndexer;
-
-    @Inject
-    RelatedIdentificationOperator relatedIdentificationOperator;
 
     private GraphElementOperator graphElement;
     private GraphElementType graphElementType;
@@ -92,12 +88,6 @@ public class GraphElementIdentificationResource {
             default:
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        relatedIdentificationOperator.relateResourceToIdentification(
-                new FriendlyResourcePojo(
-                        graphElement.uri()
-                ),
-                identification
-        );
         reindexGraphElement();
         return Response.created(URI.create(
                 UserUris.graphElementShortId(identification.uri())
@@ -117,12 +107,6 @@ public class GraphElementIdentificationResource {
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(identification);
-        relatedIdentificationOperator.removeRelatedResourceToIdentification(
-                new FriendlyResourcePojo(
-                        graphElement.uri()
-                ),
-                identification
-        );
         reindexGraphElement();
         return Response.noContent().build();
     }

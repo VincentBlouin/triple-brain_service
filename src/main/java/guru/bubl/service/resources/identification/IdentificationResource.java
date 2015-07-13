@@ -24,9 +24,6 @@ import java.util.Set;
 @Consumes(MediaType.APPLICATION_JSON)
 public class IdentificationResource {
 
-    @Inject
-    RelatedIdentificationOperator relatedIdentificationOperator;
-
     protected User authenticatedUser;
 
     @AssistedInject
