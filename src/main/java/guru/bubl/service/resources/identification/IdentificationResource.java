@@ -6,7 +6,7 @@ package guru.bubl.service.resources.identification;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.identification.RelatedIdentificationOperator;
+import guru.bubl.module.model.IdentifiedTo;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphTransactional;
@@ -26,6 +26,9 @@ public class IdentificationResource {
 
     protected User authenticatedUser;
 
+    @Inject
+    IdentifiedTo identifiedTo;
+
     @AssistedInject
     public IdentificationResource(
             @Assisted User authenticatedUser
@@ -37,7 +40,7 @@ public class IdentificationResource {
     @GraphTransactional
     @Path("/{identificationUri}")
     public Response get(@PathParam("identificationUri") String identificationUri) {
-        Set<FriendlyResourcePojo> relatedResources = relatedIdentificationOperator.getResourcesRelatedToIdentificationForUser(
+        Set<FriendlyResourcePojo> relatedResources = identifiedTo.getForIdentificationAndUser(
                 new IdentificationPojo(
                         URI.create(identificationUri)
                 ),

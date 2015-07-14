@@ -13,20 +13,18 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import guru.bubl.module.identification.IdentificationModuleNeo4j;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_search.Neo4jGraphSearchModule;
+import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
 import guru.bubl.service.RestInterceptor;
 import guru.bubl.service.resources.*;
-import guru.bubl.service.resources.identification.IdentificationResource;
 import guru.bubl.service.resources.identification.IdentificationResourceFactory;
+import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
+import guru.bubl.service.resources.schema.SchemaResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
-import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
-import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
-import guru.bubl.service.resources.schema.SchemaResourceFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -51,7 +49,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                         restInterceptor);
 
                 install(new Neo4jUserRepositoryModule());
-                install(new IdentificationModuleNeo4j());
 
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
@@ -132,7 +129,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
-                        bind(IdentificationResourceTestUtils.class);
                     }
                 } catch (NamingException e) {
                     throw new RuntimeException(e);

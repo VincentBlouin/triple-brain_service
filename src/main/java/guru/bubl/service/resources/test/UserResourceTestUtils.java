@@ -5,7 +5,7 @@
 package guru.bubl.service.resources.test;
 
 import com.google.gson.Gson;
-import org.neo4j.rest.graphdb.query.QueryEngine;
+import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserNameGenerator;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
 import java.util.Collections;
 
 @Path("test/users")
@@ -25,10 +26,10 @@ import java.util.Collections;
 public class UserResourceTestUtils {
 
     @Inject
-    UserRepository userRepository;
+    protected Connection connection;
 
     @Inject
-    protected QueryEngine queryEngine;
+    UserRepository userRepository;
 
     @Inject
     UserNameGenerator userNameGenerator;
@@ -39,7 +40,7 @@ public class UserResourceTestUtils {
     @Path("{email}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response emailExists(@PathParam("email") String email)throws Exception{
+    public Response emailExists(@PathParam("email") String email) throws Exception {
         return Response.ok(
                 userRepository.emailExists(email).toString()
         ).build();
@@ -49,18 +50,18 @@ public class UserResourceTestUtils {
     @DELETE
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteAllUsers()throws Exception{
-        queryEngine.query(
-                "START n=node:node_auto_index('type:user') DELETE n",
-                Collections.EMPTY_MAP
-        );
+    public Response deleteAllUsers() throws Exception {
+        NoExRun.wrap(() ->
+                connection.createStatement().executeQuery(
+                        "START n=node:node_auto_index('type:user') DELETE n"
+                )).get();
         return Response.noContent().build();
     }
 
 
     @POST
     @Path("/vince")
-    public Response createUserVince()throws Exception{
+    public Response createUserVince() throws Exception {
         userNameGenerator.setOverride(new UserNameGenerator() {
             @Override
             public String generate() {
@@ -89,7 +90,7 @@ public class UserResourceTestUtils {
 
     @Path("/{username}/forget-password-token")
     @GET
-    public Response getForgetPasswordToken(@PathParam("username") String username)throws Exception{
+    public Response getForgetPasswordToken(@PathParam("username") String username) throws Exception {
         User user = userRepository.findByUsername(username);
         return Response.ok().entity(
                 gson.toJson(
@@ -100,7 +101,7 @@ public class UserResourceTestUtils {
 
     @Path("/{username}/forget-password-token")
     @POST
-    public Response setForgetPasswordToken(@PathParam("username") String username, String userForgetPasswordTokenJson)throws Exception{
+    public Response setForgetPasswordToken(@PathParam("username") String username, String userForgetPasswordTokenJson) throws Exception {
         UserForgotPasswordToken userForgotPasswordToken = gson.fromJson(
                 userForgetPasswordTokenJson,
                 UserForgotPasswordToken.class
