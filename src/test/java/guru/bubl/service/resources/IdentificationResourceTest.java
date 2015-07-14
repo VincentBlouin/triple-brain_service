@@ -5,8 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.FriendlyResourcePojo;
-import guru.bubl.module.model.graph.ModelTestScenarios;
+import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
@@ -29,8 +28,13 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils{
         assertTrue(
                 relatedResources.isEmpty()
         );
-        identificationUtils().relateResourceToTshirt(
-                vertexA()
+        IdentificationPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
+        tShirtAsIdentification.setType(
+                IdentificationType.generic
+        );
+        graphElementUtils().addIdentificationToGraphElementWithUri(
+                tShirtAsIdentification,
+                vertexAUri()
         );
         relatedResources = identificationUtils().getRelatedResourcesForIdentification(
                 new ModelTestScenarios().tShirt()
@@ -43,8 +47,13 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils{
     @Test
     public void cannot_get_related_resources_of_another_user(){
         Vertex aVertex = vertexA();
-        identificationUtils().relateResourceToTshirt(
-                aVertex
+        IdentificationPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
+        tShirtAsIdentification.setType(
+                IdentificationType.generic
+        );
+        graphElementUtils().addIdentificationToGraphElementWithUri(
+                tShirtAsIdentification,
+                aVertex.uri()
         );
         String defaultAuthenticatedUserUsername = defaultAuthenticatedUser.username();
         ClientResponse response = identificationUtils().getRelatedResourcesForIdentificationClientResponseForUsername(

@@ -38,27 +38,6 @@ public class IdentificationRestTestUtils {
         this.authenticatedUser = authenticatedUser;
     }
 
-    public ClientResponse relateResourceToTshirt(FriendlyResource friendlyResource) {
-        ClientResponse response = resource
-                .path("service")
-                .path("test")
-                .path("identification")
-                .path("relate-to-tshirt")
-                .path(
-                        Uris.encodeURL(
-                                friendlyResource.uri()
-                        )
-                )
-                .cookie(authCookie)
-                .post(ClientResponse.class);
-        assertThat(
-                response.getStatus(),
-                is(
-                        Response.Status.NO_CONTENT.getStatusCode()
-                )
-        );
-        return response;
-    }
 
     public Set<FriendlyResourcePojo> getRelatedResourcesForIdentification(Identification identification) {
         return FriendlyResourceJson.fromJsonToSet(
