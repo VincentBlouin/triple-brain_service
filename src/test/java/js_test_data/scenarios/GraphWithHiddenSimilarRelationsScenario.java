@@ -6,7 +6,7 @@ package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.utils.ModelTestScenarios;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.SubGraphPojo;
 import guru.bubl.module.model.graph.UserGraph;
 import js_test_data.JsTestScenario;

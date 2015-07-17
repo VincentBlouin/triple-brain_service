@@ -7,7 +7,7 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.graph.*;
-import guru.bubl.module.utils.ModelTestScenarios;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.search.VertexSearchResult;

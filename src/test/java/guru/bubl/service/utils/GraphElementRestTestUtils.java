@@ -12,7 +12,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.IdentificationPojo;
 import guru.bubl.module.model.graph.IdentificationType;
-import guru.bubl.module.utils.ModelTestScenarios;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.json.IdentificationJson;
 
 import javax.ws.rs.core.MediaType;
