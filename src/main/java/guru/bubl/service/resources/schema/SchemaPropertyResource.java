@@ -8,13 +8,13 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.search.GraphIndexer;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

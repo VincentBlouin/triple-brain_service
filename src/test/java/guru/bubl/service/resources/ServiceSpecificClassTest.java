@@ -4,7 +4,6 @@
 
 package guru.bubl.service.resources;
 
-import guru.bubl.service.resources.identification.IdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;

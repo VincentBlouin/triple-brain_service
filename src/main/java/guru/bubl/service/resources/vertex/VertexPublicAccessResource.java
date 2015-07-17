@@ -8,7 +8,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.search.GraphIndexer;
+import guru.bubl.module.model.search.GraphIndexer;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

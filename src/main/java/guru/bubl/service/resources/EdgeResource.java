@@ -6,6 +6,7 @@ package guru.bubl.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
@@ -17,7 +18,6 @@ import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.search.GraphIndexer;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
 import javax.inject.Inject;

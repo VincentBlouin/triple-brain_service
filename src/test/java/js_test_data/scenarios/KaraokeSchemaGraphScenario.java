@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.ModelTestScenarios;
+import guru.bubl.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.json.graph.SchemaJson;

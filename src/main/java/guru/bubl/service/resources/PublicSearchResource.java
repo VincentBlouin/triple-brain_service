@@ -6,8 +6,8 @@ package guru.bubl.service.resources;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.search.GraphElementSearchResult;
-import guru.bubl.module.search.GraphSearch;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.GraphSearch;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

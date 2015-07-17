@@ -6,12 +6,12 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.search.GraphIndexer;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

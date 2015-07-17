@@ -5,12 +5,12 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.search.EdgeSearchResult;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.graph.GraphElement;
-import guru.bubl.module.search.EdgeSearchResult;
-import guru.bubl.module.search.VertexSearchResult;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

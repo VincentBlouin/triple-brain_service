@@ -5,6 +5,9 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.VertexSearchResult;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -17,9 +20,6 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.graph.SubGraphJson;
-import guru.bubl.module.search.GraphElementSearchResult;
-import guru.bubl.module.search.GraphSearch;
-import guru.bubl.module.search.VertexSearchResult;
 
 import javax.inject.Inject;
 import java.util.List;

@@ -5,6 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import guru.bubl.module.model.graph.IdentificationType;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.json.IdentificationJson;
 import guru.bubl.module.model.json.graph.SchemaJson;
-import guru.bubl.module.search.VertexSearchResult;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;

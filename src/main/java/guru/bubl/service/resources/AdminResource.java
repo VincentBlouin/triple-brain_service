@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import guru.bubl.module.model.WholeGraph;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.search.GraphIndexer;
+import guru.bubl.module.model.search.GraphIndexer;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

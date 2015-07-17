@@ -7,13 +7,12 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import guru.bubl.module.model.graph.Identification;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.IdentificationPojo;
 import guru.bubl.module.model.graph.IdentificationType;
-import guru.bubl.module.model.graph.ModelTestScenarios;
+import guru.bubl.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.json.IdentificationJson;
 
 import javax.ws.rs.core.MediaType;

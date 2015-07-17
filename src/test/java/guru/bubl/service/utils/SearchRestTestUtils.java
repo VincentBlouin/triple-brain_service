@@ -4,16 +4,16 @@
 
 package guru.bubl.service.utils;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.model.json.UserJson;
+import guru.bubl.module.model.search.EdgeSearchResult;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.VertexSearchResult;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.search.EdgeSearchResult;
-import guru.bubl.module.search.GraphElementSearchResult;
-import guru.bubl.module.search.VertexSearchResult;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;

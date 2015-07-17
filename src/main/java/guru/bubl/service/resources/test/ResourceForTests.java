@@ -4,6 +4,7 @@
 
 package guru.bubl.service.resources.test;
 
+import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
@@ -22,7 +23,6 @@ import guru.bubl.module.model.test.GraphComponentTest;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.module.model.test.scenarios.VerticesCalledABAndC;
 import guru.bubl.module.repository.user.UserRepository;
-import guru.bubl.module.search.GraphIndexer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

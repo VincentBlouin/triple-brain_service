@@ -5,10 +5,10 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
-import guru.bubl.module.search.GraphElementSearchResult;
-import guru.bubl.module.search.VertexSearchResult;
 
 import javax.ws.rs.core.Response;
 

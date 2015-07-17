@@ -15,7 +15,7 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
-import guru.bubl.module.neo4j_search.Neo4jGraphSearchModule;
+import guru.bubl.module.neo4j_graph_manipulator.graph.search.Neo4jGraphSearchModule;
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
 import guru.bubl.service.RestInterceptor;
 import guru.bubl.service.resources.*;

@@ -6,6 +6,7 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -14,7 +15,6 @@ import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.SuggestionJson;
 import guru.bubl.module.model.suggestion.SuggestionPojo;
-import guru.bubl.module.search.GraphIndexer;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

@@ -6,6 +6,8 @@ package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.json.StatementJsonFields;
+import guru.bubl.module.model.search.EdgeSearchResult;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -19,9 +21,6 @@ import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.graph.EdgeJson;
 import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
-import guru.bubl.module.search.EdgeSearchResult;
-import guru.bubl.module.search.VertexSearchResult;
-
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;

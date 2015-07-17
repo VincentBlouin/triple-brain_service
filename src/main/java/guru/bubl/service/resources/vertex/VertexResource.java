@@ -19,7 +19,7 @@ import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.json.graph.EdgeJson;
 import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
-import guru.bubl.module.search.GraphIndexer;
+import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
