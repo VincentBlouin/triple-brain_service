@@ -140,13 +140,11 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
 
     @Test
     public void identified_graph_element_is_part_of_related_identifications() throws Exception {
-        FriendlyResourcePojo edgeBetweenAAndB = new FriendlyResourcePojo(
-                edgeUtils().edgeBetweenAAndB().uri()
-        );
-        assertFalse(
-                identificationUtils().getRelatedResourcesForIdentification(
+        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        assertTrue(
+                identificationUtils().getEdgesRelatedResourcesForIdentification(
                         new ModelTestScenarios().possessionIdentification()
-                ).contains(edgeBetweenAAndB)
+                ).isEmpty()
         );
         IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setType(IdentificationType.same_as);
@@ -154,18 +152,17 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 possession,
                 edgeBetweenAAndB.uri()
         );
-        assertTrue(
-                identificationUtils().getRelatedResourcesForIdentification(
+        assertThat(
+                identificationUtils().getEdgesRelatedResourcesForIdentification(
                         new ModelTestScenarios().possessionIdentification()
-                ).contains(edgeBetweenAAndB)
+                ).iterator().next().getGraphElement(),
+                is(edgeBetweenAAndB)
         );
     }
 
     @Test
     public void removing_identifications_to_graph_element_removes_it_from_related_identifications() throws Exception {
-        FriendlyResourcePojo edgeBetweenAAndB = new FriendlyResourcePojo(
-                edgeUtils().edgeBetweenAAndB().uri()
-        );
+        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setType(IdentificationType.same_as);
         ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
@@ -175,19 +172,22 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         possession = graphElementUtils().getIdentificationFromResponse(
                 response
         );
-        assertTrue(
-                identificationUtils().getRelatedResourcesForIdentification(
+        assertThat(
+                identificationUtils().getEdgesRelatedResourcesForIdentification(
                         possession
-                ).contains(edgeBetweenAAndB)
+                ).iterator().next().getGraphElement(),
+                is(
+                        edgeBetweenAAndB
+                )
         );
         removeIdentificationToResource(
                 possession,
                 edgeBetweenAAndB
         );
-        assertFalse(
+        assertTrue(
                 identificationUtils().getRelatedResourcesForIdentification(
                         new ModelTestScenarios().possessionIdentification()
-                ).contains(edgeBetweenAAndB)
+                ).isEmpty()
         );
     }
 

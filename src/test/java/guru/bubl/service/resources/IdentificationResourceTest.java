@@ -6,6 +6,8 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
@@ -23,7 +25,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils{
 
     @Test
     public void can_get_related_resources(){
-        Set<FriendlyResourcePojo> relatedResources = identificationUtils().getRelatedResourcesForIdentification(
+        Set<VertexSearchResult> relatedResources = identificationUtils().getRelatedResourcesForIdentification(
                 new ModelTestScenarios().tShirt()
         );
         assertTrue(
