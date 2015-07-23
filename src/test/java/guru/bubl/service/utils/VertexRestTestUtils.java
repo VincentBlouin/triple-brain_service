@@ -76,21 +76,6 @@ public class VertexRestTestUtils {
         );
     }
 
-    public VertexInSubGraph vertexWithUriOfCurrentUser(URI vertexUri){
-        ClientResponse response = resource
-                .path(vertexUri.getPath())
-                .cookie(authCookie)
-                .accept(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-        JSONObject jsonObject = response.getEntity(JSONObject.class);
-        return vertexFromJson(
-                jsonObject
-        );
-    }
 
     public Set<Edge> connectedEdgesOfVertexWithURI(URI vertexUri) {
         ClientResponse response = resource

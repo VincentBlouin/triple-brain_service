@@ -38,27 +38,6 @@ public class VertexGroupResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-    @Test
-    public void can_list_included_graph_elements_when_getting_group_vertex(){
-        URI groupVertexUri = URI.create(createVertexBAndCGroup()
-                .getHeaders()
-                .get("Location")
-                .get(0));
-        VertexInSubGraph newVertex = vertexUtils().vertexWithUriOfCurrentUser(
-                groupVertexUri
-        );
-        Map<URI, ?extends Vertex> includedVertices = newVertex.getIncludedVertices();
-        assertThat(
-                includedVertices.size(),
-                is(2)
-        );
-        Map<URI, ?extends  Edge> includedEdges = newVertex.getIncludedEdges();
-        assertThat(
-                includedEdges.size(),
-                is(0)
-        );
-    }
-
     private ClientResponse createVertexBAndCGroup(){
         try{
             JSONObject vertices = new JSONObject().put(
