@@ -120,19 +120,26 @@ public class VertexResource {
             jsonCreatedStatement.put(
                     StatementJsonFields.source_vertex.name(),
                     VertexInSubGraphJson.toJson(
-                            new VertexInSubGraphPojo(sourceVertex)
+                            new VertexInSubGraphPojo(
+                                    sourceVertex.uri()
+                            )
                     )
             );
             jsonCreatedStatement.put(
                     StatementJsonFields.edge.name(),
-                    EdgeJson.toJson(
-                            new EdgePojo(createdEdge)
+                    EdgeJson.toJson(new EdgePojo(
+                                    createdEdge.uri(),
+                                    createdEdge.sourceVertex().uri(),
+                                    createdEdge.destinationVertex().uri()
+                            )
                     )
             );
             jsonCreatedStatement.put(
                     StatementJsonFields.end_vertex.name(),
                     VertexInSubGraphJson.toJson(
-                            new VertexInSubGraphPojo(createdVertex)
+                            new VertexInSubGraphPojo(
+                                    createdVertex.uri()
+                            )
                     )
             );
         } catch (JSONException e) {
