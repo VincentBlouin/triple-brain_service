@@ -27,7 +27,7 @@ import java.util.Set;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class IdentificationResource {
+public class IdentifiedToResource {
 
     private static Gson gson = new Gson();
 
@@ -37,7 +37,7 @@ public class IdentificationResource {
     IdentifiedTo identifiedTo;
 
     @AssistedInject
-    public IdentificationResource(
+    public IdentifiedToResource(
             @Assisted User authenticatedUser
     ) {
         this.authenticatedUser = authenticatedUser;

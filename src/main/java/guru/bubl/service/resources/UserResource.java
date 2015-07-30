@@ -14,8 +14,8 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.repository.user.UserRepository;
-import guru.bubl.service.resources.identification.IdentificationResource;
-import guru.bubl.service.resources.identification.IdentificationResourceFactory;
+import guru.bubl.service.resources.identification.IdentifiedToResource;
+import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
@@ -61,7 +61,7 @@ public class UserResource {
     SearchResourceFactory searchResourceFactory;
 
     @Inject
-    IdentificationResourceFactory identificationResourceFactory;
+    IdentifiedToResourceFactory identifiedToResourceFactory;
 
     @Inject
     SchemaNonOwnedResourceFactory schemaNonOwnedResourceFactory;
@@ -142,13 +142,13 @@ public class UserResource {
     }
 
     @Path("{username}/identification")
-    public IdentificationResource identificationResource(
+    public IdentifiedToResource identificationResource(
             @PathParam("username") String username
     ) {
         if (!isUserNameTheOneInSession(username)) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
-        return identificationResourceFactory.forAuthenticatedUser(
+        return identifiedToResourceFactory.forAuthenticatedUser(
                 GraphManipulatorResourceUtils.userFromSession(
                         request.getSession()
                 )

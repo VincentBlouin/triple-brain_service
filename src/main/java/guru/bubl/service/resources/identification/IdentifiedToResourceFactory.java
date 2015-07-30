@@ -6,6 +6,6 @@ package guru.bubl.service.resources.identification;
 
 import guru.bubl.module.model.User;
 
-public interface IdentificationResourceFactory {
-    IdentificationResource forAuthenticatedUser(User user);
+public interface IdentifiedToResourceFactory {
+    IdentifiedToResource forAuthenticatedUser(User user);
 }

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class IdentificationResourceTest extends GraphManipulationRestTestUtils{
+public class IdentifiedToResourceTest extends GraphManipulationRestTestUtils{
 
     @Test
     public void can_get_related_resources(){
