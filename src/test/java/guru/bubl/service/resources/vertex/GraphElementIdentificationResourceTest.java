@@ -191,6 +191,35 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
+    @Test
+    public void getting_identifications_return_ok_status(){
+        ClientResponse response = graphElementUtils().getIdentificationsClientResponse(
+                vertexAUri()
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+
+    @Test
+    public void can_get_identifications(){
+        assertTrue(
+                graphElementUtils().getIdentifications(
+                        vertexAUri()
+                ).isEmpty()
+        );
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Map<URI, IdentificationPojo> identifications = graphElementUtils().getIdentifications(
+                vertexAUri()
+        );
+        assertTrue(
+                identifications.containsKey(
+                        new ModelTestScenarios().person().getExternalResourceUri()
+                )
+        );
+    }
+
 
     private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
         IdentificationPojo creatorPredicate = modelTestScenarios.creatorPredicate();

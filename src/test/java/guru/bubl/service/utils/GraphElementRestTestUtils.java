@@ -7,6 +7,7 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.model.graph.Identification;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
@@ -18,6 +19,7 @@ import guru.bubl.module.model.json.IdentificationJson;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
+import java.util.Map;
 
 public class GraphElementRestTestUtils {
 
@@ -61,6 +63,23 @@ public class GraphElementRestTestUtils {
                 graphUtils().vertexAUri()
         );
 
+    }
+
+    public Map<URI, IdentificationPojo> getIdentifications(URI graphElementUri) {
+        return IdentificationJson.fromJson(
+                getIdentificationsClientResponse(
+                        graphElementUri
+                ).getEntity(String.class)
+        );
+    }
+
+    public ClientResponse getIdentificationsClientResponse(URI graphElementUri) {
+        return resource
+                .path(graphElementUri.getPath())
+                .path("identification")
+                .cookie(authCookie)
+                .type(MediaType.APPLICATION_JSON)
+                .get(ClientResponse.class);
     }
 
     public IdentificationPojo getIdentificationFromResponse(ClientResponse response) {
