@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.json.graph.SchemaJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
@@ -102,6 +103,11 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
         try {
             return new JSONObject().put(
+                    "schema",
+                    SchemaJson.toJson(
+                            userGraph.schemaPojoWithUri(project.uri())
+                    )
+            ).put(
                     "searchResultsForProject",
                     new JSONArray(
                             new Gson().toJson(
