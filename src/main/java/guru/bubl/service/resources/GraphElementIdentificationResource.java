@@ -55,19 +55,7 @@ public class GraphElementIdentificationResource {
         this.schemaUri = schemaUri;
         this.userGraph = userGraph;
     }
-
-
-    @GET
-    @GraphTransactional
-    @Path("/")
-    public Response get() {
-        return Response.ok().entity(
-                IdentificationJson.toJson(
-                        graphElement.getIdentifications()
-                )
-        ).build();
-    }
-
+    
     @POST
     @GraphTransactional
     @Path("/")

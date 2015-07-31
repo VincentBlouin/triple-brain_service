@@ -65,22 +65,6 @@ public class GraphElementRestTestUtils {
 
     }
 
-    public Map<URI, IdentificationPojo> getIdentifications(URI graphElementUri) {
-        return IdentificationJson.fromJson(
-                getIdentificationsClientResponse(
-                        graphElementUri
-                ).getEntity(String.class)
-        );
-    }
-
-    public ClientResponse getIdentificationsClientResponse(URI graphElementUri) {
-        return resource
-                .path(graphElementUri.getPath())
-                .path("identification")
-                .cookie(authCookie)
-                .type(MediaType.APPLICATION_JSON)
-                .get(ClientResponse.class);
-    }
 
     public IdentificationPojo getIdentificationFromResponse(ClientResponse response) {
         return IdentificationJson.singleFromJson(
