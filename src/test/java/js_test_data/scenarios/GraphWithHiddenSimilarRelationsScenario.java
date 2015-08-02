@@ -36,7 +36,7 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
 
     /*
     * Distant graph
-    * bubble labled "distant bubble" will eventually connect to b2
+    * bubble labeled "distant bubble" will eventually connect to b2 or b1
     */
 
     @Inject
@@ -74,10 +74,16 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 1,
                 distantBubble.uri()
         );
-        distantBubble.addRelationToVertex(b2);
+        EdgeOperator distantToB2 = distantBubble.addRelationToVertex(b2);
         SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.graphWithDepthAndCenterVertexId(
                 1,
                 b2.uri()
+        );
+        distantToB2.remove();
+        b1.addRelationToVertex(distantBubble);
+        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                distantBubble.uri()
         );
         try {
             return new JSONObject().put(
@@ -92,6 +98,12 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
             ).put(
                     "b2GraphWhenConnectedToDistantBubble",
                     SubGraphJson.toJson(b2GraphWhenConnectedToDistantBubble)
+            ).put(
+                    "distantBubbleGraphWhenConnectedToBubble1",
+                    SubGraphJson.toJson(distantBubbleGraphWhenConnectedToBubble1)
+            ).put(
+                    "distantBubbleUri",
+                    distantBubble.uri()
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);
