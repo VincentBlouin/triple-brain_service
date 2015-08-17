@@ -7,7 +7,7 @@ import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 
 public class Launch {
     public static void before(){
-        Neo4jModule.clearDb();
+         Neo4jModule.clearDb();
     }
     public static void after(){}
 }

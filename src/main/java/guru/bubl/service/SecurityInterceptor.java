@@ -84,8 +84,8 @@ public class SecurityInterceptor implements MethodInterceptor {
     }
 
     private boolean annotationsHaveGraphElementIdentifierAnnotation(Annotation[] annotations){
-        for(int i = 0; i < annotations.length; i++){
-            if(isGraphElementIdentifierAnnotation(annotations[i])){
+        for (Annotation annotation : annotations) {
+            if (isGraphElementIdentifierAnnotation(annotation)) {
                 return true;
             }
         }

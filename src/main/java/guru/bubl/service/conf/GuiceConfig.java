@@ -25,13 +25,20 @@ import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
+import guru.bubl.service.usage_log.H2DataSource;
+import guru.bubl.service.usage_log.SQLConnection;
+import guru.bubl.service.usage_log.UsageLogInterceptor;
+import guru.bubl.service.usage_log.UsageLogModule;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.google.inject.jndi.JndiIntegration.fromJndi;
 
 public class GuiceConfig extends GuiceServletContextListener {
 
@@ -47,6 +54,13 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 bindInterceptor(Matchers.any(), Matchers.annotatedWith(Path.class),
                         restInterceptor);
+
+
+                UsageLogInterceptor usageLogInterceptor = new UsageLogInterceptor();
+                requestInjection(usageLogInterceptor);
+                bindInterceptor(Matchers.any(), Matchers.annotatedWith(Path.class),
+                        usageLogInterceptor
+                );
 
                 install(new Neo4jUserRepositoryModule());
 
@@ -98,7 +112,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                 install(builder.build(
                         SchemaNonOwnedResourceFactory.class
                 ));
-
                 final Map<String, String> params = new HashMap<>();
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
                 serve("/*").with(GuiceContainer.class, params);
@@ -129,6 +142,14 @@ public class GuiceConfig extends GuiceServletContextListener {
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
+                    }
+                    bind(DataSource.class)
+                            .toProvider(fromJndi(DataSource.class, "jdbc/usageLog"));
+                    install(new UsageLogModule());
+                    if(isTesting){
+                        SQLConnection.createTablesUsingDataSource(
+                                new H2DataSource()
+                        );
                     }
                 } catch (NamingException e) {
                     throw new RuntimeException(e);
