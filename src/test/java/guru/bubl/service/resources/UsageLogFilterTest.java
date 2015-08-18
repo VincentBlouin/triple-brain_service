@@ -12,16 +12,19 @@ import guru.bubl.service.usage_log.UsageLogTestModule;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class UsageLogInterceptorTest extends GraphManipulationRestTestUtils {
+public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
 
     @Inject
     SQLConnection connection;
@@ -45,11 +48,21 @@ public class UsageLogInterceptorTest extends GraphManipulationRestTestUtils {
     @Test
     public void logs_request(){
         assertFalse(
-                hasLogEntryWithAction("isAuthenticated")
+                hasLogEntryWithAction("/service/users/is_authenticated")
         );
         isUserAuthenticated(authCookie);
         assertTrue(
-                hasLogEntryWithAction("isAuthenticated")
+                hasLogEntryWithAction("/service/users/is_authenticated")
+        );
+    }
+
+    @Test
+    @Ignore("the logs are duplicated because a servlet filter is used and called once for request and once for response.")
+    public void doest_not_duplicate_request_logs(){
+        isUserAuthenticated(authCookie);
+        assertThat(
+                numberOfLogEntryWithAction("/service/users/is_authenticated"),
+                is(1)
         );
     }
 
@@ -61,6 +74,18 @@ public class UsageLogInterceptorTest extends GraphManipulationRestTestUtils {
             stm.setString(1, action);
             ResultSet rs = stm.executeQuery();
             return rs.next();
+        }).get();
+    }
+
+    public Integer numberOfLogEntryWithAction(String action){
+        return NoExRun.wrap(()->{
+            PreparedStatement stm = connection.getConnection().prepareStatement(
+                    "SELECT count(*) from usage_log where user_action=?"
+            );
+            stm.setString(1, action);
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            return rs.getInt(1);
         }).get();
     }
 }

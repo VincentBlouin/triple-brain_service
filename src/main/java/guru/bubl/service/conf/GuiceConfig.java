@@ -27,7 +27,7 @@ import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
 import guru.bubl.service.usage_log.H2DataSource;
 import guru.bubl.service.usage_log.SQLConnection;
-import guru.bubl.service.usage_log.UsageLogInterceptor;
+import guru.bubl.service.usage_log.UsageLogFilter;
 import guru.bubl.service.usage_log.UsageLogModule;
 
 import javax.naming.Context;
@@ -54,14 +54,7 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 bindInterceptor(Matchers.any(), Matchers.annotatedWith(Path.class),
                         restInterceptor);
-
-
-                UsageLogInterceptor usageLogInterceptor = new UsageLogInterceptor();
-                requestInjection(usageLogInterceptor);
-                bindInterceptor(Matchers.any(), Matchers.annotatedWith(Path.class),
-                        usageLogInterceptor
-                );
-
+                filter("*").through(UsageLogFilter.class);
                 install(new Neo4jUserRepositoryModule());
 
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();

@@ -11,6 +11,6 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        UsageLogInterceptorTest.class
+        UsageLogFilterTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {}
