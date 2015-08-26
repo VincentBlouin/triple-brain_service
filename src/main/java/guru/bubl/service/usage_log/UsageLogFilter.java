@@ -37,7 +37,7 @@ public class UsageLogFilter implements Filter {
         String username = GraphManipulatorResourceUtils.isUserInSession(requestProvider.get().getSession()) ?
                 GraphManipulatorResourceUtils.userFromSession(
                         requestProvider.get().getSession()
-                ).username():
+                ).email():
                 null;
         usageLogger.log(
                 LogEntry.withDateUsernameAndAction(
