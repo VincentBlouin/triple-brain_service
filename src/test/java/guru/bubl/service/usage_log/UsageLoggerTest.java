@@ -20,9 +20,10 @@ public class UsageLoggerTest extends UsageLogAbstractTest{
     @Test
     public void can_add_entry() {
         usageLogger.log(
-                LogEntry.withDateUsernameAndAction(
+                LogEntry.withDateUsernameMethodAndAction(
                         new Date(),
                         "some_user",
+                        "POST",
                         "some_action"
                 )
         );

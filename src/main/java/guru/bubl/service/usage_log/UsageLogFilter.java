@@ -40,9 +40,10 @@ public class UsageLogFilter implements Filter {
                 ).email():
                 null;
         usageLogger.log(
-                LogEntry.withDateUsernameAndAction(
+                LogEntry.withDateUsernameMethodAndAction(
                         new Date(),
                         username,
+                        requestProvider.get().getMethod(),
                         requestProvider.get().getRequestURI()
                 )
         );

@@ -38,15 +38,16 @@ public class UsageLogAbstractTest {
     public LogEntry getLogEntryWithAction(String action) {
         return NoExRun.wrap(() -> {
             PreparedStatement stm = connection.getConnection().prepareStatement(
-                    "SELECT * from usage_log where user_action=?"
+                    "SELECT action_date, username, method, user_action from usage_log where user_action=?"
             );
             stm.setString(1, action);
             ResultSet rs = stm.executeQuery();
             assertTrue(rs.next());
-            return LogEntry.withDateUsernameAndAction(
+            return LogEntry.withDateUsernameMethodAndAction(
                     rs.getDate(1),
                     rs.getString(2),
-                    rs.getString(3)
+                    rs.getString(3),
+                    rs.getString(4)
             );
         }).get();
     }

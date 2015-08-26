@@ -18,7 +18,7 @@ public class UsageLogger {
 
     public void log(LogEntry entry){
         NoExRun.wrap(() -> {
-            String query = "insert into usage_log(action_date, username, user_action) values(?, ?, ?);";
+            String query = "insert into usage_log(action_date, username, method, user_action) values(?, ?, ?, ?);";
             PreparedStatement stm = connection.getConnection().prepareStatement(
                     query
             );
@@ -27,7 +27,8 @@ public class UsageLogger {
                     new Timestamp(entry.getDate().getTime())
             );
             stm.setString(2, entry.getUsername());
-            stm.setString(3, entry.getAction());
+            stm.setString(3, entry.getMethod());
+            stm.setString(4, entry.getAction());
             return stm.execute();
         }).get();
     }

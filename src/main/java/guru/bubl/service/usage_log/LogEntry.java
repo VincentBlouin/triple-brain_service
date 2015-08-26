@@ -10,18 +10,21 @@ public class LogEntry {
     private Date date;
     private String username;
     private String action;
+    private String method;
 
-    public static LogEntry withDateUsernameAndAction(Date date, String username, String action){
+    public static LogEntry withDateUsernameMethodAndAction(Date date, String username, String method, String action){
         return new LogEntry(
                 date,
                 username,
+                method,
                 action
         );
     }
 
-    protected LogEntry(Date date, String username, String action){
+    protected LogEntry(Date date, String username, String method, String action){
         this.date = date;
         this.username = username;
+        this.method = method;
         this.action = action;
     }
 
@@ -35,5 +38,9 @@ public class LogEntry {
 
     public String getAction() {
         return action;
+    }
+
+    public String getMethod() {
+        return method;
     }
 }

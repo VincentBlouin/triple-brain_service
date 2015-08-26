@@ -46,6 +46,7 @@ public class SQLConnection {
         String query = "CREATE TABLE usage_log (\n" +
                 "    action_date TIMESTAMP NOT NULL,\n" +
                 "    username  VARCHAR(100),\n" +
+                "    method VARCHAR(10), \n" +
                 "    user_action VARCHAR(255) NOT NULL,\n" +
                 ");";
         try {

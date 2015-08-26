@@ -43,6 +43,8 @@ public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
     @Before
     public void before(){
         injector.injectMembers(this);
+        SQLConnection.clearDatabases();
+        SQLConnection.createTables();
     }
 
     @Test
@@ -57,13 +59,33 @@ public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    @Ignore("the logs are duplicated because a servlet filter is used and called once for request and once for response.")
     public void doest_not_duplicate_request_logs(){
         isUserAuthenticated(authCookie);
         assertThat(
                 numberOfLogEntryWithAction("/service/users/is_authenticated"),
                 is(1)
         );
+    }
+
+    @Test
+    public void saves_request_method(){
+        isUserAuthenticated(authCookie);
+        assertThat(
+                getMethodForAction("/service/users/is_authenticated"),
+                is("GET")
+        );
+    }
+
+    public String getMethodForAction(String action){
+        return NoExRun.wrap(()-> {
+            PreparedStatement stm = connection.getConnection().prepareStatement(
+                    "SELECT method from usage_log where user_action=?"
+            );
+            stm.setString(1, action);
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            return rs.getString(1);
+        }).get();
     }
 
     public boolean hasLogEntryWithAction(String action){
@@ -76,6 +98,7 @@ public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
             return rs.next();
         }).get();
     }
+
 
     public Integer numberOfLogEntryWithAction(String action){
         return NoExRun.wrap(()->{
