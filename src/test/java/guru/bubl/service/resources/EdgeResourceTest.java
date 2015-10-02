@@ -5,6 +5,9 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.graph.SubGraph;
+import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Test;
@@ -193,6 +196,52 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
+    @Test
+    public void changing_source_vertex_returns_correct_status() throws Exception {
+        Edge edgeBetweenBAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexBUri(),
+                vertexCUri(),
+                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
+        );
+        ClientResponse response = changeSourceVertex(
+                edgeBetweenBAndC,
+                vertexA()
+        );
+        assertThat(
+                response.getStatus(),
+                is(
+                        Response.Status.NO_CONTENT.getStatusCode()
+                )
+        );
+    }
+
+
+    @Test
+    public void can_change_source_vertex() throws Exception {
+        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexBUri(),
+                vertexCUri(),
+                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
+
+        );
+        SubGraph graph = graphUtils().graphWithCenterVertexUri(
+                vertexAUri()
+        );
+        assertFalse(
+                graph.containsEdge(edge)
+        );
+        changeSourceVertex(
+                edge,
+                vertexA()
+        );
+        graph = graphUtils().graphWithCenterVertexUri(
+                vertexAUri()
+        );
+        assertTrue(
+                graph.containsEdge(edge)
+        );
+    }
+
     private ClientResponse inverseRelationBetweenAAndB() {
         Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
@@ -202,6 +251,15 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         return resource
                 .path(edgeBetweenAAndC.uri().toString())
                 .path("inverse")
+                .cookie(authCookie)
+                .put(ClientResponse.class);
+    }
+
+    private ClientResponse changeSourceVertex(Edge edge, Vertex newSourceVertex) {
+        return resource
+                .path(edge.uri().toString())
+                .path("source-vertex")
+                .path(UserUris.graphElementShortId(newSourceVertex.uri()))
                 .cookie(authCookie)
                 .put(ClientResponse.class);
     }

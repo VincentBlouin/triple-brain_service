@@ -6,6 +6,8 @@ package guru.bubl.service.resources;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.common_utils.Uris;
@@ -148,6 +150,26 @@ public class EdgeResource {
         edgeOperator.comment(comment);
         graphIndexer.indexRelation(edgeOperator);
         graphIndexer.commit();
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @GraphTransactional
+    @Path("{shortId}/source-vertex/{sourceVertexShortId}")
+    public Response changeSourceVertex(
+            @PathParam("shortId") String shortId,
+            @PathParam("sourceVertexShortId") String sourceVertexShortId
+    ) {
+        Vertex newSourceVertex = new VertexPojo(
+                new UserUris(
+                        userGraph.user()
+                ).vertexUriFromShortId(
+                        sourceVertexShortId
+                )
+        );
+        edgeFromShortId(shortId).changeSourceVertex(
+                newSourceVertex
+        );
         return Response.noContent().build();
     }
 
