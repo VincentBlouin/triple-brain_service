@@ -64,6 +64,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bind(PublicSearchResource.class);
 
                 install(builder.build(
+                        CenterGraphElementsResourceFactory.class
+                ));
+
+                install(builder.build(
                         GraphResourceFactory.class
                 ));
                 install(builder.build(

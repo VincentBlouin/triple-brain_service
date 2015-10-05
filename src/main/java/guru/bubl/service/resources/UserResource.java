@@ -67,6 +67,9 @@ public class UserResource {
     SchemaNonOwnedResourceFactory schemaNonOwnedResourceFactory;
 
     @Inject
+    CenterGraphElementsResourceFactory centerGraphElementsResourceFactory;
+
+    @Inject
     private Injector injector;
 
     @Context
@@ -168,6 +171,21 @@ public class UserResource {
                 Response.Status.FORBIDDEN
         );
     }
+
+    @Path("{username}/center-elements")
+    public CenterGraphElementsResource getCenterGraphElementsResource(
+            @PathParam("username") String username
+    ){
+        if (!isUserNameTheOneInSession(username)){
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
+        }
+        return centerGraphElementsResourceFactory.forUser(
+                GraphManipulatorResourceUtils.userFromSession(request.getSession())
+        );
+    }
+
 
     @Path("session")
     public UserSessionResource sessionResource() {

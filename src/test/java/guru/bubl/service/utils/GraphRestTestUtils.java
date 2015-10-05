@@ -7,18 +7,21 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.SubGraph;
 import guru.bubl.module.model.graph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
+import guru.bubl.module.model.json.CenterGraphElementsJson;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -129,5 +132,26 @@ public class GraphRestTestUtils {
                         response.getHeaders().get("Location").get(0)
                 ).getPath()
         );
+    }
+
+    public ClientResponse getCenterGraphElementsResponse(){
+        return getCenterGraphElementsResponseForUser(
+                authenticatedUser
+        );
+    }
+
+    public ClientResponse getCenterGraphElementsResponseForUser(User user){
+        return resource
+                .path(user.id())
+                .path("center-elements")
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+    }
+
+    public Set<CenterGraphElementPojo> getCenterGraphElements(){
+        return CenterGraphElementsJson.fromJson(
+                getCenterGraphElementsResponse().getEntity(
+                        String.class
+                ));
     }
 }

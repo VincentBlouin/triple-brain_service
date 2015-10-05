@@ -5,16 +5,18 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.SubGraph;
+import guru.bubl.module.model.json.graph.SubGraphJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.module.model.graph.SubGraph;
-import guru.bubl.module.model.json.graph.SubGraphJson;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -91,6 +93,28 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
         assertThat(
                 response.getStatus(),
                 is(Response.Status.NOT_FOUND.getStatusCode())
+        );
+    }
+
+    @Test
+    public void getting_graph_increments_number_of_visits_for_center_vertex() {
+        Set<CenterGraphElementPojo> centerGraphElements = graphUtils().getCenterGraphElements();
+        assertThat(
+                centerGraphElements.size(),
+                is(1)
+        );
+        assertThat(
+                centerGraphElements.iterator().next().getNumberOfVisits(),
+                is(1)
+        );
+        getGraphOfCentralVertexUri(vertexAUri());
+        assertThat(
+                centerGraphElements.size(),
+                is(1)
+        );
+        assertThat(
+                centerGraphElements.iterator().next().getNumberOfVisits(),
+                is(2)
         );
     }
 

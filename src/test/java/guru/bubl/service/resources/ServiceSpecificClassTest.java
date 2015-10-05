@@ -4,14 +4,12 @@
 
 package guru.bubl.service.resources;
 
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-@Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        EdgeResourceTest.class
+        CenterGraphElementResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }
