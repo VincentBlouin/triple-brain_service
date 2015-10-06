@@ -7,6 +7,8 @@ package guru.bubl.service.resources;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFactory;
+import guru.bubl.module.model.json.CenterGraphElementsJson;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -18,20 +20,24 @@ public class CenterGraphElementsResource {
 
     private User user;
 
-    private CenterGraphElementsResourceFactory centerGraphElementsResourceFactory;
+    private CenterGraphElementsOperatorFactory centerGraphElementsOperatorFactory;
 
     @AssistedInject
     CenterGraphElementsResource(
-            CenterGraphElementsResourceFactory centerGraphElementsResourceFactory,
+            CenterGraphElementsOperatorFactory centerGraphElementsOperatorFactory,
             @Assisted User user
     ){
-        this.centerGraphElementsResourceFactory = centerGraphElementsResourceFactory;
+        this.centerGraphElementsOperatorFactory = centerGraphElementsOperatorFactory;
         this.user = user;
     }
 
     @GET
     public Response get(){
-        return Response.ok().build();
+        return Response.ok().entity(
+                CenterGraphElementsJson.toJson(
+                        centerGraphElementsOperatorFactory.forUser(user).get()
+                )
+        ).build();
     }
 
 }

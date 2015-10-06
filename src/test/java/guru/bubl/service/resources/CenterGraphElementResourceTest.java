@@ -10,6 +10,7 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 public class CenterGraphElementResourceTest extends GraphManipulationRestTestUtils {
@@ -32,6 +33,13 @@ public class CenterGraphElementResourceTest extends GraphManipulationRestTestUti
         assertThat(
                 graphUtils().getCenterGraphElementsResponseForUser(defaultAuthenticatedUser).getStatus(),
                 is(Response.Status.FORBIDDEN.getStatusCode())
+        );
+    }
+
+    @Test
+    public void returns_center_elements(){
+        assertFalse(
+                graphUtils().getCenterGraphElements().isEmpty()
         );
     }
 
