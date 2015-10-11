@@ -287,15 +287,12 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void creating_a_single_vertex_increment_its_number_of_visits() {
         Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
-        Assert.assertThat(
-                centerElements.size(),
-                Is.is(1)
-        );
+        Integer numberOfVisitedElements = centerElements.size();
         createSingleVertex();
         centerElements = graphUtils().getCenterGraphElements();
         Assert.assertThat(
                 centerElements.size(),
-                Is.is(2)
+                Is.is(numberOfVisitedElements + 1)
         );
     }
 
