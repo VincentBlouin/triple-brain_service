@@ -5,9 +5,12 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Test;
 import guru.bubl.module.model.graph.IdentificationPojo;
 import guru.bubl.module.model.graph.IdentificationType;
@@ -18,6 +21,7 @@ import guru.bubl.module.model.json.graph.SchemaJson;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;

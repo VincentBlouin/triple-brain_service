@@ -108,6 +108,7 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
                 is(1)
         );
         getGraphOfCentralVertexUri(vertexAUri());
+        centerGraphElements = graphUtils().getCenterGraphElements();
         assertThat(
                 centerGraphElements.size(),
                 is(1)

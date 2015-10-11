@@ -7,6 +7,8 @@ package guru.bubl.service.resources.vertex;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.UserGraph;
@@ -59,6 +61,9 @@ public class VertexResource {
     @Inject
     VertexImageResourceFactory vertexImageResourceFactory;
 
+    @Inject
+    CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+
     private UserGraph userGraph;
 
     @AssistedInject
@@ -73,6 +78,9 @@ public class VertexResource {
     @Path("/")
     public Response createVertex() {
         VertexPojo newVertex = userGraph.createVertex();
+        centerGraphElementOperatorFactory.usingGraphElement(
+                newVertex
+        ).incrementNumberOfVisits();
         return Response.ok()
                 .entity(VertexInSubGraphJson.toJson(
                         new VertexInSubGraphPojo(
@@ -236,9 +244,13 @@ public class VertexResource {
     public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
             @PathParam("shortId") String shortId
     ) {
+        VertexOperator vertex = vertexFromShortId(shortId);
+        centerGraphElementOperatorFactory.usingGraphElement(
+                vertex
+        ).incrementNumberOfVisits();
         return new VertexOwnedSurroundGraphResource(
                 userGraph,
-                vertexFromShortId(shortId)
+                vertex
         );
     }
 

@@ -5,6 +5,7 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.EdgeSearchResult;
 import guru.bubl.module.model.search.VertexSearchResult;
@@ -284,6 +285,21 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void creating_a_single_vertex_increment_its_number_of_visits() {
+        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        Assert.assertThat(
+                centerElements.size(),
+                Is.is(1)
+        );
+        createSingleVertex();
+        centerElements = graphUtils().getCenterGraphElements();
+        Assert.assertThat(
+                centerElements.size(),
+                Is.is(2)
+        );
+    }
+
+    @Test
     @Ignore(
             "Using measures on the client side to avoid fast addition of multiple childs. " +
                     "Also I consider it not dramatic that the number of connected edges is not totally accurate."
@@ -305,6 +321,23 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 is(6)
         );
 
+    }
+
+    private Vertex createSingleVertex(){
+        return VertexInSubGraphJson.fromJson(
+                responseForCreateSingleVertex().getEntity(
+                        JSONObject.class
+                )
+        );
+    }
+
+    private ClientResponse responseForCreateSingleVertex(){
+        return resource
+                .path(
+                        new UserUris(defaultAuthenticatedUser).baseVertexUri().getPath()
+                )
+                .cookie(authCookie)
+                .post(ClientResponse.class);
     }
 
     private ClientResponse getAnyVertexUri() {
