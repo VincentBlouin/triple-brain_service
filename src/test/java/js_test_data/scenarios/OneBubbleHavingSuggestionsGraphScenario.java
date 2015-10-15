@@ -4,19 +4,16 @@
 
 package js_test_data.scenarios;
 
-import com.google.gson.Gson;
 import guru.bubl.module.common_utils.NoExRun;
-import guru.bubl.module.model.json.graph.SchemaJson;
-import js_test_data.JsTestScenario;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
@@ -25,7 +22,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
     /*
     * Bubble labeled Event.
     * Has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
-    * Has 2 suggestions related to "Event" identification
+    * Has 2 suggestions, one related to Person identification and the other to "date" identification
     */
 
     /*

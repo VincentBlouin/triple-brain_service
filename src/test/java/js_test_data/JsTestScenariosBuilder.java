@@ -46,7 +46,8 @@ public class JsTestScenariosBuilder {
             new KaraokeSchemaScenario(),
             new ProjectSchemaScenario(),
             new WikidataSearchResultForProjectScenario(),
-            new GraphWithCircularityScenario()
+            new GraphWithCircularityScenario(),
+            new PublicPrivateScenario()
     );
 
 
