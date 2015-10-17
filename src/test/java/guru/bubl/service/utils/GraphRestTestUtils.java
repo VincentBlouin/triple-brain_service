@@ -10,6 +10,7 @@ import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.SubGraph;
 import guru.bubl.module.model.graph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
@@ -38,10 +39,12 @@ public class GraphRestTestUtils {
     static JSONObject vertexC;
     private User authenticatedUser;
     protected Gson gson = new Gson();
-    public static GraphRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
+
+    public static GraphRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         return new GraphRestTestUtils(resource, authCookie, authenticatedUser);
     }
-    protected GraphRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser){
+
+    protected GraphRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
@@ -52,7 +55,7 @@ public class GraphRestTestUtils {
         );
     }
 
-    public SubGraph graphWithCenterVertexUri(URI vertexUri){
+    public SubGraph graphWithCenterVertexUri(URI vertexUri) {
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .path("surround_graph")
@@ -82,45 +85,47 @@ public class GraphRestTestUtils {
                 .cookie(authCookie)
                 .get(ClientResponse.class);
         JSONArray verticesABAndC = response.getEntity(JSONArray.class);
-        try{
+        try {
             vertexA = verticesABAndC.getJSONObject(0);
             vertexB = verticesABAndC.getJSONObject(1);
             vertexC = verticesABAndC.getJSONObject(2);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         return verticesABAndC;
     }
 
-    public URI vertexAUri(){
+    public URI vertexAUri() {
         return vertexUtils.uriOfVertex(
                 vertexA
         );
     }
 
-    public URI vertexBUri(){
+    public URI vertexBUri() {
         return vertexUtils.uriOfVertex(
                 vertexB
         );
     }
 
-    public URI vertexCUri(){
+    public URI vertexCUri() {
         return vertexUtils.uriOfVertex(
                 vertexC
         );
     }
 
-    public VertexInSubGraph vertexA(){
+    public VertexInSubGraph vertexA() {
         return vertexUtils.vertexWithUriOfAnyUser(vertexAUri());
     }
-    public VertexInSubGraph vertexB(){
+
+    public VertexInSubGraph vertexB() {
         return vertexUtils.vertexWithUriOfAnyUser(vertexBUri());
     }
-    public VertexInSubGraph vertexC(){
+
+    public VertexInSubGraph vertexC() {
         return vertexUtils.vertexWithUriOfAnyUser(vertexCUri());
     }
 
-    public String getCurrentGraphUri(){
+    public String getCurrentGraphUri() {
         return new UserUris(
                 authenticatedUser
         ).graphUri().toString();
@@ -134,13 +139,13 @@ public class GraphRestTestUtils {
         );
     }
 
-    public ClientResponse getCenterGraphElementsResponse(){
+    public ClientResponse getCenterGraphElementsResponse() {
         return getCenterGraphElementsResponseForUser(
                 authenticatedUser
         );
     }
 
-    public ClientResponse getCenterGraphElementsResponseForUser(User user){
+    public ClientResponse getCenterGraphElementsResponseForUser(User user) {
         return resource
                 .path(user.id())
                 .path("center-elements")
@@ -148,10 +153,18 @@ public class GraphRestTestUtils {
                 .get(ClientResponse.class);
     }
 
-    public Set<CenterGraphElementPojo> getCenterGraphElements(){
+    public Set<CenterGraphElementPojo> getCenterGraphElements() {
         return CenterGraphElementsJson.fromJson(
                 getCenterGraphElementsResponse().getEntity(
                         String.class
                 ));
+    }
+
+    public CenterGraphElementPojo getCenterGraphElementHavingUriInElements(URI uri, Set<CenterGraphElementPojo> elements) {
+        return elements.stream().filter(
+                (centerGraphElement) -> centerGraphElement.getGraphElement().uri().equals(
+                        uri
+                )
+        ).findAny().get();
     }
 }

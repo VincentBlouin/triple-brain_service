@@ -23,6 +23,7 @@ import guru.bubl.module.model.json.graph.EdgeJson;
 import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -242,12 +243,15 @@ public class VertexResource {
     @Path("{shortId}/surround_graph")
     @GraphTransactional
     public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
-            @PathParam("shortId") String shortId
+            @PathParam("shortId") String shortId,
+            @QueryParam("center") String isCenter
     ) {
         VertexOperator vertex = vertexFromShortId(shortId);
-        centerGraphElementOperatorFactory.usingGraphElement(
-                vertex
-        ).incrementNumberOfVisits();
+        if(!StringUtils.isEmpty(isCenter) && isCenter.equals("true")){
+            centerGraphElementOperatorFactory.usingGraphElement(
+                    vertex
+            ).incrementNumberOfVisits();
+        }
         return new VertexOwnedSurroundGraphResource(
                 userGraph,
                 vertex

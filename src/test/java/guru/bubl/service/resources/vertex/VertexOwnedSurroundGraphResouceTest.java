@@ -5,6 +5,8 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.model.center_graph_element.CenterGraphElement;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.SubGraph;
 import guru.bubl.module.model.json.graph.SubGraphJson;
@@ -54,7 +56,7 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
                 vertices.optJSONObject(0)
         );
         authenticate(defaultAuthenticatedUser);
-        ClientResponse response = getGraphOfCentralVertexUri(
+        ClientResponse response = getGraphAroundVertexWithUri(
                 anotherUserVertexUri
         );
         assertThat(
@@ -65,14 +67,14 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
 
     @Test
     public void can_get_sub_graph() throws Exception {
-        SubGraph graph = SubGraphJson.fromJson(getGraphOfCentralVertexUri(
+        SubGraph graph = SubGraphJson.fromJson(getGraphAroundVertexWithUri(
                 vertexBUri()
         ).getEntity(JSONObject.class));
         assertThat(
                 graph.vertices().size(),
                 is(3)
         );
-        graph = SubGraphJson.fromJson(getGraphOfCentralVertexUri(
+        graph = SubGraphJson.fromJson(getGraphAroundVertexWithUri(
                 vertexAUri()
         ).getEntity(JSONObject.class));
         assertThat(
@@ -83,53 +85,108 @@ public class VertexOwnedSurroundGraphResouceTest extends GraphManipulationRestTe
 
     @Test
     public void cannot_get_surround_graph_of_a_vertex_after_its_been_removed() throws Exception {
-        ClientResponse response = getGraphOfCentralVertexUri(vertexBUri());
+        ClientResponse response = getGraphAroundVertexWithUri(vertexBUri());
         assertThat(
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
         vertexUtils().removeVertexB();
-        response = getGraphOfCentralVertexUri(vertexBUri());
+        response = getGraphAroundVertexWithUri(vertexBUri());
         assertThat(
                 response.getStatus(),
                 is(Response.Status.NOT_FOUND.getStatusCode())
         );
     }
 
+
     @Test
-    public void getting_graph_increments_number_of_visits_for_center_vertex() {
-        Set<CenterGraphElementPojo> centerGraphElements = graphUtils().getCenterGraphElements();
+    public void getting_graph_as_center_bubble_returns_ok_status() {
+        ClientResponse response = getGraphAroundVertexWithUriAsCenterBubble(vertexAUri());
         assertThat(
-                centerGraphElements.size(),
-                is(1)
+                response.getStatus(),
+                is(
+                        Response.Status.OK.getStatusCode()
+                )
+        );
+    }
+
+    @Test
+    public void getting_graph_as_center_bubble_increments_number_of_visits_for_center_vertex() {
+        CenterGraphElement vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
+                vertexAUri(),
+                graphUtils().getCenterGraphElements()
         );
         assertThat(
-                centerGraphElements.iterator().next().getNumberOfVisits(),
-                is(1)
+                vertexACenterElement.getNumberOfVisits(),
+                is(
+                        1
+                )
         );
-        getGraphOfCentralVertexUri(vertexAUri());
-        centerGraphElements = graphUtils().getCenterGraphElements();
-        assertThat(
-                centerGraphElements.size(),
-                is(1)
+        getGraphAroundVertexWithUriAsCenterBubble(vertexAUri());
+        vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
+                vertexAUri(),
+                graphUtils().getCenterGraphElements()
         );
         assertThat(
-                centerGraphElements.iterator().next().getNumberOfVisits(),
-                is(2)
+                vertexACenterElement.getNumberOfVisits(),
+                is(
+                        2
+                )
+        );
+    }
+
+    @Test
+    public void getting_graph_not_as_center_bubble_does_not_increment_number_of_visits_for_center_vertex() {
+        CenterGraphElement vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
+                vertexAUri(),
+                graphUtils().getCenterGraphElements()
+        );
+        assertThat(
+                vertexACenterElement.getNumberOfVisits(),
+                is(
+                        1
+                )
+        );
+        getGraphAroundVertexWithUri(vertexAUri());
+        vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
+                vertexAUri(),
+                graphUtils().getCenterGraphElements()
+        );
+        assertThat(
+                vertexACenterElement.getNumberOfVisits(),
+                is(
+                        1
+                )
         );
     }
 
     private ClientResponse getGraph() {
-        return getGraphOfCentralVertexUri(
+        return getGraphAroundVertexWithUri(
                 vertexAUri()
         );
     }
 
-    private ClientResponse getGraphOfCentralVertexUri(URI centralVertexUri) {
+    private ClientResponse getGraphAroundVertexWithUri(URI centralVertexUri) {
+        return getGraphAroundVertexWithUriAsCenterBubbleOrNot(
+                centralVertexUri,
+                false
+        );
+    }
+
+    private ClientResponse getGraphAroundVertexWithUriAsCenterBubble(URI centralVertexUri) {
+        return getGraphAroundVertexWithUriAsCenterBubbleOrNot(
+                centralVertexUri,
+                true
+        );
+    }
+
+    private ClientResponse getGraphAroundVertexWithUriAsCenterBubbleOrNot(URI centralVertexUri, Boolean isCenter) {
         return resource
                 .path(centralVertexUri.getPath())
                 .path("surround_graph")
+                .queryParam("center", isCenter.toString())
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }
+
 }
