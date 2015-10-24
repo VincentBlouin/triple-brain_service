@@ -6,7 +6,7 @@ package guru.bubl.service.resources;
 
 import com.google.inject.Inject;
 import guru.bubl.module.model.WholeGraph;
-import guru.bubl.module.model.admin.WholeGraphAdmin;
+import guru.bubl.module.model.admin.WholeGraphAdminFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.search.GraphIndexer;
 
@@ -17,10 +17,13 @@ import javax.ws.rs.core.Response;
 public class AdminResource {
 
     @Inject
-    GraphIndexer graphIndexer;
+    protected GraphIndexer graphIndexer;
 
     @Inject
-    WholeGraph wholeGraph;
+    protected WholeGraph wholeGraph;
+
+    @Inject
+    protected WholeGraphAdminFactory wholeGraphAdminFactory;
 
     @Path("reindex")
     @GraphTransactional
@@ -34,9 +37,19 @@ public class AdminResource {
     @GraphTransactional
     @POST
     public Response refreshNumberOfConnectedEdges(){
-        new WholeGraphAdmin(
+        wholeGraphAdminFactory.withWholeGraph(
                 wholeGraph
         ).refreshNumberOfConnectedEdges();
+        return Response.ok().build();
+    }
+
+    @Path("refresh_identifications_nb_references")
+    @GraphTransactional
+    @POST
+    public Response refreshAllIdentificationsNumberOfReferences(){
+        wholeGraphAdminFactory.withWholeGraph(
+                wholeGraph
+        ).refreshNumberOfReferencesToAllIdentifications();
         return Response.ok().build();
     }
 

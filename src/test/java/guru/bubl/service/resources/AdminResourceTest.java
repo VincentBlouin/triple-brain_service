@@ -5,12 +5,23 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.FriendlyResource;
+import guru.bubl.module.model.graph.Identification;
+import guru.bubl.module.model.graph.IdentificationPojo;
+import guru.bubl.module.model.graph.IdentificationType;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+
+import java.net.URI;
+import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -44,6 +55,28 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
         assertThat(
                 vertexB().getNumberOfConnectedEdges(),
                 is(2)
+        );
+    }
+
+    @Test
+    public void refreshing_identifications_number_of_references_returns_ok_status() throws Exception {
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
+        possession.setType(IdentificationType.same_as);
+        graphElementUtils().addIdentificationToGraphElementWithUri(
+                possession,
+                edgeUtils().edgeBetweenAAndB().uri()
+        );
+        ClientResponse response = resource.path("service")
+                .path("users")
+                .path("vince")
+                .path("admin")
+                .path("refresh_identifications_nb_references")
+                .cookie(loginAsVince())
+                .post(ClientResponse.class);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
         );
     }
 

@@ -55,7 +55,7 @@ public class GraphElementRestTestUtils {
     }
 
     public ClientResponse addFoafPersonTypeToVertexA() {
-        IdentificationPojo identification = new ModelTestScenarios().personType();
+        IdentificationPojo identification = new ModelTestScenarios().person();
         identification.setType(IdentificationType.type);
         JSONObject personType = IdentificationJson.singleToJson(identification);
         return addIdentificationToGraphElementWithUri(
