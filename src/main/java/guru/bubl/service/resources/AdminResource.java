@@ -53,6 +53,16 @@ public class AdminResource {
         return Response.ok().build();
     }
 
+    @Path("re_add_identifications")
+    @GraphTransactional
+    @POST
+    public Response reAddIdentifications(){
+        wholeGraphAdminFactory.withWholeGraph(
+                wholeGraph
+        ).reAddIdentifications();
+        return Response.ok().build();
+    }
+
 //    @Path("convert_small_images_to_base_64")
 //    @GraphTransactional
 //    @POST
