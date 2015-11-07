@@ -71,7 +71,7 @@ public class SearchResource {
             @QueryParam("text") String searchText
     ) {
         return Response.ok(gson.toJson(
-                graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+                graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                         searchText,
                         user
                 ))).build();

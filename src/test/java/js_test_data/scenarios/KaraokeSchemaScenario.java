@@ -59,7 +59,7 @@ public class KaraokeSchemaScenario implements JsTestScenario {
         GraphElementOperator location = karaoke.addProperty();
         location.label("location");
         location.addSameAs(modelTestScenarios.location());
-        List<VertexSearchResult> searchResultsForKaraoke = graphSearch.searchSchemasOwnVerticesAndPublicOnesForAutoCompletionByLabel(
+        List<VertexSearchResult> searchResultsForKaraoke = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "karaoke",
                 user
         );
