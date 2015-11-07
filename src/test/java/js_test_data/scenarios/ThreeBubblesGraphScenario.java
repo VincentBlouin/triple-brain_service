@@ -73,7 +73,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 1,
                 b3.uri()
         );
-        List<VertexSearchResult> searchResultsForB1 = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+        List<GraphElementSearchResult> searchResultsForB1 = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "b1",
                 user
         );

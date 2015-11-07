@@ -80,7 +80,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         vertexFactory.createForOwnerUsername(
                 user.username()
         ).label("impact");
-        List<VertexSearchResult> searchResultsForProject = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+        List<GraphElementSearchResult> searchResultsForProject = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "project",
                 user
         );

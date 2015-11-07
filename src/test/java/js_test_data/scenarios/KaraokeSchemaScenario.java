@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.search.VertexSearchResult;
 import js_test_data.JsTestScenario;
@@ -59,7 +60,7 @@ public class KaraokeSchemaScenario implements JsTestScenario {
         GraphElementOperator location = karaoke.addProperty();
         location.label("location");
         location.addSameAs(modelTestScenarios.location());
-        List<VertexSearchResult> searchResultsForKaraoke = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+        List<GraphElementSearchResult> searchResultsForKaraoke = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "karaoke",
                 user
         );
