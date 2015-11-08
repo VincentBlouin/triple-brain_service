@@ -7,7 +7,6 @@ package js_test_data.scenarios;
 import com.google.gson.Gson;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
-import guru.bubl.module.model.search.VertexSearchResult;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -77,7 +76,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 "b1",
                 user
         );
-        List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
+        List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesSchemasOrIdentifiersForAutoCompletionByLabel(
                 "r2",
                 user
         );

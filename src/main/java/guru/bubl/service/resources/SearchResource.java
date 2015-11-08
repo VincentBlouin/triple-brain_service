@@ -84,7 +84,7 @@ public class SearchResource {
             @QueryParam("text") String searchText
     ) {
         return Response.ok(gson.toJson(
-                graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
+                graphSearch.searchRelationsPropertiesSchemasOrIdentifiersForAutoCompletionByLabel(
                         searchText,
                         user
                 ))).build();

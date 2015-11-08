@@ -11,7 +11,6 @@ import guru.bubl.module.model.json.graph.SchemaJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
-import guru.bubl.module.model.search.VertexSearchResult;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -84,7 +83,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 "project",
                 user
         );
-        List<GraphElementSearchResult> resultsForImpact = graphSearch.searchRelationsPropertiesOrSchemasForAutoCompletionByLabel(
+        List<GraphElementSearchResult> resultsForImpact = graphSearch.searchRelationsPropertiesSchemasOrIdentifiersForAutoCompletionByLabel(
                 "impact",
                 user
         );
