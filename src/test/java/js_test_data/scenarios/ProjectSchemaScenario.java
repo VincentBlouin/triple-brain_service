@@ -97,6 +97,10 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 user
         );
         buildSomeProject();
+        List<GraphElementSearchResult> searchResultsForProjectAfterIdentificationAdded = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+                "project",
+                user
+        );
         SubGraphPojo someProjectGraph = userGraph.graphWithDepthAndCenterVertexId(
                 1,
                 someProject.uri()
@@ -112,6 +116,13 @@ public class ProjectSchemaScenario implements JsTestScenario {
                     new JSONArray(
                             new Gson().toJson(
                                     searchResultsForProject
+                            )
+                    )
+            ).put(
+                    "searchResultsForProjectAfterIdentificationAdded",
+                    new JSONArray(
+                            new Gson().toJson(
+                                    searchResultsForProjectAfterIdentificationAdded
                             )
                     )
             ).put(
