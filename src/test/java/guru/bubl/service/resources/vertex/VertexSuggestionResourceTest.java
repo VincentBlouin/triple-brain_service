@@ -134,7 +134,11 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
                 startDateSuggestion.label(),
                 defaultAuthenticatedUserAsJson
         );
-        assertThat(relations.size(), is(1));
+        assertThat(
+                relations.size(), is(
+                        greaterThan(0)
+                )
+        );
     }
 
     @Test
