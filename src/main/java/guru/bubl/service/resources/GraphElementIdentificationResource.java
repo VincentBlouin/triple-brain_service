@@ -20,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -69,19 +70,20 @@ public class GraphElementIdentificationResource {
                     Response.Status.NOT_ACCEPTABLE
             );
         }
+        Map<URI, IdentificationPojo> identifications;
         switch (identification.getType()) {
             case same_as:
-                identification = graphElement.addSameAs(
+                identifications = graphElement.addSameAs(
                         identification
                 );
                 break;
             case type:
-                identification = graphElement.addType(
+                identifications = graphElement.addType(
                         identification
                 );
                 break;
             case generic:
-                identification = graphElement.addGenericIdentification(
+                identifications = graphElement.addGenericIdentification(
                         identification
                 );
                 break;
@@ -89,10 +91,8 @@ public class GraphElementIdentificationResource {
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         reindexGraphElement();
-        return Response.created(URI.create(
-                UserUris.graphElementShortId(identification.uri())
-        )).entity(
-                IdentificationJson.singleToJson(identification)
+        return Response.ok().entity(
+                IdentificationJson.toJson(identifications)
         ).build();
     }
 

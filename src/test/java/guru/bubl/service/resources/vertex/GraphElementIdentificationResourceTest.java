@@ -29,55 +29,35 @@ import static org.junit.Assert.assertTrue;
 public class GraphElementIdentificationResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
-    public void setting_type_of_a_vertex_returns_correct_response_status() throws Exception {
+    public void setting_type_of_a_vertex_returns_ok_response_status() throws Exception {
         ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 response.getStatus(),
-                is(Response.Status.CREATED.getStatusCode())
+                is(Response.Status.OK.getStatusCode())
         );
     }
 
     @Test
-    public void status_is_created_when_adding_identification() {
+    public void status_is_ok_when_adding_identification() {
         ClientResponse clientResponse = graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
                 clientResponse.getStatus(),
-                is(Response.Status.CREATED.getStatusCode())
+                is(Response.Status.OK.getStatusCode())
         );
     }
 
     @Test
-    public void identification_is_returned_when_adding() {
+    public void identifications_are_returned_when_adding() {
         ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentificationPojo identification = IdentificationJson.singleFromJson(
+        IdentificationPojo identification = IdentificationJson.fromJson(
                 response.getEntity(String.class)
-        );
+        ).values().iterator().next();
         assertThat(
                 identification.getExternalResourceUri(),
                 is(URI.create("http://xmlns.com/foaf/0.1/Person"))
         );
     }
 
-    @Test
-    public void uri_is_returned_when_adding_identification() {
-        assertThat(
-                vertexA().getAdditionalTypes().size(),
-                is(0)
-        );
-        ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
-        String shortId = UserUris.graphElementShortId(
-                vertexA().getAdditionalTypes().values().iterator().next().uri()
-        );
-        String responseShortId = UserUris.graphElementShortId(URI.create(
-                response.getHeaders().get("Location").get(0)
-        ));
-        assertThat(
-                responseShortId,
-                is(
-                        shortId
-                )
-        );
-    }
 
     @Test
     public void can_add_an_additional_type_to_vertex() throws Exception {
@@ -169,7 +149,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 possession,
                 edgeBetweenAAndB.uri()
         );
-        possession = graphElementUtils().getIdentificationFromResponse(
+        possession = graphElementUtils().getIdentificationsFromResponse(
                 response
         );
         assertThat(

@@ -66,18 +66,10 @@ public class GraphElementRestTestUtils {
     }
 
 
-    public IdentificationPojo getIdentificationFromResponse(ClientResponse response) {
-        return IdentificationJson.singleFromJson(
+    public IdentificationPojo getIdentificationsFromResponse(ClientResponse response) {
+        return IdentificationJson.fromJson(
                 response.getEntity(String.class)
-        );
-    }
-
-    public URI identificationUriFromResponse(ClientResponse response) {
-        URI responseUri = URI.create(response.getHeaders().get("Location").get(0));
-        UserUris userUris = new UserUris(authenticatedUser);
-        return URI.create(userUris.baseIdentificationUri() + "/" + UserUris.graphElementShortId(
-                responseUri
-        ));
+        ).values().iterator().next();
     }
 
     private GraphRestTestUtils graphUtils() {

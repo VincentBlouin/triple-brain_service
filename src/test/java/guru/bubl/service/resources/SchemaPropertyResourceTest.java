@@ -98,7 +98,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void adding_identification_returns_created_status() throws Exception {
+    public void adding_identification_returns_ok_status() throws Exception {
         IdentificationPojo identification = modelTestScenarios.creatorPredicate();
         identification.setType(
                 IdentificationType.same_as
@@ -110,7 +110,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(
                 response.getStatus(),
-                is(ClientResponse.Status.CREATED.getStatusCode())
+                is(ClientResponse.Status.OK.getStatusCode())
         );
     }
 
