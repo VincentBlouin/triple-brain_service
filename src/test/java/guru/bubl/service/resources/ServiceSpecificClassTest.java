@@ -14,7 +14,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        GraphElementIdentificationResourceTest.class
+        UserResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

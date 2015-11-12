@@ -7,7 +7,6 @@ package guru.bubl.service.resources.test;
 import com.google.gson.Gson;
 import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.UserNameGenerator;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.json.UserJson;
@@ -19,7 +18,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
-import java.util.Collections;
 
 @Path("test/users")
 @Singleton
@@ -30,9 +28,6 @@ public class UserResourceTestUtils {
 
     @Inject
     UserRepository userRepository;
-
-    @Inject
-    UserNameGenerator userNameGenerator;
 
     @Inject
     Gson gson;
@@ -62,27 +57,11 @@ public class UserResourceTestUtils {
     @POST
     @Path("/vince")
     public Response createUserVince() throws Exception {
-        userNameGenerator.setOverride(new UserNameGenerator() {
-            @Override
-            public String generate() {
-                return "vince";
-            }
-
-            @Override
-            public void setOverride(UserNameGenerator userNameGenerator) {
-
-            }
-
-            @Override
-            public void reset() {
-
-            }
-        });
-        User user = User.withEmail(
-                "vince_email@example.org"
+        User user = User.withEmailAndUsername(
+                "vince_email@example.org",
+                "vince"
         ).password("password");
         userRepository.createUser(user);
-        userNameGenerator.reset();
         return Response.ok().entity(
                 UserJson.toJson(user)
         ).build();

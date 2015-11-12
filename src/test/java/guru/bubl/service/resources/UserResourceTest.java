@@ -22,14 +22,16 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
+import static guru.bubl.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
 import static guru.bubl.module.model.json.UserJson.*;
 
 public class UserResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_authenticate_user() throws Exception {
-        User rogerLamothe = User.withEmail(
-                "roger.lamothe@example.org"
+        User rogerLamothe = User.withEmailAndUsername(
+                "roger.lamothe@example.org",
+                "roger_lamothe"
         );
         JSONObject rogerLamotheAsJson = UserJson.toJson(
                 rogerLamothe
@@ -204,9 +206,27 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void cant_register_same_user_name_twice() throws Exception {
+        createUserWithUsername("roger_lamothe");
+        JSONObject jsonUser = userUtils().validForCreation().put(USER_NAME, "roger_lamothe");
+        ClientResponse response = resource
+                .path("service")
+                .path("users")
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .post(ClientResponse.class, jsonUser);
+        assertThat(response.getStatus(), is(400));
+        JSONArray errors = response.getEntity(JSONArray.class);
+        assertThat(errors.length(), greaterThan(0));
+        assertThat(errors.getJSONObject(0).get("field").toString(), is(USER_NAME));
+        assertThat(errors.getJSONObject(0).get("reason").toString(), is(USER_NAME_ALREADY_REGISTERED));
+    }
+
+    @Test
     public void returned_user_creation_error_messages_are_in_the_right_order() throws Exception {
         JSONObject jsonUser = new JSONObject();
         jsonUser.put(EMAIL, "");
+        jsonUser.put(USER_NAME, "");
         jsonUser.put(PASSWORD, "pass");
         ClientResponse response = resource
                 .path("service")
@@ -217,7 +237,8 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .post(ClientResponse.class, jsonUser);
         JSONArray errors = response.getEntity(JSONArray.class);
         assertThat(errors.getJSONObject(0).get("field").toString(), is(EMAIL));
-        assertThat(errors.getJSONObject(1).get("field").toString(), is(PASSWORD));
+        assertThat(errors.getJSONObject(1).get("field").toString(), is(USER_NAME));
+        assertThat(errors.getJSONObject(2).get("field").toString(), is(PASSWORD));
     }
 
     private JSONObject createUserWithEmail(String email) throws Exception {
@@ -226,4 +247,12 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
         createUser(user);
         return user;
     }
+
+    private JSONObject createUserWithUsername(String username) throws Exception {
+        JSONObject user = userUtils().validForCreation();
+        user.put(UserJson.USER_NAME, username);
+        createUser(user);
+        return user;
+    }
 }
+

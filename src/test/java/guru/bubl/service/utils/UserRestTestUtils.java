@@ -59,6 +59,7 @@ public class UserRestTestUtils {
     public JSONObject validForCreation() {
         JSONObject user = new JSONObject();
         try {
+            user.put(USER_NAME, randomUsername());
             user.put(EMAIL, randomEmail());
             user.put(PASSWORD, RestTestUtils.DEFAULT_PASSWORD);
         } catch (JSONException e) {
@@ -109,5 +110,9 @@ public class UserRestTestUtils {
 
     private String randomEmail() {
         return UUID.randomUUID().toString() + "@example.org";
+    }
+
+    private String randomUsername(){
+        return UUID.randomUUID().toString().substring(0, 15);
     }
 }

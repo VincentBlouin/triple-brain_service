@@ -34,8 +34,10 @@ import java.net.URI;
 import java.util.Map;
 
 import static guru.bubl.module.model.json.UserJson.EMAIL;
+import static guru.bubl.module.model.json.UserJson.USER_NAME;
 import static guru.bubl.module.model.json.UserJson.PASSWORD;
 import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
+import static guru.bubl.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
 import static guru.bubl.module.model.validator.UserValidator.errorsForUserAsJson;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
@@ -206,15 +208,20 @@ public class UserResource {
     @GraphTransactional
     @Path("/")
     public Response createUser(JSONObject jsonUser) {
-        User user = User.withEmail(
-                jsonUser.optString(EMAIL, "")
+        User user = User.withEmailAndUsername(
+                jsonUser.optString(EMAIL, ""),
+                jsonUser.optString(USER_NAME, "")
         ).password(
                 jsonUser.optString(PASSWORD, "")
         );
         JSONArray jsonMessages = new JSONArray();
         Map<String, String> errors = errorsForUserAsJson(jsonUser);
-        if (userRepository.emailExists(jsonUser.optString(EMAIL, "")))
+        if (userRepository.emailExists(user.email())) {
             errors.put(EMAIL, ALREADY_REGISTERED_EMAIL);
+        }
+        if (userRepository.usernameExists(user.username())) {
+            errors.put(USER_NAME, USER_NAME_ALREADY_REGISTERED);
+        }
 
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> entry : errors.entrySet()) {
