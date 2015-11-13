@@ -13,6 +13,7 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.graph.SubGraphJson;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
@@ -23,6 +24,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     * me<-Possessed by book 2-book 2
     * me-Possession of book 3->book 3
     * me-other relation->other bubble
+    * other bubble with early creation date
     * me-original relation->b1
     * me-same as original relation->b2
     */
@@ -47,15 +49,18 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
             b1,
             b2;
 
+    private SubGraphPojo subGraphForMe;
+
     @Override
     public JSONObject build() {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForMe = userGraph.graphWithDepthAndCenterVertexId(
+        subGraphForMe = userGraph.graphWithDepthAndCenterVertexId(
                 1,
                 me.uri()
         );
+        setupCreationDate();
         return SubGraphJson.toJson(
                 subGraphForMe
         );
@@ -119,4 +124,11 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         );
         sameAsOriginalRelation.addSameAs(b1RelationIdentification);
     }
+
+    private void setupCreationDate(){
+        subGraphForMe.vertexWithIdentifier(
+                otherBubble.uri()
+        ).setCreationDate(new DateTime().minusDays(1));
+    }
+
 }
