@@ -47,7 +47,8 @@ public class JsTestScenariosBuilder {
             new ProjectSchemaScenario(),
             new WikidataSearchResultForProjectScenario(),
             new GraphWithCircularityScenario(),
-            new PublicPrivateScenario()
+            new PublicPrivateScenario(),
+            new CreationDateScenario()
     );
 
 
