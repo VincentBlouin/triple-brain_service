@@ -43,6 +43,7 @@ public class JsTestScenariosBuilder {
             new GroupRelationWithImageScenario(),
             new GraphWithHiddenSimilarRelationsScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
+            new BubbleWithAcceptedSuggestionScenario(),
             new KaraokeSchemaScenario(),
             new ProjectSchemaScenario(),
             new WikidataSearchResultForProjectScenario(),
