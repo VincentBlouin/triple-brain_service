@@ -20,9 +20,17 @@ import javax.inject.Inject;
 public class BubbleWithAcceptedSuggestionScenario implements JsTestScenario {
 
     /*
-    * Event-date->2016/01/15
-    * Has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
-    * Has 2 suggestions, one related to Person identification and the other to "date" identification
+    * Event-start date->2016/01/15
+    * Event-people involved->Jeremy
+    * Event-people involved->Noemi
+    * Event has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
+    * Event has 3 suggestions:
+    *   - People Involved,
+    *   - Start Date
+    *   - Venue
+    *
+    * People involved is identified to Freebase
+    * Start date is identified to Freebase
     */
 
     @Inject
@@ -36,37 +44,75 @@ public class BubbleWithAcceptedSuggestionScenario implements JsTestScenario {
 
     User user = User.withEmailAndUsername("a", "b");
 
+    private VertexOperator  event,
+                            startDate,
+                            jeremy,
+                            noemi;
+
     @Override
     public JSONObject build() {
         UserGraph userGraph = graphFactory.createForUser(user);
-        VertexOperator bubble = vertexFactory.createForOwnerUsername(
-                user.username()
-        );
-        bubble.label("Event");
-        bubble.addGenericIdentification(
-                modelTestScenarios.event()
-        );
-        bubble.addSuggestions(
-                modelTestScenarios.suggestionsToMap(
-                        modelTestScenarios.peopleInvolvedSuggestionFromEventIdentification(user),
-                        modelTestScenarios.startDateSuggestionFromEventIdentification(user)
-                )
-        );
-        VertexOperator childBubble = vertexFactory.createForOwnerUsername(
-                user.username()
-        );
-        childBubble.label("2016/01/17");
-        childBubble.addGenericIdentification(
-                modelTestScenarios.startDateIdentification()
-        );
-        EdgeOperator edge = bubble.addRelationToVertex(childBubble);
-        edge.label("start date");
-        edge.addGenericIdentification(modelTestScenarios.startDateIdentification());
+        buildBubbles();
+        buildRelations();
         return SubGraphJson.toJson(
                 userGraph.graphWithDepthAndCenterVertexId(
                         1,
-                        bubble.uri()
+                        event.uri()
                 )
         );
+    }
+
+    private void buildBubbles(){
+        event = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        event.label("Event");
+        event.addGenericIdentification(
+                modelTestScenarios.event()
+        );
+        event.addSuggestions(
+                modelTestScenarios.suggestionsToMap(
+                        modelTestScenarios.peopleInvolvedSuggestionFromEventIdentification(user),
+                        modelTestScenarios.startDateSuggestionFromEventIdentification(user),
+                        modelTestScenarios.venueSuggestionFromEventIdentification(user)
+                )
+        );
+
+        startDate = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        startDate.label("2016/01/17");
+        startDate.addGenericIdentification(
+                modelTestScenarios.startDateIdentification()
+        );
+
+        jeremy = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        jeremy.label("Jemery");
+        jeremy.addGenericIdentification(
+                modelTestScenarios.person()
+        );
+
+        noemi = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        noemi.label("Noemi");
+        noemi.addGenericIdentification(
+                modelTestScenarios.person()
+        );
+    }
+    private void buildRelations(){
+        EdgeOperator startDateEdge = event.addRelationToVertex(startDate);
+        startDateEdge.label("start date");
+        startDateEdge.addGenericIdentification(modelTestScenarios.startDateIdentification());
+
+        EdgeOperator jeremyEdge = event.addRelationToVertex(jeremy);
+        jeremyEdge.label("people involved");
+        jeremyEdge.addGenericIdentification(modelTestScenarios.personFromFreebase());
+
+        EdgeOperator noemiEdge = event.addRelationToVertex(noemi);
+        noemiEdge.label("people involved");
+        noemiEdge.addGenericIdentification(modelTestScenarios.personFromFreebase());
     }
 }
