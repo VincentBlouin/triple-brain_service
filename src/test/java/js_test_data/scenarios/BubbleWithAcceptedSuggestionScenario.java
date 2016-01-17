@@ -4,6 +4,7 @@
 
 package js_test_data.scenarios;
 
+import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.UserGraph;
@@ -54,12 +55,32 @@ public class BubbleWithAcceptedSuggestionScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         buildBubbles();
         buildRelations();
-        return SubGraphJson.toJson(
-                userGraph.graphWithDepthAndCenterVertexId(
-                        1,
-                        event.uri()
-                )
-        );
+        return NoExRun.wrap(() -> {
+            JSONObject json = new JSONObject().put(
+                    "original",
+                    SubGraphJson.toJson(
+                            userGraph.graphWithDepthAndCenterVertexId(
+                                    1,
+                                    event.uri()
+                            )
+                    )
+            );
+            VertexOperator center = vertexFactory.createForOwnerUsername(
+                    user.username()
+            );
+            center.label("center");
+            center.addRelationToVertex(event);
+            json.put(
+                    "not_centered",
+                    SubGraphJson.toJson(
+                            userGraph.graphWithDepthAndCenterVertexId(
+                                    1,
+                                    center.uri()
+                            )
+                    )
+            );
+            return json;
+        }).get();
     }
 
     private void buildBubbles(){
