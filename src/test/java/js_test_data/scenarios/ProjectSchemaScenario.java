@@ -39,9 +39,9 @@ public class ProjectSchemaScenario implements JsTestScenario {
      *
      * Relation in 2 groups test
      * bubble "some project" identified to project
-     * some project-impact 1 on society->impact 1 bubble
-     * some project-impact 2 on society->impact 2 bubble
-     * some project-impact 3->impact 3 bubble
+     * some project -- impact 1 on society --> impact 1 bubble
+     * some project -- impact 2 on society --> impact 2 bubble
+     * some project -- impact 3 --> impact 3 bubble
      * impact on society relations are identified to property "impact on society"
      * impact 3 is identified to "impact on society" and "impact on the individual"
      */
