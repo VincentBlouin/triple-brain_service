@@ -18,7 +18,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class BubbleWithAcceptedSuggestionScenario implements JsTestScenario {
+public class WithAcceptedSuggestionScenario implements JsTestScenario {
 
     /*
     * Event-start date->2016/01/15

@@ -43,13 +43,14 @@ public class JsTestScenariosBuilder {
             new GroupRelationWithImageScenario(),
             new GraphWithHiddenSimilarRelationsScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
-            new BubbleWithAcceptedSuggestionScenario(),
+            new WithAcceptedSuggestionScenario(),
             new KaraokeSchemaScenario(),
             new ProjectSchemaScenario(),
             new WikidataSearchResultForProjectScenario(),
             new GraphWithCircularityScenario(),
             new PublicPrivateScenario(),
-            new CreationDateScenario()
+            new CreationDateScenario(),
+            new RelationWithMultipleIdentifiers()
     );
 
 
