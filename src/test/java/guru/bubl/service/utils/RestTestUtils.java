@@ -44,18 +44,13 @@ public abstract class RestTestUtils {
     }
 
     protected ClientResponse createUser(JSONObject userAsJson) {
-        ClientResponse response = resource
+        return resource
                 .path("service")
                 .path("users")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, userAsJson);
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.CREATED.getStatusCode())
-        );
-        return response;
     }
 
     protected User authenticate(User user) {

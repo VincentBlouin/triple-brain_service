@@ -216,13 +216,14 @@ public class UserResource {
         );
         JSONArray jsonMessages = new JSONArray();
         Map<String, String> errors = errorsForUserAsJson(jsonUser);
-        if (userRepository.emailExists(user.email())) {
-            errors.put(EMAIL, ALREADY_REGISTERED_EMAIL);
+        if(errors.isEmpty()){
+            if (userRepository.emailExists(user.email())) {
+                errors.put(EMAIL, ALREADY_REGISTERED_EMAIL);
+            }
+            if (userRepository.usernameExists(user.username())) {
+                errors.put(USER_NAME, USER_NAME_ALREADY_REGISTERED);
+            }
         }
-        if (userRepository.usernameExists(user.username())) {
-            errors.put(USER_NAME, USER_NAME_ALREADY_REGISTERED);
-        }
-
         if (!errors.isEmpty()) {
             for (Map.Entry<String, String> entry : errors.entrySet()) {
                 try {

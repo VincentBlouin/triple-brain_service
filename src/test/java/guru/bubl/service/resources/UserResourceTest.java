@@ -18,6 +18,7 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -107,6 +108,22 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 userUtils().emailExists(
                         user.getString(EMAIL)
                 )
+        );
+    }
+
+    @Test
+    public void checks_if_username_exists_only_if_valid_user_name() throws Exception {
+        JSONObject user = userUtils().validForCreation();
+        user.put(USER_NAME, "name with space");
+        assertFalse(userUtils().emailExists(
+                user.getString(EMAIL)
+        ));
+        ClientResponse response = createUser(
+                user
+        );
+        assertThat(
+                response.getStatus(),
+                is(BAD_REQUEST.getStatusCode())
         );
     }
 
