@@ -67,6 +67,19 @@ public class UserResourceTestUtils {
         ).build();
     }
 
+    @POST
+    @Path("/Vince")
+    public Response createUserVinceWithCapitalLetter() throws Exception {
+        User user = User.withEmailAndUsername(
+                "vince_capital_email@example.org",
+                "Vince"
+        ).password("password");
+        userRepository.createUser(user);
+        return Response.ok().entity(
+                UserJson.toJson(user)
+        ).build();
+    }
+
     @Path("/{username}/forget-password-token")
     @GET
     public Response getForgetPasswordToken(@PathParam("username") String username) throws Exception {

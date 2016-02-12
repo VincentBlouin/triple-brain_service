@@ -30,6 +30,18 @@ import static org.junit.Assert.assertTrue;
 public class AdminResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
+    public void cant_perform_admin_tasks_if_logged_in_as_vince_with_capital_letter() {
+        assertThat(
+                reindexAll(
+                        loginAsVinceWithCapitalLetter()
+                ).getStatus(),
+                is(
+                        Response.Status.FORBIDDEN.getStatusCode()
+                )
+        );
+    }
+
+    @Test
     public void indexing_whole_graph_returns_no_content_status() {
         assertThat(
                 reindexAll(
@@ -57,6 +69,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 is(2)
         );
     }
+
 
     @Test
     public void refreshing_identifications_number_of_references_returns_ok_status() throws Exception {
@@ -135,6 +148,12 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .post(ClientResponse.class);
     }
 
+    private NewCookie loginAsVinceWithCapitalLetter() {
+        return authenticate(
+                createUserVinceWithCapitalLetter().getEntity(JSONObject.class)
+        ).getCookies().get(0);
+    }
+
     private NewCookie loginAsVince() {
         return authenticate(
                 createUserVince().getEntity(JSONObject.class)
@@ -151,4 +170,18 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .post(ClientResponse.class);
     }
 
+    private ClientResponse createUserVinceWithCapitalLetter() {
+        ClientResponse response = resource
+                .path("service")
+                .path("test")
+                .path("users")
+                .path("Vince")
+                .cookie(authCookie)
+                .post(ClientResponse.class);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        return response;
+    }
 }
