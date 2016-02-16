@@ -21,8 +21,8 @@ public class GraphWithCircularityScenario implements JsTestScenario {
 
     /*
     * A graph
-    * b1-r1>b2
-    * b2-r2>b3
+    * b1-r1->b2
+    * b2-r2->b3
     *
     * Another graph
     * b3-r3->b1
