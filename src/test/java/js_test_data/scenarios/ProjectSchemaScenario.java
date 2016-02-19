@@ -43,7 +43,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
      * some project -- impact 2 on society --> impact 2 bubble
      * some project -- impact 3 --> impact 3 bubble
      * impact on society relations are identified to property "impact on society"
-     * impact 3 is identified to "impact on society" and "impact on the individual"
+     * impact 3 is identified to "Impact on society" and "Impact on the individual"
      */
 
 
@@ -83,7 +83,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 "project",
                 user
         );
-        List<GraphElementSearchResult> resultsForImpact = graphSearch.searchRelationsPropertiesSchemasOrIdentifiersForAutoCompletionByLabel(
+        List<GraphElementSearchResult> resultsForImpact = graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
                 "impact",
                 user
         );

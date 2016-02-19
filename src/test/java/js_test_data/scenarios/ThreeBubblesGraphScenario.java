@@ -76,7 +76,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 "b1",
                 user
         );
-        List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesSchemasOrIdentifiersForAutoCompletionByLabel(
+        List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
                 "r2",
                 user
         );
