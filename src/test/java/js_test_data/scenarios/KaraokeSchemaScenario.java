@@ -6,20 +6,19 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.common_utils.NoExRun;
-import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.GraphSearch;
-import guru.bubl.module.model.search.VertexSearchResult;
-import js_test_data.JsTestScenario;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import java.util.List;

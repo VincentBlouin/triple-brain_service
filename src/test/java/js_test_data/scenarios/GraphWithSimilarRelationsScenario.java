@@ -23,6 +23,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     * me-Possession of book 1->book 1
     * me<-Possessed by book 2-book 2
     * me-Possession of book 3->book 3
+    * all possession relations are identified to possession
     * me-other relation->other bubble
     * other bubble with early creation date
     * me-original relation->b1

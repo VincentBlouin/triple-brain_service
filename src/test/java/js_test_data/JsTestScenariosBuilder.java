@@ -50,7 +50,8 @@ public class JsTestScenariosBuilder {
             new GraphWithCircularityScenario(),
             new PublicPrivateScenario(),
             new CreationDateScenario(),
-            new RelationWithMultipleIdentifiers()
+            new RelationWithMultipleIdentifiers(),
+            new RelationsAsIdentifierScenario()
     );
 
 
