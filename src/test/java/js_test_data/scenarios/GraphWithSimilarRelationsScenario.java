@@ -20,14 +20,15 @@ import javax.inject.Inject;
 public class GraphWithSimilarRelationsScenario implements JsTestScenario {
 
     /*
-    * me-Possession of book 1->book 1
-    * me<-Possessed by book 2-book 2
-    * me-Possession of book 3->book 3
+    * me -Possession of book 1->book 1
+    * me <-Possessed by book 2-book 2
+    * me -Possession of book 3->book 3
     * all possession relations are identified to possession
-    * me-other relation->other bubble
+    * me -other relation->other bubble
+    * me -other relation 2->other bubble 2
     * other bubble with early creation date
-    * me-original relation->b1
-    * me-same as original relation->b2
+    * me -original relation->b1
+    * me -same as original relation->b2
     */
 
     @Inject
@@ -47,6 +48,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
             book2,
             book3,
             otherBubble,
+            otherBubble2,
             b1,
             b2;
 
@@ -90,11 +92,15 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         b1 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
-        otherBubble.label("b1");
+        b1.label("b1");
         b2 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
-        otherBubble.label("b2");
+        b2.label("b2");
+        otherBubble2 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        otherBubble2.label("other bubble 2");
     }
 
     private void createEdges() {
@@ -115,6 +121,8 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         );
         EdgeOperator otherRelation = me.addRelationToVertex(otherBubble);
         otherRelation.label("other relation");
+        EdgeOperator otherRelation2 = me.addRelationToVertex(otherBubble2);
+        otherRelation2.label("other relation 2");
         EdgeOperator originalRelation = me.addRelationToVertex(b1);
         originalRelation.label("original relation");
         EdgeOperator sameAsOriginalRelation = me.addRelationToVertex(b2);

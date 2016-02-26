@@ -23,12 +23,14 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
 
     /*
     * some project-idea for 1->idea 1
-    * some project-idea for 2->-idea 2
+    * some project-idea for 2->idea 2
     * relation idea for is identified to idea which has an image
     * some project-has component 1->component 1
     * some project-has component 2->component 2
     * has component is identified to component which has no images
     * some project-other relation->-other bubble
+    * some project-other relation->-other bubble 2
+    * some project-other relation->-other bubble 3
     */
 
     @Inject
@@ -43,7 +45,9 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
             idea2,
             component1,
             component2,
-            otherBubble;
+            otherBubble,
+            otherBubble2,
+            otherBubble3;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -86,6 +90,14 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                 user.username()
         );
         otherBubble.label("other bubble");
+        otherBubble2 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        otherBubble2.label("other bubble 2");
+        otherBubble3 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        otherBubble3.label("other bubble 3");
     }
 
     public void createEdges() {
@@ -130,6 +142,14 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
 
         someProject.addRelationToVertex(
                 otherBubble
+        ).label("other relation");
+
+        someProject.addRelationToVertex(
+                otherBubble2
+        ).label("other relation");
+
+        someProject.addRelationToVertex(
+                otherBubble3
         ).label("other relation");
     }
 }
