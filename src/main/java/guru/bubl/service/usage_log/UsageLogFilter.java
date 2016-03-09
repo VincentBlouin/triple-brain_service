@@ -34,19 +34,19 @@ public class UsageLogFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String username = GraphManipulatorResourceUtils.isUserInSession(requestProvider.get().getSession()) ?
-                GraphManipulatorResourceUtils.userFromSession(
-                        requestProvider.get().getSession()
-                ).email():
-                null;
-        usageLogger.log(
-                LogEntry.withDateUsernameMethodAndAction(
-                        new Date(),
-                        username,
-                        requestProvider.get().getMethod(),
-                        requestProvider.get().getRequestURI()
-                )
-        );
+//        String username = GraphManipulatorResourceUtils.isUserInSession(requestProvider.get().getSession()) ?
+//                GraphManipulatorResourceUtils.userFromSession(
+//                        requestProvider.get().getSession()
+//                ).email():
+//                null;
+//        usageLogger.log(
+//                LogEntry.withDateUsernameMethodAndAction(
+//                        new Date(),
+//                        username,
+//                        requestProvider.get().getMethod(),
+//                        requestProvider.get().getRequestURI()
+//                )
+//        );
         filterChain.doFilter(servletRequest, servletResponse);
 
     }
