@@ -3,15 +3,13 @@
  */
 
 package guru.bubl.service.resources.test;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
-import guru.bubl.service.resources.GraphManipulatorResourceUtils;
-import org.neo4j.graphdb.GraphDatabaseService;
+
 import guru.bubl.module.model.WholeGraph;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphOperator;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.service.resources.GraphManipulatorResourceUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,7 +19,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Iterator;
 
 @Path("/test/graph")
 @Singleton
@@ -32,9 +29,6 @@ public class GraphResourceTestUtils {
 
     @Inject
     WholeGraph wholeGraph;
-
-    @Inject
-    GraphDatabaseService graphDb;
 
     @Path("graph_element/{graphElementId}/exists")
     @GraphTransactional
