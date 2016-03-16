@@ -61,15 +61,15 @@ public class DeepGraphWithCircularityScenario implements JsTestScenario {
         Map<URI, EdgePojo> relations = new LinkedHashMap<>();
         relations.put(
                 r1.uri(),
-                (EdgePojo) subGraphPojo.edgeWithIdentifier(r1.uri())
+                subGraphPojo.edgeWithIdentifier(r1.uri())
         );
         relations.put(
                 r2.uri(),
-                (EdgePojo) subGraphPojo.edgeWithIdentifier(r2.uri())
+                subGraphPojo.edgeWithIdentifier(r2.uri())
         );
         relations.put(
                 r3.uri(),
-                (EdgePojo) subGraphPojo.edgeWithIdentifier(r3.uri())
+                subGraphPojo.edgeWithIdentifier(r3.uri())
         );
         SubGraphPojo subGraphPojoWithSpecificRelationsOrder = SubGraphPojo.withVerticesAndEdges(
                 subGraphPojo.vertices(),
