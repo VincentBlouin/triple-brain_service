@@ -10,10 +10,9 @@ import guru.bubl.service.resources.vertex.VertexSuggestionResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-@Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        AdminResourceTest.class
+        IdentificationResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

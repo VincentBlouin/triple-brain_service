@@ -10,6 +10,8 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.Identification;
 import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.service.resources.identification.IdentificationResource;
+import guru.bubl.service.resources.identification.IdentificationResourceFactory;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResource;
@@ -36,6 +38,9 @@ public class GraphResource {
 
     @Inject
     SchemaResourceFactory schemaResourceFactory;
+
+    @Inject
+    IdentificationResourceFactory identificationResourceFactory;
 
     private User user;
 
@@ -64,6 +69,13 @@ public class GraphResource {
     public SchemaResource schemaResource() {
         return schemaResourceFactory.fromUserGraph(
                 userGraph()
+        );
+    }
+
+    @Path("/identification")
+    public IdentificationResource identificationResource() {
+        return identificationResourceFactory.forAuthenticatedUser(
+                user
         );
     }
 

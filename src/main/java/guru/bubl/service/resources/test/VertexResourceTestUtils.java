@@ -4,12 +4,10 @@
 
 package guru.bubl.service.resources.test;
 
+import guru.bubl.module.model.graph.*;
 import guru.bubl.service.resources.GraphManipulatorResourceUtils;
 import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.common_utils.Uris;
-import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
@@ -41,10 +39,18 @@ public class VertexResourceTestUtils {
     @GraphTransactional
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
-        UserGraph userGraph = graphFactory.loadForUser(GraphManipulatorResourceUtils.userFromSession(request.getSession()));
-        VertexOperator vertex = userGraph.vertexWithUri(new URI(vertexId));
+        UserGraph userGraph = graphFactory.loadForUser(
+                GraphManipulatorResourceUtils.userFromSession(request.getSession())
+        );
+        URI vertexUri = new URI(vertexId);
+        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                vertexUri
+        );
         return Response.ok(VertexInSubGraphJson.toJson(
-                new VertexInSubGraphPojo(vertex)
+                subGraph.vertexWithIdentifier(
+                        vertexUri
+                )
         )).build();
     }
 

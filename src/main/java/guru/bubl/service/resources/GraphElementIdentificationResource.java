@@ -96,7 +96,6 @@ public class GraphElementIdentificationResource {
         ).build();
     }
 
-
     @DELETE
     @GraphTransactional
     @Path("/")
