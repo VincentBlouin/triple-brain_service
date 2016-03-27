@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources;
+package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;

@@ -24,6 +24,7 @@ import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResourceFactory;
+import guru.bubl.service.resources.schema.SchemasResource;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
 import guru.bubl.service.usage_log.H2DataSource;
@@ -61,6 +62,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
                 bind(UserResource.class);
+                bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
                 bind(PublicSearchResource.class);
 
