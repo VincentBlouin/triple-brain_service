@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources;
+package guru.bubl.service.resources.center;
 
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
@@ -22,12 +22,13 @@ public class CenterGraphElementResourceTest extends GraphManipulationRestTestUti
                 is(Response.Status.OK.getStatusCode())
         );
     }
-
     @Test
-    public void cannot_get_center_elements_of_another_user(){
+    public void cannot_get_private_center_elements_of_another_user(){
         assertThat(
                 graphUtils().getCenterGraphElementsResponseForUser(defaultAuthenticatedUser).getStatus(),
-                is(Response.Status.OK.getStatusCode())
+                is(
+                        Response.Status.OK.getStatusCode()
+                )
         );
         createAUser();
         assertThat(
@@ -42,5 +43,4 @@ public class CenterGraphElementResourceTest extends GraphManipulationRestTestUti
                 graphUtils().getCenterGraphElements().isEmpty()
         );
     }
-
 }

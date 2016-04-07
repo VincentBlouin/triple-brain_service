@@ -19,6 +19,8 @@ import guru.bubl.module.neo4j_graph_manipulator.graph.search.Neo4jGraphSearchMod
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
 import guru.bubl.service.RestInterceptor;
 import guru.bubl.service.resources.*;
+import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.identification.IdentificationResourceFactory;
 import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
@@ -68,6 +70,10 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 install(builder.build(
                         CenterGraphElementsResourceFactory.class
+                ));
+
+                install(builder.build(
+                        PublicCenterGraphElementsResourceFactory.class
                 ));
 
                 install(builder.build(

@@ -14,6 +14,10 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.repository.user.UserRepository;
+import guru.bubl.service.resources.center.CenterGraphElementsResource;
+import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.identification.IdentifiedToResource;
 import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
@@ -70,6 +74,9 @@ public class UserResource {
 
     @Inject
     CenterGraphElementsResourceFactory centerGraphElementsResourceFactory;
+
+    @Inject
+    PublicCenterGraphElementsResourceFactory publicCenterGraphElementsResourceFactory;
 
     @Inject
     private Injector injector;
@@ -177,8 +184,8 @@ public class UserResource {
     @Path("{username}/center-elements")
     public CenterGraphElementsResource getCenterGraphElementsResource(
             @PathParam("username") String username
-    ){
-        if (!isUserNameTheOneInSession(username)){
+    ) {
+        if (!isUserNameTheOneInSession(username)) {
             throw new WebApplicationException(
                     Response.Status.FORBIDDEN
             );
@@ -188,6 +195,14 @@ public class UserResource {
         );
     }
 
+    @Path("{username}/center-elements/public")
+    public PublicCenterGraphElementsResource getPublicCenterGraphElementsResource(
+            @PathParam("username") String username
+    ) {
+        return publicCenterGraphElementsResourceFactory.forUser(
+                User.withUsername(username)
+        );
+    }
 
     @Path("session")
     public UserSessionResource sessionResource() {
@@ -216,7 +231,7 @@ public class UserResource {
         );
         JSONArray jsonMessages = new JSONArray();
         Map<String, String> errors = errorsForUserAsJson(jsonUser);
-        if(errors.isEmpty()){
+        if (errors.isEmpty()) {
             if (userRepository.emailExists(user.email())) {
                 errors.put(EMAIL, ALREADY_REGISTERED_EMAIL);
             }
@@ -261,7 +276,7 @@ public class UserResource {
     @Path("/is_authenticated")
     public Response isAuthenticated(@Context HttpServletRequest request) throws JSONException {
         return Response.ok(new JSONObject()
-                        .put("is_authenticated", GraphManipulatorResourceUtils.isUserInSession(request.getSession()))
+                .put("is_authenticated", GraphManipulatorResourceUtils.isUserInSession(request.getSession()))
         ).build();
     }
 

@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources;
+package guru.bubl.service.resources.center;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -35,7 +35,7 @@ public class CenterGraphElementsResource {
     public Response get(){
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
-                        centerGraphElementsOperatorFactory.forUser(user).get()
+                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivate()
                 )
         ).build();
     }

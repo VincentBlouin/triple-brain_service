@@ -4,18 +4,16 @@
 
 package guru.bubl.service.resources;
 
-import guru.bubl.service.resources.schema.SchemaResourceTest;
-import guru.bubl.service.resources.schema.SchemasResourceTest;
-import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceTest;
-import guru.bubl.service.resources.vertex.VertexOwnedSurroundGraphResouceTest;
-import guru.bubl.service.resources.vertex.VertexSuggestionResourceTest;
+import guru.bubl.service.resources.center.CenterGraphElementResourceTest;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SchemasResourceTest.class
+        PublicCenterGraphElementsResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

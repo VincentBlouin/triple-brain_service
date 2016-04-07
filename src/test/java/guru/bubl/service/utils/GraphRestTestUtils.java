@@ -145,6 +145,12 @@ public class GraphRestTestUtils {
         );
     }
 
+    public ClientResponse getPublicCenterGraphElementsResponse() {
+        return getPublicCenterGraphElementsResponseForUser(
+                authenticatedUser
+        );
+    }
+
     public ClientResponse getCenterGraphElementsResponseForUser(User user) {
         return resource
                 .path(user.id())
@@ -153,9 +159,24 @@ public class GraphRestTestUtils {
                 .get(ClientResponse.class);
     }
 
+    public ClientResponse getPublicCenterGraphElementsResponseForUser(User user) {
+        return resource
+                .path(user.id())
+                .path("center-elements")
+                .path("public")
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+    }
+
     public Set<CenterGraphElementPojo> getCenterGraphElements() {
+        return getCenterGraphElementsFromClientResponse(
+                getCenterGraphElementsResponse()
+        );
+    }
+
+    public Set<CenterGraphElementPojo> getCenterGraphElementsFromClientResponse(ClientResponse clientResponse) {
         return CenterGraphElementsJson.fromJson(
-                getCenterGraphElementsResponse().getEntity(
+                clientResponse.getEntity(
                         String.class
                 ));
     }
