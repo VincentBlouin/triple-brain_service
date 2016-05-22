@@ -31,6 +31,7 @@ public abstract class RestTestUtils {
     static public Launcher launcher;
     static public Client client;
     protected NewCookie authCookie;
+    protected User currentAuthenticatedUser;
     public static final String DEFAULT_PASSWORD = "password";
 
     @BeforeClass
@@ -69,6 +70,7 @@ public abstract class RestTestUtils {
                     .post(ClientResponse.class, loginInfo);
             assertThat(response.getStatus(), is(200));
             authCookie = response.getCookies().get(0);
+            currentAuthenticatedUser = user;
             return user;
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -91,6 +93,10 @@ public abstract class RestTestUtils {
                     .post(ClientResponse.class, loginInfo);
             assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
             authCookie = response.getCookies().get(0);
+            currentAuthenticatedUser = User.withEmailAndUsername(
+                    user.optString(UserJson.EMAIL, ""),
+                    user.optString(UserJson.USER_NAME, "")
+            );
             return response;
         } catch (JSONException e) {
             throw new RuntimeException(e);

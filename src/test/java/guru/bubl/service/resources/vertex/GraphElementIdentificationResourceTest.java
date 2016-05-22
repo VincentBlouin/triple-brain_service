@@ -5,14 +5,15 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.identification.Identification;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentificationType;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.FriendlyResource;
-import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.json.IdentificationJson;
 

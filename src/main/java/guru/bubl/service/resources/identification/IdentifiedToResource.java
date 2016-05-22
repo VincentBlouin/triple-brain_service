@@ -9,16 +9,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.IdentifiedTo;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.FriendlyResourcePojo;
-import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.IdentificationPojo;
-import guru.bubl.module.model.json.FriendlyResourceJson;
-import guru.bubl.module.model.json.graph.GraphElementJson;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 
 import javax.inject.Inject;
-import javax.naming.directory.SearchResult;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

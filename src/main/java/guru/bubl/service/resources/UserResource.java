@@ -9,7 +9,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphIndexer;
@@ -18,6 +18,8 @@ import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
+import guru.bubl.service.resources.fork.ForkResource;
+import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.identification.IdentifiedToResource;
 import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
@@ -80,6 +82,9 @@ public class UserResource {
 
     @Inject
     private Injector injector;
+
+    @Inject
+    ForkResourceFactory forkResourceFactory;
 
     @Context
     HttpServletRequest request;
@@ -191,6 +196,20 @@ public class UserResource {
             );
         }
         return centerGraphElementsResourceFactory.forUser(
+                GraphManipulatorResourceUtils.userFromSession(request.getSession())
+        );
+    }
+
+    @Path("{username}/fork")
+    public ForkResource getForkResource(
+            @PathParam("username") String username
+    ) {
+        if (!isUserNameTheOneInSession(username)) {
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
+        }
+        return forkResourceFactory.forUser(
                 GraphManipulatorResourceUtils.userFromSession(request.getSession())
         );
     }

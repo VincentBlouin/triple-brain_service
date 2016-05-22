@@ -10,20 +10,22 @@ import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.GraphElement;
-import guru.bubl.module.model.graph.SubGraph;
-import guru.bubl.module.model.graph.SubGraphPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Set;
 
+import static guru.bubl.service.utils.GraphManipulationRestTestUtils.getUsersBaseUri;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -187,5 +189,27 @@ public class GraphRestTestUtils {
                         uri
                 )
         ).findAny().get();
+    }
+
+    public ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
+        return getNonOwnedGraphOfCentralVertexWithUri(
+                vertex.uri()
+        );
+    }
+
+    public ClientResponse getNonOwnedGraphOfCentralVertexWithUri(URI vertexUri) {
+        String shortId = UserUris.graphElementShortId(
+                vertexUri
+        );
+        return resource
+                .path(getUsersBaseUri(UserUris.ownerUserNameFromUri(vertexUri)))
+                .path("non_owned")
+                .path("vertex")
+                .path(shortId)
+                .path("surround_graph")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .cookie(authCookie)
+                .get(ClientResponse.class);
     }
 }

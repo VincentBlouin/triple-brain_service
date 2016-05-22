@@ -7,6 +7,10 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.json.graph.SchemaJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.search.GraphElementSearchResult;

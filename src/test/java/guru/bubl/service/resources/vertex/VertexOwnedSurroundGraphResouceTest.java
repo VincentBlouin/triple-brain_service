@@ -5,10 +5,8 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.center_graph_element.CenterGraphElement;
-import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.SubGraph;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.json.graph.SubGraphJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
@@ -18,7 +16,6 @@ import org.junit.Test;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

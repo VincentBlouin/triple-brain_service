@@ -9,7 +9,7 @@ import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.json.graph.SchemaJson;
 import guru.bubl.module.model.search.GraphElementSearchResult;

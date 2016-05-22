@@ -4,7 +4,7 @@
 
 package guru.bubl.service.resources.schema;
 
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 
 public interface  SchemaNonOwnedResourceFactory {
     SchemaNonOwnedResource fromUserGraph(UserGraph userGraph);

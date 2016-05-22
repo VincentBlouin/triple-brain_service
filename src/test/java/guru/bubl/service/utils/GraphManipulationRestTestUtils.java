@@ -101,7 +101,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return IdentificationRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                defaultAuthenticatedUser
+                currentAuthenticatedUser
         );
     }
 
@@ -151,7 +151,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return Boolean.valueOf(boolStr);
     }
 
-    protected String getUsersBaseUri(String username) {
+    public static String getUsersBaseUri(String username) {
         return new UserUris(username).baseUri().toString();
     }
 

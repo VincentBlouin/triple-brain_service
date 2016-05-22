@@ -7,7 +7,7 @@ package guru.bubl.service.resources.test;
 import guru.bubl.module.model.WholeGraph;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphOperator;
 import guru.bubl.service.resources.GraphManipulatorResourceUtils;
 

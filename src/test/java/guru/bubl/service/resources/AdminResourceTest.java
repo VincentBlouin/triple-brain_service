@@ -5,23 +5,15 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.FriendlyResource;
-import guru.bubl.module.model.graph.Identification;
-import guru.bubl.module.model.graph.IdentificationPojo;
-import guru.bubl.module.model.graph.IdentificationType;
-import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentificationType;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-
-import java.net.URI;
-import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

@@ -8,7 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.SubGraph;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.graph.SubGraphJson;
@@ -31,7 +31,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         assertThat(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getStatus(),
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getStatus(),
                 is(
                         Response.Status.OK.getStatusCode()
                 )
@@ -46,7 +46,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         assertThat(
-                getNonOwnedGraphOfCentralVertex(vertexA()).getStatus(),
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexA()).getStatus(),
                 is(
                         Response.Status.FORBIDDEN.getStatusCode()
                 )
@@ -58,7 +58,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         URI vertexBUri = vertexB().uri();
         vertexUtils().removeVertexB();
         assertThat(
-                getNonOwnedGraphOfCentralVertexWithUri(vertexBUri).getStatus(),
+                graphUtils().getNonOwnedGraphOfCentralVertexWithUri(vertexBUri).getStatus(),
                 is(
                         Response.Status.NOT_FOUND.getStatusCode()
                 )
@@ -73,7 +73,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         SubGraph subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertTrue(
                 subGraph.vertices().containsKey(vertexBUri())
@@ -94,7 +94,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         SubGraph subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertThat(
                 subGraph.vertices().size(),
@@ -116,7 +116,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         SubGraph subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertThat(
                 subGraph.vertices().size(),
@@ -136,7 +136,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 vertexCUri()
         );
         SubGraph subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertThat(
                 subGraph.vertices().size(),
@@ -153,7 +153,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         );
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         SubGraph subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertTrue(
                 subGraph.hasEdgeWithUri(
@@ -164,7 +164,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         subGraph = SubGraphJson.fromJson(
-                getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertFalse(
                 subGraph.hasEdgeWithUri(
@@ -248,34 +248,14 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 vertexAUri()
         );
         authenticate(createAUser());
-        ClientResponse response = getNonOwnedGraphOfCentralVertex(vertexA());
+        ClientResponse response = graphUtils().getNonOwnedGraphOfCentralVertex(vertexA());
         assertThat(
                 response.getStatus(),
                 is(Response.Status.FORBIDDEN.getStatusCode())
         );
     }
 
-    private ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
-        return getNonOwnedGraphOfCentralVertexWithUri(
-                vertex.uri()
-        );
-    }
 
-    private ClientResponse getNonOwnedGraphOfCentralVertexWithUri(URI vertexUri) {
-        String shortId = UserUris.graphElementShortId(
-                vertexUri
-        );
-        return resource
-                .path(getUsersBaseUri(UserUris.ownerUserNameFromUri(vertexUri)))
-                .path("non_owned")
-                .path("vertex")
-                .path(shortId)
-                .path("surround_graph")
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .cookie(authCookie)
-                .get(ClientResponse.class);
-    }
 
     private ClientResponse getNonOwnedGraphOfCentralVertexNotAuthenticated(Vertex vertex) {
         String shortId = UserUris.graphElementShortId(

@@ -6,6 +6,10 @@ package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.Image;

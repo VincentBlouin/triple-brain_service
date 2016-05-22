@@ -10,7 +10,7 @@ import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 
 import javax.inject.Inject;

@@ -5,9 +5,9 @@
 package guru.bubl.service.resources.vertex;
 
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.SubGraph;
-import guru.bubl.module.model.graph.SubGraphPojo;
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.graph.SubGraphJson;

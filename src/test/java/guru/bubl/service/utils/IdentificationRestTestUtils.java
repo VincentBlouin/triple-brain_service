@@ -9,18 +9,12 @@ import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.common_utils.Uris;
-import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.FriendlyResourcePojo;
-import guru.bubl.module.model.graph.Identification;
-import guru.bubl.module.model.json.FriendlyResourceJson;
+import guru.bubl.module.model.graph.identification.Identification;
 import guru.bubl.module.model.search.EdgeSearchResult;
-import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.VertexSearchResult;
 
 import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;

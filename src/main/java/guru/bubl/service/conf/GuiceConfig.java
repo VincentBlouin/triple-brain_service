@@ -21,6 +21,8 @@ import guru.bubl.service.RestInterceptor;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
+import guru.bubl.service.resources.edge.EdgeResourceFactory;
+import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.identification.IdentificationResourceFactory;
 import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
@@ -120,6 +122,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         SchemaNonOwnedResourceFactory.class
+                ));
+                install(builder.build(
+                        ForkResourceFactory.class
                 ));
                 final Map<String, String> params = new HashMap<>();
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");

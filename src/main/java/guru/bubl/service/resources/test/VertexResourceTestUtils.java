@@ -5,13 +5,15 @@
 package guru.bubl.service.resources.test;
 
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.service.resources.GraphManipulatorResourceUtils;
 import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.graph.EdgeJson;
 import guru.bubl.module.model.json.graph.VertexInSubGraphJson;

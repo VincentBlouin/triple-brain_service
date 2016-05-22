@@ -4,29 +4,24 @@
 
 package guru.bubl.service.utils;
 
-import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import guru.bubl.module.model.graph.Identification;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.IdentificationPojo;
-import guru.bubl.module.model.graph.IdentificationType;
-import guru.bubl.test.module.utils.ModelTestScenarios;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentificationType;
 import guru.bubl.module.model.json.IdentificationJson;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
-import java.util.Map;
 
 public class GraphElementRestTestUtils {
 
     private WebResource resource;
     private NewCookie authCookie;
     private User authenticatedUser;
-    private Gson gson = new Gson();
 
     public static GraphElementRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         return new GraphElementRestTestUtils(resource, authCookie, authenticatedUser);

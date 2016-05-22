@@ -10,8 +10,8 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.module.model.graph.IdentificationPojo;
-import guru.bubl.module.model.graph.IdentificationType;
+import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentificationType;
 import guru.bubl.module.model.json.IdentificationJson;
 import guru.bubl.module.model.json.LocalizedStringJson;
 

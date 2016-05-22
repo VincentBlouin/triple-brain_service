@@ -4,7 +4,7 @@
 
 package guru.bubl.service.resources.vertex;
 
-import guru.bubl.module.model.graph.UserGraph;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 
 public interface VertexResourceFactory {
     public VertexResource withUserGraph(UserGraph userGraph);

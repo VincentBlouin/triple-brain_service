@@ -10,15 +10,14 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.identification.IdentificationFactory;
+import guru.bubl.module.model.graph.identification.IdentificationOperator;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.search.GraphElementSearchResult;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.util.Set;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
