@@ -37,17 +37,26 @@ public class VertexNonOwnedSurroundGraphResource {
     @GET
     @Path("/")
     @GraphTransactional
-    public Response get() {
+    public Response get(@QueryParam("depth") Integer depth) {
+        if(null == depth){
+            depth = 1;
+        }
         return Response.ok(
                 SubGraphJson.toJson(
-                        getGraph()
+                        getGraphAtDepth(depth)
                 )
         ).build();
     }
 
+
+
     private SubGraphPojo getGraph() {
+        return getGraphAtDepth(1);
+    }
+
+    private SubGraphPojo getGraphAtDepth(Integer depth) {
         SubGraphPojo graph = userGraph.graphWithDepthAndCenterVertexId(
-                1,
+                depth,
                 centerVertex.uri()
         );
         removeGraphElementsNotAllowedToAccess(

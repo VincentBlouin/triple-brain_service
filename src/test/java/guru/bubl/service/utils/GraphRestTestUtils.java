@@ -198,6 +198,13 @@ public class GraphRestTestUtils {
     }
 
     public ClientResponse getNonOwnedGraphOfCentralVertexWithUri(URI vertexUri) {
+        return getNonOwnedGraphOfCentralVertexWithUriAtDepth(
+                vertexUri,
+                1
+        );
+    }
+
+    public ClientResponse getNonOwnedGraphOfCentralVertexWithUriAtDepth(URI vertexUri, Integer depth) {
         String shortId = UserUris.graphElementShortId(
                 vertexUri
         );
@@ -207,6 +214,7 @@ public class GraphRestTestUtils {
                 .path("vertex")
                 .path(shortId)
                 .path("surround_graph")
+                .queryParam("depth", depth.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .cookie(authCookie)

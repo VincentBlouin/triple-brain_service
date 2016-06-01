@@ -255,9 +255,44 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         );
     }
 
+    @Test
+    public void can_get_graph_with_depth() {
+        ClientResponse response = graphUtils().getNonOwnedGraphOfCentralVertexWithUriAtDepth(
+                vertexAUri(),
+                2
+        );
+        SubGraph subGraph = SubGraphJson.fromJson(
+                response
+                .getEntity(JSONObject.class)
+        );
+        assertThat(
+                subGraph.numberOfVertices(),
+                is(3)
+        );
+    }
 
-
+    @Test
+    public void returns_graph_of_1_depth_when_not_specified() {
+        ClientResponse response = getWithNoDepthSpecifiedForVertexUri(
+                vertexAUri()
+        );
+        SubGraph subGraph = SubGraphJson.fromJson(
+                response
+                        .getEntity(JSONObject.class)
+        );
+        assertThat(
+                subGraph.numberOfVertices(),
+                is(2)
+        );
+    }
     private ClientResponse getNonOwnedGraphOfCentralVertexNotAuthenticated(Vertex vertex) {
+        return getNonOwnedGraphOfCentralVertexNotAuthenticatedWithDepth(
+                vertex,
+                1
+        );
+    }
+
+    private ClientResponse getNonOwnedGraphOfCentralVertexNotAuthenticatedWithDepth(Vertex vertex, Integer depth) {
         String shortId = UserUris.graphElementShortId(
                 vertex.uri()
         );
@@ -267,6 +302,23 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 .path("vertex")
                 .path(shortId)
                 .path("surround_graph")
+                .queryParam("depth", depth.toString())
+                .get(ClientResponse.class);
+    }
+
+    private ClientResponse getWithNoDepthSpecifiedForVertexUri(URI vertexUri){
+        String shortId = UserUris.graphElementShortId(
+                vertexUri
+        );
+        return resource
+                .path(getUsersBaseUri(UserUris.ownerUserNameFromUri(vertexUri)))
+                .path("non_owned")
+                .path("vertex")
+                .path(shortId)
+                .path("surround_graph")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .cookie(authCookie)
                 .get(ClientResponse.class);
     }
 }
