@@ -5,16 +5,19 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
+import guru.bubl.module.model.IdentifiedTo;
+import guru.bubl.module.model.graph.GraphElement;
+import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.test.scenarios.TestScenarios;
+import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -50,7 +53,15 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     @Inject
     GraphSearch graphSearch;
 
+    @Inject
+    SubGraphForkerFactory subGraphForkerFactory;
+
+    @Inject
+    IdentifiedTo identifiedTo;
+
     User user = User.withEmailAndUsername("a", "b");
+
+    User forkerUser = User.withEmailAndUsername("forker@example.com", "forker");
 
     private VertexOperator
             b1,
@@ -80,11 +91,34 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 "r2",
                 user
         );
+
+        b1.makePublic();
+        b2.makePublic();
+        b3.makePublic();
+        subGraphForkerFactory.forUser(
+                forkerUser
+        ).fork(
+                subGraphForB1
+        );
+        GraphElementSearchResult forkedB1 = identifiedTo.getForIdentificationAndUser(
+                TestScenarios.identificationFromFriendlyResource(b1),
+                forkerUser
+        ).iterator().next();
+        SubGraphPojo b1Fork = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                forkedB1.getGraphElement().uri()
+        );
+
         try {
             return new JSONObject().put(
                     "getGraph",
                     SubGraphJson.toJson(
                             subGraphForB1
+                    )
+            ).put(
+                    "forkedGraph",
+                    SubGraphJson.toJson(
+                            b1Fork
                     )
             ).put(
                     "searchResultsForB1",
