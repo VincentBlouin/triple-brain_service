@@ -274,9 +274,8 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
         return resource
                 .path(vertexAUri().getPath())
                 .path("suggestions")
-                .path("delete")
                 .cookie(authCookie)
-                .post(
+                .delete(
                         ClientResponse.class,
                         urisToDelete
                 );

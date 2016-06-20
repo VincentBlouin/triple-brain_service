@@ -84,16 +84,10 @@ public class VertexSuggestionResource {
         }
     }
 
-    @POST
-    @Path("/delete")
+    @DELETE
+    @Path("/")
     @GraphTransactional
     public Response deleteSuggestions(JSONArray uris) {
-        /*
-        * @DELETE should be used instead but data cannot be sent to a DELETE operation
-        * because of a java bug fixed in version 8.
-        * see https://bugs.openjdk.java.net/browse/JDK-7157360
-        * todo Refactor once running on java 8 and greater
-        * */
         Map<URI, SuggestionPojo> suggestions = vertex.getSuggestions();
         for(int i = 0; i < uris.length(); i++){
             try {
