@@ -40,7 +40,7 @@ public class CreationDateScenario implements JsTestScenario {
     @Inject
     VertexFactory vertexFactory;
 
-    User user = User.withEmailAndUsername("a", "b");
+    User user = User.withEmailAndUsername("f", "g");
 
     private VertexOperator
             b1,
@@ -159,7 +159,11 @@ public class CreationDateScenario implements JsTestScenario {
     }
 
     private void setupcreationDatesForSubGraphForB1() {
-        DateTime b1CreationDate = new DateTime();
+        DateTime b1CreationDate = new DateTime().withDayOfMonth(
+                27
+        ).withMonthOfYear(
+                6
+        );
         subGraphForB1.vertexWithIdentifier(
                 b1.uri()
         ).setCreationDate(b1CreationDate);

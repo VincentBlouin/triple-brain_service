@@ -6,12 +6,11 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.IdentifiedTo;
-import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
-import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -43,6 +42,11 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     * b4 has hidden relations
     */
 
+    /*
+    Also a fork of subgraph b1 b2 and b3
+    b1 fork is identified to "Event" and has 2 suggestions
+    */
+
 
     @Inject
     GraphFactory graphFactory;
@@ -58,6 +62,9 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
 
     @Inject
     IdentifiedTo identifiedTo;
+
+    @Inject
+    ModelTestScenarios modelTestScenarios;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -91,24 +98,6 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 "r2",
                 user
         );
-
-        b1.makePublic();
-        b2.makePublic();
-        b3.makePublic();
-        subGraphForkerFactory.forUser(
-                forkerUser
-        ).fork(
-                subGraphForB1
-        );
-        GraphElementSearchResult forkedB1 = identifiedTo.getForIdentificationAndUser(
-                TestScenarios.identificationFromFriendlyResource(b1),
-                forkerUser
-        ).iterator().next();
-        SubGraphPojo b1Fork = userGraph.graphWithDepthAndCenterVertexId(
-                1,
-                forkedB1.getGraphElement().uri()
-        );
-
         try {
             return new JSONObject().put(
                     "getGraph",
@@ -118,7 +107,9 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
             ).put(
                     "forkedGraph",
                     SubGraphJson.toJson(
-                            b1Fork
+                            buildForkSubGraph(
+                                    subGraphForB1
+                            )
                     )
             ).put(
                     "searchResultsForB1",
@@ -176,5 +167,37 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         r4.label("r4");
         b4.addVertexAndRelation();
         b4.addVertexAndRelation();
+    }
+
+    private SubGraphPojo buildForkSubGraph(SubGraph subGraphForB1) {
+        b1.makePublic();
+        b2.makePublic();
+        b3.makePublic();
+        UserGraph forkerUserGraph = graphFactory.createForUser(forkerUser);
+        subGraphForkerFactory.forUser(
+                forkerUser
+        ).fork(
+                subGraphForB1
+        );
+        GraphElementSearchResult forkedB1SearchResult = identifiedTo.getForIdentificationAndUser(
+                TestScenarios.identificationFromFriendlyResource(b1),
+                forkerUser
+        ).iterator().next();
+        VertexOperator forkedB1 = vertexFactory.withUri(
+                forkedB1SearchResult.getGraphElement().uri()
+        );
+        forkedB1.addGenericIdentification(
+                modelTestScenarios.event()
+        );
+        forkedB1.addSuggestions(
+                modelTestScenarios.suggestionsToMap(
+                        modelTestScenarios.peopleInvolvedSuggestionFromEventIdentification(user),
+                        modelTestScenarios.startDateSuggestionFromEventIdentification(user)
+                )
+        );
+        return forkerUserGraph.graphWithDepthAndCenterVertexId(
+                1,
+                forkedB1.uri()
+        );
     }
 }
