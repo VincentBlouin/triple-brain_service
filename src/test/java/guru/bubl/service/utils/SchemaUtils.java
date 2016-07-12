@@ -63,4 +63,20 @@ public class SchemaUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public URI uriOfCreatedPropertyForSchemaUri(URI schemaUri) {
+        return graphUtils.getElementUriInResponse(
+                addProperty(
+                        schemaUri
+                )
+        );
+    }
+
+    public ClientResponse addProperty(URI schemaUri) {
+        return resource
+                .path(schemaUri.toString())
+                .path("property")
+                .cookie(authCookie)
+                .post(ClientResponse.class);
+    }
 }

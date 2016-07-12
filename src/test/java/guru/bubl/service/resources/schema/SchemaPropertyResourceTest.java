@@ -39,7 +39,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void creation_returns_created_status() {
         assertThat(
-                addProperty(schemaUtils().uriOfCreatedSchema()).getStatus(),
+                schemaUtils().addProperty(schemaUtils().uriOfCreatedSchema()).getStatus(),
                 is(Response.Status.CREATED.getStatusCode())
         );
     }
@@ -130,7 +130,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
                 schemaUri,
                 "schema1"
         );
-        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
         updateLabel(propertyUri, "prop1");
         VertexSearchResult result = searchUtils().vertexSearchResultsFromResponse(
                 searchUtils().autoCompletionForPublicVertices(
@@ -150,7 +150,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
                 schemaUri,
                 "schema1"
         );
-        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
         updateLabel(propertyUri, "prop1");
         VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 "schema1"
@@ -170,7 +170,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_note_returns_correct_status() throws Exception {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
         ClientResponse response = updateNote(propertyUri, "some note");
         assertThat(
                 response.getStatus(),
@@ -181,7 +181,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void getting_surround_graph_returns_ok_status() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
         assertThat(
                 getSurroundGraphForPropertyWithUri(
                         propertyUri
@@ -195,7 +195,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void getting_surround_graph_returns_the_schema_and_its_properties() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
         Schema schema = SchemaJson.fromJson(
                 getSurroundGraphForPropertyWithUri(propertyUri).getEntity(
                         String.class
@@ -246,25 +246,9 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     private URI uriOfCreatedProperty() {
-        return uriOfCreatedPropertyForSchemaUri(
+        return schemaUtils().uriOfCreatedPropertyForSchemaUri(
                 schemaUtils().uriOfCreatedSchema()
         );
-    }
-
-    private URI uriOfCreatedPropertyForSchemaUri(URI schemaUri) {
-        return graphUtils().getElementUriInResponse(
-                addProperty(
-                        schemaUri
-                )
-        );
-    }
-
-    private ClientResponse addProperty(URI schemaUri) {
-        return resource
-                .path(schemaUri.toString())
-                .path("property")
-                .cookie(authCookie)
-                .post(ClientResponse.class);
     }
 
     private ClientResponse removeProperty(URI propertyUri) {
