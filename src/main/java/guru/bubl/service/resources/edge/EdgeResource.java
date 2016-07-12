@@ -10,6 +10,7 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
+import guru.bubl.service.resources.vertex.VertexOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
@@ -172,6 +173,19 @@ public class EdgeResource {
                 newSourceVertex
         );
         return Response.noContent().build();
+    }
+
+
+    @GraphTransactional
+    @Path("{shortId}/surround_graph")
+    public VertexOwnedSurroundGraphResource getSurroundGraph(
+            @PathParam("shortId") String shortId
+    ) {
+        Edge edge = edgeFromShortId(shortId);
+        return new VertexOwnedSurroundGraphResource(
+                userGraph,
+                edge.sourceVertex()
+        );
     }
 
     private EdgeOperator edgeFromShortId(String shortId) {

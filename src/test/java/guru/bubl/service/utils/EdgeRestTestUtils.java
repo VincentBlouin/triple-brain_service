@@ -7,6 +7,7 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.common_utils.NoExRun;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
@@ -43,19 +44,21 @@ public class EdgeRestTestUtils {
         );
     }
 
-    public ClientResponse updateEdgeLabel(String label, Edge edge) throws Exception {
-        JSONObject localizedLabel = new JSONObject().put(
-                LocalizedStringJson.content.name(),
-                label
-        );
-        return resource
-                .path(edge.uri().toString())
-                .path("label")
-                .cookie(authCookie)
-                .post(ClientResponse.class, localizedLabel);
+    public ClientResponse updateEdgeLabel(String label, Edge edge) {
+        return NoExRun.wrap(() -> {
+            JSONObject localizedLabel = new JSONObject().put(
+                    LocalizedStringJson.content.name(),
+                    label
+            );
+            return resource
+                    .path(edge.uri().toString())
+                    .path("label")
+                    .cookie(authCookie)
+                    .post(ClientResponse.class, localizedLabel);
+        }).get();
     }
 
-    public ClientResponse removeEdgeBetweenVertexAAndB() throws Exception {
+    public ClientResponse removeEdgeBetweenVertexAAndB() {
         Edge edgeBetweenAAndB = edgeBetweenAAndB();
         return resource
                 .path(edgeBetweenAAndB.uri().toString())
@@ -77,7 +80,7 @@ public class EdgeRestTestUtils {
         );
     }
 
-    public ClientResponse updateNoteOfEdge(String note, Edge edge){
+    public ClientResponse updateNoteOfEdge(String note, Edge edge) {
         return resource
                 .path(edge.uri().getPath())
                 .path("comment")

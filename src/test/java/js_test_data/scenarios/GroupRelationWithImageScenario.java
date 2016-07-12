@@ -28,7 +28,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
     /*
     * some project-idea for 1->idea 1
     * some project-idea for 2->idea 2
-    * relation idea for is identified to idea which has an image
+    * relation "idea for" is identified to idea which has an image
     * some project-has component 1->component 1
     * some project-has component 2->component 2
     * has component is identified to component which has no images
@@ -69,7 +69,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         );
     }
 
-    public void createVertices() {
+    private void createVertices() {
         someProject = vertexFactory.createForOwnerUsername(
                 user.username()
         );
@@ -104,7 +104,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         otherBubble3.label("other bubble 3");
     }
 
-    public void createEdges() {
+    private void createEdges() {
         FriendlyResourcePojo ideaFriendlyResource = new FriendlyResourcePojo(
                 "idea"
         );

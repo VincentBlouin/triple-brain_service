@@ -26,7 +26,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
 
     /*
     *
-    * center-some_relation->b1
+    * center-some relation->b1
     * center-some relation->b2
     * center-some relation->b3
     * center-different relation->b4

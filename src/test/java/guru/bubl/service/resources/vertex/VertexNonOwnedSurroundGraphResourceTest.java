@@ -263,7 +263,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
         );
         SubGraph subGraph = SubGraphJson.fromJson(
                 response
-                .getEntity(JSONObject.class)
+                        .getEntity(JSONObject.class)
         );
         assertThat(
                 subGraph.numberOfVertices(),
@@ -285,6 +285,40 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 is(2)
         );
     }
+
+    @Test
+    public void getting_for_edge_returns_ok_status() {
+        assertThat(
+                getNonOwnedGraphOfEdgeBetweenAAndB().getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+
+    private ClientResponse getNonOwnedGraphOfEdgeBetweenAAndB() {
+        vertexUtils().makePublicVertexWithUri(
+                vertexAUri()
+        );
+        vertexUtils().makePublicVertexWithUri(
+                vertexBUri()
+        );
+        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
+
+        );
+        String shortId = UserUris.graphElementShortId(
+                edge.uri()
+        );
+        return resource
+                .path(getUsersBaseUri(edge.getOwnerUsername()))
+                .path("non_owned")
+                .path("edge")
+                .path(shortId)
+                .path("surround_graph")
+                .get(ClientResponse.class);
+    }
+
     private ClientResponse getNonOwnedGraphOfCentralVertexNotAuthenticated(Vertex vertex) {
         return getNonOwnedGraphOfCentralVertexNotAuthenticatedWithDepth(
                 vertex,
@@ -306,7 +340,7 @@ public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRe
                 .get(ClientResponse.class);
     }
 
-    private ClientResponse getWithNoDepthSpecifiedForVertexUri(URI vertexUri){
+    private ClientResponse getWithNoDepthSpecifiedForVertexUri(URI vertexUri) {
         String shortId = UserUris.graphElementShortId(
                 vertexUri
         );

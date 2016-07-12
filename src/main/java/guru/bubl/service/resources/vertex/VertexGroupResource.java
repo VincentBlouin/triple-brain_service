@@ -87,7 +87,7 @@ public class VertexGroupResource {
         Iterator<String> keysIt = uris.keys();
         while(keysIt.hasNext()){
             String uri = keysIt.next();
-            Edge edge = edgeFactory.createOrLoadUsingUri(
+            Edge edge = edgeFactory.withUri(
                     URI.create(uri)
             );
             edges.add(

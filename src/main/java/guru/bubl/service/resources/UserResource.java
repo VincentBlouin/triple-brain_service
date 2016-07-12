@@ -9,8 +9,12 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.repository.user.UserRepository;
@@ -89,6 +93,12 @@ public class UserResource {
     @Context
     HttpServletRequest request;
 
+    @Inject
+    VertexFactory vertexFactory;
+
+    @Inject
+    EdgeFactory edgeFactory;
+
     @Path("{username}/graph")
     public GraphResource graphResource(
             @PathParam("username") String username
@@ -107,20 +117,41 @@ public class UserResource {
             @PathParam("username") String username,
             @PathParam("shortId") String shortId
     ) {
+        return getVertexSurroundGraphResource(
+                vertexFactory.withUri(
+                        new UserUris(
+                                username
+                        ).vertexUriFromShortId(shortId)
+                )
+        );
+    }
+
+    @Path("{username}/non_owned/edge/{shortId}/surround_graph")
+    @GraphTransactional
+    public VertexNonOwnedSurroundGraphResource surroundEdgeGraphResource(
+            @PathParam("username") String username,
+            @PathParam("shortId") String shortId
+    ) {
+        Edge edge = edgeFactory.withUri(
+                new UserUris(
+                        username
+                ).edgeUriFromShortId(
+                        shortId
+                )
+        );
+        return getVertexSurroundGraphResource(
+                edge.sourceVertex()
+        );
+
+    }
+
+    private VertexNonOwnedSurroundGraphResource getVertexSurroundGraphResource(Vertex centerVertex) {
         UserGraph userGraph = graphFactory.loadForUser(
-                userRepository.findByUsername(username)
+                userRepository.findByUsername(centerVertex.getOwnerUsername())
         );
-        URI centerVertexUri = new UserUris(
-                username
-        ).vertexUriFromShortId(
-                shortId
-        );
-        if (!userGraph.haveElementWithId(centerVertexUri)) {
+        if (!userGraph.haveElementWithId(centerVertex.uri())) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        Vertex centerVertex = userGraph.vertexWithUri(
-                centerVertexUri
-        );
         Boolean skipVerification = false;
         if (GraphManipulatorResourceUtils.isUserInSession(request.getSession())) {
             User userInSession = GraphManipulatorResourceUtils.userFromSession(request.getSession());
