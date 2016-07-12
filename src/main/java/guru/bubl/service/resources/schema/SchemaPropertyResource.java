@@ -9,9 +9,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.json.graph.SchemaJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
+import guru.bubl.service.resources.vertex.VertexOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
@@ -35,6 +37,9 @@ public class SchemaPropertyResource {
 
     @Inject
     GraphElementOperatorFactory graphElementOperatorFactory;
+
+    @Inject
+    SchemaResourceFactory schemaResourceFactory;
 
     @AssistedInject
     public SchemaPropertyResource(
@@ -111,6 +116,21 @@ public class SchemaPropertyResource {
         );
         graphIndexer.commit();
         return Response.noContent().build();
+    }
+
+    @GET
+    @GraphTransactional
+    @Path("{shortId}/surround_graph")
+    public Response getSurroundGraph(
+            @PathParam("shortId") String shortId
+    ) {
+        return schemaResourceFactory.fromUserGraph(
+                userGraph
+        ).get(
+                UserUris.graphElementShortId(
+                        schemaOperator.uri()
+                )
+        );
     }
 
     @GraphTransactional

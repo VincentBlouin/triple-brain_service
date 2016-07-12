@@ -5,10 +5,18 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.schema.Schema;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
+import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.json.graph.SubGraphJson;
 import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import junit.framework.Assert;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import guru.bubl.module.model.graph.identification.IdentificationPojo;
 import guru.bubl.module.model.graph.identification.IdentificationType;
@@ -168,6 +176,48 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
         );
+    }
+
+    @Test
+    public void getting_surround_graph_returns_ok_status() {
+        URI schemaUri = schemaUtils().uriOfCreatedSchema();
+        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        assertThat(
+                getSurroundGraphForPropertyWithUri(
+                        propertyUri
+                ).getStatus(),
+                is(
+                        Response.Status.OK.getStatusCode()
+                )
+        );
+    }
+
+    @Test
+    public void getting_surround_graph_returns_the_schema_and_its_properties() {
+        URI schemaUri = schemaUtils().uriOfCreatedSchema();
+        URI propertyUri = uriOfCreatedPropertyForSchemaUri(schemaUri);
+        Schema schema = SchemaJson.fromJson(
+                getSurroundGraphForPropertyWithUri(propertyUri).getEntity(
+                        String.class
+                )
+        );
+        assertThat(
+                schema.uri(),
+                is(schemaUri)
+        );
+        assertTrue(
+                schema.getProperties().containsKey(
+                        propertyUri
+                )
+        );
+    }
+
+    private ClientResponse getSurroundGraphForPropertyWithUri(URI propertyUri) {
+        return resource
+                .path(propertyUri.toString())
+                .path("surround_graph")
+                .cookie(authCookie)
+                .get(ClientResponse.class);
     }
 
     private ClientResponse updateLabel(URI propertyUri, String label) {
