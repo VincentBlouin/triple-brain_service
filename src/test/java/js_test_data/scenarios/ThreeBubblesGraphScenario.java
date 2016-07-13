@@ -86,6 +86,10 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 1,
                 b1.uri()
         );
+        SubGraphPojo subGraphForB2 = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                b2.uri()
+        );
         SubGraphPojo subGraphForB3 = userGraph.graphWithDepthAndCenterVertexId(
                 1,
                 b3.uri()
@@ -122,7 +126,12 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                             new Gson().toJson(searchResultsForR2)
                     )
             ).put(
-                    "getSurroundBubble3Graph",
+                    "subGraphForB2",
+                    SubGraphJson.toJson(
+                            subGraphForB2
+                    )
+            ).put(
+                    "subGraphForB3",
                     SubGraphJson.toJson(
                             subGraphForB3
                     )
@@ -141,6 +150,8 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 user.username()
         );
         b2.label("b2");
+        b2.addVertexAndRelation();
+        b2.addVertexAndRelation();
         b3 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
