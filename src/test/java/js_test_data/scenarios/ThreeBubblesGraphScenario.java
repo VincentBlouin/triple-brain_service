@@ -47,6 +47,8 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     b1 fork is identified to "Event" and has 2 suggestions
     */
 
+//    username has an accent
+
 
     @Inject
     GraphFactory graphFactory;
@@ -66,7 +68,10 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     @Inject
     ModelTestScenarios modelTestScenarios;
 
-    User user = User.withEmailAndUsername("a", "b");
+    User user = User.withEmailAndUsername(
+            "a",
+            "églantier"
+    );
 
     User forkerUser = User.withEmailAndUsername("forker@example.com", "forker");
 

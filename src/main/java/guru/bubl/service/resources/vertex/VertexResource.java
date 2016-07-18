@@ -101,11 +101,12 @@ public class VertexResource {
     @GraphTransactional
     @Path("/{sourceVertexShortId}")
     public Response addVertexAndEdgeToSourceVertex(
-            @Context HttpServletRequest request
+            @PathParam("sourceVertexShortId") String sourceVertexShortId
     ) {
-        VertexOperator sourceVertex = userGraph.vertexWithUri(URI.create(
-                request.getRequestURI()
-        ));
+        VertexOperator sourceVertex = vertexFromShortId(
+                sourceVertexShortId
+        );
+
         EdgeOperator createdEdge = sourceVertex.addVertexAndRelation();
         VertexOperator createdVertex = createdEdge.destinationVertex();
         graphIndexer.indexVertex(
@@ -149,13 +150,13 @@ public class VertexResource {
     @DELETE
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/{vertexShortId}")
+    @Path("/{shortId}")
     public Response removeVertex(
-            @Context HttpServletRequest request
+            @PathParam("shortId") String shortId
     ) {
-        VertexOperator vertex = userGraph.vertexWithUri(URI.create(
-                request.getRequestURI()
-        ));
+        VertexOperator vertex = vertexFromShortId(
+                shortId
+        );
         Set<VertexOperator> connectedVertices = new HashSet<VertexOperator>();
         graphIndexer.deleteGraphElement(
                 vertex
@@ -246,7 +247,7 @@ public class VertexResource {
             @QueryParam("center") String isCenter
     ) {
         VertexOperator vertex = vertexFromShortId(shortId);
-        if(!StringUtils.isEmpty(isCenter) && isCenter.equals("true")){
+        if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
             centerGraphElementOperatorFactory.usingGraphElement(
                     vertex
             ).incrementNumberOfVisits();
@@ -279,9 +280,7 @@ public class VertexResource {
 
     @Path("collection/public_access")
     @GraphTransactional
-    public VertexCollectionPublicAccessResource getCollectionPublicAccessResource(
-            @PathParam("shortId") String shortId
-    ) {
+    public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {
         return vertexCollectionPublicAccessResourceFactory.withUserGraph(
                 userGraph
         );

@@ -69,7 +69,9 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         edgeUtils().removeEdgeBetweenVertexAAndB();
         assertFalse(
-                graphUtils().graphWithCenterVertexUri(vertexAUri()).containsEdge(
+                graphUtils().graphWithCenterVertexUri(
+                        vertexAUri()
+                ).containsEdge(
                         edgeBetweenAAndB
                 )
         );

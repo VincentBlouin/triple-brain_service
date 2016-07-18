@@ -88,11 +88,9 @@ public class EdgeResource {
     @Path("/{edgeShortId}")
     @GraphTransactional
     public Response removeRelation(
-            @Context HttpServletRequest request
+            @PathParam("edgeShortId") String edgeShortId
     ) {
-        EdgeOperator edge = userGraph.edgeWithUri(Uris.get(
-                request.getRequestURI()
-        ));
+        EdgeOperator edge = edgeFromShortId(edgeShortId);
         graphIndexer.deleteGraphElement(
                 edge
         );
