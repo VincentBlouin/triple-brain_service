@@ -11,17 +11,15 @@ import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceTest;
 import guru.bubl.service.resources.schema.SchemaPropertyResource;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceTest;
-import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
-import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResourceTest;
-import guru.bubl.service.resources.vertex.VertexSuggestionResource;
-import guru.bubl.service.resources.vertex.VertexSuggestionResourceTest;
+import guru.bubl.service.resources.vertex.*;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SchemaNonOwnedResourceTest.class
+        EdgeResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

@@ -5,6 +5,8 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
@@ -55,12 +57,18 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
-        assertThat(
-                response.getHeaders().get("Location").get(0),
-                is(
-                        BASE_URI + edgeBetweenAAndC.uri().toString()
-                )
-        );
+        try {
+            assertThat(
+                    Uris.decodeUrlSafe(
+                            response.getHeaders().get("Location").get(0)
+                    ),
+                    is(
+                            BASE_URI + edgeBetweenAAndC.uri().toString()
+                    ));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 

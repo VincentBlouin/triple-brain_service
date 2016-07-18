@@ -30,6 +30,14 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
     public void before_graph_manipulator_rest_test() throws Exception {
         userUtils().deleteAllUsers();
         JSONObject userAsJson = userUtils().validForCreation();
+        String username = userAsJson.getString(
+                UserJson.USER_NAME
+        );
+        String accent = "é";
+        userAsJson.put(
+                UserJson.USER_NAME,
+                username + accent
+        );
         ClientResponse response = createUser(userAsJson);
         userAsJson = response.getEntity(JSONObject.class);
         authenticate(userAsJson);
