@@ -20,6 +20,7 @@ import guru.bubl.module.model.json.graph.SubGraphJson;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
+import java.util.Date;
 
 public class GraphWithSimilarRelationsScenario implements JsTestScenario {
 
@@ -44,6 +45,10 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     @Inject
     ModelTestScenarios modelTestScenarios;
 
+    DateTime book1Date = new DateTime().minusSeconds(30);
+    DateTime book2Date = book1Date.plusSeconds(10);
+    DateTime book3Date = book2Date.plusSeconds(10);
+
     User user = User.withEmailAndUsername("a", "b");
 
     private VertexOperator
@@ -56,6 +61,12 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
             b1,
             b2;
 
+    EdgeOperator
+            rBook1,
+            rBook2,
+            rBook3;
+
+
     private SubGraphPojo subGraphForMe;
 
     @Override
@@ -67,11 +78,12 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
                 1,
                 me.uri()
         );
-        setupCreationDate();
+        setupCreationDates();
         return SubGraphJson.toJson(
                 subGraphForMe
         );
     }
+
     private void createVertices() {
         me = vertexFactory.createForOwnerUsername(
                 user.username()
@@ -108,17 +120,17 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        EdgeOperator rBook1 = me.addRelationToVertex(book1);
+        rBook1 = me.addRelationToVertex(book1);
         rBook1.label("Possession of book 1");
         rBook1.addSameAs(
                 modelTestScenarios.possessionIdentification()
         );
-        EdgeOperator rBook2 = book2.addRelationToVertex(me);
+        rBook2 = book2.addRelationToVertex(me);
         rBook2.label("Possessed by book 2");
         rBook2.addSameAs(
                 modelTestScenarios.possessionIdentification()
         );
-        EdgeOperator rBook3 = me.addRelationToVertex(book3);
+        rBook3 = me.addRelationToVertex(book3);
         rBook3.label("Possession of book 3");
         rBook3.addSameAs(
                 modelTestScenarios.possessionIdentification()
@@ -138,10 +150,31 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         sameAsOriginalRelation.addSameAs(b1RelationIdentification);
     }
 
-    private void setupCreationDate(){
+    private void setupCreationDates() {
         subGraphForMe.vertexWithIdentifier(
                 otherBubble.uri()
         ).setCreationDate(new DateTime().minusDays(1));
+        subGraphForMe.vertexWithIdentifier(
+                book1.uri()
+        ).setCreationDate(book1Date);
+        subGraphForMe.vertexWithIdentifier(
+                book1.uri()
+        ).setCreationDate(book1Date);
+        subGraphForMe.edgeWithIdentifier(
+                rBook1.uri()
+        ).setCreationDate(book1Date);
+        subGraphForMe.vertexWithIdentifier(
+                book2.uri()
+        ).setCreationDate(book2Date);
+        subGraphForMe.edgeWithIdentifier(
+                rBook2.uri()
+        ).setCreationDate(book2Date);
+        subGraphForMe.vertexWithIdentifier(
+                book3.uri()
+        ).setCreationDate(book3Date);
+        subGraphForMe.edgeWithIdentifier(
+                rBook3.uri()
+        ).setCreationDate(book3Date);
     }
 
 }
