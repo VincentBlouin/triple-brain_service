@@ -166,41 +166,41 @@ public class CreationDateScenario implements JsTestScenario {
         );
         subGraphForB1.vertexWithIdentifier(
                 b1.uri()
-        ).setCreationDate(b1CreationDate);
+        ).setCreationDate(b1CreationDate.toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b2.uri()
-        ).setCreationDate(b1CreationDate.plusDays(1));
+        ).setCreationDate(b1CreationDate.plusDays(1).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b3.uri()
-        ).setCreationDate(b1CreationDate.plusDays(2));
+        ).setCreationDate(b1CreationDate.plusDays(2).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b4.uri()
-        ).setCreationDate(b1CreationDate.plusDays(3));
+        ).setCreationDate(b1CreationDate.plusDays(3).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b5.uri()
-        ).setCreationDate(b1CreationDate.plusDays(4));
+        ).setCreationDate(b1CreationDate.plusDays(4).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b6.uri()
-        ).setCreationDate(b1CreationDate.plusDays(5));
+        ).setCreationDate(b1CreationDate.plusDays(5).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b7.uri()
-        ).setCreationDate(b1CreationDate.plusDays(6));
+        ).setCreationDate(b1CreationDate.plusDays(6).toDate().getTime());
     }
 
     private void setupcreationDatesForSubGraphForB7() {
         DateTime b71CreationDate = new DateTime();
         subGraphForB7.vertexWithIdentifier(
                 b71.uri()
-        ).setCreationDate(b71CreationDate);
+        ).setCreationDate(b71CreationDate.toDate().getTime());
         subGraphForB7.vertexWithIdentifier(
                 b72.uri()
-        ).setCreationDate(b71CreationDate.plusDays(1));
+        ).setCreationDate(b71CreationDate.plusDays(1).toDate().getTime());
         subGraphForB7.vertexWithIdentifier(
                 b73.uri()
-        ).setCreationDate(b71CreationDate.plusDays(3));
+        ).setCreationDate(b71CreationDate.plusDays(3).toDate().getTime());
         subGraphForB7.vertexWithIdentifier(
                 b74.uri()
-        ).setCreationDate(b71CreationDate.plusDays(4));
+        ).setCreationDate(b71CreationDate.plusDays(4).toDate().getTime());
     }
 }
 

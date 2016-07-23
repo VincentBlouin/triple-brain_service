@@ -106,8 +106,10 @@ public class ResourceForTests {
     private void addALotOfVerticesToVertex(VertexOperator vertex){
         VertexOperator destinationVertex = vertex;
         for (int i = 0; i < 100; i++) {
-            EdgeOperator edge = destinationVertex.addVertexAndRelation();
-            destinationVertex = edge.destinationVertex();
+            Edge edge = destinationVertex.addVertexAndRelation();
+            destinationVertex = vertexFactory.withUri(
+                    edge.destinationVertex().uri()
+            );
         }
     }
 

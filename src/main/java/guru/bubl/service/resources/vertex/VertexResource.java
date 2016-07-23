@@ -13,15 +13,14 @@ import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.graph.vertex.VertexPojo;
+import guru.bubl.module.model.graph.vertex.*;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.json.graph.EdgeJson;
 import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
+import guru.bubl.service.resources.sort.GraphElementSortResource;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -61,6 +60,9 @@ public class VertexResource {
 
     @Inject
     CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+
+    @Inject
+    VertexFactory vertexFactory;
 
     private UserGraph userGraph;
 
@@ -105,37 +107,38 @@ public class VertexResource {
                 sourceVertexShortId
         );
 
-        EdgeOperator createdEdge = sourceVertex.addVertexAndRelation();
-        VertexOperator createdVertex = createdEdge.destinationVertex();
+        EdgePojo newEdge = sourceVertex.addVertexAndRelation();
+        VertexInSubGraphPojo newVertex = newEdge.destinationVertex();
         graphIndexer.indexVertex(
-                createdVertex
+                vertexFactory.withUri(
+                        newVertex.uri()
+                )
         );
         graphIndexer.commit();
+        VertexInSubGraphPojo sourceVertexPojo = new VertexInSubGraphPojo(
+                sourceVertex.uri()
+        );
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
             jsonCreatedStatement.put(
                     StatementJsonFields.source_vertex.name(),
                     VertexInSubGraphJson.toJson(
-                            new VertexInSubGraphPojo(
-                                    sourceVertex.uri()
-                            )
+                            sourceVertexPojo
                     )
             );
             jsonCreatedStatement.put(
                     StatementJsonFields.edge.name(),
                     EdgeJson.toJson(new EdgePojo(
-                                    createdEdge.uri(),
-                                    createdEdge.sourceVertex().uri(),
-                                    createdEdge.destinationVertex().uri()
+                                    newEdge.getGraphElement(),
+                                    sourceVertexPojo,
+                                    newVertex
                             )
                     )
             );
             jsonCreatedStatement.put(
                     StatementJsonFields.end_vertex.name(),
                     VertexInSubGraphJson.toJson(
-                            new VertexInSubGraphPojo(
-                                    createdVertex.uri()
-                            )
+                            newVertex
                     )
             );
         } catch (JSONException e) {
@@ -290,6 +293,16 @@ public class VertexResource {
             @PathParam("shortId") String shortId
     ) {
         return vertexPublicAccessResourceFactory.ofVertex(
+                vertexFromShortId(shortId)
+        );
+    }
+
+    @Path("{shortId}/sort")
+    @GraphTransactional
+    public GraphElementSortResource getSortResource(
+            @PathParam("shortId") String shortId
+    ) {
+        return new GraphElementSortResource(
                 vertexFromShortId(shortId)
         );
     }

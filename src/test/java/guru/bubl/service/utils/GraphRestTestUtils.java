@@ -4,17 +4,16 @@
 
 package guru.bubl.service.utils;
 
-import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
+import guru.bubl.module.model.json.graph.SubGraphJson;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -36,11 +35,12 @@ public class GraphRestTestUtils {
 
     private VertexRestTestUtils vertexUtils;
 
-    static JSONObject vertexA;
-    static JSONObject vertexB;
-    static JSONObject vertexC;
+    private static JSONObject
+            vertexA,
+            vertexB,
+            vertexC;
+
     private User authenticatedUser;
-    protected Gson gson = new Gson();
 
     public static GraphRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         return new GraphRestTestUtils(resource, authCookie, authenticatedUser);
@@ -57,7 +57,7 @@ public class GraphRestTestUtils {
         );
     }
 
-    public SubGraph graphWithCenterVertexUri(URI vertexUri) {
+    public SubGraphPojo graphWithCenterVertexUri(URI vertexUri) {
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .path("surround_graph")
@@ -67,9 +67,8 @@ public class GraphRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
-        return gson.fromJson(
-                response.getEntity(JSONObject.class).toString(),
-                SubGraphPojo.class
+        return SubGraphJson.fromJson(
+                response.getEntity(JSONObject.class).toString()
         );
     }
 

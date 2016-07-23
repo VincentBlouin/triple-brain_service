@@ -8,6 +8,7 @@ package js_test_data.scenarios;
 import com.google.gson.Gson;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.identification.IdentificationPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -56,6 +57,9 @@ public class ProjectSchemaScenario implements JsTestScenario {
 
     @Inject
     protected VertexFactory vertexFactory;
+
+    @Inject
+    protected EdgeFactory edgeFactory;
 
     @Inject
     protected SchemaFactory schemaFactory;
@@ -180,21 +184,27 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 projectIdentification()
         );
 
-        EdgeOperator impact1Relation = someProject.addVertexAndRelation();
+        EdgeOperator impact1Relation = edgeFactory.withUri(
+                someProject.addVertexAndRelation().uri()
+        );
         impact1Relation.label("impact 1 on society");
         impact1Relation.destinationVertex().label("impact 1 bubble");
         impact1Relation.addSameAs(
                 impactOnSocietyIdentification()
         );
 
-        EdgeOperator impact2Relation = someProject.addVertexAndRelation();
+        EdgeOperator impact2Relation = edgeFactory.withUri(
+                someProject.addVertexAndRelation().uri()
+        );
         impact2Relation.label("impact 2 on society");
         impact2Relation.destinationVertex().label("impact 2 bubble");
         impact2Relation.addSameAs(
                 impactOnSocietyIdentification()
         );
 
-        EdgeOperator impact3Relation = someProject.addVertexAndRelation();
+        EdgeOperator impact3Relation = edgeFactory.withUri(
+                someProject.addVertexAndRelation().uri()
+        );
         impact3Relation.label("impact 3");
         impact3Relation.destinationVertex().label("impact 3 bubble");
         impact3Relation.addSameAs(

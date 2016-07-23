@@ -153,28 +153,28 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     private void setupCreationDates() {
         subGraphForMe.vertexWithIdentifier(
                 otherBubble.uri()
-        ).setCreationDate(new DateTime().minusDays(1));
+        ).setCreationDate(new DateTime().minusDays(1).toDate().getTime());
         subGraphForMe.vertexWithIdentifier(
                 book1.uri()
-        ).setCreationDate(book1Date);
+        ).setCreationDate(book1Date.toDate().getTime());
         subGraphForMe.vertexWithIdentifier(
                 book1.uri()
-        ).setCreationDate(book1Date);
+        ).setCreationDate(book1Date.toDate().getTime());
         subGraphForMe.edgeWithIdentifier(
                 rBook1.uri()
-        ).setCreationDate(book1Date);
+        ).setCreationDate(book1Date.toDate().getTime());
         subGraphForMe.vertexWithIdentifier(
                 book2.uri()
-        ).setCreationDate(book2Date);
+        ).setCreationDate(book2Date.toDate().getTime());
         subGraphForMe.edgeWithIdentifier(
                 rBook2.uri()
-        ).setCreationDate(book2Date);
+        ).setCreationDate(book2Date.toDate().getTime());
         subGraphForMe.vertexWithIdentifier(
                 book3.uri()
-        ).setCreationDate(book3Date);
+        ).setCreationDate(book3Date.toDate().getTime());
         subGraphForMe.edgeWithIdentifier(
                 rBook3.uri()
-        ).setCreationDate(book3Date);
+        ).setCreationDate(book3Date.toDate().getTime());
     }
 
 }

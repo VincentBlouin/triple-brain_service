@@ -6,6 +6,7 @@ package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.EdgeSearchResult;
 import guru.bubl.module.model.search.VertexSearchResult;
@@ -32,6 +33,7 @@ import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -40,18 +42,18 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void adding_a_vertex_returns_correct_status() throws Exception {
-        ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(
+        ClientResponse response = vertexUtils().addAVertexToVertexWithUri(
                 vertexAUri()
         );
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
     }
 
     @Test
-    public void can_add_a_vertex() throws Exception {
+    public void can_add_a_vertex_and_relation() throws Exception {
         int numberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         ).size();
-        vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
+        vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         int updatedNumberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         ).size();
@@ -60,7 +62,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
-        ClientResponse response = vertexUtils().addAVertexToVertexAWithUri(vertexAUri());
+        ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         Vertex subject = VertexInSubGraphJson.fromJson(
                 createdStatement.getJSONObject(
@@ -94,6 +96,38 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                         vertexAUri(),
                         newVertex.uri()
                 )
+        );
+    }
+
+    @Test
+    public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception {
+        ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
+        JSONObject createdStatement = response.getEntity(JSONObject.class);
+        EdgePojo newEdge = EdgeJson.fromJson(
+                createdStatement.getJSONObject(
+                        StatementJsonFields.edge.name()
+                )
+        );
+        assertThat(
+                newEdge.creationDate(),
+                is(not(nullValue()))
+        );
+        assertThat(
+                newEdge.lastModificationDate(),
+                is(not(nullValue()))
+        );
+        Vertex newVertex = VertexInSubGraphJson.fromJson(
+                createdStatement.getJSONObject(
+                        StatementJsonFields.end_vertex.name()
+                )
+        );
+        assertThat(
+                newVertex.creationDate(),
+                is(not(nullValue()))
+        );
+        assertThat(
+                newVertex.lastModificationDate(),
+                is(not(nullValue()))
         );
     }
 

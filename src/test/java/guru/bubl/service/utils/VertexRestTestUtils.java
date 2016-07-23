@@ -123,7 +123,7 @@ public class VertexRestTestUtils {
                 .post(ClientResponse.class, note);
     }
 
-    public ClientResponse addAVertexToVertexAWithUri(URI vertexUri) throws Exception {
+    public ClientResponse addAVertexToVertexWithUri(URI vertexUri) throws Exception {
         return resource
                 .path(vertexUri.getPath())
                 .cookie(authCookie)
