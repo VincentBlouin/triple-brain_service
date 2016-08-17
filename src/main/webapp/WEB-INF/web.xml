@@ -10,7 +10,7 @@
     <display-name>triple_brain Service Application</display-name>
 
     <session-config>
-        <session-timeout>60</session-timeout>
+        <session-timeout>-1</session-timeout>
     </session-config>
 
     <listener>
