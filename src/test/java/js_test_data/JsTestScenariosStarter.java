@@ -21,7 +21,7 @@ public class JsTestScenariosStarter {
         injector = Guice.createInjector(
                 Neo4jModule.forTestingUsingEmbedded(),
                 new Neo4jGraphSearchModule(),
-                new ModelModule(),
+                ModelModule.forTesting(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {

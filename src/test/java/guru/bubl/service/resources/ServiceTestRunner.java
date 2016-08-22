@@ -7,28 +7,17 @@ package guru.bubl.service.resources;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
-import guru.bubl.service.Launcher;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runner.notification.RunListener;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
+import guru.bubl.service.Launcher;
 import guru.bubl.service.utils.RestTestUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.notification.RunListener;
 
-import javax.mail.Message;
-import javax.mail.Transport;
 import java.net.URI;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.suppress;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(javax.mail.Transport.class)
 public class ServiceTestRunner extends RunListener {
 
     @BeforeClass
@@ -47,11 +36,6 @@ public class ServiceTestRunner extends RunListener {
         );
         RestTestUtils.client = Client.create(clientConfig);
         RestTestUtils.resource = RestTestUtils.client.resource(RestTestUtils.BASE_URI);
-    }
-
-    @Before
-    public void before(){
-        suppress(method(Transport.class, "send", Message.class));
     }
 
     @AfterClass

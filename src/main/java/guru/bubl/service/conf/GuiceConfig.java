@@ -147,7 +147,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                     install(
                             isTesting ?
                                     ModelModule.forTesting() :
-                                    new ModelModule()
+                                    new ModelModule(
+                                            (String) jndiContext.lookup("sendgrid_key")
+                                    )
                     );
                     install(new Neo4jGraphSearchModule());
                     if (isTesting) {
