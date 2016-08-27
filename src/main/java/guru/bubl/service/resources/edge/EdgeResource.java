@@ -6,28 +6,25 @@ package guru.bubl.service.resources.edge;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexPojo;
-import guru.bubl.module.model.search.GraphIndexer;
-import guru.bubl.service.resources.GraphElementIdentificationResource;
-import guru.bubl.service.resources.vertex.VertexOwnedSurroundGraphResource;
-import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.model.search.GraphIndexer;
+import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
+import guru.bubl.service.resources.vertex.VertexOwnedSurroundGraphResource;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
@@ -172,6 +169,27 @@ public class EdgeResource {
         );
         return Response.noContent().build();
     }
+
+    @PUT
+    @GraphTransactional
+    @Path("{shortId}/destination-vertex/{destinationVertexShortId}")
+    public Response changeDestinationVertex(
+            @PathParam("shortId") String shortId,
+            @PathParam("destinationVertexShortId") String destinationVertexShortId
+    ) {
+        Vertex newSourceVertex = new VertexPojo(
+                new UserUris(
+                        userGraph.user()
+                ).vertexUriFromShortId(
+                        destinationVertexShortId
+                )
+        );
+        edgeFromShortId(shortId).changeDestinationVertex(
+                newSourceVertex
+        );
+        return Response.noContent().build();
+    }
+
 
 
     @GraphTransactional

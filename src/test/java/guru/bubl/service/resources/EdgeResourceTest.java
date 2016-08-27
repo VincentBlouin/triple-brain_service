@@ -254,6 +254,51 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void changing_destination_vertex_returns_correct_status() {
+        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+        );
+        ClientResponse response = changeDestinationVertex(
+                edgeBetweenAAndB,
+                vertexC()
+        );
+        assertThat(
+                response.getStatus(),
+                is(
+                        Response.Status.NO_CONTENT.getStatusCode()
+                )
+        );
+    }
+
+    @Test
+    public void can_change_destination_vertex() {
+        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+
+        );
+        SubGraph graph = graphUtils().graphWithCenterVertexUri(
+                vertexCUri()
+        );
+        assertFalse(
+                graph.containsEdge(edge)
+        );
+        changeDestinationVertex(
+                edge,
+                vertexC()
+        );
+        graph = graphUtils().graphWithCenterVertexUri(
+                vertexCUri()
+        );
+        assertTrue(
+                graph.containsEdge(edge)
+        );
+    }
+
+    @Test
     public void getting_surround_graph_returns_ok_status() {
         assertThat(
                 getSurroundGraphOfEdgeBetweenAAndB().getStatus(),
@@ -311,6 +356,15 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .path(edge.uri().toString())
                 .path("source-vertex")
                 .path(UserUris.graphElementShortId(newSourceVertex.uri()))
+                .cookie(authCookie)
+                .put(ClientResponse.class);
+    }
+
+    private ClientResponse changeDestinationVertex(Edge edge, Vertex newDestinationVertex) {
+        return resource
+                .path(edge.uri().toString())
+                .path("destination-vertex")
+                .path(UserUris.graphElementShortId(newDestinationVertex.uri()))
                 .cookie(authCookie)
                 .put(ClientResponse.class);
     }
