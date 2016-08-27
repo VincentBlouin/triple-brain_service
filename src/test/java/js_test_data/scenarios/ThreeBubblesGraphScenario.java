@@ -31,6 +31,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     * b1-r1->b2
     * b1-r2->b3
     * b2 has two hidden relations
+    * b2 child are private
     * b3 has two hidden relations
     * b3 has the comment "b3 comment"
     */
@@ -38,7 +39,9 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     /*
     * b3<-r2-b1
     * b3-r3->-b4
+    * b4 is public
     * b3-r4->b5
+    * b5 is public
     * b4 has hidden relations
     */
 
@@ -166,9 +169,11 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 user.username()
         );
         b4.label("b4");
+        b4.makePublic();
         b5 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
+        b5.makePublic();
         b5.label("b5");
     }
 
