@@ -150,16 +150,16 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         rBook3.addSameAs(
                 modelTestScenarios.possessionIdentification()
         );
-        rBook3Copy = me.addRelationToVertex(book3Copy);
-        rBook3Copy.addSameAs(
-                modelTestScenarios.possessionIdentification()
-        );
-        rBook3Copy.addSameAs(
-                TestScenarios.identificationFromFriendlyResource(
-                        rBook3
-                )
-        );
-        rBook3Copy.label("Possession of book 3 copy");
+//        rBook3Copy = me.addRelationToVertex(book3Copy);
+//        rBook3Copy.addSameAs(
+//                modelTestScenarios.possessionIdentification()
+//        );
+//        rBook3Copy.addSameAs(
+//                TestScenarios.identificationFromFriendlyResource(
+//                        rBook3
+//                )
+//        );
+//        rBook3Copy.label("Possession of book 3 copy");
         EdgeOperator otherRelation = me.addRelationToVertex(otherBubble);
         otherRelation.label("other relation");
         EdgeOperator otherRelation2 = me.addRelationToVertex(otherBubble2);
@@ -200,9 +200,9 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         subGraphForMe.edgeWithIdentifier(
                 rBook3.uri()
         ).setCreationDate(book3Date.toDate().getTime());
-        subGraphForMe.edgeWithIdentifier(
-                rBook3Copy.uri()
-        ).setCreationDate(book3CopyDate.toDate().getTime());
+//        subGraphForMe.edgeWithIdentifier(
+//                rBook3Copy.uri()
+//        ).setCreationDate(book3CopyDate.toDate().getTime());
     }
 
 }
