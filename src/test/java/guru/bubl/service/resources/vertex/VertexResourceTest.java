@@ -41,7 +41,7 @@ import static org.junit.Assert.fail;
 public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
-    public void adding_a_vertex_returns_correct_status() throws Exception {
+    public void adding_a_vertex_returns_correct_status() {
         ClientResponse response = vertexUtils().addAVertexToVertexWithUri(
                 vertexAUri()
         );
@@ -49,7 +49,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_add_a_vertex_and_relation() throws Exception {
+    public void can_add_a_vertex_and_relation() {
         int numberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         ).size();
@@ -61,7 +61,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
+    public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception{
         ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         Vertex subject = VertexInSubGraphJson.fromJson(
@@ -100,7 +100,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception {
+    public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception{
         ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         EdgePojo newEdge = EdgeJson.fromJson(
@@ -185,7 +185,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_update_note() throws Exception {
+    public void can_update_note(){
         String vertexANote = vertexA().comment();
         assertThat(vertexANote, is(not("some note")));
         vertexUtils().updateVertexANote("some note");
@@ -194,7 +194,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_label_returns_correct_status() throws Exception {
+    public void updating_label_returns_correct_status(){
         ClientResponse response = vertexUtils().updateVertexLabelUsingRest(
                 vertexAUri(),
                 "new vertex label"
@@ -203,7 +203,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_note_updates_search() throws Exception {
+    public void updating_note_updates_search(){
         indexGraph();
         GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 vertexA().label()
@@ -241,7 +241,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void making_vertex_public_re_indexes_it() throws Exception {
+    public void making_vertex_public_re_indexes_it() {
         indexGraph();
         JSONObject anotherUser = createAUser();
         authenticate(
@@ -270,7 +270,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void making_vertex_private_re_indexes_it() throws Exception {
+    public void making_vertex_private_re_indexes_it() {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
@@ -295,7 +295,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void number_of_connected_vertices_are_included() throws Exception {
+    public void number_of_connected_vertices_are_included() {
         assertThat(
                 vertexB().getNumberOfConnectedEdges(),
                 is(2)
@@ -303,7 +303,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_get_random_surround_graph() throws Exception {
+    public void can_get_random_surround_graph() {
         ClientResponse response = getAnyVertexUri();
         assertThat(
                 response.getStatus(),
@@ -335,7 +335,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
             "Using measures on the client side to avoid fast addition of multiple childs. " +
                     "Also I consider it not dramatic that the number of connected edges is not totally accurate."
     )
-    public void number_of_connected_edges_is_ok_after_adding_vertices_concurrently() throws Exception {
+    public void number_of_connected_edges_is_ok_after_adding_vertices_concurrently() {
         assertThat(
                 vertexA().getNumberOfConnectedEdges(),
                 is(1)
@@ -346,7 +346,12 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
             new Thread(new AddChildToVertexARunner(latch)).start();
 //            Thread.sleep(50);
         }
-        latch.await();
+        try{
+            latch.await();
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+
         assertThat(
                 vertexA().getNumberOfConnectedEdges(),
                 is(6)

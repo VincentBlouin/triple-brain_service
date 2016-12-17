@@ -12,10 +12,12 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -90,6 +92,28 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
+    @Test
+    public void updating_note_returns_ok_status(){
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        ClientResponse response = updateIdentificationNote(identification, "some note");
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void can_update_note(){
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        String identificationNote = identification.comment();
+        assertThat(identificationNote, is(not("some note")));
+        updateIdentificationNote(identification, "some note");
+        identification = vertexA().getAdditionalTypes().values().iterator().next();
+        assertThat(identification.comment(), is("some note"));
+    }
+
     private ClientResponse updateIdentificationLabel(Identification identification, String label) {
         try {
             JSONObject localizedLabel = new JSONObject().put(
@@ -104,5 +128,14 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private ClientResponse updateIdentificationNote(Identification identification, String note) {
+        return resource
+                .path(identification.uri().getPath())
+                .path("comment")
+                .cookie(authCookie)
+                .type(MediaType.TEXT_PLAIN)
+                .post(ClientResponse.class, note);
     }
 }

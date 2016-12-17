@@ -56,4 +56,25 @@ public class IdentificationResource {
         );
         return Response.noContent().build();
     }
+
+    @POST
+    @GraphTransactional
+    @Path("/{identificationShortId}/comment")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response updateNote(
+            @PathParam("identificationShortId") String identificationShortId,
+            String comment
+    ) {
+        IdentificationOperator identificationOperator = identificationFactory.withUri(
+                new UserUris(
+                        authenticatedUser
+                ).identificationUriFromShortId(
+                        identificationShortId
+                )
+        );
+        identificationOperator.comment(
+                comment
+        );
+        return Response.noContent().build();
+    }
 }
