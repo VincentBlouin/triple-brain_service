@@ -37,16 +37,17 @@ public class VertexRestTestUtils {
     private User authenticatedUser;
     private Gson gson = new Gson();
 
-    public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser){
+    public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         return new VertexRestTestUtils(resource, authCookie, authenticatedUser);
     }
-    protected VertexRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser){
+
+    protected VertexRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
     }
 
-    public ClientResponse updateVertexLabelUsingRest(URI vertexUri, String label){
+    public ClientResponse updateVertexLabelUsingRest(URI vertexUri, String label) {
         try {
             JSONObject localizedLabel = new JSONObject().put(
                     LocalizedStringJson.content.name(),
@@ -57,12 +58,12 @@ public class VertexRestTestUtils {
                     .path("label")
                     .cookie(authCookie)
                     .post(ClientResponse.class, localizedLabel);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public VertexInSubGraph vertexWithUriOfAnyUser(URI vertexUri){
+    public VertexInSubGraph vertexWithUriOfAnyUser(URI vertexUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -94,7 +95,7 @@ public class VertexRestTestUtils {
         );
     }
 
-    public boolean vertexWithUriHasDestinationVertexWithUri(URI vertexUri, URI destinationVertexUri){
+    public boolean vertexWithUriHasDestinationVertexWithUri(URI vertexUri, URI destinationVertexUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -108,13 +109,13 @@ public class VertexRestTestUtils {
         return Boolean.valueOf(hasDestinationStr);
     }
 
-    public URI uriOfVertex(JSONObject jsonObject){
+    public URI uriOfVertex(JSONObject jsonObject) {
         return vertexFromJson(
                 jsonObject
         ).uri();
     }
 
-    public ClientResponse updateVertexANote(String note){
+    public ClientResponse updateVertexANote(String note) {
         return resource
                 .path(graphUtils().vertexAUri().getPath())
                 .path("comment")
@@ -130,7 +131,7 @@ public class VertexRestTestUtils {
                 .post(ClientResponse.class);
     }
 
-    public ClientResponse makePublicVertexWithUri(URI vertexUri){
+    public ClientResponse makePublicVertexWithUri(URI vertexUri) {
         ClientResponse clientResponse = resource
                 .path(vertexUri.getPath())
                 .path("public_access")
@@ -143,7 +144,7 @@ public class VertexRestTestUtils {
         return clientResponse;
     }
 
-    public ClientResponse makePrivateVertexWithUri(URI vertexUri){
+    public ClientResponse makePrivateVertexWithUri(URI vertexUri) {
         ClientResponse clientResponse = resource
                 .path(vertexUri.getPath())
                 .path("public_access")
@@ -169,31 +170,35 @@ public class VertexRestTestUtils {
     }
 
     private ClientResponse makePublicOrPrivateVerticesWithUri(Boolean makePublic, URI... vertexUri) {
-        return resource
+        WebResource.Builder builder = resource
                 .path(getVertexBaseUri())
                 .path("collection")
                 .path("public_access")
-                .queryParam("type", makePublic ? "public" : "private")
-                .cookie(authCookie).post(
+                .cookie(authCookie);
+        return makePublic ? builder.post(
+                ClientResponse.class,
+                new JSONArray(Arrays.asList(vertexUri))
+        ) :
+                builder.delete(
                         ClientResponse.class,
                         new JSONArray(Arrays.asList(vertexUri))
                 );
     }
 
-    public ClientResponse removeVertexB(){
+    public ClientResponse removeVertexB() {
         return resource
                 .path(graphUtils().vertexBUri().getPath())
                 .cookie(authCookie)
                 .delete(ClientResponse.class);
     }
 
-    public URI baseVertexUri(){
+    public URI baseVertexUri() {
         return new UserUris(
                 authenticatedUser
         ).baseVertexUri();
     }
 
-    private GraphRestTestUtils graphUtils(){
+    private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
@@ -201,7 +206,7 @@ public class VertexRestTestUtils {
         );
     }
 
-    protected VertexInSubGraph vertexFromJson(JSONObject jsonObject){
+    protected VertexInSubGraph vertexFromJson(JSONObject jsonObject) {
         return gson.fromJson(
                 jsonObject.toString(),
                 VertexInSubGraphPojo.class

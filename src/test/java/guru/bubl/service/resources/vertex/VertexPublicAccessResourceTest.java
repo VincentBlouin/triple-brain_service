@@ -22,7 +22,6 @@ public class VertexPublicAccessResourceTest extends GraphManipulationRestTestUti
     }
 
     @Test
-    @Ignore
     public void can_make_private_again(){
         makePublic();
         assertTrue(vertexB().isPublic());

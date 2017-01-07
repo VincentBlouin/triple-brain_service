@@ -38,14 +38,16 @@ public class VertexCollectionPublicAccessResource {
     @POST
     @Path("/")
     @GraphTransactional
-    public Response makePublicOrPrivateOperation(@QueryParam("type") String type, JSONArray verticesUri) {
-        /*
-        * @DELETE should be used instead of having a type queryparam but data cannot be sent to a DELETE operation
-        * because of a java bug fixed in version 8.
-        * see https://bugs.openjdk.java.net/browse/JDK-7157360
-        * todo Refactor once running on java 8 and greater
-        * */
-        return makePublicOrPrivate(type.equals("public"), verticesUri);
+    public Response makePublic(JSONArray verticesUri) {
+        return makePublicOrPrivate(true, verticesUri);
+
+    }
+
+    @DELETE
+    @Path("/")
+    @GraphTransactional
+    public Response makePrivate(JSONArray verticesUri) {
+        return makePublicOrPrivate(false, verticesUri);
 
     }
 
