@@ -47,6 +47,9 @@ public class VertexResource {
     VertexPublicAccessResourceFactory vertexPublicAccessResourceFactory;
 
     @Inject
+    VertexCollectionResourceFactory vertexCollectionResourceFactory;
+
+    @Inject
     VertexCollectionPublicAccessResourceFactory vertexCollectionPublicAccessResourceFactory;
 
     @Inject
@@ -279,6 +282,19 @@ public class VertexResource {
         );
     }
 
+    @Path("collection")
+    @GraphTransactional
+    public VertexCollectionResource getCollectionResource() {
+        return vertexCollectionResourceFactory.withUserGraph(
+                userGraph
+        );
+    }
+
+    /*
+    * public_access should be in the vertex collection
+    * resource but it doesn't work. I get 415 http status
+    * Unsupported media type. I don't understand.
+    */
     @Path("collection/public_access")
     @GraphTransactional
     public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {

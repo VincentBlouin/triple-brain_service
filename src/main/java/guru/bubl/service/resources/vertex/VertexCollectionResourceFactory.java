@@ -6,6 +6,6 @@ package guru.bubl.service.resources.vertex;
 
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 
-public interface VertexCollectionPublicAccessResourceFactory {
-    VertexCollectionPublicAccessResource withUserGraph(UserGraph userGraph);
+public interface VertexCollectionResourceFactory {
+    VertexCollectionResource withUserGraph(UserGraph userGraph);
 }
