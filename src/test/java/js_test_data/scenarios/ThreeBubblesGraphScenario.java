@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import com.google.gson.Gson;
 import guru.bubl.module.model.IdentifiedTo;
 import guru.bubl.module.model.graph.subgraph.*;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
@@ -50,6 +51,12 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     b1 fork is identified to "Event" and has 2 suggestions
     */
 
+    /*
+    Also single child scenario
+    parent-relation->child
+    graph where child is connected to parent.
+     */
+
 //    username has an accent
 
 
@@ -83,7 +90,11 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
             b2,
             b3,
             b4,
-            b5;
+            b5,
+            parent,
+            child;
+
+    private List<GraphElementSearchResult> forkedB1SearchResults;
 
     @Override
     public JSONObject build() {
@@ -109,6 +120,15 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
                 "r2",
                 user
+        );
+        SubGraphPojo subGraphForParent = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                parent.uri()
+        );
+        parent.addRelationToVertex(b1);
+        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.graphWithDepthAndCenterVertexId(
+                1,
+                b1.uri()
         );
         try {
             return new JSONObject().put(
@@ -143,6 +163,21 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             subGraphForB3
                     )
+            ).put(
+                    "subGraphForParent",
+                    SubGraphJson.toJson(
+                            subGraphForParent
+                    )
+            ).put(
+                    "subGraphOfB1RelatedToParent",
+                    SubGraphJson.toJson(
+                            subGraphOfB1RelatedToParent
+                    )
+            ).put(
+                    "forkedB1SearchResults",
+                    JsonUtils.getGson().toJson(
+                            forkedB1SearchResults
+                    )
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -175,6 +210,14 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         );
         b5.makePublic();
         b5.label("b5");
+        parent = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        parent.label("parent");
+        child = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        child.label("child");
     }
 
     private void createEdges() {
@@ -188,6 +231,8 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         r4.label("r4");
         b4.addVertexAndRelation();
         b4.addVertexAndRelation();
+        EdgeOperator relation = parent.addRelationToVertex(child);
+        relation.label("relation");
     }
 
     private SubGraphPojo buildForkSubGraph(SubGraph subGraphForB1) {
@@ -200,12 +245,16 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         ).fork(
                 subGraphForB1
         );
-        GraphElementSearchResult forkedB1SearchResult = identifiedTo.getForIdentificationAndUser(
+        GraphElementSearchResult forkedB1AsIdentifier = identifiedTo.getForIdentificationAndUser(
                 TestScenarios.identificationFromFriendlyResource(b1),
                 forkerUser
         ).iterator().next();
+        forkedB1SearchResults = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+                "b1",
+                forkerUser
+        );
         VertexOperator forkedB1 = vertexFactory.withUri(
-                forkedB1SearchResult.getGraphElement().uri()
+                forkedB1AsIdentifier.getGraphElement().uri()
         );
         forkedB1.addGenericIdentification(
                 modelTestScenarios.event()
