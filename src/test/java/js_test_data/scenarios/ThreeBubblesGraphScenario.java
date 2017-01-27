@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.IdentifiedTo;
+import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
@@ -249,7 +250,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 TestScenarios.identificationFromFriendlyResource(b1),
                 forkerUser
         ).iterator().next();
-        forkedB1SearchResults = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+        forkedB1SearchResults = (List) graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 "b1",
                 forkerUser
         );

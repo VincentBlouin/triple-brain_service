@@ -52,7 +52,8 @@ public class JsTestScenariosBuilder {
             new CreationDateScenario(),
             new RelationWithMultipleIdentifiers(),
             new RelationsAsIdentifierScenario(),
-            new BubbleWith2RelationsToSameBubbleScenario()
+            new BubbleWith2RelationsToSameBubbleScenario(),
+            new AutomaticExpandScenario()
     );
 
 
