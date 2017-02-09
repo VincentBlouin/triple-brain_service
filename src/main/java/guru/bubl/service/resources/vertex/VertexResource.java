@@ -7,7 +7,9 @@ package guru.bubl.service.resources.vertex;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -81,9 +83,11 @@ public class VertexResource {
     @Path("/")
     public Response createVertex() {
         VertexPojo newVertex = userGraph.createVertex();
-        centerGraphElementOperatorFactory.usingGraphElement(
+        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingGraphElement(
                 newVertex
-        ).incrementNumberOfVisits();
+        );
+        centerGraphElementOperator.incrementNumberOfVisits();
+        centerGraphElementOperator.updateLastCenterDate();
         return Response.ok()
                 .entity(VertexInSubGraphJson.toJson(
                         new VertexInSubGraphPojo(
@@ -252,9 +256,11 @@ public class VertexResource {
     ) {
         VertexOperator vertex = vertexFromShortId(shortId);
         if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
-            centerGraphElementOperatorFactory.usingGraphElement(
+            CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingGraphElement(
                     vertex
-            ).incrementNumberOfVisits();
+            );
+            centerGraphElementOperator.incrementNumberOfVisits();
+            centerGraphElementOperator.updateLastCenterDate();
         }
         return new VertexOwnedSurroundGraphResource(
                 userGraph,

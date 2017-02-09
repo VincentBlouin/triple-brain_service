@@ -14,7 +14,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexCollectionResourceTest.class
+        VertexResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

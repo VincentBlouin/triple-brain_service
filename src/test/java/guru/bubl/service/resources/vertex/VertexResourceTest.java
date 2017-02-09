@@ -5,6 +5,7 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.center_graph_element.CenterGraphElement;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.json.StatementJsonFields;
@@ -327,6 +328,22 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         Assert.assertThat(
                 centerElements.size(),
                 Is.is(numberOfVisitedElements + 1)
+        );
+    }
+
+    @Test
+    public void creating_a_single_vertex_sets_last_center_date() {
+        createSingleVertex();
+        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        Integer numberOfLastCenterDateNull = 0;
+        for(CenterGraphElementPojo centerGraphElementPojo : centerElements){
+            if(null == centerGraphElementPojo.getLastCenterDate()){
+                numberOfLastCenterDateNull++;
+            }
+        }
+        assertThat(
+                numberOfLastCenterDateNull,
+                is(0)
         );
     }
 
