@@ -31,10 +31,10 @@ public class GraphElementSortResourceTest extends GraphManipulationRestTestUtils
     private Date moveDate = new Date();
 
     @Test
-    public void setting_sort_returns_ok_status() {
+    public void setting_sort_returns_no_content_status() {
         assertThat(
                 setSort(vertexA()).getStatus(),
-                is(Response.Status.OK.getStatusCode())
+                is(Response.Status.NO_CONTENT.getStatusCode())
         );
     }
 

@@ -4,6 +4,7 @@
 
 package guru.bubl.service.resources;
 
+import guru.bubl.service.resources.sort.GraphElementSortResourceTest;
 import guru.bubl.service.resources.vertex.VertexCollectionPublicAccessResourceTest;
 import guru.bubl.service.resources.vertex.VertexCollectionResourceTest;
 import guru.bubl.service.resources.vertex.VertexPublicAccessResourceTest;
@@ -14,7 +15,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexResourceTest.class
+        GraphElementSortResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

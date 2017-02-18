@@ -43,7 +43,7 @@ public class GraphElementSortResource {
                             )
                     )
             );
-            return Response.ok().build();
+            return Response.noContent().build();
         }).get();
     }
 
