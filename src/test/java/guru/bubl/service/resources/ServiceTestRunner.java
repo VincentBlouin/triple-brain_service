@@ -6,6 +6,7 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.service.Launcher;
@@ -30,10 +31,7 @@ public class ServiceTestRunner extends RunListener {
         RestTestUtils.launcher.launch();
 
         DefaultApacheHttpClientConfig clientConfig = new DefaultApacheHttpClientConfig();
-        clientConfig.getProperties().put(
-                "com.sun.jersey.impl.client.httpclient.handleCookies",
-                true
-        );
+        clientConfig.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
         RestTestUtils.client = Client.create(clientConfig);
         RestTestUtils.resource = RestTestUtils.client.resource(RestTestUtils.BASE_URI);
     }

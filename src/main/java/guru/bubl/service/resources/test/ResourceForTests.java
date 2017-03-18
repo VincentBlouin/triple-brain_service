@@ -5,6 +5,7 @@
 package guru.bubl.service.resources.test;
 
 import guru.bubl.module.model.search.GraphIndexer;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
@@ -12,7 +13,6 @@ import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
@@ -26,6 +26,7 @@ import guru.bubl.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,7 +40,6 @@ import java.util.UUID;
 
 import static guru.bubl.service.SecurityInterceptor.AUTHENTICATED_USER_KEY;
 import static guru.bubl.service.SecurityInterceptor.AUTHENTICATION_ATTRIBUTE_KEY;
-import static guru.bubl.service.resources.GraphManipulatorResourceUtils.userFromSession;
 
 @Path("/test")
 @Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +51,9 @@ public class ResourceForTests {
 
     @Inject
     GraphIndexer graphIndexer;
+
+    @Inject
+    SessionHandler sessionHandler;
 
 //    @Inject
 //    SearchUtils searchUtils;
@@ -154,7 +157,9 @@ public class ResourceForTests {
     @GraphTransactional
     @GET
     public Response indexSessionUserVertices(@Context HttpServletRequest request) {
-        User currentUser = userFromSession(request.getSession());
+        User currentUser = sessionHandler.userFromSession(
+                request.getSession()
+        );
         UserGraph userGraph = graphFactory.loadForUser(
                 currentUser
         );
@@ -192,7 +197,9 @@ public class ResourceForTests {
     @GraphTransactional
     @GET
     public Response makeGraphHave3SerialVerticesWithLongLabels(@Context HttpServletRequest request) throws Exception {
-        User currentUser = userFromSession(request.getSession());
+        User currentUser = sessionHandler.userFromSession(
+                request.getSession()
+        );
         graphComponentTest.user(currentUser);
         VerticesCalledABAndC verticesCalledABAndC = testScenarios.makeGraphHave3SerialVerticesWithLongLabels(
                 graphFactory.loadForUser(currentUser)

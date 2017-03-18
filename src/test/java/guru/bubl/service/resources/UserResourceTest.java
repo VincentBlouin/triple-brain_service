@@ -64,7 +64,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
         assertTrue(isUserAuthenticated(
                 authCookie
         ));
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         assertFalse(isUserAuthenticated(
                 authCookie
         ));
@@ -128,8 +128,8 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void user_is_authenticated_after_creation()throws JSONException{
-        logoutUsingCookie(authCookie);
+    public void user_is_authenticated_after_creation() throws JSONException {
+        logoutUsingCookies(authCookie);
         assertFalse(isUserAuthenticated(
                 authCookie
         ));
@@ -256,6 +256,22 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
         assertThat(errors.getJSONObject(0).get("field").toString(), is(EMAIL));
         assertThat(errors.getJSONObject(1).get("field").toString(), is(USER_NAME));
         assertThat(errors.getJSONObject(2).get("field").toString(), is(PASSWORD));
+    }
+
+    @Test
+    public void creates_persistent_session_on_signup_only_if_option_checked() throws Exception {
+        JSONObject jsonUser = userUtils().validForCreation();
+        jsonUser.put("staySignedIn", false);
+        createUserUsingJson(jsonUser);
+        assertTrue(
+                persistentSessionsRestTestUtils().get().isEmpty()
+        );
+        JSONObject jsonUserKeepSignIn = userUtils().validForCreation();
+        jsonUserKeepSignIn.put("staySignedIn", true);
+        createUserUsingJson(jsonUserKeepSignIn);
+        assertFalse(
+                persistentSessionsRestTestUtils().get().isEmpty()
+        );
     }
 
     private JSONObject createUserWithEmail(String email) throws Exception {

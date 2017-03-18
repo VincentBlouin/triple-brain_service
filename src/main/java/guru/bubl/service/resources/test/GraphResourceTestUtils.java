@@ -9,7 +9,7 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphOperator;
-import guru.bubl.service.resources.GraphManipulatorResourceUtils;
+import guru.bubl.service.SessionHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,12 +30,15 @@ public class GraphResourceTestUtils {
     @Inject
     WholeGraph wholeGraph;
 
+    @Inject
+    SessionHandler sessionHandler;
+
     @Path("graph_element/{graphElementId}/exists")
     @GraphTransactional
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("graphElementId") String graphElementId)throws Exception{
-        UserGraph userGraph = graphFactory.loadForUser(GraphManipulatorResourceUtils.userFromSession(request.getSession()));
+        UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
         return Response.ok(
                 userGraph.haveElementWithId(
                         URI.create(graphElementId)

@@ -6,17 +6,11 @@ package guru.bubl.service.usage_log;
 
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.servlet.RequestScoped;
-import guru.bubl.service.resources.GraphManipulatorResourceUtils;
 
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 
 @Singleton
 public class UsageLogFilter implements Filter {

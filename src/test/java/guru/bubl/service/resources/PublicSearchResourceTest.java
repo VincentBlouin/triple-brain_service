@@ -37,7 +37,7 @@ public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().makePublicVertexWithUri(
                 vertexBUri()
         );
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         assertFalse(isUserAuthenticated(
                 authCookie
         ));
@@ -55,7 +55,7 @@ public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().makePublicVertexWithUri(
                 vertexBUri()
         );
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         ClientResponse response = searchUtils().getSearchDetailsAnonymously(
                 vertexBUri()
         );
@@ -71,7 +71,7 @@ public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         GraphElementSearchResult searchResult = searchUtils().graphElementSearchResultFromClientResponse(
                 searchUtils().getSearchDetailsAnonymously(
                         vertexAUri()
@@ -88,7 +88,7 @@ public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().makePrivateVertexWithUri(
                 vertexAUri()
         );
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         ClientResponse clientResponse = searchUtils().getSearchDetailsAnonymously(
                 vertexAUri()
         );

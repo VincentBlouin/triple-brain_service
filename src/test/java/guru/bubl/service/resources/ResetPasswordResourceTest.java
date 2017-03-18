@@ -20,7 +20,7 @@ public class ResetPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void returns_correct_status() throws Exception{
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         ClientResponse response = reset(
                 defaultAuthenticatedUser.email()
         );
@@ -32,7 +32,7 @@ public class ResetPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void using_inexistent_email_returns_bad_request() throws Exception{
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         ClientResponse response = reset(
                 "inexistent_email@example.org"
         );

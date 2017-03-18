@@ -7,6 +7,7 @@ package guru.bubl.service.utils;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.AfterClass;
@@ -15,10 +16,13 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.service.Launcher;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -77,20 +81,40 @@ public abstract class RestTestUtils {
         }
     }
 
+    protected ClientResponse authenticateWithPersistentSessionCookie(JSONObject user, NewCookie persistentSessionCookie) {
+        return authenticateWithPersistentSessionCookieOrNot(
+                user,
+                persistentSessionCookie
+        );
+    }
+
     protected ClientResponse authenticate(JSONObject user) {
+        return authenticateWithPersistentSessionCookieOrNot(
+                user,
+                null
+        );
+    }
+
+    private ClientResponse authenticateWithPersistentSessionCookieOrNot(JSONObject user, NewCookie persistentSessionCookie) {
         try {
             JSONObject loginInfo = new JSONObject()
                     .put(
                             UserJson.EMAIL,
                             user.getString(UserJson.EMAIL)
                     )
-                    .put(UserJson.PASSWORD, DEFAULT_PASSWORD);
-            ClientResponse response = resource
+                    .put(UserJson.PASSWORD, DEFAULT_PASSWORD)
+                    .put("staySignedIn", user.optBoolean("staySignedIn"));
+            WebResource resourceInTheBuilding = resource
                     .path("service")
                     .path("users")
-                    .path("session")
-                    .accept(MediaType.APPLICATION_JSON_TYPE)
-                    .post(ClientResponse.class, loginInfo);
+                    .path("session");
+            WebResource.Builder builder = resourceInTheBuilding.getRequestBuilder();
+            if (null != persistentSessionCookie) {
+                builder.cookie(persistentSessionCookie);
+            }
+            ClientResponse response = builder.accept(
+                    MediaType.APPLICATION_JSON_TYPE
+            ).post(ClientResponse.class, loginInfo);
             assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
             authCookie = response.getCookies().get(0);
             currentAuthenticatedUser = User.withEmailAndUsername(
@@ -103,13 +127,25 @@ public abstract class RestTestUtils {
         }
     }
 
-    protected ClientResponse logoutUsingCookie(NewCookie cookie) {
-        return resource
+    protected NewCookie getPersistentSessionCookie(List<NewCookie> cookies) {
+        for (NewCookie cookie : cookies) {
+            if (cookie.getName().equals(SessionHandler.PERSISTENT_SESSION)) {
+                return cookie;
+            }
+        }
+        return null;
+    }
+
+    protected ClientResponse logoutUsingCookies(NewCookie ... cookies) {
+        WebResource resourceInTheBuilding = resource
                 .path("service")
                 .path("users")
-                .path("session")
-                .cookie(cookie)
-                .delete(ClientResponse.class);
+                .path("session");
+        WebResource.Builder builder = resourceInTheBuilding.getRequestBuilder();
+        for(NewCookie cookie : cookies){
+            builder = builder.cookie(cookie);
+        }
+        return builder.delete(ClientResponse.class);
     }
 
     protected Boolean isUserAuthenticated(NewCookie cookie) {
@@ -120,10 +156,21 @@ public abstract class RestTestUtils {
                 .cookie(cookie)
                 .get(ClientResponse.class);
         JSONObject jsonResponse = response.getEntity(JSONObject.class);
-        try{
+        try {
             return jsonResponse.getBoolean("is_authenticated");
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected ClientResponse createUserUsingJson(JSONObject json) {
+        ClientResponse clientResponse = createUser(json);
+        assertThat(
+                clientResponse.getStatus(),
+                is(
+                        Response.Status.CREATED.getStatusCode()
+                )
+        );
+        return clientResponse;
     }
 }

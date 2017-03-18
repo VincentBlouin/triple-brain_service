@@ -8,7 +8,7 @@ import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.service.resources.GraphManipulatorResourceUtils;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -34,15 +34,19 @@ import java.net.URI;
 @Singleton
 @Produces(MediaType.APPLICATION_JSON)
 public class VertexResourceTestUtils {
+
     @Inject
     GraphFactory graphFactory;
+
+    @Inject
+    SessionHandler sessionHandler;
 
     @Path("{vertexId}")
     @GraphTransactional
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(
-                GraphManipulatorResourceUtils.userFromSession(request.getSession())
+                sessionHandler.userFromSession(request.getSession())
         );
         URI vertexUri = new URI(vertexId);
         SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterVertexId(
@@ -60,7 +64,7 @@ public class VertexResourceTestUtils {
     @GraphTransactional
     @GET
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
-        UserGraph userGraph = graphFactory.loadForUser(GraphManipulatorResourceUtils.userFromSession(request.getSession()));
+        UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
         VertexOperator vertex = userGraph.vertexWithUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
         for(EdgeOperator edge : vertex.connectedEdges()){
@@ -78,7 +82,7 @@ public class VertexResourceTestUtils {
     @GraphTransactional
     @GET
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId)throws Exception{
-        UserGraph userGraph = graphFactory.loadForUser(GraphManipulatorResourceUtils.userFromSession(request.getSession()));
+        UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
         VertexOperator vertex = userGraph.vertexWithUri(new URI(Uris.decodeUrlSafe(vertexId)));
         Vertex otherVertex = userGraph.vertexWithUri(new URI(Uris.decodeUrlSafe(otherVertexId)));
         return Response.ok(

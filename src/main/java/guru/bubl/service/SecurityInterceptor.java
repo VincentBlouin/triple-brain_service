@@ -4,11 +4,10 @@
 
 package guru.bubl.service;
 
-import guru.bubl.service.resources.GraphManipulatorResourceUtils;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphTransactional;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -27,6 +26,10 @@ public class SecurityInterceptor implements MethodInterceptor {
     
     @Inject
     private Provider<HttpServletRequest> requestProvider;
+
+    @Inject
+    private SessionHandler sessionHandler;
+
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -79,7 +82,7 @@ public class SecurityInterceptor implements MethodInterceptor {
     }
 
     private boolean doesCurrentUserHaveAccessToURI(URI uri){
-        User currentUser = GraphManipulatorResourceUtils.userFromSession(requestProvider.get().getSession());
+        User currentUser = sessionHandler.userFromSession(requestProvider.get().getSession());
         return usernameInURI(uri).equals(currentUser.username());
     }
 

@@ -14,10 +14,10 @@ import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.repository.user.UserRepository;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
@@ -37,18 +37,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.Map;
 
-import static guru.bubl.module.model.json.UserJson.EMAIL;
-import static guru.bubl.module.model.json.UserJson.USER_NAME;
-import static guru.bubl.module.model.json.UserJson.PASSWORD;
-import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
-import static guru.bubl.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
-import static guru.bubl.module.model.validator.UserValidator.errorsForUserAsJson;
+import static guru.bubl.module.model.json.UserJson.*;
+import static guru.bubl.module.model.validator.UserValidator.*;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Path("/users")
@@ -62,6 +56,9 @@ public class UserResource {
 
     @Inject
     GraphIndexer graphIndexer;
+
+    @Inject
+    SessionHandler sessionHandler;
 
     @Inject
     private GraphFactory graphFactory;
@@ -101,11 +98,12 @@ public class UserResource {
 
     @Path("{username}/graph")
     public GraphResource graphResource(
-            @PathParam("username") String username
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (isUserNameTheOneInSession(username)) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
             return graphResourceFactory.withUser(
-                    GraphManipulatorResourceUtils.userFromSession(request.getSession())
+                    sessionHandler.userFromSession(request.getSession())
             );
         }
         throw new WebApplicationException(Response.Status.FORBIDDEN);
@@ -115,14 +113,16 @@ public class UserResource {
     @GraphTransactional
     public VertexNonOwnedSurroundGraphResource surroundGraphResource(
             @PathParam("username") String username,
-            @PathParam("shortId") String shortId
+            @PathParam("shortId") String shortId,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
         return getVertexSurroundGraphResource(
                 vertexFactory.withUri(
                         new UserUris(
                                 username
                         ).vertexUriFromShortId(shortId)
-                )
+                ),
+                persistentSessionId
         );
     }
 
@@ -130,7 +130,8 @@ public class UserResource {
     @GraphTransactional
     public VertexNonOwnedSurroundGraphResource surroundEdgeGraphResource(
             @PathParam("username") String username,
-            @PathParam("shortId") String shortId
+            @PathParam("shortId") String shortId,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
         Edge edge = edgeFactory.withUri(
                 new UserUris(
@@ -140,12 +141,15 @@ public class UserResource {
                 )
         );
         return getVertexSurroundGraphResource(
-                edge.sourceVertex()
+                edge.sourceVertex(),
+                persistentSessionId
         );
 
     }
 
-    private VertexNonOwnedSurroundGraphResource getVertexSurroundGraphResource(Vertex centerVertex) {
+    private VertexNonOwnedSurroundGraphResource getVertexSurroundGraphResource(
+            Vertex centerVertex, String persistentSessionId
+    ) {
         UserGraph userGraph = graphFactory.loadForUser(
                 userRepository.findByUsername(centerVertex.getOwnerUsername())
         );
@@ -153,8 +157,8 @@ public class UserResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         Boolean skipVerification = false;
-        if (GraphManipulatorResourceUtils.isUserInSession(request.getSession())) {
-            User userInSession = GraphManipulatorResourceUtils.userFromSession(request.getSession());
+        if (sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
+            User userInSession = sessionHandler.userFromSession(request.getSession());
             skipVerification = userInSession.username().equals(
                     centerVertex.getOwnerUsername()
             );
@@ -179,11 +183,12 @@ public class UserResource {
 
     @Path("{username}/search")
     public SearchResource searchResource(
-            @PathParam("username") String username
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (isUserNameTheOneInSession(username)) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
             return searchResourceFactory.withUser(
-                    GraphManipulatorResourceUtils.userFromSession(request.getSession())
+                    sessionHandler.userFromSession(request.getSession())
             );
         }
         throw new WebApplicationException(Response.Status.FORBIDDEN);
@@ -191,13 +196,14 @@ public class UserResource {
 
     @Path("{username}/identification")
     public IdentifiedToResource identificationResource(
-            @PathParam("username") String username
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (!isUserNameTheOneInSession(username)) {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         return identifiedToResourceFactory.forAuthenticatedUser(
-                GraphManipulatorResourceUtils.userFromSession(
+                sessionHandler.userFromSession(
                         request.getSession()
                 )
         );
@@ -205,9 +211,10 @@ public class UserResource {
 
     @Path("{username}/admin")
     public AdminResource adminResource(
-            @PathParam("username") String username
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (isUserNameTheOneInSession(username) && username.equals("vince")) {
+        if (isUserNameTheOneInSession(username, persistentSessionId) && username.equals("vince")) {
             return injector.getInstance(
                     AdminResource.class
             );
@@ -219,29 +226,31 @@ public class UserResource {
 
     @Path("{username}/center-elements")
     public CenterGraphElementsResource getCenterGraphElementsResource(
-            @PathParam("username") String username
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (!isUserNameTheOneInSession(username)) {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
             throw new WebApplicationException(
                     Response.Status.FORBIDDEN
             );
         }
         return centerGraphElementsResourceFactory.forUser(
-                GraphManipulatorResourceUtils.userFromSession(request.getSession())
+                sessionHandler.userFromSession(request.getSession())
         );
     }
 
     @Path("{username}/fork")
     public ForkResource getForkResource(
-            @PathParam("username") String username
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (!isUserNameTheOneInSession(username)) {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
             throw new WebApplicationException(
                     Response.Status.FORBIDDEN
             );
         }
         return forkResourceFactory.forUser(
-                GraphManipulatorResourceUtils.userFromSession(request.getSession())
+                sessionHandler.userFromSession(request.getSession())
         );
     }
 
@@ -279,6 +288,7 @@ public class UserResource {
         ).password(
                 jsonUser.optString(PASSWORD, "")
         );
+
         JSONArray jsonMessages = new JSONArray();
         Map<String, String> errors = errorsForUserAsJson(jsonUser);
         if (errors.isEmpty()) {
@@ -317,24 +327,36 @@ public class UserResource {
         UserSessionResource.authenticateUserInSession(
                 user, request.getSession()
         );
-        return Response.created(URI.create(
+        Response.ResponseBuilder responseBuilder = Response.created(URI.create(
                 user.username()
-        )).entity(UserJson.toJson(user)).build();
+        ));
+        if (jsonUser.optBoolean("staySignedIn")) {
+            responseBuilder.cookie(
+                    sessionHandler.persistSessionForUser(
+                            request.getSession(),
+                            user
+                    )
+            );
+        }
+        return responseBuilder.entity(UserJson.toJson(user)).build();
     }
 
     @GET
     @Path("/is_authenticated")
-    public Response isAuthenticated(@Context HttpServletRequest request) throws JSONException {
+    public Response isAuthenticated(
+            @Context HttpServletRequest request,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) throws JSONException {
         return Response.ok(new JSONObject()
-                .put("is_authenticated", GraphManipulatorResourceUtils.isUserInSession(request.getSession()))
+                .put("is_authenticated", sessionHandler.isUserInSession(request.getSession(), persistentSessionId))
         ).build();
     }
 
-    private Boolean isUserNameTheOneInSession(String userName) {
-        if (!GraphManipulatorResourceUtils.isUserInSession(request.getSession())) {
+    private Boolean isUserNameTheOneInSession(String userName, String persistentSessionId) {
+        if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
             return false;
         }
-        User authenticatedUser = GraphManipulatorResourceUtils.userFromSession(request.getSession());
+        User authenticatedUser = sessionHandler.userFromSession(request.getSession());
         return authenticatedUser.username().equals(userName);
     }
 

@@ -23,7 +23,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void changing_password_returns_correct_status() {
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
                 UserForgotPasswordToken.generate().setResetPasswordToken("token")
@@ -42,7 +42,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_change_password(){
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
                 UserForgotPasswordToken.generate().setResetPasswordToken("token")
@@ -70,7 +70,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void forget_password_token_must_match_to_change_password(){
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         ClientResponse response = changePassword(
                 defaultAuthenticatedUser.email(),
                 "new_password",
@@ -99,7 +99,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void cant_change_password_if_forget_password_token_is_expired(){
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
         userForgotPasswordToken.setResetPasswordExpirationDate(
                 new DateTime().minusHours(1).toDate()
@@ -135,7 +135,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void password_cant_be_too_short(){
-        logoutUsingCookie(authCookie);
+        logoutUsingCookies(authCookie);
         UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,

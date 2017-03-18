@@ -250,6 +250,12 @@
             <version>1.4.188</version>
         </dependency>
 
+        <dependency>
+            <groupId>biz.paluch.redis</groupId>
+            <artifactId>lettuce</artifactId>
+            <version>4.3.1.Final</version>
+        </dependency>
+
         <!-- Tests -->
 
         <dependency>

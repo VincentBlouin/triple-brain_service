@@ -6,18 +6,22 @@ package guru.bubl.service.conf;
 
 import com.google.gson.Gson;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.lambdaworks.redis.RedisClient;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.search.Neo4jGraphSearchModule;
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
+import guru.bubl.service.RedisSessionHandler;
 import guru.bubl.service.RestInterceptor;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
@@ -69,6 +73,8 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
                 bind(PublicSearchResource.class);
+                bind(SessionHandler.class).to(RedisSessionHandler.class);
+                bind(RedisSessionHandler.class);
 
                 install(builder.build(
                         CenterGraphElementsResourceFactory.class
@@ -140,6 +146,14 @@ public class GuiceConfig extends GuiceServletContextListener {
                     );
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
+                    install(
+                            isTesting ?
+                                    PersistentSessionModule.toTest() :
+                                    PersistentSessionModule.forProduction(
+                                            (String) jndiContext.lookup("redisUri")
+                                    )
+
+                    );
                     bind(Boolean.class)
                             .annotatedWith(Names.named("isTesting")).toInstance(isTesting);
                     install(
@@ -155,17 +169,20 @@ public class GuiceConfig extends GuiceServletContextListener {
                                     )
                     );
                     install(new Neo4jGraphSearchModule());
+
                     if (isTesting) {
+                        //security flaw if binded in production
                         bind(ResourceForTests.class);
                         bind(VertexResourceTestUtils.class);
                         bind(EdgeResourceTestUtils.class);
                         bind(GraphResourceTestUtils.class);
                         bind(UserResourceTestUtils.class);
+                        bind(PersistentSessionRestTestUtils.class);
                     }
                     bind(DataSource.class)
                             .toProvider(fromJndi(DataSource.class, "jdbc/usageLog"));
                     install(new UsageLogModule());
-                    if(isTesting){
+                    if (isTesting) {
                         SQLConnection.createTablesUsingDataSource(
                                 new H2DataSource()
                         );

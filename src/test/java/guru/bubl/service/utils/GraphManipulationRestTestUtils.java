@@ -122,6 +122,14 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return newUser;
     }
 
+
+    protected PersistentSessionRestTestUtils persistentSessionsRestTestUtils(){
+        return new PersistentSessionRestTestUtils(
+                resource
+        );
+    }
+
+
     private void deleteAllDocumentsFromSearch() {
         ClientResponse response = resource
                 .path("service")

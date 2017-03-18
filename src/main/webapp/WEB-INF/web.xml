@@ -9,10 +9,6 @@
 
     <display-name>triple_brain Service Application</display-name>
 
-    <session-config>
-        <session-timeout>-1</session-timeout>
-    </session-config>
-
     <listener>
         <listener-class>guru.bubl.service.conf.GuiceConfig</listener-class>
     </listener>
