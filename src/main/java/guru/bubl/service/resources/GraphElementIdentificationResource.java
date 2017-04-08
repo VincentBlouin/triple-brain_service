@@ -72,26 +72,9 @@ public class GraphElementIdentificationResource {
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        Map<URI, IdentificationPojo> identifications;
-        switch (identification.getType()) {
-            case same_as:
-                identifications = graphElement.addSameAs(
-                        identification
-                );
-                break;
-            case type:
-                identifications = graphElement.addType(
-                        identification
-                );
-                break;
-            case generic:
-                identifications = graphElement.addGenericIdentification(
-                        identification
-                );
-                break;
-            default:
-                throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+        Map<URI, IdentificationPojo> identifications = graphElement.addMeta(
+                identification
+        );
         reindexGraphElement();
         return Response.ok().entity(
                 IdentificationJson.toJson(identifications)

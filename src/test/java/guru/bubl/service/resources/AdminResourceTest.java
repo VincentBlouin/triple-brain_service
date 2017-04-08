@@ -6,18 +6,16 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.IdentificationPojo;
-import guru.bubl.module.model.graph.identification.IdentificationType;
+import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class AdminResourceTest extends GraphManipulationRestTestUtils {
 
@@ -67,7 +65,9 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
     public void refreshing_identifications_number_of_references_returns_ok_status() throws Exception {
         graphElementUtils().addFoafPersonTypeToVertexA();
         IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
-        possession.setType(IdentificationType.same_as);
+        possession.setRelationExternalResourceUri(
+                ModelTestScenarios.SAME_AS
+        );
         graphElementUtils().addIdentificationToGraphElementWithUri(
                 possession,
                 edgeUtils().edgeBetweenAAndB().uri()
@@ -89,7 +89,9 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
     public void re_adding_identifications_returns_ok_status() throws Exception {
         graphElementUtils().addFoafPersonTypeToVertexA();
         IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
-        possession.setType(IdentificationType.same_as);
+        possession.setRelationExternalResourceUri(
+                ModelTestScenarios.SAME_AS
+        );
         graphElementUtils().addIdentificationToGraphElementWithUri(
                 possession,
                 edgeUtils().edgeBetweenAAndB().uri()

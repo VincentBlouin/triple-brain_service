@@ -48,7 +48,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
                 user.username()
         );
         bubble.label("Event");
-        bubble.addGenericIdentification(
+        bubble.addMeta(
                 modelTestScenarios.event()
         );
         bubble.addSuggestions(

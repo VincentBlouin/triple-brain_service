@@ -26,12 +26,12 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_label_returns_no_content_status() {
         assertThat(
-                vertexA().getAdditionalTypes().size(),
+                vertexA().getIdentifications().size(),
                 is(0)
         );
 
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        Identification identification = vertexA().getIdentifications().values().iterator().next();
         ClientResponse clientResponse = updateIdentificationLabel(
                 identification,
                 "new label"
@@ -45,11 +45,11 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_update_identification_label() {
         assertThat(
-                vertexA().getAdditionalTypes().size(),
+                vertexA().getIdentifications().size(),
                 is(0)
         );
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        Identification identification = vertexA().getIdentifications().values().iterator().next();
         assertFalse(
                 identification.label().equals("new label")
         );
@@ -57,7 +57,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
                 identification,
                 "new label"
         );
-        identification = vertexA().getAdditionalTypes().values().iterator().next();
+        identification = vertexA().getIdentifications().values().iterator().next();
         assertTrue(
                 identification.label().equals(
                         "new label"
@@ -68,7 +68,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void cannot_update_identification_label_of_another_user() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        Identification identification = vertexA().getIdentifications().values().iterator().next();
         JSONObject anotherUser = createAUser();
         authenticate(
                 anotherUser
@@ -84,7 +84,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
         authenticate(
                 defaultAuthenticatedUser
         );
-        identification = vertexA().getAdditionalTypes().values().iterator().next();
+        identification = vertexA().getIdentifications().values().iterator().next();
         assertFalse(
                 identification.label().equals(
                         "new label"
@@ -95,7 +95,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_note_returns_ok_status(){
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        Identification identification = vertexA().getIdentifications().values().iterator().next();
         ClientResponse response = updateIdentificationNote(identification, "some note");
         assertThat(
                 response.getStatus(),
@@ -106,11 +106,11 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_update_note(){
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getAdditionalTypes().values().iterator().next();
+        Identification identification = vertexA().getIdentifications().values().iterator().next();
         String identificationNote = identification.comment();
         assertThat(identificationNote, is(not("some note")));
         updateIdentificationNote(identification, "some note");
-        identification = vertexA().getAdditionalTypes().values().iterator().next();
+        identification = vertexA().getIdentifications().values().iterator().next();
         assertThat(identification.comment(), is("some note"));
     }
 

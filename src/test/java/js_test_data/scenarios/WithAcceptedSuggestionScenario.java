@@ -88,7 +88,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         event.label("Event");
-        event.addGenericIdentification(
+        event.addMeta(
                 modelTestScenarios.event()
         );
         event.addSuggestions(
@@ -103,7 +103,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         startDate.label("2016/01/17");
-        startDate.addGenericIdentification(
+        startDate.addMeta(
                 modelTestScenarios.startDateIdentification()
         );
 
@@ -111,7 +111,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         jeremy.label("Jemery");
-        jeremy.addGenericIdentification(
+        jeremy.addMeta(
                 modelTestScenarios.person()
         );
 
@@ -119,21 +119,21 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         noemi.label("Noemi");
-        noemi.addGenericIdentification(
+        noemi.addMeta(
                 modelTestScenarios.person()
         );
     }
     private void buildRelations(){
         EdgeOperator startDateEdge = event.addRelationToVertex(startDate);
         startDateEdge.label("start date");
-        startDateEdge.addGenericIdentification(modelTestScenarios.startDateIdentification());
+        startDateEdge.addMeta(modelTestScenarios.startDateIdentification());
 
         EdgeOperator jeremyEdge = event.addRelationToVertex(jeremy);
         jeremyEdge.label("people involved");
-        jeremyEdge.addGenericIdentification(modelTestScenarios.personFromFreebase());
+        jeremyEdge.addMeta(modelTestScenarios.personFromFreebase());
 
         EdgeOperator noemiEdge = event.addRelationToVertex(noemi);
         noemiEdge.label("people involved");
-        noemiEdge.addGenericIdentification(modelTestScenarios.personFromFreebase());
+        noemiEdge.addMeta(modelTestScenarios.personFromFreebase());
     }
 }

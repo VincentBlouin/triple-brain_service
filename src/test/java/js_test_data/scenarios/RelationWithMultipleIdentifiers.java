@@ -75,19 +75,19 @@ public class RelationWithMultipleIdentifiers implements JsTestScenario {
     private void buildRelations(){
         EdgeOperator scientistRelation = team.addRelationToVertex(aria);
         scientistRelation.label("computer scientist");
-        scientistRelation.addGenericIdentification(
+        scientistRelation.addMeta(
                 modelTestScenarios.computerScientistType()
         );
-        scientistRelation.addGenericIdentification(
+        scientistRelation.addMeta(
                 modelTestScenarios.person()
         );
 
         EdgeOperator memberRelation = team.addRelationToVertex(john);
         memberRelation.label("member");
-        memberRelation.addGenericIdentification(
+        memberRelation.addMeta(
                 modelTestScenarios.person()
         );
-        memberRelation.addGenericIdentification(
+        memberRelation.addMeta(
                 modelTestScenarios.personFromFreebase()
         );
     }

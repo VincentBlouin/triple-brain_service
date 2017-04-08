@@ -151,9 +151,9 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         b1.addRelationToVertex(b2).label("r1");
         EdgeOperator shirt1Relation = b2.addRelationToVertex(shirt1);
         shirt1Relation.label("shirt1");
-        shirt1Relation.addSameAs(modelTestScenarios.tShirt());
+        shirt1Relation.addMeta(modelTestScenarios.tShirt());
         EdgeOperator shirt2Relation = b2.addRelationToVertex(shirt2);
         shirt2Relation.label("shirt2");
-        shirt2Relation.addSameAs(modelTestScenarios.tShirt());
+        shirt2Relation.addMeta(modelTestScenarios.tShirt());
     }
 }

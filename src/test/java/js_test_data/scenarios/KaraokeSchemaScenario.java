@@ -58,7 +58,7 @@ public class KaraokeSchemaScenario implements JsTestScenario {
         repertoire.label("repertoire");
         GraphElementOperator location = karaoke.addProperty();
         location.label("location");
-        location.addSameAs(modelTestScenarios.location());
+        location.addMeta(modelTestScenarios.location());
         List<GraphElementSearchResult> searchResultsForKaraoke = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "karaoke",
                 user

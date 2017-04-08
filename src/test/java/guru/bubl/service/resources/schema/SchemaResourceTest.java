@@ -5,15 +5,15 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.search.VertexSearchResult;
-import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import org.codehaus.jettison.json.JSONObject;
-import org.junit.Test;
 import guru.bubl.module.model.graph.identification.IdentificationPojo;
-import guru.bubl.module.model.graph.identification.IdentificationType;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.json.IdentificationJson;
 import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import org.codehaus.jettison.json.JSONObject;
+import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -186,8 +186,8 @@ public class SchemaResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void adding_identification_returns_ok_status() throws Exception {
         IdentificationPojo identification = modelTestScenarios.creatorPredicate();
-        identification.setType(
-                IdentificationType.same_as
+        identification.setRelationExternalResourceUri(
+                ModelTestScenarios.SAME_AS
         );
         JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
         ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(

@@ -85,11 +85,11 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
                 r1
         );
         r1Identifier.setLabel("r1");
-        r2.addGenericIdentification(r1Identifier);
+        r2.addMeta(r1Identifier);
         IdentificationPojo r2Identifier = TestScenarios.identificationFromFriendlyResource(
                 r2
         );
-        r1.addGenericIdentification(r2Identifier);
-        r1.addGenericIdentification(modelTestScenarios.computerScientistType());
+        r1.addMeta(r2Identifier);
+        r1.addMeta(modelTestScenarios.computerScientistType());
     }
 }

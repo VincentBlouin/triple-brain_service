@@ -134,27 +134,27 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     private void createEdges() {
         rBook1 = me.addRelationToVertex(book1);
         rBook1.label("Possession of book 1");
-        rBook1.addSameAs(
+        rBook1.addMeta(
                 modelTestScenarios.possessionIdentification()
         );
         rBook2 = book2.addRelationToVertex(me);
         rBook2.label("Possessed by book 2");
-        rBook2.addSameAs(
+        rBook2.addMeta(
                 modelTestScenarios.possessionIdentification()
         );
         rBook3 = me.addRelationToVertex(book3);
         rBook3.label("Possession of book 3");
-        rBook3.addSameAs(
+        rBook3.addMeta(
                 modelTestScenarios.possessionIdentification()
         );
-        rBook3.addSameAs(
+        rBook3.addMeta(
                 modelTestScenarios.possessionIdentification()
         );
         rBook3Copy = me.addRelationToVertex(book3Copy);
-        rBook3Copy.addSameAs(
+        rBook3Copy.addMeta(
                 modelTestScenarios.possessionIdentification()
         );
-        rBook3Copy.addSameAs(
+        rBook3Copy.addMeta(
                 TestScenarios.identificationFromFriendlyResource(
                         rBook3
                 )
@@ -172,7 +172,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
                 originalRelation.uri(),
                 new FriendlyResourcePojo("original relation")
         );
-        sameAsOriginalRelation.addSameAs(b1RelationIdentification);
+        sameAsOriginalRelation.addMeta(b1RelationIdentification);
     }
 
     private void setupCreationDates() {

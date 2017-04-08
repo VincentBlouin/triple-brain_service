@@ -6,20 +6,17 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.IdentificationPojo;
-import guru.bubl.module.model.graph.identification.IdentificationType;
-import guru.bubl.module.model.search.VertexSearchResult;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class IdentifiedToResourceTest extends GraphManipulationRestTestUtils{
 
@@ -32,8 +29,8 @@ public class IdentifiedToResourceTest extends GraphManipulationRestTestUtils{
                 relatedResources.isEmpty()
         );
         IdentificationPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
-        tShirtAsIdentification.setType(
-                IdentificationType.generic
+        tShirtAsIdentification.setRelationExternalResourceUri(
+                ModelTestScenarios.GENERIC
         );
         graphElementUtils().addIdentificationToGraphElementWithUri(
                 tShirtAsIdentification,
@@ -51,8 +48,8 @@ public class IdentifiedToResourceTest extends GraphManipulationRestTestUtils{
     public void cannot_get_related_resources_of_another_user(){
         Vertex aVertex = vertexA();
         IdentificationPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
-        tShirtAsIdentification.setType(
-                IdentificationType.generic
+        tShirtAsIdentification.setRelationExternalResourceUri(
+                ModelTestScenarios.GENERIC
         );
         graphElementUtils().addIdentificationToGraphElementWithUri(
                 tShirtAsIdentification,

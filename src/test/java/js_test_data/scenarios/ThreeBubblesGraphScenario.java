@@ -257,7 +257,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         VertexOperator forkedB1 = vertexFactory.withUri(
                 forkedB1AsIdentifier.getGraphElement().uri()
         );
-        forkedB1.addGenericIdentification(
+        forkedB1.addMeta(
                 modelTestScenarios.event()
         );
         forkedB1.addSuggestions(

@@ -112,12 +112,12 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
         );
         EdgeOperator secondSomeRelation = center.addRelationToVertex(b2);
         secondSomeRelation.label("some relation");
-        secondSomeRelation.addGenericIdentification(
+        secondSomeRelation.addMeta(
                 firstSomeRelationAsIdentifier
         );
         EdgeOperator thirdSomeRelation = center.addRelationToVertex(b3);
         thirdSomeRelation.label("some relation");
-        thirdSomeRelation.addGenericIdentification(
+        thirdSomeRelation.addMeta(
                 firstSomeRelationAsIdentifier
         );
         EdgeOperator differentRelation = center.addRelationToVertex(b4);

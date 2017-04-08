@@ -180,7 +180,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
     private void buildSomeProject() {
         someProject = vertexFactory.createForOwnerUsername(user.username());
         someProject.label("some project");
-        someProject.addGenericIdentification(
+        someProject.addMeta(
                 projectIdentification()
         );
 
@@ -189,7 +189,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
         impact1Relation.label("impact 1 on society");
         impact1Relation.destinationVertex().label("impact 1 bubble");
-        impact1Relation.addSameAs(
+        impact1Relation.addMeta(
                 impactOnSocietyIdentification()
         );
 
@@ -198,7 +198,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
         impact2Relation.label("impact 2 on society");
         impact2Relation.destinationVertex().label("impact 2 bubble");
-        impact2Relation.addSameAs(
+        impact2Relation.addMeta(
                 impactOnSocietyIdentification()
         );
 
@@ -207,10 +207,10 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
         impact3Relation.label("impact 3");
         impact3Relation.destinationVertex().label("impact 3 bubble");
-        impact3Relation.addSameAs(
+        impact3Relation.addMeta(
                 impactOnSocietyIdentification()
         );
-        impact3Relation.addSameAs(
+        impact3Relation.addMeta(
                 impactOnTheIndividualIdentification()
         );
     }

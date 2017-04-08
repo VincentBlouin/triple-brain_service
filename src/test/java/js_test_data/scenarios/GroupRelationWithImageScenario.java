@@ -122,11 +122,11 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         );
         EdgeOperator rIdea1 = someProject.addRelationToVertex(idea1);
         rIdea1.label("idea for 1");
-        rIdea1.addGenericIdentification(ideaIdentification);
+        rIdea1.addMeta(ideaIdentification);
 
         EdgeOperator rIdea2 = someProject.addRelationToVertex(idea2);
         rIdea2.label("idea for 2");
-        rIdea2.addGenericIdentification(ideaIdentification);
+        rIdea2.addMeta(ideaIdentification);
 
         IdentificationPojo componentIdentification = new IdentificationPojo(
                 URI.create(
@@ -138,11 +138,11 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         );
         EdgeOperator rComponent1 = someProject.addRelationToVertex(component1);
         rComponent1.label("has component 1");
-        rComponent1.addGenericIdentification(componentIdentification);
+        rComponent1.addMeta(componentIdentification);
 
         EdgeOperator rComponent2 = someProject.addRelationToVertex(component2);
         rComponent2.label("has component 2");
-        rComponent2.addGenericIdentification(componentIdentification);
+        rComponent2.addMeta(componentIdentification);
 
         someProject.addRelationToVertex(
                 otherBubble
