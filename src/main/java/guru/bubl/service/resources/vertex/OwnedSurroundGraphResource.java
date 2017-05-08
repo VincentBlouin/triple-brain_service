@@ -4,6 +4,7 @@
 
 package guru.bubl.service.resources.vertex;
 
+import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -20,17 +21,17 @@ import javax.ws.rs.core.Response;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VertexOwnedSurroundGraphResource {
+public class OwnedSurroundGraphResource {
 
-    private Vertex centerVertex;
+    private FriendlyResource centerBubble;
     private UserGraph userGraph;
 
-    public VertexOwnedSurroundGraphResource(
+    public OwnedSurroundGraphResource(
             UserGraph userGraph,
-            Vertex centerVertex
+            FriendlyResource centerBubble
     ) {
         this.userGraph = userGraph;
-        this.centerVertex = centerVertex;
+        this.centerBubble = centerBubble;
     }
 
     @GET
@@ -51,9 +52,9 @@ public class VertexOwnedSurroundGraphResource {
     }
 
     private SubGraphPojo getGraph(){
-        return userGraph.graphWithDepthAndCenterVertexId(
+        return userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
-                centerVertex.uri()
+                centerBubble.uri()
         );
     }
 }

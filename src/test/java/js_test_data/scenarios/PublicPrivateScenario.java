@@ -45,7 +45,7 @@ public class PublicPrivateScenario implements JsTestScenario {
         createVertices();
         createEdges();
         return SubGraphJson.toJson(
-                userGraph.graphWithDepthAndCenterVertexId(
+                userGraph.graphWithDepthAndCenterBubbleUri(
                         1,
                         b1.uri()
                 )

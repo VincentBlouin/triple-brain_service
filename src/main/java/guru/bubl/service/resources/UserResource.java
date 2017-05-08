@@ -28,7 +28,7 @@ import guru.bubl.service.resources.identification.IdentifiedToResource;
 import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
-import guru.bubl.service.resources.vertex.VertexNonOwnedSurroundGraphResource;
+import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -111,7 +111,7 @@ public class UserResource {
 
     @Path("{username}/non_owned/vertex/{shortId}/surround_graph")
     @GraphTransactional
-    public VertexNonOwnedSurroundGraphResource surroundGraphResource(
+    public NotOwnedSurroundGraphResource surroundGraphResource(
             @PathParam("username") String username,
             @PathParam("shortId") String shortId,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
@@ -128,7 +128,7 @@ public class UserResource {
 
     @Path("{username}/non_owned/edge/{shortId}/surround_graph")
     @GraphTransactional
-    public VertexNonOwnedSurroundGraphResource surroundEdgeGraphResource(
+    public NotOwnedSurroundGraphResource surroundEdgeGraphResource(
             @PathParam("username") String username,
             @PathParam("shortId") String shortId,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
@@ -147,7 +147,7 @@ public class UserResource {
 
     }
 
-    private VertexNonOwnedSurroundGraphResource getVertexSurroundGraphResource(
+    private NotOwnedSurroundGraphResource getVertexSurroundGraphResource(
             Vertex centerVertex, String persistentSessionId
     ) {
         UserGraph userGraph = graphFactory.loadForUser(
@@ -163,7 +163,7 @@ public class UserResource {
                     centerVertex.getOwnerUsername()
             );
         }
-        return new VertexNonOwnedSurroundGraphResource(
+        return new NotOwnedSurroundGraphResource(
                 userGraph,
                 centerVertex,
                 skipVerification

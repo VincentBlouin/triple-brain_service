@@ -10,7 +10,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.IdentifiedTo;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 
 import javax.inject.Inject;
@@ -43,7 +43,7 @@ public class IdentifiedToResource {
     @Path("/{identificationUri}")
     public Response get(@PathParam("identificationUri") String identificationUri) {
         Set<GraphElementSearchResult> relatedResources = identifiedTo.getForIdentificationAndUser(
-                new IdentificationPojo(
+                new IdentifierPojo(
                         URI.create(identificationUri)
                 ),
                 authenticatedUser

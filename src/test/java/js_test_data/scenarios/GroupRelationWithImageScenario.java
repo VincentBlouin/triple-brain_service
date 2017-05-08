@@ -8,7 +8,7 @@ import com.google.common.collect.Sets;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
@@ -60,7 +60,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 someProject.uri()
         );
@@ -114,7 +114,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                         URI.create("big_url")
                 )
         ));
-        IdentificationPojo ideaIdentification = new IdentificationPojo(
+        IdentifierPojo ideaIdentification = new IdentifierPojo(
                 URI.create(
                         "http://external-uri.com/idea"
                 ),
@@ -128,7 +128,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         rIdea2.label("idea for 2");
         rIdea2.addMeta(ideaIdentification);
 
-        IdentificationPojo componentIdentification = new IdentificationPojo(
+        IdentifierPojo componentIdentification = new IdentifierPojo(
                 URI.create(
                         "http://external-uri.com/component"
                 ),

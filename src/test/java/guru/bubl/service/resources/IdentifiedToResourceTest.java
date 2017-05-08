@@ -5,7 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
@@ -28,7 +28,7 @@ public class IdentifiedToResourceTest extends GraphManipulationRestTestUtils{
         assertTrue(
                 relatedResources.isEmpty()
         );
-        IdentificationPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
+        IdentifierPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
         tShirtAsIdentification.setRelationExternalResourceUri(
                 ModelTestScenarios.GENERIC
         );
@@ -47,7 +47,7 @@ public class IdentifiedToResourceTest extends GraphManipulationRestTestUtils{
     @Test
     public void cannot_get_related_resources_of_another_user(){
         Vertex aVertex = vertexA();
-        IdentificationPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
+        IdentifierPojo tShirtAsIdentification = new ModelTestScenarios().tShirt();
         tShirtAsIdentification.setRelationExternalResourceUri(
                 ModelTestScenarios.GENERIC
         );

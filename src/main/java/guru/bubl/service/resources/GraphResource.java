@@ -11,7 +11,7 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
-import guru.bubl.service.resources.identification.IdentificationResource;
+import guru.bubl.service.resources.identification.IdentifierResource;
 import guru.bubl.service.resources.identification.IdentificationResourceFactory;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
@@ -74,9 +74,10 @@ public class GraphResource {
     }
 
     @Path("/identification")
-    public IdentificationResource identificationResource() {
-        return identificationResourceFactory.forAuthenticatedUser(
-                user
+    public IdentifierResource identificationResource() {
+        return identificationResourceFactory.forAuthenticatedUserAndGraph(
+                user,
+                userGraph()
         );
     }
 

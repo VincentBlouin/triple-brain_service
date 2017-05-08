@@ -5,7 +5,11 @@
 package guru.bubl.service.resources.identification;
 
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 
 public interface IdentificationResourceFactory {
-    IdentificationResource forAuthenticatedUser(User user);
+    IdentifierResource forAuthenticatedUserAndGraph(
+            User user,
+            UserGraph userGraph
+    );
 }

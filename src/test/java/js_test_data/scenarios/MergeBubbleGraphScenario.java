@@ -68,7 +68,7 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
                 )
         );
         mergeBubble.label("merge");
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 mergeBubble.uri()
         );

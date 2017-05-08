@@ -21,7 +21,7 @@ import java.net.URI;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class VertexNonOwnedSurroundGraphResourceTest extends GraphManipulationRestTestUtils {
+public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void getting_graph_of_another_user_returns_correct_status() {

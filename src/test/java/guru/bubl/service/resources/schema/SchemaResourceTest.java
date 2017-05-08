@@ -5,7 +5,7 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.json.IdentificationJson;
 import guru.bubl.module.model.json.graph.SchemaJson;
@@ -185,7 +185,7 @@ public class SchemaResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void adding_identification_returns_ok_status() throws Exception {
-        IdentificationPojo identification = modelTestScenarios.creatorPredicate();
+        IdentifierPojo identification = modelTestScenarios.creatorPredicate();
         identification.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );

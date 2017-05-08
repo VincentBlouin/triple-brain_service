@@ -49,7 +49,7 @@ public class RelationWithMultipleIdentifiers implements JsTestScenario {
         buildBubbles();
         buildRelations();
         return SubGraphJson.toJson(
-                userGraph.graphWithDepthAndCenterVertexId(
+                userGraph.graphWithDepthAndCenterBubbleUri(
                         1,
                         team.uri()
                 )

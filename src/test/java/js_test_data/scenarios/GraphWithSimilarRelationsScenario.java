@@ -7,7 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -80,7 +80,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        subGraphForMe = userGraph.graphWithDepthAndCenterVertexId(
+        subGraphForMe = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 me.uri()
         );
@@ -168,7 +168,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         originalRelation.label("original relation");
         EdgeOperator sameAsOriginalRelation = me.addRelationToVertex(b2);
         sameAsOriginalRelation.label("same as original relation");
-        IdentificationPojo b1RelationIdentification = new IdentificationPojo(
+        IdentifierPojo b1RelationIdentification = new IdentifierPojo(
                 originalRelation.uri(),
                 new FriendlyResourcePojo("original relation")
         );

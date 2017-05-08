@@ -49,7 +49,7 @@ public class VertexResourceTestUtils {
                 sessionHandler.userFromSession(request.getSession())
         );
         URI vertexUri = new URI(vertexId);
-        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 vertexUri
         );

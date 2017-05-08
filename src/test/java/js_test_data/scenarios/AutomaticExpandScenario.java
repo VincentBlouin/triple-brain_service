@@ -53,19 +53,19 @@ public class AutomaticExpandScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b1.uri()
         );
-        SubGraphPojo b2SubGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b2SubGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b2.uri()
         );
-        SubGraphPojo b3SubGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b3SubGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b3.uri()
         );
-        SubGraphPojo b31SubGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b31SubGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b31.uri()
         );

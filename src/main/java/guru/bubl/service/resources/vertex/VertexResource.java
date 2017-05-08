@@ -9,7 +9,6 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -250,7 +249,7 @@ public class VertexResource {
 
     @Path("{shortId}/surround_graph")
     @GraphTransactional
-    public VertexOwnedSurroundGraphResource getVertexSurroundGraphResource(
+    public OwnedSurroundGraphResource getVertexSurroundGraphResource(
             @PathParam("shortId") String shortId,
             @QueryParam("center") String isCenter
     ) {
@@ -262,7 +261,7 @@ public class VertexResource {
             centerGraphElementOperator.incrementNumberOfVisits();
             centerGraphElementOperator.updateLastCenterDate();
         }
-        return new VertexOwnedSurroundGraphResource(
+        return new OwnedSurroundGraphResource(
                 userGraph,
                 vertex
         );

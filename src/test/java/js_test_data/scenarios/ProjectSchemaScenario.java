@@ -6,13 +6,15 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
@@ -49,6 +51,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
      * some project -- impact 3 --> impact 3 bubble
      * impact on society relations are identified to property "impact on society"
      * impact 3 is identified to "Impact on society" and "Impact on the individual"
+     * impact 2 bubble has been centered and so has 1 nb of visits
      */
 
 
@@ -63,6 +66,9 @@ public class ProjectSchemaScenario implements JsTestScenario {
 
     @Inject
     protected SchemaFactory schemaFactory;
+
+    @Inject
+    protected CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     @Inject
     ModelTestScenarios modelTestScenarios;
@@ -108,7 +114,12 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 "project",
                 user
         );
-        SubGraphPojo someProjectGraph = userGraph.graphWithDepthAndCenterVertexId(
+
+        List<VertexSearchResult> searchResultsForImpactBubbles = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                "impact",
+                user
+        );
+        SubGraphPojo someProjectGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 someProject.uri()
         );
@@ -151,6 +162,13 @@ public class ProjectSchemaScenario implements JsTestScenario {
                     new JSONObject(
                             new Gson().toJson(
                                     impactOnSocietySearchDetails
+                            )
+                    )
+            ).put(
+                    "impactVerticesSearchResults",
+                    new JSONArray(
+                            new Gson().toJson(
+                                    searchResultsForImpactBubbles
                             )
                     )
             ).put(
@@ -197,7 +215,9 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 someProject.addVertexAndRelation().uri()
         );
         impact2Relation.label("impact 2 on society");
-        impact2Relation.destinationVertex().label("impact 2 bubble");
+        VertexOperator impact2Bubble = impact2Relation.destinationVertex();
+        impact2Bubble.label("impact 2 bubble");
+        centerGraphElementOperatorFactory.usingGraphElement(impact2Bubble).incrementNumberOfVisits();
         impact2Relation.addMeta(
                 impactOnSocietyIdentification()
         );
@@ -215,8 +235,8 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
     }
 
-    private IdentificationPojo projectIdentification(){
-        return new IdentificationPojo(
+    private IdentifierPojo projectIdentification(){
+        return new IdentifierPojo(
                 project.uri(),
                 new FriendlyResourcePojo(
                         "Project"
@@ -224,8 +244,8 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
     }
 
-    private IdentificationPojo impactOnSocietyIdentification(){
-        return new IdentificationPojo(
+    private IdentifierPojo impactOnSocietyIdentification(){
+        return new IdentifierPojo(
                 impactOnSocietyProperty.uri(),
                 new FriendlyResourcePojo(
                         "Impact on society"
@@ -233,8 +253,8 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
     }
 
-    private IdentificationPojo impactOnTheIndividualIdentification(){
-        return new IdentificationPojo(
+    private IdentifierPojo impactOnTheIndividualIdentification(){
+        return new IdentifierPojo(
                 impactOnTheIndividualProperty.uri(),
                 new FriendlyResourcePojo(
                         "Impact on the individual"

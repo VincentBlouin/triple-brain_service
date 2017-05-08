@@ -8,8 +8,8 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.identification.Identification;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.Identifier;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.graph.edge.Edge;
@@ -64,7 +64,7 @@ public class GraphElementIdentificationResource {
     @Path("/")
     public Response add(JSONObject identificationJson) {
         IdentificationValidator validator = new IdentificationValidator();
-        IdentificationPojo identification = IdentificationJson.singleFromJson(
+        IdentifierPojo identification = IdentificationJson.singleFromJson(
                 identificationJson.toString()
         );
         if (!validator.validate(identification).isEmpty()) {
@@ -72,7 +72,7 @@ public class GraphElementIdentificationResource {
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        Map<URI, IdentificationPojo> identifications = graphElement.addMeta(
+        Map<URI, IdentifierPojo> identifications = graphElement.addMeta(
                 identification
         );
         reindexGraphElement();
@@ -87,7 +87,7 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        Identification identification = graphElement.getIdentificationHavingInternalUri(
+        Identifier identification = graphElement.getIdentificationHavingInternalUri(
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(identification);

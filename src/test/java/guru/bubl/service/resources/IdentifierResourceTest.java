@@ -5,7 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.Identification;
+import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
@@ -21,7 +21,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
+public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void updating_label_returns_no_content_status() {
@@ -31,7 +31,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
         );
 
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getIdentifications().values().iterator().next();
+        Identifier identification = vertexA().getIdentifications().values().iterator().next();
         ClientResponse clientResponse = updateIdentificationLabel(
                 identification,
                 "new label"
@@ -49,7 +49,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
                 is(0)
         );
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getIdentifications().values().iterator().next();
+        Identifier identification = vertexA().getIdentifications().values().iterator().next();
         assertFalse(
                 identification.label().equals("new label")
         );
@@ -68,7 +68,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void cannot_update_identification_label_of_another_user() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getIdentifications().values().iterator().next();
+        Identifier identification = vertexA().getIdentifications().values().iterator().next();
         JSONObject anotherUser = createAUser();
         authenticate(
                 anotherUser
@@ -95,7 +95,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_note_returns_ok_status(){
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getIdentifications().values().iterator().next();
+        Identifier identification = vertexA().getIdentifications().values().iterator().next();
         ClientResponse response = updateIdentificationNote(identification, "some note");
         assertThat(
                 response.getStatus(),
@@ -106,7 +106,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_update_note(){
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identification identification = vertexA().getIdentifications().values().iterator().next();
+        Identifier identification = vertexA().getIdentifications().values().iterator().next();
         String identificationNote = identification.comment();
         assertThat(identificationNote, is(not("some note")));
         updateIdentificationNote(identification, "some note");
@@ -114,7 +114,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
         assertThat(identification.comment(), is("some note"));
     }
 
-    private ClientResponse updateIdentificationLabel(Identification identification, String label) {
+    private ClientResponse updateIdentificationLabel(Identifier identification, String label) {
         try {
             JSONObject localizedLabel = new JSONObject().put(
                     LocalizedStringJson.content.name(),
@@ -130,7 +130,7 @@ public class IdentificationResourceTest extends GraphManipulationRestTestUtils {
         }
     }
 
-    private ClientResponse updateIdentificationNote(Identification identification, String note) {
+    private ClientResponse updateIdentificationNote(Identifier identification, String note) {
         return resource
                 .path(identification.uri().getPath())
                 .path("comment")

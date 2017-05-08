@@ -46,15 +46,15 @@ public class GraphWithCircularityScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b1.uri()
         );
-        SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b2.uri()
         );
-        SubGraphPojo b3Graph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b3Graph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b3.uri()
         );

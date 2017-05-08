@@ -6,9 +6,8 @@ package guru.bubl.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.json.IdentificationJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
@@ -33,7 +32,7 @@ public class GraphElementRestTestUtils {
         this.authenticatedUser = authenticatedUser;
     }
 
-    public ClientResponse addIdentificationToGraphElementWithUri(IdentificationPojo identification, URI graphElementUri) {
+    public ClientResponse addIdentificationToGraphElementWithUri(IdentifierPojo identification, URI graphElementUri) {
         return addIdentificationToGraphElementWithUri(
                 IdentificationJson.singleToJson(identification),
                 graphElementUri
@@ -50,7 +49,7 @@ public class GraphElementRestTestUtils {
     }
 
     public ClientResponse addFoafPersonTypeToVertexA() {
-        IdentificationPojo identification = new ModelTestScenarios().person();
+        IdentifierPojo identification = new ModelTestScenarios().person();
         identification.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
@@ -63,7 +62,7 @@ public class GraphElementRestTestUtils {
     }
 
 
-    public IdentificationPojo getIdentificationsFromResponse(ClientResponse response) {
+    public IdentifierPojo getIdentificationsFromResponse(ClientResponse response) {
         return IdentificationJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();

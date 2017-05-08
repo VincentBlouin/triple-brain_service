@@ -6,7 +6,6 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.IdentifiedTo;
-import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
@@ -102,15 +101,15 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForB1 = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphForB1 = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b1.uri()
         );
-        SubGraphPojo subGraphForB2 = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphForB2 = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b2.uri()
         );
-        SubGraphPojo subGraphForB3 = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphForB3 = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b3.uri()
         );
@@ -122,12 +121,12 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 "r2",
                 user
         );
-        SubGraphPojo subGraphForParent = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphForParent = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 parent.uri()
         );
         parent.addRelationToVertex(b1);
-        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b1.uri()
         );
@@ -266,7 +265,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                         modelTestScenarios.startDateSuggestionFromEventIdentification(user)
                 )
         );
-        return forkerUserGraph.graphWithDepthAndCenterVertexId(
+        return forkerUserGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 forkedB1.uri()
         );

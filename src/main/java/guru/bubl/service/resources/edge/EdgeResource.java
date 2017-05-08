@@ -20,7 +20,7 @@ import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
-import guru.bubl.service.resources.vertex.VertexOwnedSurroundGraphResource;
+import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
@@ -194,11 +194,11 @@ public class EdgeResource {
 
     @GraphTransactional
     @Path("{shortId}/surround_graph")
-    public VertexOwnedSurroundGraphResource getSurroundGraph(
+    public OwnedSurroundGraphResource getSurroundGraph(
             @PathParam("shortId") String shortId
     ) {
         Edge edge = edgeFromShortId(shortId);
-        return new VertexOwnedSurroundGraphResource(
+        return new OwnedSurroundGraphResource(
                 userGraph,
                 edge.sourceVertex()
         );

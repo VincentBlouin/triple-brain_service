@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -29,7 +29,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
     * center-some relation->b1
     * center-some relation->b2
     * center-some relation->b3
-    * center-different relation->b4
+    * center-some different relation->b4
     *
     * all relations labeled "some relation" are identified to the first "some relation"
     */
@@ -73,7 +73,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
                 ).put(
                         "graph",
                         SubGraphJson.toJson(
-                                userGraph.graphWithDepthAndCenterVertexId(
+                                userGraph.graphWithDepthAndCenterBubbleUri(
                                         1,
                                         center.uri()
                                 )
@@ -107,7 +107,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
     private void createRelations() {
         EdgeOperator firstSomeRelation = center.addRelationToVertex(b1);
         firstSomeRelation.label("some relation");
-        IdentificationPojo firstSomeRelationAsIdentifier = TestScenarios.identificationFromFriendlyResource(
+        IdentifierPojo firstSomeRelationAsIdentifier = TestScenarios.identificationFromFriendlyResource(
                 firstSomeRelation
         );
         EdgeOperator secondSomeRelation = center.addRelationToVertex(b2);
@@ -121,6 +121,6 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
                 firstSomeRelationAsIdentifier
         );
         EdgeOperator differentRelation = center.addRelationToVertex(b4);
-        differentRelation.label("different relation");
+        differentRelation.label("some different relation");
     }
 }

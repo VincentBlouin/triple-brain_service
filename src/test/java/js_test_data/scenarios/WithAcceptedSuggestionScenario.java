@@ -59,7 +59,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
             JSONObject json = new JSONObject().put(
                     "original",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterVertexId(
+                            userGraph.graphWithDepthAndCenterBubbleUri(
                                     1,
                                     event.uri()
                             )
@@ -73,7 +73,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
             json.put(
                     "not_centered",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterVertexId(
+                            userGraph.graphWithDepthAndCenterBubbleUri(
                                     1,
                                     center.uri()
                             )

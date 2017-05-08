@@ -42,7 +42,7 @@ public class GraphWithAnInverseRelationScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForMe = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphForMe = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 me.uri()
         );

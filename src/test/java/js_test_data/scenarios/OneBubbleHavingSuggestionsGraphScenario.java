@@ -61,7 +61,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
             JSONObject json = new JSONObject().put(
                     "original",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterVertexId(
+                            userGraph.graphWithDepthAndCenterBubbleUri(
                                     1,
                                     bubble.uri()
                             )
@@ -75,7 +75,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
             json.put(
                     "not_centered",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterVertexId(
+                            userGraph.graphWithDepthAndCenterBubbleUri(
                                     1,
                                     center.uri()
                             )

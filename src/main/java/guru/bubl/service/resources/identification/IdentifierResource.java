@@ -12,7 +12,9 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.IdentificationOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -21,18 +23,21 @@ import javax.ws.rs.core.Response;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class IdentificationResource {
+public class IdentifierResource {
 
     @Inject
     IdentificationFactory identificationFactory;
 
     protected User authenticatedUser;
+    protected UserGraph userGraph;
 
     @AssistedInject
-    public IdentificationResource(
-            @Assisted User authenticatedUser
+    public IdentifierResource(
+            @Assisted User authenticatedUser,
+            @Assisted UserGraph userGraph
     ) {
         this.authenticatedUser = authenticatedUser;
+        this.userGraph = userGraph;
     }
 
     @POST
@@ -76,5 +81,23 @@ public class IdentificationResource {
                 comment
         );
         return Response.noContent().build();
+    }
+
+    @Path("{shortId}/surround_graph")
+    @GraphTransactional
+    public OwnedSurroundGraphResource getVertexSurroundGraphResource(
+            @PathParam("shortId") String identificationShortId
+    ){
+        IdentificationOperator identificationOperator = identificationFactory.withUri(
+                new UserUris(
+                        authenticatedUser
+                ).identificationUriFromShortId(
+                        identificationShortId
+                )
+        );
+        return new OwnedSurroundGraphResource(
+                userGraph,
+                identificationOperator
+        );
     }
 }

@@ -62,26 +62,26 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b1.uri()
         );
-        SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b2.uri()
         );
-        SubGraphPojo distantBubbleGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo distantBubbleGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 distantBubble.uri()
         );
         EdgeOperator distantToB2 = distantBubble.addRelationToVertex(b2);
-        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b2.uri()
         );
         distantToB2.remove();
         b1.addRelationToVertex(distantBubble);
-        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 distantBubble.uri()
         );

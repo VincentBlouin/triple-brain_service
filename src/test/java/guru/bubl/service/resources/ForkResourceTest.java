@@ -5,13 +5,10 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.identification.Identification;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.Identifier;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.search.VertexSearchResult;
-import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
@@ -57,7 +54,7 @@ public class ForkResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_fork() {
-        Identification vertexBAsIdentifier = new IdentificationPojo(
+        Identifier vertexBAsIdentifier = new IdentifierPojo(
                 vertexBUri()
         );
         Set<VertexSearchResult> relatedResources = identificationUtils().getRelatedResourcesForIdentification(

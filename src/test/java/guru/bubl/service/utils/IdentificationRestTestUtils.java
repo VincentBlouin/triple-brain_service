@@ -10,7 +10,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.identification.Identification;
+import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.search.EdgeSearchResult;
 import guru.bubl.module.model.search.VertexSearchResult;
 
@@ -40,7 +40,7 @@ public class IdentificationRestTestUtils {
     }
 
 
-    public Set<VertexSearchResult> getRelatedResourcesForIdentification(Identification identification) {
+    public Set<VertexSearchResult> getRelatedResourcesForIdentification(Identifier identification) {
         return gson.fromJson(
                 getRelatedResourcesForIdentificationClientResponse(
                         identification
@@ -50,7 +50,7 @@ public class IdentificationRestTestUtils {
         );
     }
 
-    public Set<EdgeSearchResult> getEdgesRelatedResourcesForIdentification(Identification identification) {
+    public Set<EdgeSearchResult> getEdgesRelatedResourcesForIdentification(Identifier identification) {
         return gson.fromJson(
                 getRelatedResourcesForIdentificationClientResponse(
                         identification
@@ -60,7 +60,7 @@ public class IdentificationRestTestUtils {
         );
     }
 
-    public ClientResponse getRelatedResourcesForIdentificationClientResponse(Identification identification) {
+    public ClientResponse getRelatedResourcesForIdentificationClientResponse(Identifier identification) {
         return getRelatedResourcesForIdentificationClientResponseForUsername(
                 identification,
                 authenticatedUser.username()
@@ -68,7 +68,7 @@ public class IdentificationRestTestUtils {
     }
 
     public ClientResponse getRelatedResourcesForIdentificationClientResponseForUsername(
-            Identification identification,
+            Identifier identification,
             String username
     ) {
         return resource

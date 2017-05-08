@@ -7,8 +7,8 @@ package guru.bubl.service.resources.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.identification.Identification;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.Identifier;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.json.IdentificationJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
@@ -48,7 +48,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void identifications_are_returned_when_adding() {
         ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentificationPojo identification = IdentificationJson.fromJson(
+        IdentifierPojo identification = IdentificationJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();
         assertThat(
@@ -78,7 +78,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 vertexA().getIdentifications().size(),
                 is(1)
         );
-        Identification addedIdentification = vertexA().getIdentifications().values().iterator().next();
+        Identifier addedIdentification = vertexA().getIdentifications().values().iterator().next();
         removeIdentificationToResource(
                 addedIdentification,
                 vertexA()
@@ -125,7 +125,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                         new ModelTestScenarios().possessionIdentification()
                 ).isEmpty()
         );
-        IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
+        IdentifierPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
@@ -144,7 +144,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void removing_identifications_to_graph_element_removes_it_from_related_identifications() throws Exception {
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
-        IdentificationPojo possession = new ModelTestScenarios().possessionIdentification();
+        IdentifierPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
@@ -175,7 +175,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
-        IdentificationPojo creatorPredicate = modelTestScenarios.creatorPredicate();
+        IdentifierPojo creatorPredicate = modelTestScenarios.creatorPredicate();
         creatorPredicate.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
@@ -185,7 +185,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
-    private ClientResponse removeIdentificationToResource(Identification identification, FriendlyResource resource) throws Exception {
+    private ClientResponse removeIdentificationToResource(Identifier identification, FriendlyResource resource) throws Exception {
         return RestTestUtils.resource
                 .path(resource.uri().getPath())
                 .path("identification")

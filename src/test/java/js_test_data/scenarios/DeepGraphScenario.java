@@ -47,7 +47,7 @@ public class DeepGraphScenario implements JsTestScenario {
         b2.addRelationToVertex(b3).label("r2");
         b4.addRelationToVertex(b2).label("r3");
         b5.addRelationToVertex(b1).label("r4");
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
                 2,
                 b1.uri()
         );

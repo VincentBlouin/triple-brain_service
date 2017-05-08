@@ -64,12 +64,12 @@ public class CreationDateScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        subGraphForB1 = userGraph.graphWithDepthAndCenterVertexId(
+        subGraphForB1 = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b1.uri()
         );
         setupcreationDatesForSubGraphForB1();
-        subGraphForB7 = userGraph.graphWithDepthAndCenterVertexId(
+        subGraphForB7 = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b7.uri()
         );

@@ -7,8 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentificationFactory;
-import guru.bubl.module.model.graph.identification.IdentificationPojo;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -52,7 +51,7 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.createForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterVertexId(
+        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 center.uri()
         );
@@ -81,12 +80,12 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
         r1.label("r1'");
         EdgeOperator r2 = center.addRelationToVertex(b2);
         r2.label("r2");
-        IdentificationPojo r1Identifier = TestScenarios.identificationFromFriendlyResource(
+        IdentifierPojo r1Identifier = TestScenarios.identificationFromFriendlyResource(
                 r1
         );
         r1Identifier.setLabel("r1");
         r2.addMeta(r1Identifier);
-        IdentificationPojo r2Identifier = TestScenarios.identificationFromFriendlyResource(
+        IdentifierPojo r2Identifier = TestScenarios.identificationFromFriendlyResource(
                 r2
         );
         r1.addMeta(r2Identifier);
