@@ -14,7 +14,7 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.inject.Inject;
 import java.net.URI;

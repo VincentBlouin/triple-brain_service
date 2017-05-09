@@ -18,7 +18,7 @@ import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.test.GraphComponentTest;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.module.model.test.scenarios.VerticesCalledABAndC;
@@ -26,7 +26,6 @@ import guru.bubl.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

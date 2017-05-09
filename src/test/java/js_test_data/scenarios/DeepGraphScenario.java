@@ -12,7 +12,7 @@ import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.inject.Inject;
 

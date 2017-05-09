@@ -13,7 +13,7 @@ import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.search.GraphElementSearchResult;
@@ -27,7 +27,7 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
 
 import javax.inject.Inject;

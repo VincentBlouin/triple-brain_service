@@ -11,7 +11,7 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;

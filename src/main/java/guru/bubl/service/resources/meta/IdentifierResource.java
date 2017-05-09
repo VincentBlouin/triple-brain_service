@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources.identification;
+package guru.bubl.service.resources.meta;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;

@@ -9,7 +9,7 @@ import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.json.IdentificationJson;
+import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -48,7 +48,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void identifications_are_returned_when_adding() {
         ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentifierPojo identification = IdentificationJson.fromJson(
+        IdentifierPojo identification = MetaJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();
         assertThat(

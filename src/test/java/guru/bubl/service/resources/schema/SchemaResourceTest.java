@@ -7,8 +7,8 @@ package guru.bubl.service.resources.schema;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
-import guru.bubl.module.model.json.IdentificationJson;
-import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -189,7 +189,7 @@ public class SchemaResourceTest extends GraphManipulationRestTestUtils {
         identification.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
-        JSONObject creatorPredicate = IdentificationJson.singleToJson(identification);
+        JSONObject creatorPredicate = MetaJson.singleToJson(identification);
         ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
                 creatorPredicate,
                 schemaUtils().uriOfCreatedSchema()

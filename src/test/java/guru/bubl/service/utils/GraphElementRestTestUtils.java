@@ -8,7 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.json.IdentificationJson;
+import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -34,7 +34,7 @@ public class GraphElementRestTestUtils {
 
     public ClientResponse addIdentificationToGraphElementWithUri(IdentifierPojo identification, URI graphElementUri) {
         return addIdentificationToGraphElementWithUri(
-                IdentificationJson.singleToJson(identification),
+                MetaJson.singleToJson(identification),
                 graphElementUri
         );
     }
@@ -53,7 +53,7 @@ public class GraphElementRestTestUtils {
         identification.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
-        JSONObject personType = IdentificationJson.singleToJson(identification);
+        JSONObject personType = MetaJson.singleToJson(identification);
         return addIdentificationToGraphElementWithUri(
                 personType,
                 graphUtils().vertexAUri()
@@ -63,7 +63,7 @@ public class GraphElementRestTestUtils {
 
 
     public IdentifierPojo getIdentificationsFromResponse(ClientResponse response) {
-        return IdentificationJson.fromJson(
+        return MetaJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();
     }

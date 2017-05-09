@@ -6,13 +6,11 @@ package guru.bubl.service.conf;
 
 import com.google.gson.Gson;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.lambdaworks.redis.RedisClient;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import guru.bubl.module.model.ModelModule;
@@ -27,8 +25,10 @@ import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
-import guru.bubl.service.resources.identification.IdentificationResourceFactory;
-import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
+import guru.bubl.service.resources.meta.IdentificationResourceFactory;
+import guru.bubl.service.resources.meta.IdentifiedToResourceFactory;
+import guru.bubl.service.resources.meta.UserMetasResource;
+import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResourceFactory;
@@ -125,6 +125,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         IdentificationResourceFactory.class
+                ));
+                install(builder.build(
+                        UserMetasResourceFactory.class
                 ));
                 install(builder.build(
                         SchemaPropertyResourceFactory.class

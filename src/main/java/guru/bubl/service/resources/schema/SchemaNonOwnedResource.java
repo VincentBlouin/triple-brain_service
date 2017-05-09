@@ -9,7 +9,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

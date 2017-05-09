@@ -5,14 +5,12 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.graph.edge.Edge;

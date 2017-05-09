@@ -11,7 +11,7 @@ import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.subgraph.SubGraphForker;
 import guru.bubl.module.model.graph.subgraph.SubGraphForkerFactory;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.json.graph.SubGraphJson;
+import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

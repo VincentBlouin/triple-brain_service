@@ -5,7 +5,6 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.center_graph_element.CenterGraphElement;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.json.StatementJsonFields;
@@ -22,8 +21,8 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.json.graph.EdgeJson;
-import guru.bubl.module.model.json.graph.VertexInSubGraphJson;
+import guru.bubl.module.model.graph.edge.EdgeJson;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;

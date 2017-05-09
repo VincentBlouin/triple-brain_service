@@ -24,8 +24,10 @@ import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.fork.ForkResource;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
-import guru.bubl.service.resources.identification.IdentifiedToResource;
-import guru.bubl.service.resources.identification.IdentifiedToResourceFactory;
+import guru.bubl.service.resources.meta.IdentifiedToResource;
+import guru.bubl.service.resources.meta.IdentifiedToResourceFactory;
+import guru.bubl.service.resources.meta.UserMetasResource;
+import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
@@ -95,6 +97,9 @@ public class UserResource {
 
     @Inject
     EdgeFactory edgeFactory;
+
+    @Inject
+    UserMetasResourceFactory userMetasResourceFactory;
 
     @Path("{username}/graph")
     public GraphResource graphResource(
@@ -350,6 +355,22 @@ public class UserResource {
         return Response.ok(new JSONObject()
                 .put("is_authenticated", sessionHandler.isUserInSession(request.getSession(), persistentSessionId))
         ).build();
+    }
+
+    @Path("{username}/metas")
+    public UserMetasResource getUserMetas(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId,
+            @Context HttpServletRequest request
+    ) {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
+        }
+        return userMetasResourceFactory.forUser(
+                sessionHandler.userFromSession(request.getSession())
+        );
     }
 
     private Boolean isUserNameTheOneInSession(String userName, String persistentSessionId) {

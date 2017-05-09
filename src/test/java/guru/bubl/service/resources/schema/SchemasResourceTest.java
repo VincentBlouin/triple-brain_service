@@ -5,17 +5,13 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.schema.Schema;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
-import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;

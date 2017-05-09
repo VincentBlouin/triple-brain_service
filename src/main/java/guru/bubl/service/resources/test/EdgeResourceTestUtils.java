@@ -9,7 +9,7 @@ import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.json.graph.EdgeJson;
+import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.service.SessionHandler;
 
 import javax.inject.Inject;

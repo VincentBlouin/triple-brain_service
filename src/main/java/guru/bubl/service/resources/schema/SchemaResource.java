@@ -16,7 +16,7 @@ import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
 
 import javax.inject.Inject;

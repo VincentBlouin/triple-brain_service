@@ -5,7 +5,7 @@
 package guru.bubl.service.resources.schema;
 
 import guru.bubl.module.model.graph.schema.SchemaList;
-import guru.bubl.module.model.json.graph.SchemaJson;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

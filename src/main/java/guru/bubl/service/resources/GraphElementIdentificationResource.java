@@ -14,7 +14,7 @@ import guru.bubl.module.model.search.GraphIndexer;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.json.IdentificationJson;
+import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.module.model.validator.IdentificationValidator;
 
 import javax.inject.Inject;
@@ -64,7 +64,7 @@ public class GraphElementIdentificationResource {
     @Path("/")
     public Response add(JSONObject identificationJson) {
         IdentificationValidator validator = new IdentificationValidator();
-        IdentifierPojo identification = IdentificationJson.singleFromJson(
+        IdentifierPojo identification = MetaJson.singleFromJson(
                 identificationJson.toString()
         );
         if (!validator.validate(identification).isEmpty()) {
@@ -77,7 +77,7 @@ public class GraphElementIdentificationResource {
         );
         reindexGraphElement();
         return Response.ok().entity(
-                IdentificationJson.toJson(identifications)
+                MetaJson.toJson(identifications)
         ).build();
     }
 
