@@ -6,7 +6,9 @@ package guru.bubl.service.resources.meta;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.Identifier;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -114,6 +116,29 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
         assertThat(identification.comment(), is("some note"));
     }
 
+    @Test
+    public void get_meta_returns_ok_status(){
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Identifier meta = vertexA().getIdentifications().values().iterator().next();
+        assertThat(
+                getMeta(meta).getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+
+    @Test
+    public void can_get_meta(){
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Identifier meta = vertexA().getIdentifications().values().iterator().next();
+        IdentifierPojo person = MetaJson.singleFromJson(
+                getMeta(meta).getEntity(String.class)
+        );
+        assertThat(
+                person.label(),
+                is("Person")
+        );
+    }
+
     private ClientResponse updateIdentificationLabel(Identifier identification, String label) {
         try {
             JSONObject localizedLabel = new JSONObject().put(
@@ -137,5 +162,12 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
                 .post(ClientResponse.class, note);
+    }
+
+    private ClientResponse getMeta(Identifier identifier){
+        return resource
+                .path(identifier.uri().getPath())
+                .cookie(authCookie)
+                .get(ClientResponse.class);
     }
 }

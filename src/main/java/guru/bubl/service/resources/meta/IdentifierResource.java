@@ -12,8 +12,11 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.IdentificationOperator;
+import guru.bubl.module.model.graph.identification.Identifier;
+import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -39,6 +42,22 @@ public class IdentifierResource {
         this.authenticatedUser = authenticatedUser;
         this.userGraph = userGraph;
     }
+
+    @GET
+    @GraphTransactional
+    @Path("/{identificationShortId}")
+    public Response get(@PathParam("identificationShortId") String identificationShortId){
+        IdentificationOperator identificationOperator = identificationFactory.withUri(
+                new UserUris(
+                        authenticatedUser
+                ).identificationUriFromShortId(
+                        identificationShortId
+                )
+        );
+        IdentifierPojo identifierPojo = identificationOperator.buildPojo();
+        return Response.ok().entity(MetaJson.singleToJson(identifierPojo)).build();
+    }
+
 
     @POST
     @GraphTransactional
@@ -85,7 +104,7 @@ public class IdentifierResource {
 
     @Path("{shortId}/surround_graph")
     @GraphTransactional
-    public OwnedSurroundGraphResource getVertexSurroundGraphResource(
+    public OwnedSurroundGraphResource getSurroundGraphResource(
             @PathParam("shortId") String identificationShortId
     ){
         IdentificationOperator identificationOperator = identificationFactory.withUri(
