@@ -56,7 +56,8 @@ public class JsTestScenariosBuilder {
             new BubbleWith2RelationsToSameBubbleScenario(),
             new AutomaticExpandScenario(),
             new CenterMetaScenario(),
-            new SameLevelRelationsWithMoreThanOneCommonMetaScenario()
+            new SameLevelRelationsWithMoreThanOneCommonMetaScenario(),
+            new MetasWithSameLabelSearchResultScenario()
     );
 
 
