@@ -57,7 +57,8 @@ public class JsTestScenariosBuilder {
             new AutomaticExpandScenario(),
             new CenterMetaScenario(),
             new SameLevelRelationsWithMoreThanOneCommonMetaScenario(),
-            new MetasWithSameLabelSearchResultScenario()
+            new MetasWithSameLabelSearchResultScenario(),
+            new MetaCenterChildHavingGroupRelationScenario()
     );
 
 
