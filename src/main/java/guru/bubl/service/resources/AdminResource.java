@@ -53,6 +53,16 @@ public class AdminResource {
         return Response.ok().build();
     }
 
+    @Path("remove_metas_having_zero_references")
+    @GraphTransactional
+    @POST
+    public Response removeMetasHavingZeroReferences(){
+        wholeGraphAdminFactory.withWholeGraph(
+                wholeGraph
+        ).removeMetasHavingZeroReferences();
+        return Response.ok().build();
+    }
+
     @Path("re_add_identifications")
     @GraphTransactional
     @POST
