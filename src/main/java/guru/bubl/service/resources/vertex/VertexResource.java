@@ -82,7 +82,7 @@ public class VertexResource {
     @Path("/")
     public Response createVertex() {
         VertexPojo newVertex = userGraph.createVertex();
-        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingGraphElement(
+        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
                 newVertex
         );
         centerGraphElementOperator.incrementNumberOfVisits();
@@ -255,7 +255,7 @@ public class VertexResource {
     ) {
         VertexOperator vertex = vertexFromShortId(shortId);
         if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
-            CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingGraphElement(
+            CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
                     vertex
             );
             centerGraphElementOperator.incrementNumberOfVisits();

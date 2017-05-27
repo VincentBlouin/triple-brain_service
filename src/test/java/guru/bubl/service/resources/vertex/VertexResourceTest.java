@@ -6,6 +6,7 @@ package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.EdgeSearchResult;

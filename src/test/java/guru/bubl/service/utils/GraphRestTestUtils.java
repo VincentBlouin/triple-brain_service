@@ -9,6 +9,7 @@ import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
@@ -141,7 +142,7 @@ public class GraphRestTestUtils {
     }
 
     public ClientResponse getCenterGraphElementsResponse() {
-        return getCenterGraphElementsResponseForUser(
+        return getCenterGraphElementsResponseForGraphElementTypeAndUser(
                 authenticatedUser
         );
     }
@@ -152,7 +153,7 @@ public class GraphRestTestUtils {
         );
     }
 
-    public ClientResponse getCenterGraphElementsResponseForUser(User user) {
+    public ClientResponse getCenterGraphElementsResponseForGraphElementTypeAndUser(User user) {
         return resource
                 .path(user.id())
                 .path("center-elements")

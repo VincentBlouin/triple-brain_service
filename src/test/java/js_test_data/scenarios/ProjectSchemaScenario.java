@@ -217,7 +217,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         impact2Relation.label("impact 2 on society");
         VertexOperator impact2Bubble = impact2Relation.destinationVertex();
         impact2Bubble.label("impact 2 bubble");
-        centerGraphElementOperatorFactory.usingGraphElement(impact2Bubble).incrementNumberOfVisits();
+        centerGraphElementOperatorFactory.usingFriendlyResource(impact2Bubble).incrementNumberOfVisits();
         impact2Relation.addMeta(
                 impactOnSocietyIdentification()
         );

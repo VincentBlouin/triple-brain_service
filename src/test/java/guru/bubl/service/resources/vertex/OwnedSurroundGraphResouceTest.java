@@ -106,7 +106,7 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
 //    public void getting_graph_as_center_bubble_increments_number_of_visits_for_center_vertex() {
 //        CenterGraphElement vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
 //                vertexAUri(),
-//                graphUtils().getCenterGraphElements()
+//                graphUtils().getCenterGraphElementsOfType()
 //        );
 //        assertThat(
 //                vertexACenterElement.getNumberOfVisits(),
@@ -117,7 +117,7 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
 //        getGraphAroundVertexWithUriAsCenterBubble(vertexAUri());
 //        vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
 //                vertexAUri(),
-//                graphUtils().getCenterGraphElements()
+//                graphUtils().getCenterGraphElementsOfType()
 //        );
 //        assertThat(
 //                vertexACenterElement.getNumberOfVisits(),
@@ -131,7 +131,7 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
 //    public void getting_graph_not_as_center_bubble_does_not_increment_number_of_visits_for_center_vertex() {
 //        CenterGraphElement vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
 //                vertexAUri(),
-//                graphUtils().getCenterGraphElements()
+//                graphUtils().getCenterGraphElementsOfType()
 //        );
 //        assertThat(
 //                vertexACenterElement.getNumberOfVisits(),
@@ -142,7 +142,7 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
 //        getGraphAroundVertexWithUri(vertexAUri());
 //        vertexACenterElement = graphUtils().getCenterGraphElementHavingUriInElements(
 //                vertexAUri(),
-//                graphUtils().getCenterGraphElements()
+//                graphUtils().getCenterGraphElementsOfType()
 //        );
 //        assertThat(
 //                vertexACenterElement.getNumberOfVisits(),

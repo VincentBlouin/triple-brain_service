@@ -4,6 +4,7 @@
 
 package guru.bubl.service.resources.center;
 
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
@@ -25,14 +26,14 @@ public class CenterGraphElementResourceTest extends GraphManipulationRestTestUti
     @Test
     public void cannot_get_private_center_elements_of_another_user(){
         assertThat(
-                graphUtils().getCenterGraphElementsResponseForUser(defaultAuthenticatedUser).getStatus(),
+                graphUtils().getCenterGraphElementsResponseForGraphElementTypeAndUser(defaultAuthenticatedUser).getStatus(),
                 is(
                         Response.Status.OK.getStatusCode()
                 )
         );
         createAUser();
         assertThat(
-                graphUtils().getCenterGraphElementsResponseForUser(defaultAuthenticatedUser).getStatus(),
+                graphUtils().getCenterGraphElementsResponseForGraphElementTypeAndUser(defaultAuthenticatedUser).getStatus(),
                 is(Response.Status.FORBIDDEN.getStatusCode())
         );
     }

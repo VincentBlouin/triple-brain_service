@@ -9,10 +9,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.IdentificationOperator;
-import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
@@ -30,6 +31,9 @@ public class IdentifierResource {
 
     @Inject
     IdentificationFactory identificationFactory;
+
+    @javax.inject.Inject
+    CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     protected User authenticatedUser;
     protected UserGraph userGraph;
@@ -114,6 +118,9 @@ public class IdentifierResource {
                         identificationShortId
                 )
         );
+        centerGraphElementOperatorFactory.usingFriendlyResource(
+                identificationOperator
+        ).updateLastCenterDate();
         return new OwnedSurroundGraphResource(
                 userGraph,
                 identificationOperator
