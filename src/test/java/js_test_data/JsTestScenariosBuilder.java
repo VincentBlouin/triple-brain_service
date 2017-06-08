@@ -75,7 +75,7 @@ public class JsTestScenariosBuilder {
         }
         FileUtils.writeStringToFile(
                 new File(
-                        "src/test/java/js_test_data/js-test-data.json"
+                        "src/test/java/js_test_data/js-test-data-server-side.json"
                 ),
                 jsonObject.toString()
         );

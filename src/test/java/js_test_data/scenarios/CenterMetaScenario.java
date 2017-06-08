@@ -27,11 +27,14 @@ public class CenterMetaScenario implements JsTestScenario {
      * event->e2
      * event is an identifier
      *
+     * e2 has 2 hidden relations
+     *
      * to do->r1
      * to do->r2
      * e1-r1->e3
      * e2-r2->e4
      * to do is an identifier
+     * e4 has one hidden vertex
      */
 
     @Inject
@@ -95,6 +98,7 @@ public class CenterMetaScenario implements JsTestScenario {
         e2.addMeta(
                 event
         );
+        e2.addVertexAndRelation();
         e3 = vertexFactory.createForOwnerUsername(
                 user.username()
         );

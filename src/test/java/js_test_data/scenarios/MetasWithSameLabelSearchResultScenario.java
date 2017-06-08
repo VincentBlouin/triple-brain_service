@@ -10,11 +10,15 @@ import guru.bubl.module.model.graph.identification.IdentificationOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.AbstractScenario;
 import js_test_data.JsTestScenario;
 
 import javax.inject.Inject;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class MetasWithSameLabelSearchResultScenario extends AbstractScenario implements JsTestScenario {
 
@@ -31,6 +35,9 @@ public class MetasWithSameLabelSearchResultScenario extends AbstractScenario imp
 
     @Inject
     IdentificationFactory identificationFactory;
+
+    @Inject
+    ModelTestScenarios modelTestScenarios;
 
     IdentificationOperator
             meta0,
@@ -53,8 +60,8 @@ public class MetasWithSameLabelSearchResultScenario extends AbstractScenario imp
 
     private void buildMetas() {
         meta0 = identificationFactory.withUri(
-                b1.addMeta(
-                        TestScenarios.identificationFromFriendlyResource(center)
+                center.addMeta(
+                        modelTestScenarios.person()
                 ).values().iterator().next().uri());
         meta0.label("meta0");
         meta0.setNbReferences(0);
