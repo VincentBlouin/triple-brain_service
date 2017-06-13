@@ -27,6 +27,7 @@ public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTe
     * center - r1 -> b1
     * center - r2 -> b2
     * center - r3 -> b3
+    * center - other relation -> other bubble
     *
     * r1 - meta -> creator
     * r1 - meta -> possession
@@ -49,7 +50,8 @@ public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTe
             center,
             b1,
             b2,
-            b3;
+            b3,
+            otherBubble;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -84,6 +86,10 @@ public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTe
                 user.username()
         );
         b3.label("b3");
+        otherBubble = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        otherBubble.label("other bubble");
     }
 
     private void createRelations() {
@@ -98,5 +104,6 @@ public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTe
         EdgeOperator r3 = center.addRelationToVertex(b3);
         r3.label("r3");
         r3.addMeta(modelTestScenarios.creatorPredicate());
+        center.addRelationToVertex(otherBubble).label("other relation");
     }
 }
