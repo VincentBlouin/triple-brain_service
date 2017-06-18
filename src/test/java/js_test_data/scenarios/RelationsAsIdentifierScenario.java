@@ -26,7 +26,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
 
     /*
     *
-    * center-some relation->b1
+    * center-original some relation->b1
     * center-some relation->b2
     * center-some relation->b3
     * center-some different relation->b4
@@ -106,7 +106,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
 
     private void createRelations() {
         EdgeOperator firstSomeRelation = center.addRelationToVertex(b1);
-        firstSomeRelation.label("some relation");
+        firstSomeRelation.label("original some relation");
         IdentifierPojo firstSomeRelationAsIdentifier = TestScenarios.identificationFromFriendlyResource(
                 firstSomeRelation
         );
