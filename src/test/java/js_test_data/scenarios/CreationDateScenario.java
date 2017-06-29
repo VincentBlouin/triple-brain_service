@@ -13,6 +13,8 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.test.scenarios.TestScenarios;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
@@ -25,6 +27,10 @@ public class CreationDateScenario implements JsTestScenario {
     * b1-r1->b2
     * b1-r2->b3
     * b1-r3->b4
+    * b1-similar->s1
+    * b1-similar->s2
+    * b1-similar->s3
+    * similar have same identifier
     * b1-r4->b5
     * b1-r5->b6
     * b1-r6->b7
@@ -40,6 +46,9 @@ public class CreationDateScenario implements JsTestScenario {
     @Inject
     VertexFactory vertexFactory;
 
+    @Inject
+    ModelTestScenarios modelTestScenarios;
+
     User user = User.withEmailAndUsername("f", "g");
 
     private VertexOperator
@@ -47,6 +56,9 @@ public class CreationDateScenario implements JsTestScenario {
             b2,
             b3,
             b4,
+            s1,
+            s2,
+            s3,
             b5,
             b6,
             b7,
@@ -133,6 +145,18 @@ public class CreationDateScenario implements JsTestScenario {
                 user.username()
         );
         b74.label("b74");
+        s1 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        s1.label("s1");
+        s2 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        s2.label("s2");
+        s3 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        s3.label("s3");
     }
 
     private void createEdges() {
@@ -144,6 +168,15 @@ public class CreationDateScenario implements JsTestScenario {
         r3.label("r3");
         EdgeOperator r4 = b1.addRelationToVertex(b5);
         r4.label("r4");
+        EdgeOperator similar1 = b1.addRelationToVertex(s1);
+        similar1.label("similar");
+        similar1.addMeta(modelTestScenarios.toDo());
+        EdgeOperator similar2 = b1.addRelationToVertex(s2);
+        similar2.label("similar");
+        similar2.addMeta(modelTestScenarios.toDo());
+        EdgeOperator similar3 = b1.addRelationToVertex(s3);
+        similar3.label("similar");
+        similar3.addMeta(modelTestScenarios.toDo());
         EdgeOperator r5 = b1.addRelationToVertex(b6);
         r5.label("r5");
         EdgeOperator r6 = b1.addRelationToVertex(b7);
@@ -177,14 +210,23 @@ public class CreationDateScenario implements JsTestScenario {
                 b4.uri()
         ).setCreationDate(b1CreationDate.plusDays(3).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
-                b5.uri()
+                s1.uri()
         ).setCreationDate(b1CreationDate.plusDays(4).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
-                b6.uri()
+                b5.uri()
         ).setCreationDate(b1CreationDate.plusDays(5).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
-                b7.uri()
+                b6.uri()
         ).setCreationDate(b1CreationDate.plusDays(6).toDate().getTime());
+        subGraphForB1.vertexWithIdentifier(
+                b7.uri()
+        ).setCreationDate(b1CreationDate.plusDays(7).toDate().getTime());
+        subGraphForB1.vertexWithIdentifier(
+                s2.uri()
+        ).setCreationDate(b1CreationDate.plusDays(8).toDate().getTime());
+        subGraphForB1.vertexWithIdentifier(
+                s3.uri()
+        ).setCreationDate(b1CreationDate.plusDays(9).toDate().getTime());
     }
 
     private void setupcreationDatesForSubGraphForB7() {

@@ -63,7 +63,9 @@ public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario
                 modelTestScenarios.human()
         );
         EdgeOperator r2 = b1.addRelationToVertex(b2);
+        r2.label("r2");
         EdgeOperator r3 = b1.addRelationToVertex(b3);
+        r3.label("r3");
         r2AsMeta = TestScenarios.identificationFromFriendlyResource(
                 r2
         );
