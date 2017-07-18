@@ -7,13 +7,14 @@ package guru.bubl.service.resources;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.module.model.json.UserJson;
+import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-
+import java.util.List;
 import java.util.Set;
 
 import static guru.bubl.module.model.json.UserJson.USER_NAME;
@@ -54,26 +55,27 @@ public class ForkResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_fork() {
-        Identifier vertexBAsIdentifier = new IdentifierPojo(
-                vertexBUri()
+        List<GraphElementSearchResult> relatedResources = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+                "vertex B",
+                UserJson.toJson(currentAuthenticatedUser)
         );
-        Set<VertexSearchResult> relatedResources = identificationUtils().getRelatedResourcesForIdentification(
-                vertexBAsIdentifier
-        );
-        assertTrue(
-                relatedResources.isEmpty()
+        assertThat(
+                relatedResources.size(),
+                is(1)
         );
         vertexUtils().makePublicVertexWithUri(vertexBUri());
         forkVertexABCGraph();
-        relatedResources = identificationUtils().getRelatedResourcesForIdentification(
-                vertexBAsIdentifier
+        relatedResources = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+                "vertex B",
+                UserJson.toJson(currentAuthenticatedUser)
         );
-        assertFalse(
-                relatedResources.isEmpty()
+        assertThat(
+                relatedResources.size(),
+                is(3)
         );
     }
 
-    public ClientResponse forkVertexABCGraph() {
+    private ClientResponse forkVertexABCGraph() {
         JSONObject graphAsJson = graphUtils().getNonOwnedGraphOfCentralVertex(
                 vertexB()
         ).getEntity(JSONObject.class);

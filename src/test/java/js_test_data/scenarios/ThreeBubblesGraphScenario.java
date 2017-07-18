@@ -5,7 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
-import guru.bubl.module.model.meta.IdentifiedTo;
+import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
@@ -24,7 +24,9 @@ import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.inject.Inject;
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 public class ThreeBubblesGraphScenario implements JsTestScenario {
 
@@ -73,10 +75,10 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     SubGraphForkerFactory subGraphForkerFactory;
 
     @Inject
-    IdentifiedTo identifiedTo;
+    ModelTestScenarios modelTestScenarios;
 
     @Inject
-    ModelTestScenarios modelTestScenarios;
+    WholeGraphAdmin wholeGraphAdmin;
 
     User user = User.withEmailAndUsername(
             "a",
@@ -113,6 +115,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 1,
                 b3.uri()
         );
+        wholeGraphAdmin.reindexAll();
         List<GraphElementSearchResult> searchResultsForB1 = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "b1",
                 user
@@ -240,21 +243,18 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         b2.makePublic();
         b3.makePublic();
         UserGraph forkerUserGraph = graphFactory.createForUser(forkerUser);
-        subGraphForkerFactory.forUser(
+        SubGraphForker subGraphForker = subGraphForkerFactory.forUser(
                 forkerUser
-        ).fork(
+        );
+        wholeGraphAdmin.reindexAll();
+        forkedB1SearchResults = graphSearch.searchPublicVerticesOnly(
+                "b1"
+        );
+        Map<URI, VertexOperator> vertices = subGraphForker.fork(
                 subGraphForB1
         );
-        GraphElementSearchResult forkedB1AsIdentifier = identifiedTo.getForIdentificationAndUser(
-                TestScenarios.identificationFromFriendlyResource(b1),
-                forkerUser
-        ).iterator().next();
-        forkedB1SearchResults = (List) graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
-                "b1",
-                forkerUser
-        );
-        VertexOperator forkedB1 = vertexFactory.withUri(
-                forkedB1AsIdentifier.getGraphElement().uri()
+        VertexOperator forkedB1 = vertices.get(
+                b1.uri()
         );
         forkedB1.addMeta(
                 modelTestScenarios.event()

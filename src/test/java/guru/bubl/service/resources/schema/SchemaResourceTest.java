@@ -6,10 +6,10 @@ package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.meta.MetaJson;
-import guru.bubl.module.model.graph.schema.SchemaJson;
-import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
@@ -130,7 +130,7 @@ public class SchemaResourceTest extends GraphManipulationRestTestUtils {
                 schemaUri,
                 "schema1"
         );
-        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
                 "schema1",
                 defaultAuthenticatedUserAsJson
         );
@@ -140,7 +140,7 @@ public class SchemaResourceTest extends GraphManipulationRestTestUtils {
                         1
                 )
         );
-        VertexSearchResult result = results.iterator().next();
+        GraphElementSearchResult result = results.iterator().next();
         assertThat(
                 result.getGraphElement().uri(),
                 is(

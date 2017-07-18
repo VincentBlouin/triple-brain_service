@@ -29,8 +29,7 @@ public class UserResourceTestUtils {
     @Inject
     UserRepository userRepository;
 
-    @Inject
-    Gson gson;
+    private Gson gson = new Gson();
 
     @Path("{email}")
     @GET

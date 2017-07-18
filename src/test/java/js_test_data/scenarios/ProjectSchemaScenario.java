@@ -6,29 +6,30 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
+import guru.bubl.module.model.User;
+import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.FriendlyResourcePojo;
+import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.schema.SchemaJson;
-import guru.bubl.module.model.search.VertexSearchResult;
-import guru.bubl.test.module.utils.ModelTestScenarios;
+import guru.bubl.module.model.graph.schema.SchemaOperator;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.schema.SchemaOperator;
-import guru.bubl.module.model.graph.vertex.VertexFactory;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -57,6 +58,9 @@ public class ProjectSchemaScenario implements JsTestScenario {
 
     @Inject
     protected GraphFactory graphFactory;
+
+    @Inject
+    protected WholeGraphAdmin wholeGraphAdmin;
 
     @Inject
     protected VertexFactory vertexFactory;
@@ -93,6 +97,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         vertexFactory.createForOwnerUsername(
                 user.username()
         ).label("impact");
+        wholeGraphAdmin.reindexAll();
         List<GraphElementSearchResult> searchResultsForProject = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "project",
                 user
@@ -110,12 +115,13 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 user
         );
         buildSomeProject();
+        wholeGraphAdmin.reindexAll();
         List<GraphElementSearchResult> searchResultsForProjectAfterIdentificationAdded = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 "project",
                 user
         );
 
-        List<VertexSearchResult> searchResultsForImpactBubbles = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+        List<GraphElementSearchResult> searchResultsForImpactBubbles = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 "impact",
                 user
         );

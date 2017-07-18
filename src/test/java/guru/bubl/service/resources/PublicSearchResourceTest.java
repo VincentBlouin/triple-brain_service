@@ -6,18 +6,14 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.VertexSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
 
@@ -41,7 +37,7 @@ public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
         assertFalse(isUserAuthenticated(
                 authCookie
         ));
-        List<VertexSearchResult> results = searchUtils().vertexSearchResultsFromResponse(
+        List<GraphElementSearchResult> results = searchUtils().vertexSearchResultsFromResponse(
                 searchUtils().autoCompletionForPublicVertices("vertex")
         );
         assertThat(

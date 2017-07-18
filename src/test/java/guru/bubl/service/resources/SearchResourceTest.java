@@ -5,12 +5,11 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.search.EdgeSearchResult;
-import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.module.model.graph.GraphElement;
+import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.module.model.graph.GraphElement;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,7 +23,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_search_vertices_for_auto_complete() throws Exception {
-        indexGraph();
+        searchUtils().indexAll();
         ClientResponse response = resource
                 .path("service")
                 .path("users")
@@ -36,7 +35,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
-        List<VertexSearchResult> results = searchUtils().vertexSearchResultsFromResponse(
+        List<GraphElementSearchResult> results = searchUtils().vertexSearchResultsFromResponse(
                 response
         );
         assertThat(results.size(), is(3));
@@ -45,8 +44,8 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void search_for_auto_complete_can_have_spaces() throws Exception {
-        indexGraph();
-        List<VertexSearchResult> searchResults = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+        searchUtils().indexAll();
+        List<GraphElementSearchResult> searchResults = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 "vertex Azu"
         );
         GraphElement firstResult = searchResults.get(0).getGraphElement();
@@ -68,10 +67,10 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
-        indexGraph();
+        searchUtils().indexAll();
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
-        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
                 vertexA().label(),
                 anotherUser
         );
@@ -96,8 +95,8 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_search_relations() {
-        indexGraph();
-        List<EdgeSearchResult> relations = searchUtils().searchForRelations(
+        searchUtils().indexAll();
+        List<GraphElementSearchResult> relations = searchUtils().searchForRelations(
                 "between",
                 defaultAuthenticatedUserAsJson
         );
@@ -106,7 +105,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_get_search_details_by_uri() {
-        indexGraph();
+        searchUtils().indexAll();
         GraphElement result = searchUtils().searchDetailsByUri(
                 vertexAUri()
         ).getGraphElement();
@@ -122,8 +121,8 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
                 vertexAUri(),
                 "z(arg"
         );
-        indexGraph();
-        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+        searchUtils().indexAll();
+        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 "z(arg"
         );
         assertThat(results.size(), is(1));

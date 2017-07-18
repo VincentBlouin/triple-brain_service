@@ -117,63 +117,6 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
-    @Test
-    public void identified_graph_element_is_part_of_related_identifications() throws Exception {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
-        assertTrue(
-                identificationUtils().getEdgesRelatedResourcesForIdentification(
-                        new ModelTestScenarios().possessionIdentification()
-                ).isEmpty()
-        );
-        IdentifierPojo possession = new ModelTestScenarios().possessionIdentification();
-        possession.setRelationExternalResourceUri(
-                ModelTestScenarios.SAME_AS
-        );
-        graphElementUtils().addIdentificationToGraphElementWithUri(
-                possession,
-                edgeBetweenAAndB.uri()
-        );
-        assertThat(
-                identificationUtils().getEdgesRelatedResourcesForIdentification(
-                        new ModelTestScenarios().possessionIdentification()
-                ).iterator().next().getGraphElement(),
-                is(edgeBetweenAAndB)
-        );
-    }
-
-    @Test
-    public void removing_identifications_to_graph_element_removes_it_from_related_identifications() throws Exception {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
-        IdentifierPojo possession = new ModelTestScenarios().possessionIdentification();
-        possession.setRelationExternalResourceUri(
-                ModelTestScenarios.SAME_AS
-        );
-        ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
-                possession,
-                edgeBetweenAAndB.uri()
-        );
-        possession = graphElementUtils().getIdentificationsFromResponse(
-                response
-        );
-        assertThat(
-                identificationUtils().getEdgesRelatedResourcesForIdentification(
-                        possession
-                ).iterator().next().getGraphElement(),
-                is(
-                        edgeBetweenAAndB
-                )
-        );
-        removeIdentificationToResource(
-                possession,
-                edgeBetweenAAndB
-        );
-        assertTrue(
-                identificationUtils().getRelatedResourcesForIdentification(
-                        new ModelTestScenarios().possessionIdentification()
-                ).isEmpty()
-        );
-    }
-
     private ClientResponse addCreatorPredicateToEdge(Edge edge) throws Exception {
         IdentifierPojo creatorPredicate = modelTestScenarios.creatorPredicate();
         creatorPredicate.setRelationExternalResourceUri(

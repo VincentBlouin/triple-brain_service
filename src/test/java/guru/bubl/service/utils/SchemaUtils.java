@@ -64,7 +64,7 @@ public class SchemaUtils {
         }
     }
 
-    public URI uriOfCreatedPropertyForSchemaUri(URI schemaUri) {
+    public URI addPropertyForSchemaUri(URI schemaUri) {
         return graphUtils.getElementUriInResponse(
                 addProperty(
                         schemaUri

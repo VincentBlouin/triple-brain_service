@@ -20,7 +20,6 @@ public class JsTestScenariosStarter {
     public static void main(String[] args) throws Exception {
         injector = Guice.createInjector(
                 Neo4jModule.forTestingUsingEmbedded(),
-                new Neo4jGraphSearchModule(),
                 ModelModule.forTesting(),
                 new AbstractModule() {
                     @Override

@@ -5,13 +5,13 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.search.EdgeSearchResult;
+import guru.bubl.module.model.json.SuggestionJson;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.suggestion.SuggestionPojo;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.module.model.json.SuggestionJson;
-import guru.bubl.module.model.suggestion.SuggestionPojo;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -121,7 +121,7 @@ public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils
         SuggestionPojo startDateSuggestion = modelTestScenarios.startDateSuggestionFromEventIdentification(
                 defaultAuthenticatedUser
         );
-        List<EdgeSearchResult> relations = searchUtils().searchForRelations(
+        List<GraphElementSearchResult> relations = searchUtils().searchForRelations(
                 startDateSuggestion.label(),
                 defaultAuthenticatedUserAsJson
         );

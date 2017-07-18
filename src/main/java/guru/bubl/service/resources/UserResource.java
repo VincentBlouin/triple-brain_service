@@ -24,8 +24,6 @@ import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.fork.ForkResource;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
-import guru.bubl.service.resources.meta.IdentifiedToResource;
-import guru.bubl.service.resources.meta.IdentifiedToResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResource;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
@@ -70,9 +68,6 @@ public class UserResource {
 
     @Inject
     SearchResourceFactory searchResourceFactory;
-
-    @Inject
-    IdentifiedToResourceFactory identifiedToResourceFactory;
 
     @Inject
     SchemaNonOwnedResourceFactory schemaNonOwnedResourceFactory;
@@ -199,20 +194,6 @@ public class UserResource {
         throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
 
-    @Path("{username}/identification")
-    public IdentifiedToResource identificationResource(
-            @PathParam("username") String username,
-            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) {
-        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
-            throw new WebApplicationException(Response.Status.FORBIDDEN);
-        }
-        return identifiedToResourceFactory.forAuthenticatedUser(
-                sessionHandler.userFromSession(
-                        request.getSession()
-                )
-        );
-    }
 
     @Path("{username}/admin")
     public AdminResource adminResource(

@@ -7,10 +7,10 @@ package guru.bubl.service.resources.schema;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.schema.Schema;
-import guru.bubl.module.model.meta.MetaJson;
-import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.graph.schema.SchemaJson;
-import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONException;
@@ -121,47 +121,48 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
                 schemaUri,
                 "schema1"
         );
-        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().addPropertyForSchemaUri(schemaUri);
         updateLabel(propertyUri, "prop1");
-        VertexSearchResult result = searchUtils().vertexSearchResultsFromResponse(
+        GraphElementSearchResult result = searchUtils().vertexSearchResultsFromResponse(
                 searchUtils().autoCompletionForPublicVertices(
                         "schema1"
                 )
         ).iterator().next();
         assertTrue(
-                result.getProperties().containsKey(propertyUri)
+                result.getContext().containsKey(propertyUri)
         );
     }
 
     @Test
     public void deleting_property_also_removes_it_from_schema_in_search() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        //updating schema label so that it gets reindex
         schemaUtils().updateSchemaLabelWithUri(
                 schemaUri,
                 "schema1"
         );
-        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
-        updateLabel(propertyUri, "prop1");
-        VertexSearchResult searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+        URI propertyUri = schemaUtils().addPropertyForSchemaUri(schemaUri);
+        searchUtils().indexAll();
+        GraphElementSearchResult schemaSearchResult = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+                "schema1"
+        ).get(0);
+        searchUtils().indexAll();
+        assertFalse(
+                schemaSearchResult.getContext().isEmpty()
+        );
+        removeProperty(propertyUri);
+        searchUtils().indexAll();
+        schemaSearchResult = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 "schema1"
         ).get(0);
         assertTrue(
-                searchResultA.hasProperties()
-        );
-        removeProperty(propertyUri);
-        searchResultA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                "schema1"
-        ).get(0);
-        assertFalse(
-                searchResultA.hasProperties()
+                schemaSearchResult.getContext().isEmpty()
         );
     }
 
     @Test
     public void updating_note_returns_correct_status() throws Exception {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().addPropertyForSchemaUri(schemaUri);
         ClientResponse response = updateNote(propertyUri, "some note");
         assertThat(
                 response.getStatus(),
@@ -172,7 +173,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void getting_surround_graph_returns_ok_status() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().addPropertyForSchemaUri(schemaUri);
         assertThat(
                 getSurroundGraphForPropertyWithUri(
                         propertyUri
@@ -186,7 +187,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void getting_surround_graph_returns_the_schema_and_its_properties() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        URI propertyUri = schemaUtils().uriOfCreatedPropertyForSchemaUri(schemaUri);
+        URI propertyUri = schemaUtils().addPropertyForSchemaUri(schemaUri);
         Schema schema = SchemaJson.fromJson(
                 getSurroundGraphForPropertyWithUri(propertyUri).getEntity(
                         String.class
@@ -237,7 +238,7 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     private URI uriOfCreatedProperty() {
-        return schemaUtils().uriOfCreatedPropertyForSchemaUri(
+        return schemaUtils().addPropertyForSchemaUri(
                 schemaUtils().uriOfCreatedSchema()
         );
     }

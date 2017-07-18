@@ -14,8 +14,9 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import guru.bubl.module.model.ModelModule;
+import guru.bubl.module.model.admin.WholeGraphAdminDailyTask;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
-import guru.bubl.module.neo4j_graph_manipulator.graph.search.Neo4jGraphSearchModule;
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
 import guru.bubl.service.RedisSessionHandler;
 import guru.bubl.service.RestInterceptor;
@@ -26,8 +27,6 @@ import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFacto
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.meta.IdentificationResourceFactory;
-import guru.bubl.service.resources.meta.IdentifiedToResourceFactory;
-import guru.bubl.service.resources.meta.UserMetasResource;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
@@ -58,7 +57,7 @@ public class GuiceConfig extends GuiceServletContextListener {
             @Override
             protected void configureServlets() {
                 bind(Context.class).to(InitialContext.class);
-                bind(Gson.class).toInstance(new Gson());
+                bind(Gson.class).toInstance(JsonUtils.getGson());
                 RestInterceptor restInterceptor = new RestInterceptor();
                 requestInjection(restInterceptor);
 
@@ -121,9 +120,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                         SchemaResourceFactory.class
                 ));
                 install(builder.build(
-                        IdentifiedToResourceFactory.class
-                ));
-                install(builder.build(
                         IdentificationResourceFactory.class
                 ));
                 install(builder.build(
@@ -171,7 +167,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                                             (String) jndiContext.lookup("sendgrid_key")
                                     )
                     );
-                    install(new Neo4jGraphSearchModule());
 
                     if (isTesting) {
                         //security flaw if binded in production
@@ -190,6 +185,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                                 new H2DataSource()
                         );
                     }
+                    bind(WholeGraphAdminDailyTask.class);
                 } catch (NamingException e) {
                     throw new RuntimeException(e);
                 }

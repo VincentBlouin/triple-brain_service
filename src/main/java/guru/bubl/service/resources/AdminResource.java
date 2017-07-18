@@ -6,7 +6,7 @@ package guru.bubl.service.resources;
 
 import com.google.inject.Inject;
 import guru.bubl.module.model.WholeGraph;
-import guru.bubl.module.model.admin.WholeGraphAdminFactory;
+import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.search.GraphIndexer;
 
@@ -20,16 +20,13 @@ public class AdminResource {
     protected GraphIndexer graphIndexer;
 
     @Inject
-    protected WholeGraph wholeGraph;
-
-    @Inject
-    protected WholeGraphAdminFactory wholeGraphAdminFactory;
+    protected WholeGraphAdmin wholeGraphAdmin;
 
     @Path("reindex")
     @GraphTransactional
     @POST
     public Response reindexAll(){
-        graphIndexer.indexWholeGraph();
+        wholeGraphAdmin.reindexAll();
         return Response.noContent().build();
     }
 
@@ -37,9 +34,7 @@ public class AdminResource {
     @GraphTransactional
     @POST
     public Response refreshNumberOfConnectedEdges(){
-        wholeGraphAdminFactory.withWholeGraph(
-                wholeGraph
-        ).refreshNumberOfConnectedEdges();
+        wholeGraphAdmin.refreshNumberOfConnectedEdges();
         return Response.ok().build();
     }
 
@@ -47,9 +42,7 @@ public class AdminResource {
     @GraphTransactional
     @POST
     public Response refreshAllIdentificationsNumberOfReferences(){
-        wholeGraphAdminFactory.withWholeGraph(
-                wholeGraph
-        ).refreshNumberOfReferencesToAllIdentifications();
+        wholeGraphAdmin.refreshNumberOfReferencesToAllIdentifications();
         return Response.ok().build();
     }
 
@@ -57,9 +50,7 @@ public class AdminResource {
     @GraphTransactional
     @POST
     public Response removeMetasHavingZeroReferences(){
-        wholeGraphAdminFactory.withWholeGraph(
-                wholeGraph
-        ).removeMetasHavingZeroReferences();
+        wholeGraphAdmin.removeMetasHavingZeroReferences();
         return Response.ok().build();
     }
 
@@ -67,9 +58,7 @@ public class AdminResource {
     @GraphTransactional
     @POST
     public Response reAddIdentifications(){
-        wholeGraphAdminFactory.withWholeGraph(
-                wholeGraph
-        ).reAddIdentifications();
+        wholeGraphAdmin.reAddIdentifications();
         return Response.ok().build();
     }
 

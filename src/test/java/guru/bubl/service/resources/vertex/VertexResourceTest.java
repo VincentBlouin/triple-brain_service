@@ -5,12 +5,16 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.GraphElementType;
+import guru.bubl.module.model.graph.GraphElement;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.json.StatementJsonFields;
-import guru.bubl.module.model.search.EdgeSearchResult;
-import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -18,12 +22,7 @@ import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.GraphElement;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
+
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
@@ -32,9 +31,7 @@ import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -205,7 +202,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void updating_note_updates_search(){
-        indexGraph();
+        searchUtils().indexAll();
         GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 vertexA().label()
         ).get(0).getGraphElement();
@@ -221,8 +218,8 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void when_deleting_a_vertex_its_relations_are_also_removed_from_search() {
-        indexGraph();
-        List<EdgeSearchResult> relations = searchUtils().searchForRelations(
+        searchUtils().indexAll();
+        List<GraphElementSearchResult> relations = searchUtils().searchForRelations(
                 "between",
                 defaultAuthenticatedUserAsJson
         );
@@ -243,12 +240,12 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void making_vertex_public_re_indexes_it() {
-        indexGraph();
+        searchUtils().indexAll();
         JSONObject anotherUser = createAUser();
         authenticate(
                 anotherUser
         );
-        List<VertexSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
                 vertexA().label(),
                 anotherUser
         );
@@ -275,7 +272,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
-        indexGraph();
+        searchUtils().indexAll();
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         JSONArray results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(

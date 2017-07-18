@@ -105,14 +105,6 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         );
     }
 
-    protected IdentificationRestTestUtils identificationUtils() {
-        return IdentificationRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
-                authCookie,
-                currentAuthenticatedUser
-        );
-    }
-
     protected JSONObject createAUser() {
         JSONObject newUser = userUtils().validForCreation();
         ClientResponse response = createUser(
@@ -140,18 +132,6 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
                 .get(ClientResponse.class);
         assertThat(response.getStatus(), is(200));
     }
-
-    protected void indexGraph() {
-        ClientResponse response = resource
-                .path("service")
-                .path("test")
-                .path("search")
-                .path("index_graph")
-                .cookie(authCookie)
-                .get(ClientResponse.class);
-        assertThat(response.getStatus(), is(200));
-    }
-
 
     public boolean graphElementWithIdExistsInCurrentGraph(URI graphElementId) {
         ClientResponse response = resource

@@ -9,9 +9,8 @@ import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.model.search.EdgeSearchResult;
 import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.VertexSearchResult;
+import guru.bubl.module.model.search.GraphElementSearchResultPojo;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -41,13 +40,13 @@ public class SearchRestTestUtils {
         this.authenticatedUserAsJson = authenticatedUserAsJson;
     }
 
-    public List<EdgeSearchResult> searchForRelations(String textToSearchWith, JSONObject user) {
+    public List<GraphElementSearchResult> searchForRelations(String textToSearchWith, JSONObject user) {
         return gson.fromJson(
                 searchForRelationsClientResponse(
                         textToSearchWith,
                         user
                 ).getEntity(String.class),
-                new TypeToken<List<EdgeSearchResult>>() {
+                new TypeToken<List<GraphElementSearchResultPojo>>() {
                 }.getType()
         );
     }
@@ -71,7 +70,7 @@ public class SearchRestTestUtils {
         return clientResponse;
     }
 
-    public List<VertexSearchResult> autoCompletionResultsForPublicAndUserVertices(
+    public List<GraphElementSearchResult> autoCompletionResultsForPublicAndUserVertices(
             String textToSearchWith, JSONObject user
     ) {
         return vertexSearchResultsFromResponse(
@@ -84,7 +83,7 @@ public class SearchRestTestUtils {
     }
 
 
-    public List<VertexSearchResult> autoCompletionResultsForUserVerticesOnly(
+    public List<GraphElementSearchResult> autoCompletionResultsForUserVerticesOnly(
             String textToSearchWith, JSONObject user
     ) {
         return vertexSearchResultsFromResponse(
@@ -122,11 +121,11 @@ public class SearchRestTestUtils {
         return jsonObject.has("edge") ?
                 gson.fromJson(
                         jsonObject.toString(),
-                        EdgeSearchResult.class
+                        GraphElementSearchResultPojo.class
                 ) :
                 gson.fromJson(
                         jsonObject.toString(),
-                        VertexSearchResult.class
+                        GraphElementSearchResultPojo.class
                 );
     }
 
@@ -143,7 +142,7 @@ public class SearchRestTestUtils {
                 .get(ClientResponse.class);
     }
 
-    public List<VertexSearchResult> autoCompletionResultsForCurrentUserVerticesOnly(String textToSearchWith) {
+    public List<GraphElementSearchResult> autoCompletionResultsForCurrentUserVerticesOnly(String textToSearchWith) {
         return vertexSearchResultsFromResponse(
                 clientResponseOfAutoCompletionOfCurrentUserVerticesOnly(
                         textToSearchWith
@@ -151,10 +150,11 @@ public class SearchRestTestUtils {
         );
     }
 
-    public List<VertexSearchResult> vertexSearchResultsFromResponse(ClientResponse clientResponse) {
+    public List<GraphElementSearchResult> vertexSearchResultsFromResponse(ClientResponse clientResponse) {
+        String jsonString = clientResponse.getEntity(JSONArray.class).toString();
         return gson.fromJson(
-                clientResponse.getEntity(JSONArray.class).toString(),
-                new TypeToken<List<VertexSearchResult>>() {
+                jsonString,
+                new TypeToken<List<GraphElementSearchResultPojo>>() {
                 }.getType()
         );
     }
@@ -201,6 +201,17 @@ public class SearchRestTestUtils {
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(ClientResponse.class);
+    }
+
+    public void indexAll() {
+        ClientResponse response = resource
+                .path("service")
+                .path("test")
+                .path("search")
+                .path("index_graph")
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+        assertThat(response.getStatus(), is(200));
     }
 
     private ClientResponse clientResponseOfAutoCompletionForVerticesOfUser(String textToSearchWith, JSONObject user, Boolean onlyOwnVertices) {

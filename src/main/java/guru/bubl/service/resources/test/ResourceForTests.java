@@ -4,25 +4,24 @@
 
 package guru.bubl.service.resources.test;
 
-import guru.bubl.module.model.search.GraphIndexer;
-import guru.bubl.service.SessionHandler;
-import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.subgraph.SubGraph;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
+import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.model.test.GraphComponentTest;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.module.model.test.scenarios.VerticesCalledABAndC;
 import guru.bubl.module.repository.user.UserRepository;
+import guru.bubl.service.SessionHandler;
+import org.codehaus.jettison.json.JSONArray;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,6 +52,9 @@ public class ResourceForTests {
 
     @Inject
     SessionHandler sessionHandler;
+
+    @Inject
+    WholeGraphAdmin wholeGraphAdmin;
 
 //    @Inject
 //    SearchUtils searchUtils;
@@ -155,27 +157,8 @@ public class ResourceForTests {
     @Produces(MediaType.TEXT_PLAIN)
     @GraphTransactional
     @GET
-    public Response indexSessionUserVertices(@Context HttpServletRequest request) {
-        User currentUser = sessionHandler.userFromSession(
-                request.getSession()
-        );
-        UserGraph userGraph = graphFactory.loadForUser(
-                currentUser
-        );
-        SubGraph subGraph = userGraph.graphWithAnyVertexAndDepth(10);
-        for (Vertex vertex : subGraph.vertices().values()) {
-            graphIndexer.indexVertex(
-                    vertexFactory.withUri(
-                            vertex.uri()
-                    )
-            );
-        }
-        for (Edge edge : subGraph.edges().values()) {
-            graphIndexer.indexRelation(
-                    edge
-            );
-        }
-        graphIndexer.commit();
+    public Response reindexAll(@Context HttpServletRequest request) {
+        wholeGraphAdmin.reindexAll();
         return Response.ok().build();
     }
 
