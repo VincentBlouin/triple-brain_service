@@ -5,6 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import guru.bubl.module.model.WholeGraph;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphTransactional;

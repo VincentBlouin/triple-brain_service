@@ -14,7 +14,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import guru.bubl.module.model.ModelModule;
-import guru.bubl.module.model.ScheduleModule;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
@@ -68,6 +67,7 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
+                bind(DailyJobResource.class);
                 bind(UserResource.class);
                 bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
@@ -185,11 +185,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                                 new H2DataSource()
                         );
                     }
-                    install(new ScheduleModule());
                 } catch (NamingException e) {
                     throw new RuntimeException(e);
                 }
-
             }
         });
     }
