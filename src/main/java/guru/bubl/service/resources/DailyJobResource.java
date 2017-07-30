@@ -8,13 +8,11 @@ import guru.bubl.module.model.admin.WholeGraphAdminDailyJob;
 import guru.bubl.module.model.graph.GraphTransactional;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 @Path("/daily-job")
-@Singleton
 public class DailyJobResource {
 
     @Inject
@@ -22,9 +20,11 @@ public class DailyJobResource {
 
     @GET
     @GraphTransactional
+    @Path("/")
     public Response doDailyJob(){
-        System.out.println("daily job");
-//        wholeGraphAdminDailyJob.execute();
+        System.out.println("daily job started");
+        wholeGraphAdminDailyJob.execute();
+        System.out.println("daily job finished");
         return Response.ok().build();
     }
 }

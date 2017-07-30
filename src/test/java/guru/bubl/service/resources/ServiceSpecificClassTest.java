@@ -12,7 +12,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        UserPasswordResourceTest.class
+        DailyJobResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }
