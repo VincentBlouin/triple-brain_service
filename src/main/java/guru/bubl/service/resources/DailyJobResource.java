@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import java.time.Duration;
+import java.time.Instant;
 
 @Path("/daily-job")
 public class DailyJobResource {
@@ -23,8 +25,11 @@ public class DailyJobResource {
     @Path("/")
     public Response doDailyJob(){
         System.out.println("daily job started");
+        Instant start = Instant.now();
         wholeGraphAdminDailyJob.execute();
+        Instant end = Instant.now();
         System.out.println("daily job finished");
+        System.out.println(Duration.between(start, end));
         return Response.ok().build();
     }
 }
