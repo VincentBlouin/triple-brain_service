@@ -13,6 +13,7 @@ import guru.bubl.module.model.json.LocalizedStringJson;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
+import java.util.UUID;
 
 public class SchemaUtils {
     private WebResource resource;
@@ -65,11 +66,16 @@ public class SchemaUtils {
     }
 
     public URI addPropertyForSchemaUri(URI schemaUri) {
-        return graphUtils.getElementUriInResponse(
+        URI propertyUri = graphUtils.getElementUriInResponse(
                 addProperty(
                         schemaUri
                 )
         );
+        updateSchemaLabelWithUri(
+                propertyUri,
+                UUID.randomUUID().toString()
+        );
+        return propertyUri;
     }
 
     public ClientResponse addProperty(URI schemaUri) {

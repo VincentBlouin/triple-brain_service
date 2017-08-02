@@ -26,10 +26,15 @@ public class DailyJobResource {
     public Response doDailyJob(){
         System.out.println("daily job started");
         Instant start = Instant.now();
-        wholeGraphAdminDailyJob.execute();
-        Instant end = Instant.now();
-        System.out.println("daily job finished");
-        System.out.println(Duration.between(start, end));
+        try{
+            wholeGraphAdminDailyJob.execute();
+            System.out.println("daily job finished");
+        }catch(Exception e){
+            System.out.println("daily job finished with errors");
+        }finally{
+            Instant end = Instant.now();
+            System.out.println(Duration.between(start, end));
+        }
         return Response.ok().build();
     }
 }
