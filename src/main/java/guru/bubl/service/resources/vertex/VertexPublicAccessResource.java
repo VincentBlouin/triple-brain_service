@@ -36,10 +36,6 @@ public class VertexPublicAccessResource {
     @GraphTransactional
     public Response makePublic(){
         vertex.makePublic();
-        graphIndexer.indexVertex(
-                vertex
-        );
-        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -48,10 +44,6 @@ public class VertexPublicAccessResource {
     @GraphTransactional
     public Response makePrivate(){
         vertex.makePrivate();
-        graphIndexer.indexVertex(
-                vertex
-        );
-        graphIndexer.commit();
         return Response.ok().build();
     }
 }

@@ -115,12 +115,6 @@ public class VertexResource {
 
         EdgePojo newEdge = sourceVertex.addVertexAndRelation();
         VertexInSubGraphPojo newVertex = newEdge.destinationVertex();
-        graphIndexer.indexVertex(
-                vertexFactory.withUri(
-                        newVertex.uri()
-                )
-        );
-        graphIndexer.commit();
         VertexInSubGraphPojo sourceVertexPojo = new VertexInSubGraphPojo(
                 sourceVertex.uri()
         );
@@ -175,12 +169,6 @@ public class VertexResource {
             connectedVertices.add(edge.otherVertex(vertex));
         }
         vertex.remove();
-        for (VertexOperator connectedVertex : connectedVertices) {
-            graphIndexer.indexVertex(
-                    connectedVertex
-            );
-        }
-        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -200,10 +188,6 @@ public class VertexResource {
                         LocalizedStringJson.content.name()
                 )
         );
-        graphIndexer.indexVertex(
-                vertex
-        );
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 
@@ -220,8 +204,6 @@ public class VertexResource {
                 vertexId
         );
         vertex.comment(comment);
-        graphIndexer.indexVertex(vertex);
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 

@@ -114,26 +114,6 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_label_of_property_updates_properties_name_of_schema_in_search() {
-        URI schemaUri = schemaUtils().uriOfCreatedSchema();
-        //updating schema label so that it gets reindex
-        schemaUtils().updateSchemaLabelWithUri(
-                schemaUri,
-                "schema1"
-        );
-        URI propertyUri = schemaUtils().addPropertyForSchemaUri(schemaUri);
-        updateLabel(propertyUri, "prop1");
-        GraphElementSearchResult result = searchUtils().vertexSearchResultsFromResponse(
-                searchUtils().autoCompletionForPublicVertices(
-                        "schema1"
-                )
-        ).iterator().next();
-        assertTrue(
-                result.getContext().containsKey(propertyUri)
-        );
-    }
-
-    @Test
     public void deleting_property_also_removes_it_from_schema_in_search() {
         URI schemaUri = schemaUtils().uriOfCreatedSchema();
         schemaUtils().updateSchemaLabelWithUri(

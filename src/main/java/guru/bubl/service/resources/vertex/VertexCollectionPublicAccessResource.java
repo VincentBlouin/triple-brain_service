@@ -64,16 +64,12 @@ public class VertexCollectionPublicAccessResource {
                 } else {
                     vertex.makePrivate();
                 }
-                graphIndexer.indexVertex(
-                        vertex
-                );
             }
         } catch (JSONException e) {
             throw new WebApplicationException(
                     Response.Status.BAD_REQUEST
             );
         }
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 }

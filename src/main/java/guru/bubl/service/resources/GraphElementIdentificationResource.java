@@ -75,7 +75,6 @@ public class GraphElementIdentificationResource {
         Map<URI, IdentifierPojo> identifications = graphElement.addMeta(
                 identification
         );
-        reindexGraphElement();
         return Response.ok().entity(
                 MetaJson.toJson(identifications)
         ).build();
@@ -91,28 +90,7 @@ public class GraphElementIdentificationResource {
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(identification);
-        reindexGraphElement();
         return Response.noContent().build();
     }
 
-    private void reindexGraphElement() {
-        if (GraphElementType.vertex == graphElementType) {
-            graphIndexer.indexVertex(
-                    (VertexOperator) graphElement
-            );
-            graphIndexer.commit();
-        } else if (GraphElementType.edge == graphElementType) {
-            graphIndexer.indexRelation(
-                    (Edge) graphElement
-            );
-            graphIndexer.commit();
-        } else if (GraphElementType.property == graphElementType) {
-            graphIndexer.indexSchema(
-                    userGraph.schemaPojoWithUri(
-                            schemaUri
-                    )
-            );
-            graphIndexer.commit();
-        }
-    }
 }

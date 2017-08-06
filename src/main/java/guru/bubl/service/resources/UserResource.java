@@ -306,10 +306,6 @@ public class UserResource {
         }
         user = userRepository.createUser(user);
         graphFactory.createForUser(user);
-        UserGraph userGraph = graphFactory.loadForUser(user);
-        graphIndexer.indexVertex(
-                userGraph.defaultVertex()
-        );
         UserSessionResource.authenticateUserInSession(
                 user, request.getSession()
         );

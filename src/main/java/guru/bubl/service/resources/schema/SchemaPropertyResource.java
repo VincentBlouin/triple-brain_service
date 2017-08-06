@@ -73,12 +73,6 @@ public class SchemaPropertyResource {
                         LocalizedStringJson.content.name()
                 )
         );
-        graphIndexer.indexSchema(
-                userGraph.schemaPojoWithUri(
-                        schemaOperator.uri()
-                )
-        );
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 
@@ -87,12 +81,6 @@ public class SchemaPropertyResource {
     @Path("/{shortId}")
     public Response delete(@PathParam("shortId") String shortId) {
         graphElementOperatorFromShortId(shortId).remove();
-        graphIndexer.indexSchema(
-                userGraph.schemaPojoWithUri(
-                        schemaOperator.uri()
-                )
-        );
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 
@@ -107,12 +95,6 @@ public class SchemaPropertyResource {
         graphElementOperatorFromShortId(shortId).comment(
                 comment
         );
-        graphIndexer.indexSchema(
-                userGraph.schemaPojoWithUri(
-                        schemaOperator.uri()
-                )
-        );
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 

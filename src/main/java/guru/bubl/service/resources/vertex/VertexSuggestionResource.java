@@ -69,8 +69,6 @@ public class VertexSuggestionResource {
         Edge newEdge = vertex.acceptSuggestion(
                 SuggestionJson.fromJson(suggestionJson)
         );
-        graphIndexer.indexRelation(newEdge);
-        graphIndexer.commit();
         try {
             return Response.ok().entity(
                     new JSONObject().put(

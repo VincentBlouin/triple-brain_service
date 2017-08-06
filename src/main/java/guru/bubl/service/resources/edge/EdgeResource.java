@@ -88,11 +88,7 @@ public class EdgeResource {
             @PathParam("edgeShortId") String edgeShortId
     ) {
         EdgeOperator edge = edgeFromShortId(edgeShortId);
-        graphIndexer.deleteGraphElement(
-                edge
-        );
         edge.remove();
-        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -112,8 +108,6 @@ public class EdgeResource {
                         LocalizedStringJson.content.name()
                 )
         );
-        graphIndexer.indexRelation(edge);
-        graphIndexer.commit();
         return Response.ok().build();
     }
 
@@ -145,8 +139,6 @@ public class EdgeResource {
     ) {
         EdgeOperator edgeOperator = edgeFromShortId(shortId);
         edgeOperator.comment(comment);
-        graphIndexer.indexRelation(edgeOperator);
-        graphIndexer.commit();
         return Response.noContent().build();
     }
 
