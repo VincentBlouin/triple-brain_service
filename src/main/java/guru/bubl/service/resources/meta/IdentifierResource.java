@@ -118,9 +118,12 @@ public class IdentifierResource {
                         identificationShortId
                 )
         );
-        centerGraphElementOperatorFactory.usingFriendlyResource(
+        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
                 identificationOperator
-        ).updateLastCenterDate();
+        );
+        centerGraphElementOperator.incrementNumberOfVisits();
+        centerGraphElementOperator.updateLastCenterDate();
+
         return new OwnedSurroundGraphResource(
                 userGraph,
                 identificationOperator

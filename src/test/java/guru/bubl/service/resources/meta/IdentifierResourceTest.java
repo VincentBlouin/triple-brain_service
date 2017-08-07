@@ -15,11 +15,13 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.net.URI;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -156,6 +158,39 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
                 centerElements.size(),
                 Is.is(numberOfVisitedElements + 1)
         );
+    }
+
+    @Test
+    public void increments_number_of_visits_when_getting_surround_graph() {
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Identifier meta = vertexA().getIdentifications().values().iterator().next();
+        graphUtils().graphWithCenterVertexUri(meta.uri());
+        CenterGraphElementPojo centerMeta = getCenterWithUri(
+                graphUtils().getCenterGraphElements(),
+                meta.uri()
+        );
+        assertThat(
+                centerMeta.getNumberOfVisits(),
+                is(1)
+        );
+        graphUtils().graphWithCenterVertexUri(meta.uri());
+        centerMeta = getCenterWithUri(
+                graphUtils().getCenterGraphElements(),
+                meta.uri()
+        );
+        assertThat(
+                centerMeta.getNumberOfVisits(),
+                is(2)
+        );
+    }
+
+    private CenterGraphElementPojo getCenterWithUri(Set<CenterGraphElementPojo> centers, URI centerUri){
+        for(CenterGraphElementPojo centerGraphElement: centers){
+            if(centerGraphElement.getGraphElement().uri().equals(centerUri)){
+                return centerGraphElement;
+            }
+        }
+        return null;
     }
 
     private ClientResponse updateIdentificationLabel(Identifier identification, String label) {
