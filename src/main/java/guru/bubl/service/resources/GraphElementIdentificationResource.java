@@ -4,20 +4,23 @@
 
 package guru.bubl.service.resources;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.graph.*;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.GraphElementType;
+import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.search.GraphIndexer;
-import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.module.model.validator.IdentificationValidator;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jGraphElementFactory;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.identification.Neo4jIdentification;
+import guru.bubl.module.neo4j_graph_manipulator.graph.meta.Neo4jIdentificationFactory;
+import org.codehaus.jettison.json.JSONObject;
 
-import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,13 +31,13 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GraphElementIdentificationResource {
 
-    @Inject
-    GraphIndexer graphIndexer;
-
     private GraphElementOperator graphElement;
     private GraphElementType graphElementType;
     private URI schemaUri;
     private UserGraph userGraph;
+
+    @Inject
+    IdentificationFactory identificationFactory;
 
     @AssistedInject
     public GraphElementIdentificationResource(
@@ -86,7 +89,7 @@ public class GraphElementIdentificationResource {
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri
     ) {
-        Identifier identification = graphElement.getIdentificationHavingInternalUri(
+        Identifier identification = identificationFactory.withUri(
                 URI.create(identificationUri)
         );
         graphElement.removeIdentification(identification);
