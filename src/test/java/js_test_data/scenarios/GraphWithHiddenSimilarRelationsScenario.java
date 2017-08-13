@@ -5,6 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
+import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -28,8 +29,9 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
      * b1-r1->b2
      * b2 has hidden relations
      * b2 has an image
-     * b2-T-shirt->shirt1
-     * b2-T-shirt->shirt2
+     * b2-shirt1->shirt1
+     * b2-shirt2->shirt2
+     * shirt2-color->red
      * shirt2 has an image
      * relations T-shirt are identified to Freebase T-shirt.
      */
@@ -55,6 +57,7 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
             b2,
             shirt1,
             shirt2,
+            red,
             distantBubble;
 
     @Override
@@ -69,6 +72,10 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
                 b2.uri()
+        );
+        SubGraphPojo shirt2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
+                1,
+                shirt2.uri()
         );
         SubGraphPojo distantBubbleGraph = userGraph.graphWithDepthAndCenterBubbleUri(
                 1,
@@ -85,29 +92,35 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 1,
                 distantBubble.uri()
         );
-        try {
-            return new JSONObject().put(
-                    "b1Graph",
-                    SubGraphJson.toJson(b1Graph)
-            ).put(
-                    "b2Graph",
-                    SubGraphJson.toJson(b2Graph)
-            ).put(
-                    "distantBubbleGraph",
-                    SubGraphJson.toJson(distantBubbleGraph)
-            ).put(
-                    "b2GraphWhenConnectedToDistantBubble",
-                    SubGraphJson.toJson(b2GraphWhenConnectedToDistantBubble)
-            ).put(
-                    "distantBubbleGraphWhenConnectedToBubble1",
-                    SubGraphJson.toJson(distantBubbleGraphWhenConnectedToBubble1)
-            ).put(
-                    "distantBubbleUri",
-                    distantBubble.uri()
-            );
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+
+        return NoExRun.wrap(() ->
+                new JSONObject().put(
+                        "b1Graph",
+                        SubGraphJson.toJson(b1Graph)
+                ).put(
+                        "b2Graph",
+                        SubGraphJson.toJson(b2Graph)
+                ).put(
+                        "distantBubbleGraph",
+                        SubGraphJson.toJson(distantBubbleGraph)
+                ).put(
+                        "b2GraphWhenConnectedToDistantBubble",
+                        SubGraphJson.toJson(b2GraphWhenConnectedToDistantBubble)
+                ).put(
+                        "distantBubbleGraphWhenConnectedToBubble1",
+                        SubGraphJson.toJson(distantBubbleGraphWhenConnectedToBubble1)
+                ).put(
+                        "distantBubbleUri",
+                        distantBubble.uri()
+                ).put(
+                        "shirt2Graph",
+                        SubGraphJson.toJson(shirt2Graph)
+                )
+                .put(
+                        "shirt2BubbleUri",
+                        shirt2.uri()
+                )
+        ).get();
     }
 
     private void createVertices() {
@@ -120,10 +133,10 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         );
         b2.label("b2");
         b2.addImages(Sets.newHashSet(
-                        Image.withBase64ForSmallAndUriForBigger(
-                                "base64ForB2",
-                                URI.create("http://example.org/bigImageForB2")
-                        )
+                Image.withBase64ForSmallAndUriForBigger(
+                        "base64ForB2",
+                        URI.create("http://example.org/bigImageForB2")
+                )
                 )
         );
         shirt1 = vertexFactory.createForOwnerUsername(
@@ -135,12 +148,16 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         );
         shirt2.label("shirt2");
         shirt2.addImages(Sets.newHashSet(
-                        Image.withBase64ForSmallAndUriForBigger(
-                                "base64ForShirt2",
-                                URI.create("http://example.org/bigImageForShirt2")
-                        )
+                Image.withBase64ForSmallAndUriForBigger(
+                        "base64ForShirt2",
+                        URI.create("http://example.org/bigImageForShirt2")
+                )
                 )
         );
+        red = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        red.label("red");
         distantBubble = vertexFactory.createForOwnerUsername(
                 user.username()
         );
@@ -155,5 +172,7 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         EdgeOperator shirt2Relation = b2.addRelationToVertex(shirt2);
         shirt2Relation.label("shirt2");
         shirt2Relation.addMeta(modelTestScenarios.tShirt());
+        EdgeOperator color = shirt2.addRelationToVertex(red);
+        color.label("color");
     }
 }
