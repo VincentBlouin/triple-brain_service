@@ -4,14 +4,19 @@
 
 package js_test_data.scenarios;
 
+import com.google.gson.Gson;
+import guru.bubl.module.common_utils.NoExRun;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -21,6 +26,7 @@ import guru.bubl.module.model.graph.SubGraphJson;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class GraphWithSimilarRelationsScenario implements JsTestScenario {
 
@@ -47,6 +53,9 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
 
     @Inject
     ModelTestScenarios modelTestScenarios;
+
+    @Inject
+    GraphSearch graphSearch;
 
     private DateTime
             book1Date = new DateTime().minusSeconds(30),
@@ -84,10 +93,26 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
                 1,
                 me.uri()
         );
-        setupCreationDates();
-        return SubGraphJson.toJson(
-                subGraphForMe
+        List<GraphElementSearchResult> bookSearchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+                "book",
+                user
         );
+        setupCreationDates();
+        return NoExRun.wrap(() ->
+                new JSONObject().put(
+                        "graph",
+                        SubGraphJson.toJson(
+                                subGraphForMe
+                        )
+                ).put(
+                        "bookSearchResults",
+                        new JSONArray(
+                                new Gson().toJson(
+                                        bookSearchResults
+                                )
+                        )
+                )
+        ).get();
     }
 
     private void createVertices() {
@@ -99,20 +124,26 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
                 user.username()
         );
         book1.label("book 1");
+        IdentifierPojo bookMeta = book1.addMeta(
+                modelTestScenarios.book()
+        ).values().iterator().next();
         book2 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
         book2.label("book 2");
+        book2.addMeta(bookMeta);
         book3 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
         book3.label("book 3");
         book3.addVertexAndRelation();
         book3.addVertexAndRelation();
+        book3.addMeta(bookMeta);
         book3Copy = vertexFactory.createForOwnerUsername(
                 user.username()
         );
         book3Copy.label("book 3 copy");
+        book3Copy.addMeta(bookMeta);
         otherBubble = vertexFactory.createForOwnerUsername(
                 user.username()
         );
