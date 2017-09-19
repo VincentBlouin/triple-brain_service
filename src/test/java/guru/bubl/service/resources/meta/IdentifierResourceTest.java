@@ -165,7 +165,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
         graphElementUtils().addFoafPersonTypeToVertexA();
         Identifier meta = vertexA().getIdentifications().values().iterator().next();
         graphUtils().graphWithCenterVertexUri(meta.uri());
-        CenterGraphElementPojo centerMeta = getCenterWithUri(
+        CenterGraphElementPojo centerMeta = graphUtils().getCenterWithUri(
                 graphUtils().getCenterGraphElements(),
                 meta.uri()
         );
@@ -174,7 +174,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
                 is(1)
         );
         graphUtils().graphWithCenterVertexUri(meta.uri());
-        centerMeta = getCenterWithUri(
+        centerMeta = graphUtils().getCenterWithUri(
                 graphUtils().getCenterGraphElements(),
                 meta.uri()
         );
@@ -182,15 +182,6 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
                 centerMeta.getNumberOfVisits(),
                 is(2)
         );
-    }
-
-    private CenterGraphElementPojo getCenterWithUri(Set<CenterGraphElementPojo> centers, URI centerUri){
-        for(CenterGraphElementPojo centerGraphElement: centers){
-            if(centerGraphElement.getGraphElement().uri().equals(centerUri)){
-                return centerGraphElement;
-            }
-        }
-        return null;
     }
 
     private ClientResponse updateIdentificationLabel(Identifier identification, String label) {

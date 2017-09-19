@@ -220,4 +220,13 @@ public class GraphRestTestUtils {
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }
+
+    public CenterGraphElementPojo getCenterWithUri(Set<CenterGraphElementPojo> centers, URI centerUri){
+        for(CenterGraphElementPojo centerGraphElement: centers){
+            if(centerGraphElement.getGraphElement().uri().equals(centerUri)){
+                return centerGraphElement;
+            }
+        }
+        return null;
+    }
 }

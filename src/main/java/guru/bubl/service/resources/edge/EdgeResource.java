@@ -7,8 +7,9 @@ package guru.bubl.service.resources.edge;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementType;
-import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -17,7 +18,6 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
@@ -37,13 +37,10 @@ import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 public class EdgeResource {
 
     @Inject
-    GraphFactory graphFactory;
-
-    @Inject
-    GraphIndexer graphIndexer;
-
-    @Inject
     GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
+
+    @Inject
+    CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     private UserGraph userGraph;
 
@@ -190,6 +187,11 @@ public class EdgeResource {
             @PathParam("shortId") String shortId
     ) {
         Edge edge = edgeFromShortId(shortId);
+        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
+                edge
+        );
+        centerGraphElementOperator.incrementNumberOfVisits();
+        centerGraphElementOperator.updateLastCenterDate();
         return new OwnedSurroundGraphResource(
                 userGraph,
                 edge.sourceVertex()

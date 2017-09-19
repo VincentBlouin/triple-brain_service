@@ -7,15 +7,19 @@ package guru.bubl.service.resources;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.hamcrest.core.Is;
 import org.junit.Test;
 import guru.bubl.module.model.graph.edge.Edge;
 
 import javax.ws.rs.core.Response;
+
+import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -319,6 +323,46 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         assertFalse(
                 subGraph.containsVertex(vertexC())
+        );
+    }
+
+    @Test
+    public void updates_last_visit_date_when_getting_surround_graph() {
+        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        Integer numberOfVisitedElements = centerElements.size();
+        getSurroundGraphOfEdgeBetweenAAndB();
+        centerElements = graphUtils().getCenterGraphElements();
+        assertThat(
+                centerElements.size(),
+                Is.is(numberOfVisitedElements + 1)
+        );
+    }
+
+    @Test
+    public void increments_number_of_visits_when_getting_surround_graph() {
+        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
+                vertexBUri(),
+                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
+
+        );
+        getSurroundGraphOfEdgeBetweenAAndB();
+        CenterGraphElementPojo centerEdge = graphUtils().getCenterWithUri(
+                graphUtils().getCenterGraphElements(),
+                edge.uri()
+        );
+        assertThat(
+                centerEdge.getNumberOfVisits(),
+                is(1)
+        );
+        getSurroundGraphOfEdgeBetweenAAndB();
+        centerEdge = graphUtils().getCenterWithUri(
+                graphUtils().getCenterGraphElements(),
+                edge.uri()
+        );
+        assertThat(
+                centerEdge.getNumberOfVisits(),
+                is(2)
         );
     }
 
