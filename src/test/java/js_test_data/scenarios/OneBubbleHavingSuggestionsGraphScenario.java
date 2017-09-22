@@ -43,7 +43,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         VertexOperator bubble = vertexFactory.createForOwnerUsername(
                 user.username()
         );

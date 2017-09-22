@@ -100,7 +100,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
         SubGraphPojo subGraphForB1 = userGraph.graphWithDepthAndCenterBubbleUri(
@@ -242,7 +242,7 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         b1.makePublic();
         b2.makePublic();
         b3.makePublic();
-        UserGraph forkerUserGraph = graphFactory.createForUser(forkerUser);
+        UserGraph forkerUserGraph = graphFactory.loadForUser(forkerUser);
         SubGraphForker subGraphForker = subGraphForkerFactory.forUser(
                 forkerUser
         );

@@ -4,18 +4,23 @@
 
 package guru.bubl.service.resources;
 
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Injector;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.content.AllContentFactory;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
+import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphIndexer;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
@@ -32,14 +37,20 @@ import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.restlet.resource.Post;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static guru.bubl.module.model.json.UserJson.*;
 import static guru.bubl.module.model.validator.UserValidator.*;
@@ -55,7 +66,10 @@ public class UserResource {
     UserRepository userRepository;
 
     @Inject
-    GraphIndexer graphIndexer;
+    AllContentFactory allContentFactory;
+
+    @Inject
+    protected Neo4jUserGraphFactory neo4jUserGraphFactory;
 
     @Inject
     SessionHandler sessionHandler;
@@ -267,7 +281,7 @@ public class UserResource {
     @Produces(MediaType.WILDCARD)
     @GraphTransactional
     @Path("/")
-    public Response createUser(JSONObject jsonUser) {
+    public Response createUser(JSONObject jsonUser, @QueryParam("skipDefaultContent") Boolean skipDefaultContent) throws JSONException {
         User user = User.withEmailAndUsername(
                 jsonUser.optString(EMAIL, ""),
                 jsonUser.optString(USER_NAME, "")
@@ -304,8 +318,17 @@ public class UserResource {
                     .build()
             );
         }
+        if (jsonUser.has(UserJson.PREFERRED_LOCALES)) {
+            user.setPreferredLocales(
+                    jsonUser.getString(UserJson.PREFERRED_LOCALES)
+            );
+        }
         user = userRepository.createUser(user);
-        graphFactory.createForUser(user);
+        if(skipDefaultContent == null || !skipDefaultContent){
+            allContentFactory.forUserGraph(
+                    neo4jUserGraphFactory.withUser(user)
+            ).add();
+        }
         UserSessionResource.authenticateUserInSession(
                 user, request.getSession()
         );
@@ -348,6 +371,26 @@ public class UserResource {
         return userMetasResourceFactory.forUser(
                 sessionHandler.userFromSession(request.getSession())
         );
+    }
+
+    @PUT
+    @Path("{username}/locale")
+    public Response updateLocale(
+            @PathParam("username") String username,
+            String locales,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) throws JSONException {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
+        }
+        User authenticatedUser = sessionHandler.userFromSession(request.getSession());
+        authenticatedUser.setPreferredLocales(locales);
+        userRepository.updatePreferredLocales(
+                authenticatedUser
+        );
+        return Response.noContent().build();
     }
 
     private Boolean isUserNameTheOneInSession(String userName, String persistentSessionId) {

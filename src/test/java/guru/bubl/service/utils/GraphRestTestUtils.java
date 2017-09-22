@@ -62,6 +62,7 @@ public class GraphRestTestUtils {
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .path("surround_graph")
+                .queryParam("center", "true")
                 .cookie(authCookie)
                 .get(ClientResponse.class);
         assertThat(

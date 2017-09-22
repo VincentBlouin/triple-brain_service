@@ -34,9 +34,18 @@ public class UserResourceTestUtils {
     @Path("{email}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response emailExists(@PathParam("email") String email) throws Exception {
+    public Response emailExists(@PathParam("email") String email){
         return Response.ok(
                 userRepository.emailExists(email).toString()
+        ).build();
+    }
+
+    @Path("/{username}/locale")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserLocale(@PathParam("username") String username){
+        return Response.ok(
+                userRepository.findByUsername(username).getPreferredLocales()
         ).build();
     }
 

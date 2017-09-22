@@ -83,7 +83,7 @@ public class ResourceForTests {
                     user
             );
         }
-        graphFactory.createForUser(user);
+        graphFactory.loadForUser(user).createVertex();
 //        deleteAllUserDocumentsForSearch(user);
         UserGraph userGraph = graphFactory.loadForUser(
                 user

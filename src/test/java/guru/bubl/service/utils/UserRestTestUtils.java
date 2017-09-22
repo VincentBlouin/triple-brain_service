@@ -7,6 +7,7 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
@@ -54,6 +55,22 @@ public class UserRestTestUtils {
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
         );
+    }
+
+    public JSONArray getUserPreferredLocale(String username) {
+        ClientResponse response = resource
+                .path("service")
+                .path("test")
+                .path("users")
+                .path(username)
+                .path("locale")
+                .accept(MediaType.APPLICATION_JSON)
+                .get(ClientResponse.class);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        return response.getEntity(JSONArray.class);
     }
 
     public JSONObject validForCreation() {

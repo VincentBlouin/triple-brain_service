@@ -59,7 +59,7 @@ public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTe
 
     @Override
     public Object build() {
-        userGraph = graphFactory.createForUser(user);
+        userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
         SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(

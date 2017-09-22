@@ -328,6 +328,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void updates_last_visit_date_when_getting_surround_graph() {
+        graphUtils().graphWithCenterVertexUri(vertexAUri());
         Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
         getSurroundGraphOfEdgeBetweenAAndB();

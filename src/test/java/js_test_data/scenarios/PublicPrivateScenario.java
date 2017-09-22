@@ -41,7 +41,7 @@ public class PublicPrivateScenario implements JsTestScenario {
 
     @Override
     public Object build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
         return SubGraphJson.toJson(

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 public class PublicCenterGraphElementsResourceTest extends GraphManipulationRestTestUtils {
@@ -30,6 +31,11 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
 
     @Test
     public void returns_only_public_centers() {
+        graphUtils().graphWithCenterVertexUri(vertexA().uri());
+        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        assertFalse(
+                centerElements.isEmpty()
+        );
         Set<CenterGraphElementPojo> centers = graphUtils().getCenterGraphElementsFromClientResponse(
                 graphUtils().getPublicCenterGraphElementsResponse()
         );
@@ -52,6 +58,7 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
 
     @Test
     public void can_get_public_centers_of_another_user() {
+        graphUtils().graphWithCenterVertexUri(vertexA().uri());
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );

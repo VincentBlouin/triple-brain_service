@@ -52,7 +52,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         buildBubbles();
         buildRelations();
         return NoExRun.wrap(() -> {

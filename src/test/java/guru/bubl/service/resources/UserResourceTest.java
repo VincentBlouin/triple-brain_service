@@ -159,27 +159,6 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    @Ignore("adapt test")
-    public void when_creating_a_user_a_mind_map_is_created_for_him() throws Exception {
-        JSONObject validUser = userUtils().validForCreation();
-        User user = User.withEmailAndUsername(
-                validUser.getString(UserJson.EMAIL),
-                validUser.getString(USER_NAME)
-        );
-//        assertFalse(
-//                graphElementWithIdExistsInCurrentGraph(
-//                        new UserUris(user).defaultVertexUri()
-//                )
-//        );
-//        createUser(validUser);
-//        assertTrue(
-//                graphElementWithIdExistsInCurrentGraph(
-//                        new UserUris(user).defaultVertexUri()
-//                )
-//        );
-    }
-
-    @Test
     public void can_get_current_authenticated_user() throws Exception {
         JSONObject user = createUserWithEmail("roger_lamothe@example.org");
         authenticate(user);
@@ -259,6 +238,79 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void can_set_locale_in_registration() throws Exception {
+        JSONObject jsonUser = userUtils().validForCreation();
+        jsonUser.put(
+                UserJson.PREFERRED_LOCALES,
+                new JSONArray().put("fr_CA")
+        );
+        createUserUsingJson(jsonUser);
+        JSONArray preferredLocales = userUtils().getUserPreferredLocale(
+                jsonUser.getString(UserJson.USER_NAME)
+        );
+        assertThat(
+                preferredLocales.toString(),
+                is("[\"fr_CA\"]")
+        );
+    }
+
+    @Test
+    public void update_locale_returns_no_content_status_code() throws Exception {
+        ClientResponse response = updateUserLocale(
+                defaultAuthenticatedUser.username(),
+                new JSONArray().put("es_ES")
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void can_update_locale() throws Exception {
+        JSONArray preferredLocales = userUtils().getUserPreferredLocale(
+                defaultAuthenticatedUser.username()
+        );
+        assertThat(
+                preferredLocales.toString(),
+                is("[]")
+        );
+        updateUserLocale(
+                defaultAuthenticatedUser.username(),
+                new JSONArray().put("es_ES")
+        );
+        preferredLocales = userUtils().getUserPreferredLocale(
+                defaultAuthenticatedUser.username()
+        );
+        assertThat(
+                preferredLocales.toString(),
+                is("[\"es_ES\"]")
+        );
+    }
+
+    @Test
+    public void cannot_update_locale_of_another_user() throws Exception {
+        JSONObject jsonUser = userUtils().validForCreation();
+        createUserUsingJson(jsonUser);
+        authenticate(jsonUser);
+        ClientResponse response = updateUserLocale(
+                defaultAuthenticatedUser.username(),
+                new JSONArray().put("es_ES")
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.FORBIDDEN.getStatusCode())
+        );
+        JSONArray preferredLocales = userUtils().getUserPreferredLocale(
+                defaultAuthenticatedUser.username()
+        );
+        assertThat(
+                preferredLocales.toString(),
+                is("[]")
+        );
+    }
+
+    @Test
     public void creates_persistent_session_on_signup_only_if_option_checked() throws Exception {
         JSONObject jsonUser = userUtils().validForCreation();
         jsonUser.put("staySignedIn", false);
@@ -286,6 +338,18 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
         user.put(UserJson.USER_NAME, username);
         createUser(user);
         return user;
+    }
+
+    private ClientResponse updateUserLocale(String username, JSONArray locale) {
+        return resource
+                .path("service")
+                .path("users")
+                .path(username)
+                .path("locale")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .cookie(authCookie)
+                .put(ClientResponse.class, locale);
     }
 }
 

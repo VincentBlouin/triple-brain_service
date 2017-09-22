@@ -34,7 +34,7 @@ public class BubbleWith2RelationsToSameBubbleScenario implements JsTestScenario 
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         VertexOperator center = vertexFactory.createForOwnerUsername(
                 user.username()
         );

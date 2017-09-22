@@ -45,7 +45,7 @@ public class RelationWithMultipleIdentifiers implements JsTestScenario {
 
     @Override
     public Object build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         buildBubbles();
         buildRelations();
         return SubGraphJson.toJson(

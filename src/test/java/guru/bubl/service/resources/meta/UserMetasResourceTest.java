@@ -29,12 +29,11 @@ public class UserMetasResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void returns_the_user_metas() {
-        assertTrue(
-                getDataForUser(currentAuthenticatedUser).isEmpty()
-        );
+        Integer nbTags = getDataForUser(currentAuthenticatedUser).size();
         graphElementUtils().addFoafPersonTypeToVertexA();
-        assertFalse(
-                getDataForUser(currentAuthenticatedUser).isEmpty()
+        assertThat(
+                getDataForUser(currentAuthenticatedUser).size(),
+                is(nbTags + 1)
         );
     }
 

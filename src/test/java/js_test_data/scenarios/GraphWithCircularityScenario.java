@@ -43,7 +43,7 @@ public class GraphWithCircularityScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
         SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterBubbleUri(

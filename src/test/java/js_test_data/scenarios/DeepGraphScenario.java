@@ -41,7 +41,7 @@ public class DeepGraphScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         b1.addRelationToVertex(b2).label("r1");
         b2.addRelationToVertex(b3).label("r2");

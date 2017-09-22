@@ -59,7 +59,7 @@ public class CenterMetaScenario implements JsTestScenario {
 
     @Override
     public Object build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
         SubGraphPojo aroundTodo = userGraph.graphWithDepthAndCenterBubbleUri(

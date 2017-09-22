@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 public class UserMetasResource {
 
     @Inject
-    UserMetasOperatorFactory userMetasOperatorFactory;
+    protected UserMetasOperatorFactory userMetasOperatorFactory;
 
     private User user;
 

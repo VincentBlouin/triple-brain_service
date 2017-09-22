@@ -92,7 +92,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        userGraph = graphFactory.createForUser(user);
+        userGraph = graphFactory.loadForUser(user);
         buildSchema();
         vertexFactory.createForOwnerUsername(
                 user.username()

@@ -37,7 +37,7 @@ public class AbstractScenario {
     protected UserGraph userGraph;
 
     public void createUserGraph() {
-        userGraph = graphFactory.createForUser(user);
+        userGraph = graphFactory.loadForUser(user);
     }
 
     public void createVertices() {

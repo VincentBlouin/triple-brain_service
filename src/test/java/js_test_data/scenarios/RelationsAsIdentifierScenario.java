@@ -56,7 +56,8 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        userGraph = graphFactory.createForUser(user);
+        userGraph = graphFactory.loadForUser(user);
+        userGraph.createVertex();
         createVertices();
         createRelations();
 

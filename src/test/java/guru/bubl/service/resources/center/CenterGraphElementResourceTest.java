@@ -86,10 +86,7 @@ public class CenterGraphElementResourceTest extends GraphManipulationRestTestUti
     public void cannot_remove_centers_of_another_user(){
         graphUtils().graphWithCenterVertexUri(vertexA().uri());
         Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
-        assertThat(
-                centerElements.size(),
-                is(1)
-        );
+        Integer nbCenters = centerElements.size();
         createAUser();
         ClientResponse response = removeCenters(defaultAuthenticatedUser, centerElements);
         assertThat(
@@ -100,7 +97,7 @@ public class CenterGraphElementResourceTest extends GraphManipulationRestTestUti
         centerElements = graphUtils().getCenterGraphElements();
         assertThat(
                 centerElements.size(),
-                is(1)
+                is(nbCenters)
         );
     }
 

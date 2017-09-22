@@ -49,9 +49,14 @@ public abstract class RestTestUtils {
     }
 
     protected ClientResponse createUser(JSONObject userAsJson) {
+        return createUserSkippingDefaultContentOrNot(userAsJson,true);
+    }
+
+    protected ClientResponse createUserSkippingDefaultContentOrNot(JSONObject userAsJson, Boolean skipDefaultContent) {
         return resource
                 .path("service")
                 .path("users")
+                .queryParam("skipDefaultContent", skipDefaultContent.toString())
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON)

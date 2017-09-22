@@ -86,7 +86,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
 
     @Override
     public JSONObject build() {
-        UserGraph userGraph = graphFactory.createForUser(user);
+        UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
         subGraphForMe = userGraph.graphWithDepthAndCenterBubbleUri(
