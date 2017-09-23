@@ -4,10 +4,10 @@
 
 package guru.bubl.service.resources;
 
+import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.validator.UserValidator;
 import guru.bubl.module.repository.user.UserRepository;
 

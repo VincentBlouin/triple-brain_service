@@ -5,12 +5,12 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.json.UserJson;
 
 import javax.ws.rs.core.MediaType;
