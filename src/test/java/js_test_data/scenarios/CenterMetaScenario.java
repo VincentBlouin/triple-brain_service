@@ -29,11 +29,11 @@ public class CenterMetaScenario implements JsTestScenario {
      *
      * e2 has 2 hidden relations
      *
-     * to do->r1
-     * to do->r2
-     * e1-r1->e3
-     * e2-r2->e4
-     * to do is an identifier
+     * e1-r1->e2
+     * e1-r2->e3
+     * o2-f1->o4
+     * r1,r2,f1 are tagged to "to do"
+     * "to do" is a tag
      * e4 has one hidden vertex
      */
 
@@ -55,7 +55,8 @@ public class CenterMetaScenario implements JsTestScenario {
             e1,
             e2,
             e3,
-            e4;
+            o1,
+            o2;
 
     @Override
     public Object build() {
@@ -63,11 +64,11 @@ public class CenterMetaScenario implements JsTestScenario {
         createVertices();
         createEdges();
         SubGraphPojo aroundTodo = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
+                2,
                 toDo.uri()
         );
         SubGraphPojo aroundEvent = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
+                2,
                 event.uri()
         );
         return NoExRun.wrap(() -> new JSONObject().put(
@@ -103,20 +104,27 @@ public class CenterMetaScenario implements JsTestScenario {
                 user.username()
         );
         e3.label("e3");
-        e4 = vertexFactory.createForOwnerUsername(
+        o1 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
-        e4.label("e4");
+        o1.label("o1");
+        o2 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        o2.label("o2");
     }
 
     private void createEdges() {
-        EdgeOperator r1 = e1.addRelationToVertex(e3);
+        EdgeOperator r1 = e1.addRelationToVertex(e2);
         r1.label("r1");
         toDo = r1.addMeta(
                 modelTestScenarios.toDo()
         ).values().iterator().next();
-        EdgeOperator r2 = e2.addRelationToVertex(e4);
+        EdgeOperator r2 = e1.addRelationToVertex(e3);
         r2.label("r2");
         r2.addMeta(toDo);
+        EdgeOperator f1 = o1.addRelationToVertex(o2);
+        f1.label("f1");
+        f1.addMeta(toDo);
     }
 }

@@ -36,8 +36,11 @@ public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario
         createUserGraph();
         createVertices();
         createEdges();
+        /*
+        I have to write a depth of 2 but a depth of one should be enough, I don't understand
+         */
         SubGraphPojo metaCenter = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
+                2,
                 r2AsMeta.uri()
         );
         SubGraphPojo childOfB1 = userGraph.graphWithDepthAndCenterBubbleUri(
