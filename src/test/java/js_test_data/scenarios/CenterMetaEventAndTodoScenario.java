@@ -20,7 +20,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class CenterMetaScenario implements JsTestScenario {
+public class CenterMetaEventAndTodoScenario implements JsTestScenario {
 
     /*
      * event->e1
@@ -31,10 +31,11 @@ public class CenterMetaScenario implements JsTestScenario {
      *
      * e1-r1->e2
      * e1-r2->e3
-     * o2-f1->o4
+     * e1-ra1->a1
+     * o1-f1->o2
      * r1,r2,f1 are tagged to "to do"
      * "to do" is a tag
-     * e4 has one hidden vertex
+     * e2 has one hidden vertex
      */
 
     @Inject
@@ -56,7 +57,8 @@ public class CenterMetaScenario implements JsTestScenario {
             e2,
             e3,
             o1,
-            o2;
+            o2,
+            a1;
 
     @Override
     public Object build() {
@@ -112,6 +114,10 @@ public class CenterMetaScenario implements JsTestScenario {
                 user.username()
         );
         o2.label("o2");
+        a1 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        a1.label("a1");
     }
 
     private void createEdges() {
@@ -126,5 +132,6 @@ public class CenterMetaScenario implements JsTestScenario {
         EdgeOperator f1 = o1.addRelationToVertex(o2);
         f1.label("f1");
         f1.addMeta(toDo);
+        e1.addRelationToVertex(a1).label("ra1");
     }
 }

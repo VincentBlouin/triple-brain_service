@@ -55,7 +55,7 @@ public class JsTestScenariosBuilder {
             new RelationsAsIdentifierScenario(),
             new BubbleWith2RelationsToSameBubbleScenario(),
             new AutomaticExpandScenario(),
-            new CenterMetaScenario(),
+            new CenterMetaEventAndTodoScenario(),
             new SameLevelRelationsWithMoreThanOneCommonMetaScenario(),
             new MetasWithSameLabelSearchResultScenario(),
             new MetaCenterChildHavingGroupRelationScenario()
