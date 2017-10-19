@@ -31,6 +31,8 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
      *
      * e1-r1->e2
      * e1-r2->e3
+     * e3-re31->e31
+     * e3-re32->e32
      * e1-ra1->a1
      * o1-f1->o2
      * r1,r2,f1 are tagged to "to do"
@@ -56,6 +58,8 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
             e1,
             e2,
             e3,
+            e31,
+            e32,
             o1,
             o2,
             a1;
@@ -73,6 +77,10 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 2,
                 event.uri()
         );
+        SubGraphPojo aroundE3 = userGraph.graphWithDepthAndCenterBubbleUri(
+                1,
+                e3.uri()
+        );
         return NoExRun.wrap(() -> new JSONObject().put(
                 "aroundEvent",
                 SubGraphJson.toJson(
@@ -82,6 +90,11 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 "aroundTodo",
                 SubGraphJson.toJson(
                         aroundTodo
+                )
+        ).put(
+                "aroundE3",
+                SubGraphJson.toJson(
+                        aroundE3
                 )
         )).get();
     }
@@ -106,6 +119,14 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 user.username()
         );
         e3.label("e3");
+        e31 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        e31.label("e31");
+        e32 = vertexFactory.createForOwnerUsername(
+                user.username()
+        );
+        e32.label("e32");
         o1 = vertexFactory.createForOwnerUsername(
                 user.username()
         );
@@ -133,5 +154,7 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
         f1.label("f1");
         f1.addMeta(toDo);
         e1.addRelationToVertex(a1).label("ra1");
+        e3.addRelationToVertex(e31).label("r3e1");
+        e3.addRelationToVertex(e32).label("r3e2");
     }
 }
