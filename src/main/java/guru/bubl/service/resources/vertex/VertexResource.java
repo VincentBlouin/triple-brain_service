@@ -162,7 +162,7 @@ public class VertexResource {
         graphIndexer.deleteGraphElement(
                 vertex
         );
-        for (EdgeOperator edge : vertex.connectedEdges()) {
+        for (EdgeOperator edge : vertex.connectedEdges().values()) {
             graphIndexer.deleteGraphElement(
                     edge
             );
@@ -308,6 +308,25 @@ public class VertexResource {
         return new GraphElementSortResource(
                 vertexFromShortId(shortId)
         );
+    }
+
+    @POST
+    @Path("{shortId}/mergeTo/{destinationShortId}")
+    @GraphTransactional
+    public Response getMergeResource(
+            @PathParam("shortId") String shortId,
+            @PathParam("destinationShortId") String destinationShortId
+    ) {
+        URI destinationVertexUri = uriFromShortId(destinationShortId);
+        if(!userGraph.haveElementWithId(destinationVertexUri)){
+            return Response.status(
+                    Response.Status.BAD_REQUEST
+            ).build();
+        }
+        vertexFactory.withUri(uriFromShortId(shortId)).mergeTo(
+                vertexFactory.withUri(destinationVertexUri)
+        );
+        return Response.noContent().build();
     }
 
     private URI uriFromShortId(String shortId) {

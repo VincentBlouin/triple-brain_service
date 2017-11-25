@@ -5,6 +5,7 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElement;
@@ -13,6 +14,7 @@ import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
@@ -320,7 +322,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     public void creating_a_single_vertex_increment_its_number_of_visits() {
         Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
-        createSingleVertex();
+        vertexUtils().createSingleVertex();
         centerElements = graphUtils().getCenterGraphElements();
         Assert.assertThat(
                 centerElements.size(),
@@ -330,7 +332,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void creating_a_single_vertex_sets_last_center_date() {
-        createSingleVertex();
+        vertexUtils().createSingleVertex();
         Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfLastCenterDateNull = 0;
         for(CenterGraphElementPojo centerGraphElementPojo : centerElements){
@@ -373,23 +375,6 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     }
 
-    private Vertex createSingleVertex(){
-        return VertexInSubGraphJson.fromJson(
-                responseForCreateSingleVertex().getEntity(
-                        JSONObject.class
-                )
-        );
-    }
-
-    private ClientResponse responseForCreateSingleVertex(){
-        return resource
-                .path(
-                        new UserUris(defaultAuthenticatedUser).baseVertexUri().getPath()
-                )
-                .cookie(authCookie)
-                .post(ClientResponse.class);
-    }
-
     private ClientResponse getAnyVertexUri() {
         return resource
                 .path(
@@ -416,5 +401,4 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
             latch.countDown();
         }
     }
-
 }

@@ -55,7 +55,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return VertexRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                defaultAuthenticatedUser
+                currentAuthenticatedUser
         );
     }
 

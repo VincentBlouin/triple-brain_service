@@ -4,7 +4,6 @@
 
 package guru.bubl.service.resources;
 
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Injector;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
@@ -13,13 +12,10 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
-import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
-import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
@@ -37,7 +33,6 @@ import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.restlet.resource.Post;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,10 +42,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static guru.bubl.module.model.json.UserJson.*;
 import static guru.bubl.module.model.validator.UserValidator.*;

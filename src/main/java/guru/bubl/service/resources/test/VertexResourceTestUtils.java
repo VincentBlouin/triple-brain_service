@@ -67,7 +67,7 @@ public class VertexResourceTestUtils {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
         VertexOperator vertex = userGraph.vertexWithUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
-        for(EdgeOperator edge : vertex.connectedEdges()){
+        for(EdgeOperator edge : vertex.connectedEdges().values()){
             edges.put(
                     EdgeJson.toJson(
                             new EdgePojo(edge)

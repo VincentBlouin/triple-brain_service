@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -196,6 +198,23 @@ public class VertexRestTestUtils {
         return new UserUris(
                 authenticatedUser
         ).baseVertexUri();
+    }
+
+    public Vertex createSingleVertex(){
+        return VertexInSubGraphJson.fromJson(
+                responseForCreateSingleVertex().getEntity(
+                        JSONObject.class
+                )
+        );
+    }
+
+    public ClientResponse responseForCreateSingleVertex(){
+        return resource
+                .path(
+                        new UserUris(authenticatedUser).baseVertexUri().getPath()
+                )
+                .cookie(authCookie)
+                .post(ClientResponse.class);
     }
 
     private GraphRestTestUtils graphUtils() {
