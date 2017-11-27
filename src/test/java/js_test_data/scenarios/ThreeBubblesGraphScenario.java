@@ -133,6 +133,11 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 1,
                 b1.uri()
         );
+        child.mergeTo(b1);
+        SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.graphWithDepthAndCenterBubbleUri(
+                1,
+                b1.uri()
+        );
         try {
             return new JSONObject().put(
                     "getGraph",
@@ -180,6 +185,11 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                     "forkedB1SearchResults",
                     JsonUtils.getGson().toJson(
                             forkedB1SearchResults
+                    )
+            ).put(
+                    "subGraphOfB1OnceMergedWithSingleChild",
+                    SubGraphJson.toJson(
+                            subGraphOfB1OnceMergedWithSingleChild
                     )
             );
         } catch (JSONException e) {
