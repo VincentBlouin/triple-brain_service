@@ -311,6 +311,19 @@ public class VertexResource {
     }
 
     @POST
+    @Path("{shortId}/childrenIndex")
+    @GraphTransactional
+    public Response saveChildrenIndexes(
+            @PathParam("shortId") String shortId,
+            JSONObject childrenIndexes
+    ) {
+        vertexFactory.withUri(uriFromShortId(shortId)).setChildrenIndex(
+                childrenIndexes.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
     @Path("{shortId}/mergeTo/{destinationShortId}")
     @GraphTransactional
     public Response getMergeResource(

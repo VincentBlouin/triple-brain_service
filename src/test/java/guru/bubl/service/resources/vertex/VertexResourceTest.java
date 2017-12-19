@@ -5,16 +5,15 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
@@ -347,6 +346,40 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void can_set_children_indexes() throws Exception{
+        JSONObject childrenIndexes = new JSONObject().put(
+                vertexAUri().toString(),
+                new JSONObject().put(
+                        "index",
+                        0
+                )
+        ).put(
+                vertexCUri().toString(),
+                new JSONObject().put(
+                        "index",
+                        1
+                )
+        );
+        SubGraphPojo subGraph = graphUtils().graphWithCenterVertexUri(vertexBUri());
+        assertFalse(
+                subGraph.vertexWithIdentifier(vertexBUri()).getChildrenIndex().equals(
+                        childrenIndexes.toString()
+                )
+        );
+        ClientResponse response = setChildrenIndexes(vertexB(), childrenIndexes);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+        subGraph = graphUtils().graphWithCenterVertexUri(vertexBUri());
+        assertTrue(
+                subGraph.vertexWithIdentifier(vertexBUri()).getChildrenIndex().equals(
+                        childrenIndexes.toString()
+                )
+        );
+    }
+
+    @Test
     @Ignore(
             "Using measures on the client side to avoid fast addition of multiple childs. " +
                     "Also I consider it not dramatic that the number of connected edges is not totally accurate."
@@ -400,5 +433,15 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
             ).post();
             latch.countDown();
         }
+    }
+
+    private ClientResponse setChildrenIndexes(Vertex vertex, JSONObject childrenIndexes){
+        return resource
+                .path(
+                        vertex.uri().getPath()
+                )
+                .path("childrenIndex")
+                .cookie(authCookie)
+                .post(ClientResponse.class, childrenIndexes);
     }
 }

@@ -13,13 +13,14 @@ import guru.bubl.service.resources.meta.UserMetasResourceTest;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceTest;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceTest;
 import guru.bubl.service.resources.vertex.VertexMergeResourceTest;
+import guru.bubl.service.resources.vertex.VertexResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexMergeResourceTest.class
+        VertexResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }
