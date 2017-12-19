@@ -11,17 +11,15 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.*;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.json.StatementJsonFields;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
-import guru.bubl.service.resources.sort.GraphElementSortResource;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -296,16 +294,6 @@ public class VertexResource {
             @PathParam("shortId") String shortId
     ) {
         return vertexPublicAccessResourceFactory.ofVertex(
-                vertexFromShortId(shortId)
-        );
-    }
-
-    @Path("{shortId}/sort")
-    @GraphTransactional
-    public GraphElementSortResource getSortResource(
-            @PathParam("shortId") String shortId
-    ) {
-        return new GraphElementSortResource(
                 vertexFromShortId(shortId)
         );
     }
