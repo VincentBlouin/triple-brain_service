@@ -53,15 +53,15 @@ public class GraphWithAnInverseRelationScenario implements JsTestScenario {
     }
 
     private void createVertices(){
-        me = vertexFactory.createForOwnerUsername(
+        me = vertexFactory.createForOwner(
                 user.username()
         );
         me.label("me");
-        straightBubble = vertexFactory.createForOwnerUsername(
+        straightBubble = vertexFactory.createForOwner(
                 user.username()
         );
         straightBubble.label("straight bubble");
-        inverseBubble = vertexFactory.createForOwnerUsername(
+        inverseBubble = vertexFactory.createForOwner(
                 user.username()
         );
         inverseBubble.label("inverse bubble");

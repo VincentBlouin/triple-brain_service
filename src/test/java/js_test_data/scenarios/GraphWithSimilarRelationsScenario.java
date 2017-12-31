@@ -5,7 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -98,7 +98,7 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
                 user
         );
         setupCreationDates();
-        return NoExRun.wrap(() ->
+        return NoEx.wrap(() ->
                 new JSONObject().put(
                         "graph",
                         SubGraphJson.toJson(
@@ -116,47 +116,47 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        me = vertexFactory.createForOwnerUsername(
+        me = vertexFactory.createForOwner(
                 user.username()
         );
         me.label("me");
-        book1 = vertexFactory.createForOwnerUsername(
+        book1 = vertexFactory.createForOwner(
                 user.username()
         );
         book1.label("book 1");
         IdentifierPojo bookMeta = book1.addMeta(
                 modelTestScenarios.book()
         ).values().iterator().next();
-        book2 = vertexFactory.createForOwnerUsername(
+        book2 = vertexFactory.createForOwner(
                 user.username()
         );
         book2.label("book 2");
         book2.addMeta(bookMeta);
-        book3 = vertexFactory.createForOwnerUsername(
+        book3 = vertexFactory.createForOwner(
                 user.username()
         );
         book3.label("book 3");
         book3.addVertexAndRelation();
         book3.addVertexAndRelation();
         book3.addMeta(bookMeta);
-        book3Copy = vertexFactory.createForOwnerUsername(
+        book3Copy = vertexFactory.createForOwner(
                 user.username()
         );
         book3Copy.label("book 3 copy");
         book3Copy.addMeta(bookMeta);
-        otherBubble = vertexFactory.createForOwnerUsername(
+        otherBubble = vertexFactory.createForOwner(
                 user.username()
         );
         otherBubble.label("other bubble");
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
-        otherBubble2 = vertexFactory.createForOwnerUsername(
+        otherBubble2 = vertexFactory.createForOwner(
                 user.username()
         );
         otherBubble2.label("other bubble 2");

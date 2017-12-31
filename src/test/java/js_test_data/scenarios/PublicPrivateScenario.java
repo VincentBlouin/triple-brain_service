@@ -53,17 +53,17 @@ public class PublicPrivateScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
         b1.makePublic();
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
         b2.makePublic();
-        b3 = vertexFactory.createForOwnerUsername(
+        b3 = vertexFactory.createForOwner(
                 user.username()
         );
         b3.label("b3");

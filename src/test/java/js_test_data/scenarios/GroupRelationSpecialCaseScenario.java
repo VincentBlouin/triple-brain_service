@@ -61,15 +61,15 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        center = vertexFactory.createForOwnerUsername(
+        center = vertexFactory.createForOwner(
                 user.username()
         );
         center.label("center");
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");

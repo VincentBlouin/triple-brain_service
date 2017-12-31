@@ -6,6 +6,7 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
@@ -105,13 +106,23 @@ public class VertexResource {
     @GraphTransactional
     @Path("/{sourceVertexShortId}")
     public Response addVertexAndEdgeToSourceVertex(
-            @PathParam("sourceVertexShortId") String sourceVertexShortId
+            @PathParam("sourceVertexShortId") String sourceVertexShortId,
+            JSONObject options
     ) {
         VertexOperator sourceVertex = vertexFromShortId(
                 sourceVertexShortId
         );
 
-        EdgePojo newEdge = sourceVertex.addVertexAndRelation();
+        EdgePojo newEdge;
+        if (options.has("toTheLeft")) {
+            newEdge = NoEx.wrap(() ->
+                    options.getBoolean("toTheLeft") ?
+                            sourceVertex.addVertexAndRelationToTheLeft() :
+                            sourceVertex.addVertexAndRelationToTheRight()
+            ).get();
+        } else {
+            newEdge = sourceVertex.addVertexAndRelation();
+        }
         VertexInSubGraphPojo newVertex = newEdge.destinationVertex();
         VertexInSubGraphPojo sourceVertexPojo = new VertexInSubGraphPojo(
                 sourceVertex.uri()
@@ -276,10 +287,10 @@ public class VertexResource {
     }
 
     /*
-    * public_access should be in the vertex collection
-    * resource but it doesn't work. I get 415 http status
-    * Unsupported media type. I don't understand.
-    */
+     * public_access should be in the vertex collection
+     * resource but it doesn't work. I get 415 http status
+     * Unsupported media type. I don't understand.
+     */
     @Path("collection/public_access")
     @GraphTransactional
     public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {
@@ -319,7 +330,7 @@ public class VertexResource {
             @PathParam("destinationShortId") String destinationShortId
     ) {
         URI destinationVertexUri = uriFromShortId(destinationShortId);
-        if(!userGraph.haveElementWithId(destinationVertexUri)){
+        if (!userGraph.haveElementWithId(destinationVertexUri)) {
             return Response.status(
                     Response.Status.BAD_REQUEST
             ).build();

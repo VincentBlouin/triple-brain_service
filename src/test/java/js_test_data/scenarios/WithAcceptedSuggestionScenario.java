@@ -4,7 +4,7 @@
 
 package js_test_data.scenarios;
 
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -55,7 +55,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         buildBubbles();
         buildRelations();
-        return NoExRun.wrap(() -> {
+        return NoEx.wrap(() -> {
             JSONObject json = new JSONObject().put(
                     "original",
                     SubGraphJson.toJson(
@@ -65,7 +65,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                             )
                     )
             );
-            VertexOperator center = vertexFactory.createForOwnerUsername(
+            VertexOperator center = vertexFactory.createForOwner(
                     user.username()
             );
             center.label("center");
@@ -84,7 +84,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
     }
 
     private void buildBubbles(){
-        event = vertexFactory.createForOwnerUsername(
+        event = vertexFactory.createForOwner(
                 user.username()
         );
         event.label("Event");
@@ -99,7 +99,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 )
         );
 
-        startDate = vertexFactory.createForOwnerUsername(
+        startDate = vertexFactory.createForOwner(
                 user.username()
         );
         startDate.label("2016/01/17");
@@ -107,7 +107,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 modelTestScenarios.startDateIdentification()
         );
 
-        jeremy = vertexFactory.createForOwnerUsername(
+        jeremy = vertexFactory.createForOwner(
                 user.username()
         );
         jeremy.label("Jemery");
@@ -115,7 +115,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 modelTestScenarios.person()
         );
 
-        noemi = vertexFactory.createForOwnerUsername(
+        noemi = vertexFactory.createForOwner(
                 user.username()
         );
         noemi.label("Noemi");

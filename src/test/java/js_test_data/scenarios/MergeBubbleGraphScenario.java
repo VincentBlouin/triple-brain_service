@@ -78,19 +78,19 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
-        b3 = vertexFactory.createForOwnerUsername(
+        b3 = vertexFactory.createForOwner(
                 user.username()
         );
         b3.label("b3");
-        b4 = vertexFactory.createForOwnerUsername(
+        b4 = vertexFactory.createForOwner(
                 user.username()
         );
         b4.label("b4");

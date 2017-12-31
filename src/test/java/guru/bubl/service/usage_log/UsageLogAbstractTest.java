@@ -6,7 +6,7 @@ package guru.bubl.service.usage_log;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import org.junit.After;
 import org.junit.Before;
 
@@ -36,7 +36,7 @@ public class UsageLogAbstractTest {
     }
 
     public LogEntry getLogEntryWithAction(String action) {
-        return NoExRun.wrap(() -> {
+        return NoEx.wrap(() -> {
             PreparedStatement stm = connection.getConnection().prepareStatement(
                     "SELECT action_date, username, method, user_action from usage_log where user_action=?"
             );

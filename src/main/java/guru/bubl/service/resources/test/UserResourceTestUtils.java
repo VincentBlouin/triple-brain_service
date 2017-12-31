@@ -5,7 +5,7 @@
 package guru.bubl.service.resources.test;
 
 import com.google.gson.Gson;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.graph.GraphTransactional;
@@ -54,7 +54,7 @@ public class UserResourceTestUtils {
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteAllUsers() throws Exception {
-        NoExRun.wrap(() ->
+        NoEx.wrap(() ->
                 connection.createStatement().executeQuery(
                         "START n=node:node_auto_index('type:user') DELETE n"
                 )).get();

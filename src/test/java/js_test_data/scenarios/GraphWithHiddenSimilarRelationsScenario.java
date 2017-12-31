@@ -5,13 +5,12 @@
 package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import js_test_data.JsTestScenario;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.Image;
 import guru.bubl.module.model.User;
@@ -93,7 +92,7 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 distantBubble.uri()
         );
 
-        return NoExRun.wrap(() ->
+        return NoEx.wrap(() ->
                 new JSONObject().put(
                         "b1Graph",
                         SubGraphJson.toJson(b1Graph)
@@ -124,11 +123,11 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
@@ -139,11 +138,11 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 )
                 )
         );
-        shirt1 = vertexFactory.createForOwnerUsername(
+        shirt1 = vertexFactory.createForOwner(
                 user.username()
         );
         shirt1.label("shirt1");
-        shirt2 = vertexFactory.createForOwnerUsername(
+        shirt2 = vertexFactory.createForOwner(
                 user.username()
         );
         shirt2.label("shirt2");
@@ -154,11 +153,11 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
                 )
                 )
         );
-        red = vertexFactory.createForOwnerUsername(
+        red = vertexFactory.createForOwner(
                 user.username()
         );
         red.label("red");
-        distantBubble = vertexFactory.createForOwnerUsername(
+        distantBubble = vertexFactory.createForOwner(
                 user.username()
         );
         distantBubble.label("distant bubble");

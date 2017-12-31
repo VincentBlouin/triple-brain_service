@@ -4,7 +4,7 @@
 
 package js_test_data.scenarios;
 
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -81,7 +81,7 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 1,
                 e3.uri()
         );
-        return NoExRun.wrap(() -> new JSONObject().put(
+        return NoEx.wrap(() -> new JSONObject().put(
                 "aroundEvent",
                 SubGraphJson.toJson(
                         aroundEvent
@@ -100,14 +100,14 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        e1 = vertexFactory.createForOwnerUsername(
+        e1 = vertexFactory.createForOwner(
                 user.username()
         );
         event = e1.addMeta(
                 modelTestScenarios.event()
         ).values().iterator().next();
         e1.label("e1");
-        e2 = vertexFactory.createForOwnerUsername(
+        e2 = vertexFactory.createForOwner(
                 user.username()
         );
         e2.label("e2");
@@ -115,27 +115,27 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 event
         );
         e2.addVertexAndRelation();
-        e3 = vertexFactory.createForOwnerUsername(
+        e3 = vertexFactory.createForOwner(
                 user.username()
         );
         e3.label("e3");
-        e31 = vertexFactory.createForOwnerUsername(
+        e31 = vertexFactory.createForOwner(
                 user.username()
         );
         e31.label("e31");
-        e32 = vertexFactory.createForOwnerUsername(
+        e32 = vertexFactory.createForOwner(
                 user.username()
         );
         e32.label("e32");
-        o1 = vertexFactory.createForOwnerUsername(
+        o1 = vertexFactory.createForOwner(
                 user.username()
         );
         o1.label("o1");
-        o2 = vertexFactory.createForOwnerUsername(
+        o2 = vertexFactory.createForOwner(
                 user.username()
         );
         o2.label("o2");
-        a1 = vertexFactory.createForOwnerUsername(
+        a1 = vertexFactory.createForOwner(
                 user.username()
         );
         a1.label("a1");

@@ -4,7 +4,7 @@
 
 package js_test_data.scenarios;
 
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -69,7 +69,7 @@ public class AutomaticExpandScenario implements JsTestScenario {
                 1,
                 b31.uri()
         );
-        return NoExRun.wrap(() -> new JSONObject()
+        return NoEx.wrap(() -> new JSONObject()
                 .put(
                         "centerGraph",
                         SubGraphJson.toJson(
@@ -107,39 +107,39 @@ public class AutomaticExpandScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
-        b21 = vertexFactory.createForOwnerUsername(
+        b21 = vertexFactory.createForOwner(
                 user.username()
         );
         b21.label("b21");
-        b3 = vertexFactory.createForOwnerUsername(
+        b3 = vertexFactory.createForOwner(
                 user.username()
         );
         b3.label("b3");
-        b31 = vertexFactory.createForOwnerUsername(
+        b31 = vertexFactory.createForOwner(
                 user.username()
         );
         b31.label("b31");
-        b311 = vertexFactory.createForOwnerUsername(
+        b311 = vertexFactory.createForOwner(
                 user.username()
         );
         b311.label("b311");
-        b32 = vertexFactory.createForOwnerUsername(
+        b32 = vertexFactory.createForOwner(
                 user.username()
         );
         b32.label("b32");
-        b321 = vertexFactory.createForOwnerUsername(
+        b321 = vertexFactory.createForOwner(
                 user.username()
         );
         b321.label("b321");
-        b322 = vertexFactory.createForOwnerUsername(
+        b322 = vertexFactory.createForOwner(
                 user.username()
         );
         b322.label("b322");

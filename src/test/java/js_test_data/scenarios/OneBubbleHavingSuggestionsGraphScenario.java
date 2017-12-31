@@ -4,7 +4,7 @@
 
 package js_test_data.scenarios;
 
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -44,7 +44,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
     @Override
     public JSONObject build() {
         UserGraph userGraph = graphFactory.loadForUser(user);
-        VertexOperator bubble = vertexFactory.createForOwnerUsername(
+        VertexOperator bubble = vertexFactory.createForOwner(
                 user.username()
         );
         bubble.label("Event");
@@ -57,7 +57,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
                         modelTestScenarios.startDateSuggestionFromEventIdentification(user)
                 )
         );
-        return NoExRun.wrap(() -> {
+        return NoEx.wrap(() -> {
             JSONObject json = new JSONObject().put(
                     "original",
                     SubGraphJson.toJson(
@@ -67,7 +67,7 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
                             )
                     )
             );
-            VertexOperator center = vertexFactory.createForOwnerUsername(
+            VertexOperator center = vertexFactory.createForOwner(
                     user.username()
             );
             center.label("center");

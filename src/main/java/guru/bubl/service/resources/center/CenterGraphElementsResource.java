@@ -6,7 +6,7 @@ package guru.bubl.service.resources.center;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFactory;
@@ -52,7 +52,7 @@ public class CenterGraphElementsResource {
     @DELETE
     public Response delete(JSONArray uris) {
         Set<CenterGraphElementPojo> centers = new HashSet<>();
-        NoExRun.wrap(()->{
+        NoEx.wrap(()->{
             for (int i = 0; i < uris.length(); i++) {
                 centers.add(
                         new CenterGraphElementPojo(

@@ -94,7 +94,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
     public JSONObject build() {
         userGraph = graphFactory.loadForUser(user);
         buildSchema();
-        vertexFactory.createForOwnerUsername(
+        vertexFactory.createForOwner(
                 user.username()
         ).label("impact");
         wholeGraphAdmin.reindexAll();
@@ -202,7 +202,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
     }
 
     private void buildSomeProject() {
-        someProject = vertexFactory.createForOwnerUsername(user.username());
+        someProject = vertexFactory.createForOwner(user.username());
         someProject.label("some project");
         someProject.addMeta(
                 projectIdentification()

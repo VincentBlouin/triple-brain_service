@@ -5,7 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphFactory;
@@ -63,7 +63,7 @@ public class KaraokeSchemaScenario implements JsTestScenario {
                 "karaoke",
                 user
         );
-        return NoExRun.wrap(() ->
+        return NoEx.wrap(() ->
                 new JSONObject().put(
                         "schema",
                         SchemaJson.toJson(

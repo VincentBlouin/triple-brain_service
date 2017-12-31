@@ -6,7 +6,7 @@ package guru.bubl.service.resources;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.service.usage_log.SQLConnection;
 import guru.bubl.service.usage_log.UsageLogTestModule;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
@@ -78,7 +78,7 @@ public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
     }
 
     public String getMethodForAction(String action){
-        return NoExRun.wrap(()-> {
+        return NoEx.wrap(()-> {
             PreparedStatement stm = connection.getConnection().prepareStatement(
                     "SELECT method from usage_log where user_action=?"
             );
@@ -90,7 +90,7 @@ public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
     }
 
     public boolean hasLogEntryWithAction(String action){
-        return NoExRun.wrap(()->{
+        return NoEx.wrap(()->{
             PreparedStatement stm = connection.getConnection().prepareStatement(
                     "SELECT * from usage_log where user_action=?"
             );
@@ -102,7 +102,7 @@ public class UsageLogFilterTest extends GraphManipulationRestTestUtils {
 
 
     public Integer numberOfLogEntryWithAction(String action){
-        return NoExRun.wrap(()->{
+        return NoEx.wrap(()->{
             PreparedStatement stm = connection.getConnection().prepareStatement(
                     "SELECT count(*) from usage_log where user_action=?"
             );

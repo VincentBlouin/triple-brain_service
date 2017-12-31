@@ -5,7 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -61,7 +61,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
         createVertices();
         createRelations();
 
-        return NoExRun.wrap(() -> new JSONObject().put(
+        return NoEx.wrap(() -> new JSONObject().put(
                         "searchSome",
                         new JSONArray(
                                 new Gson().toJson(
@@ -83,23 +83,23 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        center = vertexFactory.createForOwnerUsername(
+        center = vertexFactory.createForOwner(
                 user.username()
         );
         center.label("center");
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
-        b3 = vertexFactory.createForOwnerUsername(
+        b3 = vertexFactory.createForOwner(
                 user.username()
         );
         b3.label("b3");
-        b4 = vertexFactory.createForOwnerUsername(
+        b4 = vertexFactory.createForOwner(
                 user.username()
         );
         b4.label("b4");

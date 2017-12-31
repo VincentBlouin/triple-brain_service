@@ -10,7 +10,6 @@ import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
-import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
@@ -198,36 +197,36 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
         b2.addVertexAndRelation();
         b2.addVertexAndRelation();
-        b3 = vertexFactory.createForOwnerUsername(
+        b3 = vertexFactory.createForOwner(
                 user.username()
         );
         b3.label("b3");
         b3.comment("b3 comment");
-        b4 = vertexFactory.createForOwnerUsername(
+        b4 = vertexFactory.createForOwner(
                 user.username()
         );
         b4.label("b4");
         b4.makePublic();
-        b5 = vertexFactory.createForOwnerUsername(
+        b5 = vertexFactory.createForOwner(
                 user.username()
         );
         b5.makePublic();
         b5.label("b5");
-        parent = vertexFactory.createForOwnerUsername(
+        parent = vertexFactory.createForOwner(
                 user.username()
         );
         parent.label("parent");
-        child = vertexFactory.createForOwnerUsername(
+        child = vertexFactory.createForOwner(
                 user.username()
         );
         child.label("child");

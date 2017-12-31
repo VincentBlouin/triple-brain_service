@@ -4,7 +4,7 @@
 
 package js_test_data.scenarios;
 
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -13,7 +13,6 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
@@ -86,7 +85,7 @@ public class CreationDateScenario implements JsTestScenario {
                 b7.uri()
         );
         setupcreationDatesForSubGraphForB7();
-        return NoExRun.wrap(() -> new JSONObject().put(
+        return NoEx.wrap(() -> new JSONObject().put(
                 "surroundBubble1Graph",
                 SubGraphJson.toJson(
                         subGraphForB1
@@ -100,60 +99,60 @@ public class CreationDateScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        b1 = vertexFactory.createForOwnerUsername(
+        b1 = vertexFactory.createForOwner(
                 user.username()
         );
         b1.label("b1");
-        b2 = vertexFactory.createForOwnerUsername(
+        b2 = vertexFactory.createForOwner(
                 user.username()
         );
         b2.label("b2");
-        b3 = vertexFactory.createForOwnerUsername(
+        b3 = vertexFactory.createForOwner(
                 user.username()
         );
         b3.label("b3");
         b3.comment("b3 comment");
-        b4 = vertexFactory.createForOwnerUsername(
+        b4 = vertexFactory.createForOwner(
                 user.username()
         );
         b4.label("b4");
-        b5 = vertexFactory.createForOwnerUsername(
+        b5 = vertexFactory.createForOwner(
                 user.username()
         );
         b5.label("b5");
-        b6 = vertexFactory.createForOwnerUsername(
+        b6 = vertexFactory.createForOwner(
                 user.username()
         );
         b6.label("b6");
-        b7 = vertexFactory.createForOwnerUsername(
+        b7 = vertexFactory.createForOwner(
                 user.username()
         );
         b7.label("b7");
-        b71 = vertexFactory.createForOwnerUsername(
+        b71 = vertexFactory.createForOwner(
                 user.username()
         );
         b71.label("b71");
-        b72 = vertexFactory.createForOwnerUsername(
+        b72 = vertexFactory.createForOwner(
                 user.username()
         );
         b72.label("b72");
-        b73 = vertexFactory.createForOwnerUsername(
+        b73 = vertexFactory.createForOwner(
                 user.username()
         );
         b73.label("b73");
-        b74 = vertexFactory.createForOwnerUsername(
+        b74 = vertexFactory.createForOwner(
                 user.username()
         );
         b74.label("b74");
-        s1 = vertexFactory.createForOwnerUsername(
+        s1 = vertexFactory.createForOwner(
                 user.username()
         );
         s1.label("s1");
-        s2 = vertexFactory.createForOwnerUsername(
+        s2 = vertexFactory.createForOwner(
                 user.username()
         );
         s2.label("s2");
-        s3 = vertexFactory.createForOwnerUsername(
+        s3 = vertexFactory.createForOwner(
                 user.username()
         );
         s3.label("s3");

@@ -7,7 +7,7 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
@@ -45,7 +45,7 @@ public class EdgeRestTestUtils {
     }
 
     public ClientResponse updateEdgeLabel(String label, Edge edge) {
-        return NoExRun.wrap(() -> {
+        return NoEx.wrap(() -> {
             JSONObject localizedLabel = new JSONObject().put(
                     LocalizedStringJson.content.name(),
                     label

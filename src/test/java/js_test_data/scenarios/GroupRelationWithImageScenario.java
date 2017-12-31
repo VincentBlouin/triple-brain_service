@@ -70,35 +70,35 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
     }
 
     private void createVertices() {
-        someProject = vertexFactory.createForOwnerUsername(
+        someProject = vertexFactory.createForOwner(
                 user.username()
         );
         someProject.label("some project");
-        idea1 = vertexFactory.createForOwnerUsername(
+        idea1 = vertexFactory.createForOwner(
                 user.username()
         );
         idea1.label("idea 1");
-        idea2 = vertexFactory.createForOwnerUsername(
+        idea2 = vertexFactory.createForOwner(
                 user.username()
         );
         idea2.label("idea 2");
-        component1 = vertexFactory.createForOwnerUsername(
+        component1 = vertexFactory.createForOwner(
                 user.username()
         );
         component1.label("component 1");
-        component2 = vertexFactory.createForOwnerUsername(
+        component2 = vertexFactory.createForOwner(
                 user.username()
         );
         component2.label("component 2");
-        otherBubble = vertexFactory.createForOwnerUsername(
+        otherBubble = vertexFactory.createForOwner(
                 user.username()
         );
         otherBubble.label("other bubble");
-        otherBubble2 = vertexFactory.createForOwnerUsername(
+        otherBubble2 = vertexFactory.createForOwner(
                 user.username()
         );
         otherBubble2.label("other bubble 2");
-        otherBubble3 = vertexFactory.createForOwnerUsername(
+        otherBubble3 = vertexFactory.createForOwner(
                 user.username()
         );
         otherBubble3.label("other bubble 3");

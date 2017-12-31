@@ -57,17 +57,17 @@ public class RelationWithMultipleIdentifiers implements JsTestScenario {
     }
 
     private void buildBubbles(){
-        team = vertexFactory.createForOwnerUsername(
+        team = vertexFactory.createForOwner(
                 user.username()
         );
         team.label("Team");
 
-        john = vertexFactory.createForOwnerUsername(
+        john = vertexFactory.createForOwner(
                 user.username()
         );
         john.label("John Foo");
 
-        aria = vertexFactory.createForOwnerUsername(
+        aria = vertexFactory.createForOwner(
                 user.username()
         );
         aria.label("Aria Sauley");

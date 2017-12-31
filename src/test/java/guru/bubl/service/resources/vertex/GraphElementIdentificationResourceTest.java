@@ -5,19 +5,14 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
-import guru.bubl.module.model.graph.Triple;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
-import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
@@ -178,7 +173,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse removeIdentificationToResource(Identifier identification, FriendlyResource resource) {
-        return NoExRun.wrap(() -> RestTestUtils.resource
+        return NoEx.wrap(() -> RestTestUtils.resource
                 .path(resource.uri().getPath())
                 .path("identification")
                 .queryParam(

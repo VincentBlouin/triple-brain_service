@@ -5,7 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.inject.Inject;
-import guru.bubl.module.common_utils.NoExRun;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -47,7 +47,7 @@ public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario
                 1,
                 b1.uri()
         );
-        return NoExRun.wrap(() -> new JSONObject()
+        return NoEx.wrap(() -> new JSONObject()
                 .put(
                         "metaCenter",
                         SubGraphJson.toJson(metaCenter)
