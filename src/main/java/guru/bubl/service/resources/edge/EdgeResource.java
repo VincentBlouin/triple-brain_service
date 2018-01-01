@@ -179,7 +179,35 @@ public class EdgeResource {
         return Response.noContent().build();
     }
 
+    @POST
+    @GraphTransactional
+    @Path("{shortId}/setToTheLeft")
+    public Response setToTheLeft(
+            @PathParam("shortId") String shortId
+    ) {
+        edgeFromShortId(shortId).setToTheLeft();
+        return Response.noContent().build();
+    }
 
+    @POST
+    @GraphTransactional
+    @Path("{shortId}/setToTheRight")
+    public Response setToTheRight(
+            @PathParam("shortId") String shortId
+    ) {
+        edgeFromShortId(shortId).setToTheRight();
+        return Response.noContent().build();
+    }
+
+    @POST
+    @GraphTransactional
+    @Path("{shortId}/unsetToTheLeftOrRight")
+    public Response unsetToTheLeftOrRight(
+            @PathParam("shortId") String shortId
+    ) {
+        edgeFromShortId(shortId).unsetToTheLeftOrRight();
+        return Response.noContent().build();
+    }
 
     @GraphTransactional
     @Path("{shortId}/surround_graph")
