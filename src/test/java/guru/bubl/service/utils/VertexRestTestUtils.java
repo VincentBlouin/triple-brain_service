@@ -21,6 +21,7 @@ import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import sun.plugin.javascript.navig5.JSObject;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
@@ -130,7 +131,9 @@ public class VertexRestTestUtils {
         return resource
                 .path(vertexUri.getPath())
                 .cookie(authCookie)
-                .post(ClientResponse.class);
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, "{}");
     }
 
     public ClientResponse makePublicVertexWithUri(URI vertexUri) {
