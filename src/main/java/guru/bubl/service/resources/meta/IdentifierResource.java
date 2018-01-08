@@ -51,7 +51,7 @@ public class IdentifierResource {
     @GET
     @GraphTransactional
     @Path("/{identificationShortId}")
-    public Response get(@PathParam("identificationShortId") String identificationShortId){
+    public Response get(@PathParam("identificationShortId") String identificationShortId) {
         IdentificationOperator identificationOperator = identificationFactory.withUri(
                 new UserUris(
                         authenticatedUser
@@ -138,13 +138,14 @@ public class IdentifierResource {
     @GraphTransactional
     public OwnedSurroundGraphResource getSurroundGraphResource(
             @PathParam("shortId") String identificationShortId
-    ){
+    ) {
+        URI tagUri = new UserUris(
+                authenticatedUser
+        ).identificationUriFromShortId(
+                identificationShortId
+        );
         IdentificationOperator identificationOperator = identificationFactory.withUri(
-                new UserUris(
-                        authenticatedUser
-                ).identificationUriFromShortId(
-                        identificationShortId
-                )
+                tagUri
         );
         CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
                 identificationOperator

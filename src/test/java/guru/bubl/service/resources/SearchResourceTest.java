@@ -5,6 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
@@ -22,19 +23,22 @@ import static org.junit.Assert.assertThat;
 public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
-    public void can_search_vertices_for_auto_complete() throws Exception {
+    public void can_search_vertices_for_auto_complete() {
         searchUtils().indexAll();
-        ClientResponse response = resource
+        ClientResponse response = NoEx.wrap(() -> resource
                 .path("service")
                 .path("users")
                 .path(defaultAuthenticatedUser.username())
                 .path("search")
                 .path("own_vertices")
                 .path("auto_complete")
-                .queryParam("text", "vert")
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(ClientResponse.class);
+                .post(ClientResponse.class, new JSONObject().put(
+                        "searchText",
+                        "vert"
+                ))
+        ).get();
         List<GraphElementSearchResult> results = searchUtils().vertexSearchResultsFromResponse(
                 response
         );
@@ -43,7 +47,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
 
 
     @Test
-    public void search_for_auto_complete_can_have_spaces() throws Exception {
+    public void search_for_auto_complete_can_have_spaces() {
         searchUtils().indexAll();
         List<GraphElementSearchResult> searchResults = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 "vertex Azu"
@@ -63,7 +67,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_search_for_only_own_vertices() throws Exception {
+    public void can_search_for_only_own_vertices() {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
         );
@@ -83,7 +87,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void searching_for_only_owned_schemas_or_vertices_returns_correct_status() throws Exception {
+    public void searching_for_only_owned_schemas_or_vertices_returns_correct_status() {
         assertThat(
                 searchUtils().autoCompletionResultsForUserVerticesOnly(
                         defaultAuthenticatedUserAsJson,
@@ -116,7 +120,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_index_and_search_bubbles_having_special_characters() throws Exception {
+    public void can_index_and_search_bubbles_having_special_characters() {
         vertexUtils().updateVertexLabelUsingRest(
                 vertexAUri(),
                 "z(arg"

@@ -8,6 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphElementSearchResultPojo;
@@ -51,18 +52,21 @@ public class SearchRestTestUtils {
         );
     }
 
-    public ClientResponse searchForRelationsClientResponse(String textToSearchWith, JSONObject user) {
-        ClientResponse clientResponse = resource
+    private ClientResponse searchForRelationsClientResponse(String textToSearchWith, JSONObject user) {
+        ClientResponse clientResponse = NoEx.wrap(() -> resource
                 .path("service")
                 .path("users")
                 .path(user.optString(UserJson.USER_NAME))
                 .path("search")
                 .path("relations")
                 .path("auto_complete")
-                .queryParam("text", textToSearchWith)
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(ClientResponse.class);
+                .post(ClientResponse.class, new JSONObject().put(
+                        "searchText",
+                        textToSearchWith
+                ))
+        ).get();
         assertThat(
                 clientResponse.getStatus(),
                 is(Response.Status.OK.getStatusCode())
@@ -130,7 +134,7 @@ public class SearchRestTestUtils {
     }
 
     public ClientResponse autoCompletionResultsForUserVerticesOnly(JSONObject user, String text) {
-        return resource
+        return NoEx.wrap(() -> resource
                 .path("service")
                 .path("users")
                 .path(user.optString(UserJson.USER_NAME))
@@ -139,7 +143,11 @@ public class SearchRestTestUtils {
                 .path("auto_complete")
                 .queryParam("text", text)
                 .cookie(authCookie)
-                .get(ClientResponse.class);
+                .post(ClientResponse.class, new JSONObject().put(
+                        "searchText",
+                        text
+                ))
+        ).get();
     }
 
     public List<GraphElementSearchResult> autoCompletionResultsForCurrentUserVerticesOnly(String textToSearchWith) {
@@ -215,17 +223,19 @@ public class SearchRestTestUtils {
     }
 
     private ClientResponse clientResponseOfAutoCompletionForVerticesOfUser(String textToSearchWith, JSONObject user, Boolean onlyOwnVertices) {
-        ClientResponse clientResponse = resource
+        ClientResponse clientResponse = NoEx.wrap(() -> resource
                 .path("service")
                 .path("users")
                 .path(user.optString(UserJson.USER_NAME))
                 .path("search")
                 .path(onlyOwnVertices ? "own_vertices" : "vertices")
                 .path("auto_complete")
-                .queryParam("text", textToSearchWith)
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(ClientResponse.class);
+                .post(ClientResponse.class, new JSONObject().put(
+                        "searchText",
+                        textToSearchWith
+                ))).get();
         assertThat(
                 clientResponse.getStatus(),
                 is(Response.Status.OK.getStatusCode())
