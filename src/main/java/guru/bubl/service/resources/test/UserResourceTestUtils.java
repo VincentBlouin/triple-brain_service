@@ -13,11 +13,13 @@ import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
+import java.util.HashMap;
 
 @Path("test/users")
 @Singleton
@@ -27,6 +29,10 @@ public class UserResourceTestUtils {
     protected Connection connection;
 
     @Inject
+    @Named("session")
+    HashMap sessionsInTests;
+
+    @Inject
     UserRepository userRepository;
 
     private Gson gson = new Gson();
@@ -34,7 +40,7 @@ public class UserResourceTestUtils {
     @Path("{email}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public Response emailExists(@PathParam("email") String email){
+    public Response emailExists(@PathParam("email") String email) {
         return Response.ok(
                 userRepository.emailExists(email).toString()
         ).build();
@@ -43,7 +49,7 @@ public class UserResourceTestUtils {
     @Path("/{username}/locale")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserLocale(@PathParam("username") String username){
+    public Response getUserLocale(@PathParam("username") String username) {
         return Response.ok(
                 userRepository.findByUsername(username).getPreferredLocales()
         ).build();
@@ -53,7 +59,8 @@ public class UserResourceTestUtils {
     @DELETE
     @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteAllUsers() throws Exception {
+    public Response deleteAllUsers() {
+        sessionsInTests.clear();
         NoEx.wrap(() ->
                 connection.createStatement().executeQuery(
                         "START n=node:node_auto_index('type:user') DELETE n"
@@ -64,7 +71,7 @@ public class UserResourceTestUtils {
 
     @POST
     @Path("/vince")
-    public Response createUserVince() throws Exception {
+    public Response createUserVince() {
         User user = User.withEmailAndUsername(
                 "vince_email@example.org",
                 "vince"
@@ -77,7 +84,7 @@ public class UserResourceTestUtils {
 
     @POST
     @Path("/Vince")
-    public Response createUserVinceWithCapitalLetter() throws Exception {
+    public Response createUserVinceWithCapitalLetter() {
         User user = User.withEmailAndUsername(
                 "vince_capital_email@example.org",
                 "Vince"
@@ -90,7 +97,7 @@ public class UserResourceTestUtils {
 
     @Path("/{username}/forget-password-token")
     @GET
-    public Response getForgetPasswordToken(@PathParam("username") String username) throws Exception {
+    public Response getForgetPasswordToken(@PathParam("username") String username) {
         User user = userRepository.findByUsername(username);
         return Response.ok().entity(
                 gson.toJson(
@@ -101,7 +108,7 @@ public class UserResourceTestUtils {
 
     @Path("/{username}/forget-password-token")
     @POST
-    public Response setForgetPasswordToken(@PathParam("username") String username, String userForgetPasswordTokenJson) throws Exception {
+    public Response setForgetPasswordToken(@PathParam("username") String username, String userForgetPasswordTokenJson) {
         UserForgotPasswordToken userForgotPasswordToken = gson.fromJson(
                 userForgetPasswordTokenJson,
                 UserForgotPasswordToken.class
@@ -112,5 +119,6 @@ public class UserResourceTestUtils {
         );
         return Response.noContent().build();
     }
+
 
 }
