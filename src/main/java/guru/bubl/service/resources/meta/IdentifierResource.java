@@ -11,7 +11,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.IdentificationOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -24,6 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -102,6 +103,33 @@ public class IdentifierResource {
         );
         identificationOperator.comment(
                 comment
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("{shortId}/mergeTo/{destinationShortId}")
+    @GraphTransactional
+    public Response mergeTo(
+            @PathParam("shortId") String shortId,
+            @PathParam("destinationShortId") String destinationShortId
+    ) {
+        UserUris userUris = new UserUris(
+                authenticatedUser
+        );
+        IdentificationOperator identificationOperator = identificationFactory.withUri(
+                userUris.identificationUriFromShortId(
+                        shortId
+                )
+        );
+        URI destinationTagUri = userUris.identificationUriFromShortId(destinationShortId);
+        if (!userGraph.haveElementWithId(destinationTagUri)) {
+            return Response.status(
+                    Response.Status.BAD_REQUEST
+            ).build();
+        }
+        identificationOperator.mergeTo(
+                identificationFactory.withUri(destinationTagUri)
         );
         return Response.noContent().build();
     }

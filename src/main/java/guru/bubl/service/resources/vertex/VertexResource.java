@@ -325,7 +325,7 @@ public class VertexResource {
     @POST
     @Path("{shortId}/mergeTo/{destinationShortId}")
     @GraphTransactional
-    public Response getMergeResource(
+    public Response mergeTo(
             @PathParam("shortId") String shortId,
             @PathParam("destinationShortId") String destinationShortId
     ) {
