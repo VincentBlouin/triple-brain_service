@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElement;
+import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
@@ -380,6 +381,33 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void can_set_colors() throws Exception {
+        JSONObject colors =
+                new JSONObject().put(
+                        GraphElementOperator.colorProps.background.toString(),
+                        "blue"
+                );
+
+        SubGraphPojo subGraph = graphUtils().graphWithCenterVertexUri(vertexBUri());
+        assertFalse(
+                subGraph.vertexWithIdentifier(vertexBUri()).getColors().equals(
+                        colors.toString()
+                )
+        );
+        ClientResponse response = setColors(vertexB(), colors);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+        subGraph = graphUtils().graphWithCenterVertexUri(vertexBUri());
+        assertTrue(
+                subGraph.vertexWithIdentifier(vertexBUri()).getColors().equals(
+                        colors.toString()
+                )
+        );
+    }
+
+    @Test
     @Ignore(
             "Using measures on the client side to avoid fast addition of multiple childs. " +
                     "Also I consider it not dramatic that the number of connected edges is not totally accurate."
@@ -443,5 +471,14 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 .path("childrenIndex")
                 .cookie(authCookie)
                 .post(ClientResponse.class, childrenIndexes);
+    }
+    private ClientResponse setColors(Vertex vertex, JSONObject colors){
+        return resource
+                .path(
+                        vertex.uri().getPath()
+                )
+                .path("colors")
+                .cookie(authCookie)
+                .post(ClientResponse.class, colors);
     }
 }

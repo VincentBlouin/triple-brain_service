@@ -323,6 +323,19 @@ public class VertexResource {
     }
 
     @POST
+    @Path("{shortId}/colors")
+    @GraphTransactional
+    public Response saveColors(
+            @PathParam("shortId") String shortId,
+            JSONObject colors
+    ) {
+        vertexFactory.withUri(uriFromShortId(shortId)).setColors(
+                colors.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
     @Path("{shortId}/mergeTo/{destinationShortId}")
     @GraphTransactional
     public Response mergeTo(
