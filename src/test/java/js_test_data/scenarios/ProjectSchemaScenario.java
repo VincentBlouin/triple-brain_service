@@ -120,8 +120,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 "project",
                 user
         );
-
-        List<GraphElementSearchResult> searchResultsForImpactBubbles = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
+        List<GraphElementSearchResult> searchResultsForImpactBubbles = graphSearch.searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
                 "impact",
                 user
         );
