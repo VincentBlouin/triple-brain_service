@@ -336,6 +336,19 @@ public class VertexResource {
     }
 
     @POST
+    @Path("{shortId}/font")
+    @GraphTransactional
+    public Response saveFont(
+            @PathParam("shortId") String shortId,
+            JSONObject font
+    ) {
+        vertexFactory.withUri(uriFromShortId(shortId)).setFont(
+                font.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
     @Path("{shortId}/mergeTo/{destinationShortId}")
     @GraphTransactional
     public Response mergeTo(
