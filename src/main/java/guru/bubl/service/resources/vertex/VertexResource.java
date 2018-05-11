@@ -114,15 +114,7 @@ public class VertexResource {
         );
 
         EdgePojo newEdge;
-        if (options.has("toTheLeft")) {
-            newEdge = NoEx.wrap(() ->
-                    options.getBoolean("toTheLeft") ?
-                            sourceVertex.addVertexAndRelationToTheLeft() :
-                            sourceVertex.addVertexAndRelationToTheRight()
-            ).get();
-        } else {
-            newEdge = sourceVertex.addVertexAndRelation();
-        }
+        newEdge = sourceVertex.addVertexAndRelation();
         VertexInSubGraphPojo newVertex = newEdge.destinationVertex();
         VertexInSubGraphPojo sourceVertexPojo = new VertexInSubGraphPojo(
                 sourceVertex.uri()
