@@ -7,6 +7,7 @@ package js_test_data;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import guru.bubl.module.model.ModelTestModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.search.Neo4jGraphSearchModule;
 import org.neo4j.graphdb.GraphDatabaseService;
 import guru.bubl.module.model.ModelModule;
@@ -21,6 +22,7 @@ public class JsTestScenariosStarter {
         injector = Guice.createInjector(
                 Neo4jModule.forTestingUsingEmbedded(),
                 ModelModule.forTesting(),
+                new ModelTestModule(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {

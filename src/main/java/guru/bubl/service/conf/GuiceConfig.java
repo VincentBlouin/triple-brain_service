@@ -14,6 +14,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import guru.bubl.module.model.ModelModule;
+import guru.bubl.module.model.ModelTestModule;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
@@ -160,13 +161,20 @@ public class GuiceConfig extends GuiceServletContextListener {
                                     Neo4jModule.forTestingUsingEmbedded() :
                                     Neo4jModule.notForTestingUsingEmbedded()
                     );
-                    install(
-                            isTesting ?
-                                    ModelModule.forTesting() :
-                                    new ModelModule(
-                                            (String) jndiContext.lookup("sendgrid_key")
-                                    )
-                    );
+                    if (isTesting) {
+                        install(
+                                ModelModule.forTesting()
+                        );
+                        install(
+                                new ModelTestModule()
+                        );
+                    } else {
+                        install(
+                                new ModelModule(
+                                        (String) jndiContext.lookup("sendgrid_key")
+                                )
+                        );
+                    }
 
                     if (isTesting) {
                         //security flaw if binded in production
