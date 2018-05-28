@@ -7,5 +7,5 @@ package guru.bubl.service.resources.edge;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 
 public interface EdgeResourceFactory{
-    public EdgeResource withUserGraph(UserGraph userGraph);
+    EdgeResource withUserGraph(UserGraph userGraph);
 }

@@ -7,5 +7,5 @@ package guru.bubl.service.resources.vertex;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 
 public interface VertexImageResourceFactory {
-    public VertexImageResource ofVertex(VertexOperator vertex);
+    VertexImageResource ofVertex(VertexOperator vertex);
 }

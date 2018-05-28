@@ -13,6 +13,7 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import guru.bubl.module.model.FriendlyResourceFactory;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.model.ModelTestModule;
 import guru.bubl.module.model.json.JsonUtils;
@@ -26,6 +27,7 @@ import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
+import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.meta.IdentificationResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
@@ -134,6 +136,9 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         ForkResourceFactory.class
+                ));
+                install(builder.build(
+                        FriendsResourceFactory.class
                 ));
                 final Map<String, String> params = new HashMap<>();
                 params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");

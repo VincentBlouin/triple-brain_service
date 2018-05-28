@@ -5,9 +5,14 @@
 package guru.bubl.service.resources;
 
 import com.google.inject.Injector;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.content.AllContentFactory;
+import guru.bubl.module.model.friend.FriendManager;
+import guru.bubl.module.model.friend.FriendManagerFactory;
+import guru.bubl.module.model.friend.FriendStatus;
+import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
@@ -15,6 +20,7 @@ import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
 import guru.bubl.module.repository.user.UserRepository;
@@ -25,6 +31,8 @@ import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.fork.ForkResource;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
+import guru.bubl.service.resources.friend.FriendsResource;
+import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResource;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
@@ -42,6 +50,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import static guru.bubl.module.model.json.UserJson.*;
@@ -102,6 +111,34 @@ public class UserResource {
     @Inject
     UserMetasResourceFactory userMetasResourceFactory;
 
+    @Inject
+    FriendsResourceFactory friendsResourceFactory;
+
+    @Inject
+    FriendManagerFactory friendManagerFactory;
+
+    @Inject
+    FriendConfirmationEmail friendConfirmationEmail;
+
+    @POST
+    @Path("{username}/search-users")
+    public Response searchUsers(
+            JSONObject search,
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
+            List<User> searchResults = userRepository.searchUsers(
+                    search.optString("searchText"),
+                    sessionHandler.userFromSession(request.getSession())
+            );
+            return Response.ok(
+                    JsonUtils.getGson().toJson(searchResults)
+            ).build();
+        }
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
     @Path("{username}/graph")
     public GraphResource graphResource(
             @PathParam("username") String username,
@@ -151,6 +188,55 @@ public class UserResource {
                 persistentSessionId
         );
 
+    }
+
+    @POST
+    @Path("/confirm-friendship-with-token")
+    public Response confirmFriendship(
+            JSONObject confirmation,
+            @Context HttpServletRequest request,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        String requestUsername = confirmation.optString("requestUsername");
+        String destinationUsername = confirmation.optString("destinationUsername");
+        User destinationUser = userRepository.findByUsername(destinationUsername);
+        User requestUser = userRepository.findByUsername(requestUsername);
+        FriendManager friendManager = friendManagerFactory.forUser(destinationUser);
+        FriendStatus friendStatus = friendManager.getStatusWithUser(requestUser);
+        if(friendStatus != FriendStatus.waitingForYourAnswer){
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+        String confirmToken = confirmation.optString("confirmToken");
+        Boolean hasConfirmed = friendManager.confirmWithToken(requestUser, confirmToken);
+        if (!hasConfirmed) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
+        if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
+            UserSessionResource.authenticateUserInSession(
+                    destinationUser,
+                    request.getSession()
+            );
+        }
+        friendConfirmationEmail.sendForUserToUser(
+                destinationUser,
+                requestUser
+        );
+        return Response.ok(
+                UserJson.toJson(destinationUser)
+        ).build();
+    }
+
+    @Path("{username}/friends")
+    public FriendsResource friendsResource(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
+            return friendsResourceFactory.forUser(
+                    sessionHandler.userFromSession(request.getSession())
+            );
+        }
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
 
     private NotOwnedSurroundGraphResource getVertexSurroundGraphResource(
@@ -316,7 +402,7 @@ public class UserResource {
             );
         }
         user = userRepository.createUser(user);
-        if(skipDefaultContent == null || !skipDefaultContent){
+        if (skipDefaultContent == null || !skipDefaultContent) {
             allContentFactory.forUserGraph(
                     neo4jUserGraphFactory.withUser(user)
             ).add();
@@ -343,10 +429,12 @@ public class UserResource {
     public Response isAuthenticated(
             @Context HttpServletRequest request,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) throws JSONException {
-        return Response.ok(new JSONObject()
-                .put("is_authenticated", sessionHandler.isUserInSession(request.getSession(), persistentSessionId))
-        ).build();
+    ) {
+        return NoEx.wrap(() ->
+                Response.ok(new JSONObject()
+                        .put("is_authenticated", sessionHandler.isUserInSession(request.getSession(), persistentSessionId))
+                ).build()
+        ).get();
     }
 
     @Path("{username}/metas")
