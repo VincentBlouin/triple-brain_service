@@ -5,6 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.google.inject.Injector;
+import com.google.inject.name.Named;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
@@ -120,6 +121,10 @@ public class UserResource {
     @Inject
     FriendConfirmationEmail friendConfirmationEmail;
 
+    @Inject
+    @Named("AppUrl")
+    String appUrl;
+
     @POST
     @Path("{username}/search-users")
     public Response searchUsers(
@@ -203,7 +208,7 @@ public class UserResource {
         User requestUser = userRepository.findByUsername(requestUsername);
         FriendManager friendManager = friendManagerFactory.forUser(destinationUser);
         FriendStatus friendStatus = friendManager.getStatusWithUser(requestUser);
-        if(friendStatus != FriendStatus.waitingForYourAnswer){
+        if (friendStatus != FriendStatus.waitingForYourAnswer) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
         String confirmToken = confirmation.optString("confirmToken");
@@ -219,7 +224,8 @@ public class UserResource {
         }
         friendConfirmationEmail.sendForUserToUser(
                 destinationUser,
-                requestUser
+                requestUser,
+                appUrl + "/user/" + destinationUser.username()
         );
         return Response.ok(
                 UserJson.toJson(destinationUser)
