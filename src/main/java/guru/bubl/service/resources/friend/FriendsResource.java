@@ -15,6 +15,7 @@ import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
 import guru.bubl.module.model.friend.friend_request_email.FriendRequestEmail;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.repository.user.UserRepository;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -52,6 +53,16 @@ public class FriendsResource {
         this.friendManager = friendManagerFactory.forUser(
                 user
         );
+    }
+
+    @GET
+    @Path("/")
+    public Response list() {
+        return Response.ok(
+                JsonUtils.getGson().toJson(
+                        friendManager.list()
+                )
+        ).build();
     }
 
     @POST
