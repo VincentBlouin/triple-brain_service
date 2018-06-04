@@ -84,7 +84,8 @@ public class FriendsResource {
             User requestUser = destinationUser;
             friendConfirmationEmail.sendForUserToUser(
                     authenticatedUser,
-                    requestUser
+                    requestUser,
+                    appUrl + "/user/" + destinationUser.username()
             );
         }
         return NoEx.wrap(() -> Response.ok(
