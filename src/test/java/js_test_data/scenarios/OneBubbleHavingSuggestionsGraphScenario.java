@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -17,18 +18,18 @@ import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
+public class  OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
 
     /*
-    * Bubble labeled Event.
-    * Has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
-    * Has 2 suggestions, one related to Person identification and the other to "date" identification
-    */
+     * Bubble labeled Event.
+     * Has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
+     * Has 2 suggestions, one related to Person identification and the other to "date" identification
+     */
 
     /*
-    * Bubble labeled center.
-    * connected to bubble event
-    */
+     * Bubble labeled center.
+     * connected to bubble event
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -61,9 +62,9 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
             JSONObject json = new JSONObject().put(
                     "original",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterBubbleUri(
-                                    1,
-                                    bubble.uri()
+                            userGraph.aroundVertexUriInShareLevels(
+                                    bubble.uri(),
+                                    ShareLevel.allShareLevels
                             )
                     )
             );
@@ -75,9 +76,9 @@ public class OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario {
             json.put(
                     "not_centered",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterBubbleUri(
-                                    1,
-                                    center.uri()
+                            userGraph.aroundVertexUriInShareLevels(
+                                    center.uri(),
+                                    ShareLevel.allShareLevels
                             )
                     )
             );

@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -74,9 +75,9 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
                 ).put(
                         "graph",
                         SubGraphJson.toJson(
-                                userGraph.graphWithDepthAndCenterBubbleUri(
-                                        1,
-                                        center.uri()
+                                userGraph.aroundVertexUriInShareLevels(
+                                        center.uri(),
+                                        ShareLevel.allShareLevels
                                 )
                         ))
         ).get();

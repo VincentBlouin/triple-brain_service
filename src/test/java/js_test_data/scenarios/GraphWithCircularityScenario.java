@@ -4,6 +4,7 @@
 
 package js_test_data.scenarios;
 
+import guru.bubl.module.model.graph.ShareLevel;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -46,17 +47,17 @@ public class GraphWithCircularityScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo b1Graph = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b2.uri()
+        SubGraphPojo b2Graph = userGraph.aroundVertexUriInShareLevels(
+                b2.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo b3Graph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b3.uri()
+        SubGraphPojo b3Graph = userGraph.aroundVertexUriInShareLevels(
+                b3.uri(),
+                ShareLevel.allShareLevels
         );
         try {
             return new JSONObject().put(

@@ -4,6 +4,7 @@
 
 package js_test_data.scenarios;
 
+import guru.bubl.module.model.graph.ShareLevel;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
@@ -47,9 +48,10 @@ public class DeepGraphScenario implements JsTestScenario {
         b2.addRelationToVertex(b3).label("r2");
         b4.addRelationToVertex(b2).label("r3");
         b5.addRelationToVertex(b1).label("r4");
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
-                2,
-                b1.uri()
+        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevelsWithDepth(
+                b1.uri(),
+                ShareLevel.allShareLevels,
+                2
         );
         return SubGraphJson.toJson(
                 subGraphPojo

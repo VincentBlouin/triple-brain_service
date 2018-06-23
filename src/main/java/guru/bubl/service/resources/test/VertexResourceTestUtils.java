@@ -44,14 +44,14 @@ public class VertexResourceTestUtils {
     @Path("{vertexId}")
     @GraphTransactional
     @GET
-    public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
+    public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(
                 sessionHandler.userFromSession(request.getSession())
         );
         URI vertexUri = new URI(vertexId);
-        SubGraphPojo subGraph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                vertexUri
+        SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevels(
+                vertexUri,
+                ShareLevel.allShareLevels
         );
         return Response.ok(VertexInSubGraphJson.toJson(
                 subGraph.vertexWithIdentifier(
@@ -63,11 +63,11 @@ public class VertexResourceTestUtils {
     @Path("{vertexId}/connected_edges")
     @GraphTransactional
     @GET
-    public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId)throws Exception{
+    public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
         VertexOperator vertex = userGraph.vertexWithUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
-        for(EdgeOperator edge : vertex.connectedEdges().values()){
+        for (EdgeOperator edge : vertex.connectedEdges().values()) {
             edges.put(
                     EdgeJson.toJson(
                             new EdgePojo(edge)
@@ -81,7 +81,7 @@ public class VertexResourceTestUtils {
     @Produces(MediaType.TEXT_PLAIN)
     @GraphTransactional
     @GET
-    public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId)throws Exception{
+    public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
         VertexOperator vertex = userGraph.vertexWithUri(new URI(Uris.decodeUrlSafe(vertexId)));
         Vertex otherVertex = userGraph.vertexWithUri(new URI(Uris.decodeUrlSafe(otherVertexId)));

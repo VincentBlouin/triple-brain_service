@@ -4,6 +4,7 @@
 
 package js_test_data.scenarios;
 
+import guru.bubl.module.model.graph.ShareLevel;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
@@ -43,9 +44,9 @@ public class GraphWithAnInverseRelationScenario implements JsTestScenario {
         userGraph.createVertex();
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForMe = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                me.uri()
+        SubGraphPojo subGraphForMe = userGraph.aroundVertexUriInShareLevels(
+                me.uri(),
+                ShareLevel.allShareLevels
         );
         return SubGraphJson.toJson(
                 subGraphForMe

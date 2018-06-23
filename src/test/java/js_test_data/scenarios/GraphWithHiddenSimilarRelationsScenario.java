@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import com.google.common.collect.Sets;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -64,32 +65,32 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo b1Graph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo b2Graph = userGraph.aroundVertexUriInShareLevels(
+                b2.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo b2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b2.uri()
+        SubGraphPojo b1Graph = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo shirt2Graph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                shirt2.uri()
+        SubGraphPojo shirt2Graph = userGraph.aroundVertexUriInShareLevels(
+                shirt2.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo distantBubbleGraph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                distantBubble.uri()
+        SubGraphPojo distantBubbleGraph = userGraph.aroundVertexUriInShareLevels(
+                distantBubble.uri(),
+                ShareLevel.allShareLevels
         );
         EdgeOperator distantToB2 = distantBubble.addRelationToVertex(b2);
-        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b2.uri()
+        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundVertexUriInShareLevels(
+                b2.uri(),
+                ShareLevel.allShareLevels
         );
         distantToB2.remove();
         b1.addRelationToVertex(distantBubble);
-        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                distantBubble.uri()
+        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.aroundVertexUriInShareLevels(
+                distantBubble.uri(),
+                ShareLevel.allShareLevels
         );
 
         return NoEx.wrap(() ->

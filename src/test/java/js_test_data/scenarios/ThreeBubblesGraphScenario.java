@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import com.google.gson.Gson;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
@@ -102,17 +103,17 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForB1 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo subGraphForB1 = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo subGraphForB2 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b2.uri()
+        SubGraphPojo subGraphForB2 = userGraph.aroundVertexUriInShareLevels(
+                b2.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo subGraphForB3 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b3.uri()
+        SubGraphPojo subGraphForB3 = userGraph.aroundVertexUriInShareLevels(
+                b3.uri(),
+                ShareLevel.allShareLevels
         );
         wholeGraphAdmin.reindexAll();
         List<GraphElementSearchResult> searchResultsForB1 = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
@@ -123,19 +124,19 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                 "r2",
                 user
         );
-        SubGraphPojo subGraphForParent = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                parent.uri()
+        SubGraphPojo subGraphForParent = userGraph.aroundVertexUriInShareLevels(
+                parent.uri(),
+                ShareLevel.allShareLevels
         );
         parent.addRelationToVertex(b1);
-        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
         child.mergeTo(b1);
-        SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
         try {
             return new JSONObject().put(
@@ -274,9 +275,9 @@ public class ThreeBubblesGraphScenario implements JsTestScenario {
                         modelTestScenarios.startDateSuggestionFromEventIdentification(user)
                 )
         );
-        return forkerUserGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                forkedB1.uri()
+        return forkerUserGraph.aroundVertexUriInShareLevels(
+                forkedB1.uri(),
+                ShareLevel.allShareLevels
         );
     }
 }

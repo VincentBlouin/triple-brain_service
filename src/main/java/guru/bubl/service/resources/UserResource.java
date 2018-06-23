@@ -23,7 +23,7 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
@@ -71,7 +71,7 @@ public class UserResource {
     AllContentFactory allContentFactory;
 
     @Inject
-    protected Neo4jUserGraphFactory neo4jUserGraphFactory;
+    protected UserGraphFactoryNeo4j neo4jUserGraphFactory;
 
     @Inject
     SessionHandler sessionHandler;

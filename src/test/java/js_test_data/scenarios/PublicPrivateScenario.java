@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -45,9 +46,9 @@ public class PublicPrivateScenario implements JsTestScenario {
         createVertices();
         createEdges();
         return SubGraphJson.toJson(
-                userGraph.graphWithDepthAndCenterBubbleUri(
-                        1,
-                        b1.uri()
+                userGraph.aroundVertexUriInShareLevels(
+                        b1.uri(),
+                        ShareLevel.allShareLevels
                 )
         );
     }

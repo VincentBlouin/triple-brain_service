@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -21,18 +22,18 @@ import javax.inject.Inject;
 public class WithAcceptedSuggestionScenario implements JsTestScenario {
 
     /*
-    * Event-start date->2016/01/15
-    * Event-people involved->Jeremy
-    * Event-people involved->Noemi
-    * Event has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
-    * Event has 3 suggestions:
-    *   - People Involved,
-    *   - Start Date
-    *   - Venue
-    *
-    * People involved is identified to Freebase
-    * Start date is identified to Freebase
-    */
+     * Event-start date->2016/01/15
+     * Event-people involved->Jeremy
+     * Event-people involved->Noemi
+     * Event has a generic identification to freebase "Event" http://rdf.freebase.com/rdf/m/02xm94t
+     * Event has 3 suggestions:
+     *   - People Involved,
+     *   - Start Date
+     *   - Venue
+     *
+     * People involved is identified to Freebase
+     * Start date is identified to Freebase
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -45,10 +46,10 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
 
     User user = User.withEmailAndUsername("a", "b");
 
-    private VertexOperator  event,
-                            startDate,
-                            jeremy,
-                            noemi;
+    private VertexOperator event,
+            startDate,
+            jeremy,
+            noemi;
 
     @Override
     public JSONObject build() {
@@ -59,9 +60,9 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
             JSONObject json = new JSONObject().put(
                     "original",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterBubbleUri(
-                                    1,
-                                    event.uri()
+                            userGraph.aroundVertexUriInShareLevels(
+                                    event.uri(),
+                                    ShareLevel.allShareLevels
                             )
                     )
             );
@@ -73,9 +74,9 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
             json.put(
                     "not_centered",
                     SubGraphJson.toJson(
-                            userGraph.graphWithDepthAndCenterBubbleUri(
-                                    1,
-                                    center.uri()
+                            userGraph.aroundVertexUriInShareLevels(
+                                    center.uri(),
+                                    ShareLevel.allShareLevels
                             )
                     )
             );
@@ -83,7 +84,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
         }).get();
     }
 
-    private void buildBubbles(){
+    private void buildBubbles() {
         event = vertexFactory.createForOwner(
                 user.username()
         );
@@ -123,7 +124,8 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 modelTestScenarios.person()
         );
     }
-    private void buildRelations(){
+
+    private void buildRelations() {
         EdgeOperator startDateEdge = event.addRelationToVertex(startDate);
         startDateEdge.label("start date");
         startDateEdge.addMeta(modelTestScenarios.startDateIdentification());

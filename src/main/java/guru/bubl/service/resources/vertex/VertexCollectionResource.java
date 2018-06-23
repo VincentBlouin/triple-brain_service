@@ -8,10 +8,12 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -44,6 +46,25 @@ public class VertexCollectionResource {
         return Response.noContent().build();
     }
 
+    @Path("/share-level")
+    @POST
+    @GraphTransactional
+    public Response setShareLevel(JSONObject shareLevelJson) {
+        ShareLevel shareLevel = ShareLevel.valueOf(
+                shareLevelJson.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+        );
+        JSONArray verticesUri = shareLevelJson.optJSONArray("verticesUri");
+        for (int i = 0; i < verticesUri.length(); i++) {
+            VertexOperator vertex = userGraph.vertexWithUri(
+                    URI.create(
+                            verticesUri.optString(i)
+                    )
+            );
+            vertex.setShareLevel(shareLevel);
+        }
+        return Response.noContent().build();
+    }
+
     private void deleteVertices(JSONArray verticesUri) {
         try {
             for (int i = 0; i < verticesUri.length(); i++) {
@@ -62,10 +83,10 @@ public class VertexCollectionResource {
     }
 
     /*
-    * public_access should be in the vertex collection
-    * resource but it doesn't work. I get 415 http status
-    * Unsupported media type. I don't understand.
-    */
+     * public_access should be in the vertex collection
+     * resource but it doesn't work. I get 415 http status
+     * Unsupported media type. I don't understand.
+     */
 //    @Path("public_access")
 //    @GraphTransactional
 //    public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {

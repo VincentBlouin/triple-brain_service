@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import com.google.inject.Inject;
 import guru.bubl.module.common_utils.NoEx;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -19,12 +20,12 @@ import org.codehaus.jettison.json.JSONObject;
 public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario implements JsTestScenario {
 
     /*
-    * center - r1 -> b1
-    * r1 - meta -> human
-    * b1 - r2 -> b2
-    * b1 - r3 -> b3
-    * r3 - meta -> r2
-    */
+     * center - r1 -> b1
+     * r1 - meta -> human
+     * b1 - r2 -> b2
+     * b1 - r3 -> b3
+     * r3 - meta -> r2
+     */
 
     @Inject
     ModelTestScenarios modelTestScenarios;
@@ -39,13 +40,14 @@ public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario
         /*
         I have to write a depth of 2 but a depth of one should be enough, I don't understand
          */
-        SubGraphPojo metaCenter = userGraph.graphWithDepthAndCenterBubbleUri(
-                2,
-                r2AsMeta.uri()
+        SubGraphPojo metaCenter = userGraph.aroundVertexUriInShareLevelsWithDepth(
+                r2AsMeta.uri(),
+                ShareLevel.allShareLevels,
+                2
         );
-        SubGraphPojo childOfB1 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo childOfB1 = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
         return NoEx.wrap(() -> new JSONObject()
                 .put(

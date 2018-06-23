@@ -16,9 +16,6 @@ import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.meta.MetaJson;
 import guru.bubl.module.model.validator.IdentificationValidator;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jGraphElementFactory;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.identification.Neo4jIdentification;
-import guru.bubl.module.neo4j_graph_manipulator.graph.meta.Neo4jIdentificationFactory;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -61,7 +58,7 @@ public class GraphElementIdentificationResource {
         this.schemaUri = schemaUri;
         this.userGraph = userGraph;
     }
-    
+
     @POST
     @GraphTransactional
     @Path("/")

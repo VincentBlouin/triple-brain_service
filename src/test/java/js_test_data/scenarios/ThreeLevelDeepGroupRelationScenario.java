@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -103,9 +104,9 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
         createVertices();
         createEdges();
         return SubGraphJson.toJson(
-                userGraph.graphWithDepthAndCenterBubbleUri(
-                        1,
-                        fastChargingStation.uri()
+                userGraph.aroundVertexUriInShareLevels(
+                        fastChargingStation.uri(),
+                        ShareLevel.allShareLevels
                 )
         );
     }

@@ -5,12 +5,16 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.common_utils.NoEx;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -59,6 +63,64 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
         assertFalse(
                 subGraph.containsVertex(vertexC)
         );
+    }
+
+    @Test
+    public void can_set_share_level_of_multiple_vertices() {
+        assertThat(
+                vertexA().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        assertThat(
+                vertexB().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        assertThat(
+                vertexC().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        ClientResponse response = setShareLevelOfCollection(
+                ShareLevel.FRIENDS,
+                vertexAUri(),
+                vertexBUri()
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+        assertThat(
+                vertexA().getShareLevel(),
+                is(ShareLevel.FRIENDS)
+        );
+        assertThat(
+                vertexB().getShareLevel(),
+                is(ShareLevel.FRIENDS)
+        );
+        assertThat(
+                vertexC().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+    }
+
+    private ClientResponse setShareLevelOfCollection(ShareLevel shareLevel, URI... vertexUri) {
+        return NoEx.wrap(() ->
+                resource
+                        .path(vertexUtils().getVertexBaseUri())
+                        .path("collection")
+                        .path("share-level")
+                        .cookie(authCookie)
+                        .post(
+                                ClientResponse.class,
+                                new JSONObject().put(
+                                        "shareLevel",
+                                        shareLevel.name()
+                                ).put(
+                                        "verticesUri",
+                                        new JSONArray(Arrays.asList(vertexUri))
+                                )
+                        )
+        ).get();
+
     }
 
     private ClientResponse removeCollection(URI... vertexUri) {

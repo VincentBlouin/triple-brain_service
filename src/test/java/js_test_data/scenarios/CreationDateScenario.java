@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -23,21 +24,21 @@ import javax.inject.Inject;
 public class CreationDateScenario implements JsTestScenario {
 
     /*
-    * b1-r1->b2
-    * b1-r2->b3
-    * b1-r3->b4
-    * b1-similar->s1
-    * b1-similar->s2
-    * b1-similar->s3
-    * similar have same identifier
-    * b1-r4->b5
-    * b1-r5->b6
-    * b1-r6->b7
-    * b7-r71->b71
-    * b7-r72->b72
-    * b7-r73->b73
-    * b7-r74->b74
-    */
+     * b1-r1->b2
+     * b1-r2->b3
+     * b1-r3->b4
+     * b1-similar->s1
+     * b1-similar->s2
+     * b1-similar->s3
+     * similar have same identifier
+     * b1-r4->b5
+     * b1-r5->b6
+     * b1-r6->b7
+     * b7-r71->b71
+     * b7-r72->b72
+     * b7-r73->b73
+     * b7-r74->b74
+     */
 
     @Inject
     GraphFactory graphFactory;
@@ -75,14 +76,14 @@ public class CreationDateScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        subGraphForB1 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        subGraphForB1 = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
         setupcreationDatesForSubGraphForB1();
-        subGraphForB7 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b7.uri()
+        subGraphForB7 = userGraph.aroundVertexUriInShareLevels(
+                b7.uri(),
+                ShareLevel.allShareLevels
         );
         setupcreationDatesForSubGraphForB7();
         return NoEx.wrap(() -> new JSONObject().put(

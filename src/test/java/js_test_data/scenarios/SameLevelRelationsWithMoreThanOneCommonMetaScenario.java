@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -58,9 +59,9 @@ public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTe
         userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                center.uri()
+        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
+                center.uri(),
+                ShareLevel.allShareLevels
         );
         return SubGraphJson.toJson(subGraphPojo);
     }

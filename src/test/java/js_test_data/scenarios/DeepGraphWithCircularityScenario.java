@@ -4,6 +4,7 @@
 
 package js_test_data.scenarios;
 
+import guru.bubl.module.model.graph.ShareLevel;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
@@ -24,11 +25,11 @@ import java.util.Map;
 public class DeepGraphWithCircularityScenario implements JsTestScenario {
 
     /*
-    * Keep relations order
-    * b3<-r1-b2
-    * b4-r2->b1
-    * b1-r3->b2
-    */
+     * Keep relations order
+     * b3<-r1-b2
+     * b4-r2->b1
+     * b1-r3->b2
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -54,9 +55,10 @@ public class DeepGraphWithCircularityScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
-                3,
-                b3.uri()
+        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevelsWithDepth(
+                b3.uri(),
+                ShareLevel.allShareLevels,
+                3
         );
         Map<URI, EdgePojo> relations = new LinkedHashMap<>();
         relations.put(

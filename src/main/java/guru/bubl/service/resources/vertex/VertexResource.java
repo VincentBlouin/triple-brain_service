@@ -12,6 +12,7 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
@@ -268,6 +269,18 @@ public class VertexResource {
         return vertexSuggestionResourceFactory.ofVertex(
                 vertexFromShortId(shortId)
         );
+    }
+
+    @Path("{shortId}/shareLevel")
+    @POST
+    @GraphTransactional
+    public Response setShareLevel(@PathParam("shortId") String shortId, JSONObject shareLevel) {
+        vertexFromShortId(shortId).setShareLevel(
+                ShareLevel.valueOf(
+                        shareLevel.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                )
+        );
+        return Response.noContent().build();
     }
 
     @Path("collection")

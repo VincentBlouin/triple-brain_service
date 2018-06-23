@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -69,17 +70,19 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo aroundTodo = userGraph.graphWithDepthAndCenterBubbleUri(
-                2,
-                toDo.uri()
+        SubGraphPojo aroundTodo = userGraph.aroundVertexUriInShareLevelsWithDepth(
+                toDo.uri(),
+                ShareLevel.allShareLevels,
+                2
         );
-        SubGraphPojo aroundEvent = userGraph.graphWithDepthAndCenterBubbleUri(
-                2,
-                event.uri()
+        SubGraphPojo aroundEvent = userGraph.aroundVertexUriInShareLevelsWithDepth(
+                event.uri(),
+                ShareLevel.allShareLevels,
+                2
         );
-        SubGraphPojo aroundE3 = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                e3.uri()
+        SubGraphPojo aroundE3 = userGraph.aroundVertexUriInShareLevels(
+                e3.uri(),
+                ShareLevel.allShareLevels
         );
         return NoEx.wrap(() -> new JSONObject().put(
                 "aroundEvent",

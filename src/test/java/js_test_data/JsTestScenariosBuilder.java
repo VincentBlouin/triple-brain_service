@@ -13,7 +13,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.test.GraphComponentTest;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.Neo4jUserGraphFactory;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -31,7 +31,7 @@ public class JsTestScenariosBuilder {
     protected GraphComponentTest graphComponentTest;
 
     @Inject
-    protected Neo4jUserGraphFactory neo4jUserGraphFactory;
+    protected UserGraphFactoryNeo4j neo4jUserGraphFactory;
 
     Set<JsTestScenario> scenarios = Sets.newHashSet(
             new DeepGraphScenario(),

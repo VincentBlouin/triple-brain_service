@@ -7,6 +7,7 @@ package js_test_data.scenarios;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -53,21 +54,21 @@ public class AutomaticExpandScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b1.uri()
+        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
+                b1.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo b2SubGraph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b2.uri()
+        SubGraphPojo b2SubGraph = userGraph.aroundVertexUriInShareLevels(
+                b2.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo b3SubGraph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b3.uri()
+        SubGraphPojo b3SubGraph = userGraph.aroundVertexUriInShareLevels(
+                b3.uri(),
+                ShareLevel.allShareLevels
         );
-        SubGraphPojo b31SubGraph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                b31.uri()
+        SubGraphPojo b31SubGraph = userGraph.aroundVertexUriInShareLevels(
+                b31.uri(),
+                ShareLevel.allShareLevels
         );
         return NoEx.wrap(() -> new JSONObject()
                 .put(

@@ -6,6 +6,7 @@ package guru.bubl.service.resources.vertex;
 
 import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.exceptions.NonExistingResourceException;
@@ -17,6 +18,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -40,7 +44,7 @@ public class OwnedSurroundGraphResource {
         SubGraphPojo subGraphPojo;
         try {
             subGraphPojo = getGraph();
-        }catch(NonExistingResourceException e){
+        } catch (NonExistingResourceException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(
@@ -50,10 +54,10 @@ public class OwnedSurroundGraphResource {
         ).build();
     }
 
-    private SubGraphPojo getGraph(){
-        return userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                centerBubble.uri()
+    private SubGraphPojo getGraph() {
+        return userGraph.aroundVertexUriInShareLevels(
+                centerBubble.uri(),
+                ShareLevel.allShareLevels
         );
     }
 }

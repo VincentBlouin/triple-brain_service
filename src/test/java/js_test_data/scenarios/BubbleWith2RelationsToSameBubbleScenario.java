@@ -6,6 +6,7 @@ package js_test_data.scenarios;
 
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -47,9 +48,9 @@ public class BubbleWith2RelationsToSameBubbleScenario implements JsTestScenario 
         center.addRelationToVertex(child).label("r1");
         center.addRelationToVertex(child).label("r2");
         return SubGraphJson.toJson(
-                userGraph.graphWithDepthAndCenterBubbleUri(
-                        1,
-                        center.uri()
+                userGraph.aroundVertexUriInShareLevels(
+                        center.uri(),
+                        ShareLevel.allShareLevels
                 )
         );
     }

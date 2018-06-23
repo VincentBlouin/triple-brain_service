@@ -89,9 +89,9 @@ public class GraphWithSimilarRelationsScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        subGraphForMe = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                me.uri()
+        subGraphForMe = userGraph.aroundVertexUriInShareLevels(
+                me.uri(),
+                ShareLevel.allShareLevels
         );
         List<GraphElementSearchResult> bookSearchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 "book",

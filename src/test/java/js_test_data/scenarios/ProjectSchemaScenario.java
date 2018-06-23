@@ -9,10 +9,7 @@ import com.google.gson.Gson;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.FriendlyResourcePojo;
-import guru.bubl.module.model.graph.GraphElementOperator;
-import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -124,9 +121,9 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 "impact",
                 user
         );
-        SubGraphPojo someProjectGraph = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                someProject.uri()
+        SubGraphPojo someProjectGraph = userGraph.aroundVertexUriInShareLevels(
+                someProject.uri(),
+                ShareLevel.allShareLevels
         );
         try {
             return new JSONObject().put(

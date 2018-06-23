@@ -5,6 +5,7 @@
 package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
+import guru.bubl.module.model.graph.ShareLevel;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.User;
@@ -68,9 +69,9 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
                 )
         );
         mergeBubble.label("merge");
-        SubGraphPojo subGraphPojo = userGraph.graphWithDepthAndCenterBubbleUri(
-                1,
-                mergeBubble.uri()
+        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
+                mergeBubble.uri(),
+                ShareLevel.allShareLevels
         );
         return SubGraphJson.toJson(
                 subGraphPojo
