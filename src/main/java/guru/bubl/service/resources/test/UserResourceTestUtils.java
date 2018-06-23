@@ -63,7 +63,7 @@ public class UserResourceTestUtils {
         sessionsInTests.clear();
         NoEx.wrap(() ->
                 connection.createStatement().executeQuery(
-                        "START n=node:node_auto_index('type:user') DELETE n"
+                        "START n=node:node_auto_index('type:user') OPTIONAL MATCH n-[r]->o DELETE r,n"
                 )).get();
         return Response.noContent().build();
     }

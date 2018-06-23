@@ -8,9 +8,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.graph.GraphElement;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
@@ -148,6 +151,23 @@ public class VertexRestTestUtils {
         return clientResponse;
     }
 
+    public ClientResponse setShareLevel(URI uri, ShareLevel shareLevel) {
+        return NoEx.wrap(() -> {
+            ClientResponse clientResponse = resource
+                    .path(uri.getPath())
+                    .path("shareLevel")
+                    .cookie(authCookie)
+                    .post(ClientResponse.class, new JSONObject().put(
+                            "shareLevel", shareLevel.name()
+                    ));
+            assertThat(
+                    clientResponse.getStatus(),
+                    is(Response.Status.NO_CONTENT.getStatusCode())
+            );
+            return clientResponse;
+        }).get();
+    }
+
     public ClientResponse makePrivateVertexWithUri(URI vertexUri) {
         ClientResponse clientResponse = resource
                 .path(vertexUri.getPath())
@@ -202,7 +222,7 @@ public class VertexRestTestUtils {
         ).baseVertexUri();
     }
 
-    public Vertex createSingleVertex(){
+    public Vertex createSingleVertex() {
         return VertexInSubGraphJson.fromJson(
                 responseForCreateSingleVertex().getEntity(
                         JSONObject.class
@@ -210,7 +230,7 @@ public class VertexRestTestUtils {
         );
     }
 
-    public ClientResponse responseForCreateSingleVertex(){
+    public ClientResponse responseForCreateSingleVertex() {
         return resource
                 .path(
                         new UserUris(authenticatedUser).baseVertexUri().getPath()

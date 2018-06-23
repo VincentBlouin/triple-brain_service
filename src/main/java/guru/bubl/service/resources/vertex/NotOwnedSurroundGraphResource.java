@@ -26,15 +26,18 @@ public class NotOwnedSurroundGraphResource {
     private Vertex centerVertex;
     private UserGraph userGraph;
     private Boolean skipVerification;
+    private Boolean isFriend;
 
     public NotOwnedSurroundGraphResource(
             UserGraph userGraph,
             Vertex centerVertex,
-            Boolean skipVerification
+            Boolean skipVerification,
+            Boolean isFriend
     ) {
         this.userGraph = userGraph;
         this.centerVertex = centerVertex;
         this.skipVerification = skipVerification;
+        this.isFriend = isFriend;
     }
 
     @GET
@@ -46,6 +49,8 @@ public class NotOwnedSurroundGraphResource {
         inShareLevels.add(ShareLevel.PUBLIC_WITH_LINK);
         if (skipVerification) {
             inShareLevels.add(ShareLevel.PRIVATE);
+            inShareLevels.add(ShareLevel.FRIENDS);
+        } else if (isFriend) {
             inShareLevels.add(ShareLevel.FRIENDS);
         }
         if (depth == null) {

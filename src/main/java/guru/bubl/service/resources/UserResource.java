@@ -196,6 +196,7 @@ public class UserResource {
     }
 
     @POST
+    @GraphTransactional
     @Path("/confirm-friendship-with-token")
     public Response confirmFriendship(
             JSONObject confirmation,
@@ -233,6 +234,7 @@ public class UserResource {
     }
 
     @Path("{username}/friends")
+    @GraphTransactional
     public FriendsResource friendsResource(
             @PathParam("username") String username,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
@@ -248,23 +250,29 @@ public class UserResource {
     private NotOwnedSurroundGraphResource getVertexSurroundGraphResource(
             Vertex centerVertex, String persistentSessionId
     ) {
+        User owner = userRepository.findByUsername(centerVertex.getOwnerUsername());
         UserGraph userGraph = graphFactory.loadForUser(
-                userRepository.findByUsername(centerVertex.getOwnerUsername())
+                owner
         );
         if (!userGraph.haveElementWithId(centerVertex.uri())) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         Boolean skipVerification = false;
+        Boolean isFriend = false;
         if (sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
             User userInSession = sessionHandler.userFromSession(request.getSession());
             skipVerification = userInSession.username().equals(
                     centerVertex.getOwnerUsername()
             );
+            isFriend = FriendStatus.confirmed == friendManagerFactory.forUser(
+                    userInSession
+            ).getStatusWithUser(owner);
         }
         return new NotOwnedSurroundGraphResource(
                 userGraph,
                 centerVertex,
-                skipVerification
+                skipVerification,
+                isFriend
         );
     }
 

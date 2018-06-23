@@ -5,6 +5,8 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.friend.FriendStatus;
+import guru.bubl.module.model.graph.ShareLevel;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import guru.bubl.module.model.UserUris;
@@ -292,6 +294,61 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
                 getNonOwnedGraphOfEdgeBetweenAAndB().getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
+    }
+
+    @Test
+    public void can_get_friend_bubbles() {
+        vertexUtils().setShareLevel(
+                vertexBUri(),
+                ShareLevel.PUBLIC
+        );
+        vertexUtils().setShareLevel(
+                vertexCUri(),
+                ShareLevel.FRIENDS
+        );
+        vertexUtils().setShareLevel(
+                vertexAUri(),
+                ShareLevel.FRIENDS
+        );
+        String username = currentAuthenticatedUser.username();
+        JSONObject anotherUser = createAUser();
+        String otherUsername = anotherUser.optString("user_name");
+        authenticate(anotherUser);
+        userUtils().addFriend(
+                otherUsername,
+                username
+        );
+//        SubGraph subGraph = SubGraphJson.fromJson(
+//                graphUtils().getNonOwnedGraphOfCentralVertexWithUri(vertexBUri()).getEntity(
+//                        JSONObject.class
+//                )
+//        );
+//        assertThat(
+//                subGraph.numberOfVertices(),
+//                is(1)
+//        );
+//        authenticate(defaultAuthenticatedUser);
+//        ClientResponse response = userUtils().addFriend(
+//                username,
+//                otherUsername
+//        );
+//        FriendStatus friendStatus = FriendStatus.valueOf(
+//                response.getEntity(JSONObject.class).optString("status")
+//        );
+//        assertThat(
+//                friendStatus,
+//                is(FriendStatus.confirmed)
+//        );
+//        authenticate(anotherUser);
+//        subGraph = SubGraphJson.fromJson(
+//                graphUtils().getNonOwnedGraphOfCentralVertexWithUri(vertexBUri()).getEntity(
+//                        JSONObject.class
+//                )
+//        );
+//        assertThat(
+//                subGraph.numberOfVertices(),
+//                is(3)
+//        );
     }
 
     private ClientResponse getNonOwnedGraphOfEdgeBetweenAAndB() {

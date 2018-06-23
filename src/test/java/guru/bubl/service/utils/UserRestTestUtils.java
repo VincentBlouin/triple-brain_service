@@ -7,29 +7,34 @@ package guru.bubl.service.utils;
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.common_utils.NoEx;
+import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.User;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
+import static guru.bubl.module.model.json.UserJson.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static guru.bubl.module.model.json.UserJson.*;
+
 public class UserRestTestUtils {
 
     private WebResource resource;
+    private NewCookie authCookie;
 
-    public static UserRestTestUtils withWebResource(WebResource resource) {
-        return new UserRestTestUtils(resource);
+    public static UserRestTestUtils withWebResourceAndCookie(WebResource resource, NewCookie authCookie) {
+        return new UserRestTestUtils(resource, authCookie);
     }
 
-    protected UserRestTestUtils(WebResource resource) {
+    protected UserRestTestUtils(WebResource resource, NewCookie authCookie) {
         this.resource = resource;
+        this.authCookie = authCookie;
     }
 
     public boolean emailExists(String email) {
@@ -124,12 +129,33 @@ public class UserRestTestUtils {
         );
     }
 
+    public ClientResponse addFriend(String usernameA, String usernameB) {
+        ClientResponse response = NoEx.wrap(() -> resource
+                .path("service")
+                .path("users")
+                .path(usernameA)
+                .path("friends")
+                .cookie(authCookie)
+                .post(
+                        ClientResponse.class,
+                        new JSONObject().put(
+                                "friendUsername",
+                                usernameB
+                        )
+                )
+        ).get();
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        return response;
+    }
 
     private String randomEmail() {
         return UUID.randomUUID().toString() + "@example.org";
     }
 
-    private String randomUsername(){
+    private String randomUsername() {
         return UUID.randomUUID().toString().substring(0, 15);
     }
 }
