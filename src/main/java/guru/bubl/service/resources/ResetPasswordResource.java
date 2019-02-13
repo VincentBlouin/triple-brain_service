@@ -38,10 +38,10 @@ public class ResetPasswordResource {
 
     @Path("/")
     @POST
-    public Response reset(JSONObject emailWrap, @Context HttpContext context){
+    public Response reset(JSONObject emailWrap, @Context HttpContext context) {
         try {
             String email = emailWrap.getString("email");
-            if(!userRepository.emailExists(email)){
+            if (!userRepository.emailExists(email)) {
                 throw new WebApplicationException(Response.Status.BAD_REQUEST);
             }
             User user = userRepository.findByEmail(email);
@@ -52,10 +52,12 @@ public class ResetPasswordResource {
             );
             forgotPasswordEmail.send(
                     user,
-                    appUrl + "?email="+user.email().replace("@", "%40")+"&reset-token=" + userForgotPasswordToken.getToken()
+                    appUrl + "/email/" +
+                            user.email().replace("@", "%40") + "/token/" +
+                            userForgotPasswordToken.getToken()
             );
             return Response.noContent().build();
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
     }

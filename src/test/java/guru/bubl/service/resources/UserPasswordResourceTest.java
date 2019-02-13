@@ -52,7 +52,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
                         defaultAuthenticatedUser.email(),
                         "new_password"
                 ).getStatus(),
-                is(Response.Status.UNAUTHORIZED.getStatusCode())
+                is(Response.Status.BAD_REQUEST.getStatusCode())
         );
         changePassword(
                 defaultAuthenticatedUser.email(),
@@ -78,7 +78,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(
                 response.getStatus(),
-                is(Response.Status.UNAUTHORIZED.getStatusCode())
+                is(Response.Status.BAD_REQUEST.getStatusCode())
         );
         UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
         userForgotPasswordToken.setResetPasswordToken("token");
@@ -115,7 +115,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(
                 response.getStatus(),
-                is(Response.Status.UNAUTHORIZED.getStatusCode())
+                is(Response.Status.BAD_REQUEST.getStatusCode())
         );
         userForgotPasswordToken = UserForgotPasswordToken.generate();
         userUtils().setUserForgetPasswordToken(
