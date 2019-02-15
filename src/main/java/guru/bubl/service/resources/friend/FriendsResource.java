@@ -77,9 +77,9 @@ public class FriendsResource {
         String confirmToken = friendManager.add(destinationUser);
         if (confirmToken != null) {
             String confirmUrl = appUrl + "/user/" + authenticatedUser.username() +
-                    "?requestUser=" + authenticatedUser.username() +
-                    "&destinationUser=" + friendUsername +
-                    "&confirm-token=" + confirmToken;
+                    "/requestUser=" + authenticatedUser.username() +
+                    "/destinationUser=" + friendUsername +
+                    "/confirm-token=" + confirmToken;
             friendRequestEmail.sendToUserFromUser(destinationUser, authenticatedUser, confirmUrl);
         }
         FriendStatus friendStatusAfter = friendManager.getStatusWithUser(destinationUser);
