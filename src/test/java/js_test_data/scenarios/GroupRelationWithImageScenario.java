@@ -109,7 +109,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                 "idea"
         );
         ideaFriendlyResource.setImages(Sets.newHashSet(
-                Image.withBase64ForSmallAndUriForBigger(
+                Image.withUrlForSmallAndUriForBigger(
                         "dummy_base_64",
                         URI.create("big_url")
                 )

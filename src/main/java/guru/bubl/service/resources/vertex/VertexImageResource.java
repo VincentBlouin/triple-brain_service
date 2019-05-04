@@ -101,7 +101,7 @@ public class VertexImageResource {
                                 resizedSmallImage(savedFile)
                         );
                         uploadedImages.add(
-                                Image.withBase64ForSmallAndUriForBigger(
+                                Image.withUrlForSmallAndUriForBigger(
                                         base64ForSmallImage,
                                         URI.create(imageBaseUrl + "big")
                                 )

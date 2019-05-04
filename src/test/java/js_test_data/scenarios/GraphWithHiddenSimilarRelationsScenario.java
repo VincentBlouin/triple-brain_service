@@ -133,7 +133,7 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         );
         b2.label("b2");
         b2.addImages(Sets.newHashSet(
-                Image.withBase64ForSmallAndUriForBigger(
+                Image.withUrlForSmallAndUriForBigger(
                         "base64ForB2",
                         URI.create("http://example.org/bigImageForB2")
                 )
@@ -148,7 +148,7 @@ public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
         );
         shirt2.label("shirt2");
         shirt2.addImages(Sets.newHashSet(
-                Image.withBase64ForSmallAndUriForBigger(
+                Image.withUrlForSmallAndUriForBigger(
                         "base64ForShirt2",
                         URI.create("http://example.org/bigImageForShirt2")
                 )
