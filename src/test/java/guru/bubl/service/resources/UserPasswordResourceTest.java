@@ -41,7 +41,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_change_password(){
+    public void can_change_password() {
         logoutUsingCookies(authCookie);
         userUtils().setUserForgetPasswordToken(
                 defaultAuthenticatedUser,
@@ -52,7 +52,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
                         defaultAuthenticatedUser.email(),
                         "new_password"
                 ).getStatus(),
-                is(Response.Status.BAD_REQUEST.getStatusCode())
+                is(Response.Status.UNAUTHORIZED.getStatusCode())
         );
         changePassword(
                 defaultAuthenticatedUser.email(),
@@ -69,7 +69,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void forget_password_token_must_match_to_change_password(){
+    public void forget_password_token_must_match_to_change_password() {
         logoutUsingCookies(authCookie);
         ClientResponse response = changePassword(
                 defaultAuthenticatedUser.email(),
@@ -98,7 +98,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void cant_change_password_if_forget_password_token_is_expired(){
+    public void cant_change_password_if_forget_password_token_is_expired() {
         logoutUsingCookies(authCookie);
         UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
         userForgotPasswordToken.setResetPasswordExpirationDate(
@@ -134,7 +134,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void password_cant_be_too_short(){
+    public void password_cant_be_too_short() {
         logoutUsingCookies(authCookie);
         UserForgotPasswordToken userForgotPasswordToken = UserForgotPasswordToken.generate();
         userUtils().setUserForgetPasswordToken(
@@ -169,7 +169,7 @@ public class UserPasswordResourceTest extends GraphManipulationRestTestUtils {
                     .path("users")
                     .path("password")
                     .post(ClientResponse.class, data);
-        }catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }

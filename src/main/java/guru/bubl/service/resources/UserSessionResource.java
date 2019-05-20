@@ -87,11 +87,11 @@ public class UserSessionResource {
                 return response.build();
             }
         } catch (NonExistingUserException e) {
-            return Response.status(401).build();
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         } catch(JSONException e){
             throw new RuntimeException(e);
         }
-        return Response.status(401).build();
+        return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
     }
 
     @DELETE

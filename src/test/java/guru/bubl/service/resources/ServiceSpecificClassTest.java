@@ -15,7 +15,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        DailyJobResourceTest.class
+        UserPasswordResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }
