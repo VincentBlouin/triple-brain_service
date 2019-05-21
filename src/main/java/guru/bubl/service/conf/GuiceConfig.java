@@ -190,14 +190,14 @@ public class GuiceConfig extends GuiceServletContextListener {
                         bind(UserResourceTestUtils.class);
                         bind(PersistentSessionRestTestUtils.class);
                     }
-                    bind(DataSource.class)
-                            .toProvider(fromJndi(DataSource.class, "jdbc/usageLog"));
-                    install(new UsageLogModule());
-                    if (isTesting) {
-                        SQLConnection.createTablesUsingDataSource(
-                                new H2DataSource()
-                        );
-                    }
+//                    bind(DataSource.class)
+//                            .toProvider(fromJndi(DataSource.class, "jdbc/usageLog"));
+//                    install(new UsageLogModule());
+//                    if (isTesting) {
+//                        SQLConnection.createTablesUsingDataSource(
+//                                new H2DataSource()
+//                        );
+//                    }
                 } catch (NamingException e) {
                     throw new RuntimeException(e);
                 }
