@@ -61,7 +61,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception{
+    public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
         ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         Vertex subject = VertexInSubGraphJson.fromJson(
@@ -100,7 +100,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception{
+    public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception {
         ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
         EdgePojo newEdge = EdgeJson.fromJson(
@@ -185,7 +185,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_update_note(){
+    public void can_update_note() {
         String vertexANote = vertexA().comment();
         assertThat(vertexANote, is(not("some note")));
         vertexUtils().updateVertexANote("some note");
@@ -194,7 +194,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_label_returns_correct_status(){
+    public void updating_label_returns_correct_status() {
         ClientResponse response = vertexUtils().updateVertexLabelUsingRest(
                 vertexAUri(),
                 "new vertex label"
@@ -203,7 +203,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_note_updates_search(){
+    public void updating_note_updates_search() {
         searchUtils().indexAll();
         GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
                 vertexA().label()
@@ -237,6 +237,15 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         assertThat(
                 relations.size(),
                 is(0)
+        );
+    }
+
+    @Test
+    public void remove_returns_ok_status() {
+        ClientResponse response = vertexUtils().removeVertexB();
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
         );
     }
 
@@ -335,8 +344,8 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         vertexUtils().createSingleVertex();
         Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfLastCenterDateNull = 0;
-        for(CenterGraphElementPojo centerGraphElementPojo : centerElements){
-            if(null == centerGraphElementPojo.getLastCenterDate()){
+        for (CenterGraphElementPojo centerGraphElementPojo : centerElements) {
+            if (null == centerGraphElementPojo.getLastCenterDate()) {
                 numberOfLastCenterDateNull++;
             }
         }
@@ -347,7 +356,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_set_children_indexes() throws Exception{
+    public void can_set_children_indexes() throws Exception {
         JSONObject childrenIndexes = new JSONObject().put(
                 vertexAUri().toString(),
                 new JSONObject().put(
@@ -423,9 +432,9 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
             new Thread(new AddChildToVertexARunner(latch)).start();
 //            Thread.sleep(50);
         }
-        try{
+        try {
             latch.await();
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -463,7 +472,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         }
     }
 
-    private ClientResponse setChildrenIndexes(Vertex vertex, JSONObject childrenIndexes){
+    private ClientResponse setChildrenIndexes(Vertex vertex, JSONObject childrenIndexes) {
         return resource
                 .path(
                         vertex.uri().getPath()
@@ -472,7 +481,8 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 .cookie(authCookie)
                 .post(ClientResponse.class, childrenIndexes);
     }
-    private ClientResponse setColors(Vertex vertex, JSONObject colors){
+
+    private ClientResponse setColors(Vertex vertex, JSONObject colors) {
         return resource
                 .path(
                         vertex.uri().getPath()
