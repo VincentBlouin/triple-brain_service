@@ -38,6 +38,9 @@ public class CreationDateScenario implements JsTestScenario {
      * b7-r72->b72
      * b7-r73->b73
      * b7-r74->b74
+     * b1-r8->b8
+     * b1-r9->b9
+     * b1-r10->b10
      */
 
     @Inject
@@ -65,7 +68,10 @@ public class CreationDateScenario implements JsTestScenario {
             b71,
             b72,
             b73,
-            b74;
+            b74,
+            b8,
+            b9,
+            b10;
     private SubGraphPojo
             subGraphForB1,
             subGraphForB7;
@@ -145,6 +151,18 @@ public class CreationDateScenario implements JsTestScenario {
                 user.username()
         );
         b74.label("b74");
+        b8 = vertexFactory.createForOwner(
+                user.username()
+        );
+        b8.label("8");
+        b9 = vertexFactory.createForOwner(
+                user.username()
+        );
+        b9.label("9");
+        b10 = vertexFactory.createForOwner(
+                user.username()
+        );
+        b10.label("10");
         s1 = vertexFactory.createForOwner(
                 user.username()
         );
@@ -189,6 +207,12 @@ public class CreationDateScenario implements JsTestScenario {
         r73.label("r73");
         EdgeOperator r74 = b7.addRelationToVertex(b74);
         r74.label("r74");
+        EdgeOperator r8 = b1.addRelationToVertex(b8);
+        r8.label("r8");
+        EdgeOperator r9 = b1.addRelationToVertex(b9);
+        r9.label("r9");
+        EdgeOperator r10 = b1.addRelationToVertex(b10);
+        r10.label("r10");
     }
 
     private void setupcreationDatesForSubGraphForB1() {
@@ -222,11 +246,20 @@ public class CreationDateScenario implements JsTestScenario {
                 b7.uri()
         ).setCreationDate(b1CreationDate.plusDays(7).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
-                s2.uri()
+                b8.uri()
         ).setCreationDate(b1CreationDate.plusDays(8).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
-                s3.uri()
+                b9.uri()
         ).setCreationDate(b1CreationDate.plusDays(9).toDate().getTime());
+        subGraphForB1.vertexWithIdentifier(
+                b10.uri()
+        ).setCreationDate(b1CreationDate.plusDays(10).toDate().getTime());
+        subGraphForB1.vertexWithIdentifier(
+                s2.uri()
+        ).setCreationDate(b1CreationDate.plusDays(11).toDate().getTime());
+        subGraphForB1.vertexWithIdentifier(
+                s3.uri()
+        ).setCreationDate(b1CreationDate.plusDays(12).toDate().getTime());
     }
 
     private void setupcreationDatesForSubGraphForB7() {
