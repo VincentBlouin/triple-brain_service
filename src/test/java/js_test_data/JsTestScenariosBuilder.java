@@ -37,7 +37,7 @@ public class JsTestScenariosBuilder {
             new DeepGraphScenario(),
             new DeepGraphWithCircularityScenario(),
             new MergeBubbleGraphScenario(),
-            new ThreeBubblesGraphScenario(),
+            new ThreeScenario(),
             new GraphWithAnInverseRelationScenario(),
             new GraphWithSimilarRelationsScenario(),
             new GroupRelationWithImageScenario(),

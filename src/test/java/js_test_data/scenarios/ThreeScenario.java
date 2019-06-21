@@ -28,7 +28,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-public class ThreeBubblesGraphScenario implements JsTestScenario {
+public class ThreeScenario implements JsTestScenario {
 
     /*
     * b1-r1->b2
