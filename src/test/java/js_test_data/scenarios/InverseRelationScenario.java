@@ -18,7 +18,7 @@ import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.inject.Inject;
 
-public class GraphWithAnInverseRelationScenario implements JsTestScenario {
+public class InverseRelationScenario implements JsTestScenario {
 
     /*
     * me -going straight->straight bubble

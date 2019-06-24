@@ -28,7 +28,7 @@ import org.joda.time.DateTime;
 import javax.inject.Inject;
 import java.util.List;
 
-public class GraphWithSimilarRelationsScenario implements JsTestScenario {
+public class SimilarRelationsScenario implements JsTestScenario {
 
     /*
     * me -Possession of book 1->book 1
