@@ -23,7 +23,7 @@ import guru.bubl.module.model.graph.SubGraphJson;
 import javax.inject.Inject;
 import java.net.URI;
 
-public class GraphWithHiddenSimilarRelationsScenario implements JsTestScenario {
+public class HiddenGroupRelationsScenario implements JsTestScenario {
 
     /*
      * b1-r1->b2
