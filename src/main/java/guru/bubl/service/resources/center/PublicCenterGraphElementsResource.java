@@ -24,18 +24,18 @@ public class PublicCenterGraphElementsResource {
     PublicCenterGraphElementsResource(
             CenterGraphElementsOperatorFactory centerGraphElementsOperatorFactory,
             @Assisted User user
-    ){
+    ) {
         this.centerGraphElementsOperatorFactory = centerGraphElementsOperatorFactory;
         this.user = user;
     }
 
     @GET
-    public Response get(){
+    public Response get() {
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
                         centerGraphElementsOperatorFactory.forUser(
                                 user
-                        ).getPublicOnlyOfType()
+                        ).getPublicOnlyOfTypeWithLimit(20)
                 )
         ).build();
     }
