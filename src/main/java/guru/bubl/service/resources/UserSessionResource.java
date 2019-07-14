@@ -33,10 +33,10 @@ public class UserSessionResource {
     @GET
     @Path("/")
     public Response get(
-        @Context HttpServletRequest request,
-        @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+            @Context HttpServletRequest request,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if(!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)){
+        if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         return Response.ok(
@@ -54,15 +54,15 @@ public class UserSessionResource {
             JSONObject loginInfo,
             @Context HttpServletRequest request,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ){
-        if(sessionHandler.isUserInSession(request.getSession(), persistentSessionId)){
+    ) {
+        if (sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
             return Response.status(
                     Response.Status.CONFLICT.getStatusCode()
             ).build();
         }
         try {
             User user = userRepository.findByEmail(
-                    loginInfo.getString(UserJson.EMAIL)
+                    loginInfo.getString(UserJson.EMAIL).toLowerCase().trim()
             );
             if (user.hasPassword(
                     loginInfo.getString(UserJson.PASSWORD)
@@ -71,13 +71,13 @@ public class UserSessionResource {
                 Response.ResponseBuilder response = Response.ok(
                         UserJson.toJson(user)
                 );
-                if(loginInfo.optBoolean("staySignedIn")){
+                if (loginInfo.optBoolean("staySignedIn")) {
                     response.cookie(sessionHandler.persistSessionForUser(
                             request.getSession(),
                             user
                     ));
-                }else{
-                    if(sessionHandler.isUserInSession(request.getSession(), persistentSessionId)){
+                } else {
+                    if (sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
                         sessionHandler.removePersistentSession(
                                 persistentSessionId
                         );
@@ -88,7 +88,7 @@ public class UserSessionResource {
             }
         } catch (NonExistingUserException e) {
             return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-        } catch(JSONException e){
+        } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
@@ -100,14 +100,14 @@ public class UserSessionResource {
     public Response logout(
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId,
             @Context HttpServletRequest request
-    ){
+    ) {
         sessionHandler.removePersistentSession(persistentSessionId);
         request.getSession().setAttribute(SecurityInterceptor.AUTHENTICATION_ATTRIBUTE_KEY, false);
         request.getSession().setAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY, null);
         return Response.ok().build();
     }
 
-    public static void authenticateUserInSession(User user, HttpSession session){
+    public static void authenticateUserInSession(User user, HttpSession session) {
         session.setAttribute(SecurityInterceptor.AUTHENTICATION_ATTRIBUTE_KEY, true);
         session.setAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY, user);
     }
