@@ -18,16 +18,18 @@ import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.inject.Inject;
 
-public class GraphWithCircularityScenario implements JsTestScenario {
+public class CircularityScenario implements JsTestScenario {
 
     /*
-    * A graph
-    * b1-r1->b2
-    * b2-r2->b3
-    *
-    * Another graph
-    * b3-r3->b1
-    */
+     * A graph
+     * b1-r1->b2
+     * b2-r2->b3
+     * b2-r4->b4
+     *
+     * Another graph
+     * b3-r3->b1
+     * b3-r5->b5
+     */
 
     @Inject
     GraphFactory graphFactory;
@@ -40,7 +42,9 @@ public class GraphWithCircularityScenario implements JsTestScenario {
     private VertexOperator
             b1,
             b2,
-            b3;
+            b3,
+            b4,
+            b5;
 
     @Override
     public JSONObject build() {
@@ -94,11 +98,21 @@ public class GraphWithCircularityScenario implements JsTestScenario {
                 user.username()
         );
         b3.label("b3");
+        b4 = vertexFactory.createForOwner(
+                user.username()
+        );
+        b4.label("b4");
+        b5 = vertexFactory.createForOwner(
+                user.username()
+        );
+        b5.label("b5");
     }
 
     private void createRelations() {
         b1.addRelationToVertex(b2).label("r1");
         b2.addRelationToVertex(b3).label("r2");
+        b2.addRelationToVertex(b4).label("r4");
         b3.addRelationToVertex(b1).label("r3");
+        b3.addRelationToVertex(b5).label("r5");
     }
 }
