@@ -31,19 +31,19 @@ import java.util.List;
 public class GroupRelationsScenario implements JsTestScenario {
 
     /*
-    * me -Possession of book 1->book 1
-    * me <-Possessed by book 2-book 2
-    * me -Possession of book 3->book 3
-    * me -Possession of book 3 copy->book 3 copy
-    * book3 has two hidden relations
-    * Relation "Possession of book 3 copy" is identified to relation "Possession of book 3"
-    * all possession relations are identified to possession
-    * me -other relation->other bubble
-    * me -other relation 2->other bubble 2
-    * other bubble with early creation date
-    * me -original relation->b1
-    * me -same as original relation->b2
-    */
+     * me -Possession of book 1->book 1
+     * me <-Possessed by book 2-book 2
+     * me -Possession of book 3->book 3
+     * me -Possession of book 3 copy->book 3 copy
+     * book3 has two hidden relations
+     * Relation "Possession of book 3 copy" is identified to relation "Possession of book 3"
+     * all possession relations are identified to possession
+     * me -other relation->other bubble
+     * me -other relation 2->other bubble 2
+     * other bubble with early creation date
+     * me -original relation->b1
+     * me -same as original relation->b2
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -165,25 +165,28 @@ public class GroupRelationsScenario implements JsTestScenario {
     private void createEdges() {
         rBook1 = me.addRelationToVertex(book1);
         rBook1.label("Possession of book 1");
-        rBook1.addMeta(
+        IdentifierPojo possession = book1.addMeta(
                 modelTestScenarios.possessionIdentification()
+        ).values().iterator().next();
+        rBook1.addMeta(
+                possession
         );
         rBook2 = book2.addRelationToVertex(me);
         rBook2.label("Possessed by book 2");
         rBook2.addMeta(
-                modelTestScenarios.possessionIdentification()
+                possession
         );
         rBook3 = me.addRelationToVertex(book3);
         rBook3.label("Possession of book 3");
         rBook3.addMeta(
-                modelTestScenarios.possessionIdentification()
+                possession
         );
         rBook3.addMeta(
-                modelTestScenarios.possessionIdentification()
+                possession
         );
         rBook3Copy = me.addRelationToVertex(book3Copy);
         rBook3Copy.addMeta(
-                modelTestScenarios.possessionIdentification()
+                possession
         );
         rBook3Copy.addMeta(
                 TestScenarios.identificationFromFriendlyResource(
