@@ -117,8 +117,8 @@ public class VertexResource {
         EdgePojo newEdge;
         if (options.has("vertexId") && options.has("edgeId")) {
             newEdge = sourceVertex.addVertexAndRelationWithIds(
-                    UUID.fromString(options.optString("vertexId")),
-                    UUID.fromString(options.optString("edgeId"))
+                    options.optString("vertexId"),
+                    options.optString("edgeId")
             );
         } else {
             newEdge = sourceVertex.addVertexAndRelation();
