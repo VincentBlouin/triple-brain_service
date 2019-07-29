@@ -33,6 +33,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -113,9 +114,15 @@ public class VertexResource {
         VertexOperator sourceVertex = vertexFromShortId(
                 sourceVertexShortId
         );
-
         EdgePojo newEdge;
-        newEdge = sourceVertex.addVertexAndRelation();
+        if (options.has("vertexId") && options.has("edgeId")) {
+            newEdge = sourceVertex.addVertexAndRelationWithIds(
+                    UUID.fromString(options.optString("vertexId")),
+                    UUID.fromString(options.optString("edgeId"))
+            );
+        } else {
+            newEdge = sourceVertex.addVertexAndRelation();
+        }
         VertexInSubGraphPojo newVertex = newEdge.destinationVertex();
         VertexInSubGraphPojo sourceVertexPojo = new VertexInSubGraphPojo(
                 sourceVertex.uri()

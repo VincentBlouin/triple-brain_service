@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.Assert.assertFalse;
@@ -141,6 +142,40 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 .cookie(authCookie)
                 .post(ClientResponse.class);
         assertThat(response.getStatus(), is(Response.Status.FORBIDDEN.getStatusCode()));
+    }
+
+    @Test
+    public void can_specify_id_when_adding_a_vertex_and_relation_with() throws Exception {
+        UserUris userUris = new UserUris(defaultAuthenticatedUser);
+        URI vertexUri = userUris.generateVertexUri();
+        URI edgeUri = userUris.generateEdgeUri();
+        JSONObject options = new JSONObject().put(
+                "vertexId", UserUris.graphElementShortId(vertexUri)
+        ).put("edgeId", UserUris.graphElementShortId(edgeUri));
+        ClientResponse response = resource
+                .path(
+                        vertexAUri().getPath()
+                )
+                .cookie(authCookie)
+                .post(ClientResponse.class, options);
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+        JSONObject createdStatement = response.getEntity(JSONObject.class);
+        EdgePojo newEdge = EdgeJson.fromJson(
+                createdStatement.getJSONObject(
+                        StatementJsonFields.edge.name()
+                )
+        );
+        assertThat(
+                newEdge.uri(),
+                is(edgeUri)
+        );
+        assertThat(
+                newEdge.destinationVertex().uri(),
+                is(vertexUri)
+        );
     }
 
     @Test
