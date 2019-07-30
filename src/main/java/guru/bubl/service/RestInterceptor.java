@@ -29,6 +29,7 @@ public class RestInterceptor implements MethodInterceptor {
         try{
             returnedObject = invocation.proceed();
         }catch(Exception e){
+            e.printStackTrace();
             throw e;
         }finally {
             graphTransaction.after(state);
