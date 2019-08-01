@@ -59,7 +59,8 @@ public class JsTestScenariosBuilder {
             new SameLevelRelationsWithMoreThanOneCommonMetaScenario(),
             new MetasWithSameLabelSearchResultScenario(),
             new MetaCenterChildHavingGroupRelationScenario(),
-            new ThreeLevelDeepGroupRelationScenario()
+            new ThreeLevelDeepGroupRelationScenario(),
+            new ConvertVertexToGroupRelationScenario()
     );
 
 
