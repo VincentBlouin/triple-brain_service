@@ -17,9 +17,6 @@ import js_test_data.JsTestScenario;
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-
 public class MetasWithSameLabelSearchResultScenario extends AbstractScenario implements JsTestScenario {
 
     /*

@@ -4,20 +4,16 @@
 
 package guru.bubl.service.resources.vertex;
 
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.subgraph.SubGraph;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.SubGraphJson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +38,6 @@ public class NotOwnedSurroundGraphResource {
 
     @GET
     @Path("/")
-    @GraphTransactional
     public Response get(@QueryParam("depth") Integer depth) {
         Set<ShareLevel> inShareLevels = new HashSet<>();
         inShareLevels.add(ShareLevel.PUBLIC);

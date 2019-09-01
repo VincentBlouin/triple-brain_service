@@ -8,7 +8,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
 
 import javax.ws.rs.GET;

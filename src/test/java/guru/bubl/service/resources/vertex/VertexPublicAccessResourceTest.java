@@ -6,7 +6,6 @@ package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

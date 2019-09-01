@@ -5,14 +5,14 @@
 package guru.bubl.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONObject;
-import org.junit.Before;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.json.UserJson;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import org.codehaus.jettison.json.JSONObject;
+import org.junit.Before;
 
 import java.net.URI;
 

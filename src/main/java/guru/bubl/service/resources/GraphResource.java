@@ -7,22 +7,25 @@ package guru.bubl.service.resources;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.GraphElementOperatorFactory;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
-import guru.bubl.service.resources.meta.IdentifierResource;
 import guru.bubl.service.resources.meta.IdentificationResourceFactory;
+import guru.bubl.service.resources.meta.IdentifierResource;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
-import guru.bubl.service.resources.schema.SchemaResource;
-import guru.bubl.service.resources.schema.SchemaResourceFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -38,10 +41,13 @@ public class GraphResource {
     EdgeResourceFactory edgeResourceFactory;
 
     @Inject
-    SchemaResourceFactory schemaResourceFactory;
+    IdentificationResourceFactory identificationResourceFactory;
 
     @Inject
-    IdentificationResourceFactory identificationResourceFactory;
+    GraphElementOperatorFactory graphElementOperatorFactory;
+
+    @Inject
+    CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     private User user;
 
@@ -50,6 +56,15 @@ public class GraphResource {
             @Assisted User user
     ) {
         this.user = user;
+    }
+
+    @Path("/{type}/{shortId}/center")
+    @DELETE
+    public Response removeCenter(@PathParam("type") String type, @PathParam("shortId") String shortId) {
+        centerGraphElementOperatorFactory.usingFriendlyResource(
+                graphElementFromShortIdAndType(shortId, type)
+        ).remove();
+        return Response.noContent().build();
     }
 
     @Path("/vertex")
@@ -66,12 +81,12 @@ public class GraphResource {
         );
     }
 
-    @Path("/schema")
-    public SchemaResource schemaResource() {
-        return schemaResourceFactory.fromUserGraph(
-                userGraph()
-        );
-    }
+//    @Path("/schema")
+//    public SchemaResource schemaResource() {
+//        return schemaResourceFactory.fromUserGraph(
+//                userGraph()
+//        );
+//    }
 
     @Path("/identification")
     public IdentifierResource identificationResource() {
@@ -85,6 +100,19 @@ public class GraphResource {
         return graphFactory.loadForUser(
                 user
         );
+    }
+
+    private GraphElementOperator graphElementFromShortIdAndType(String shortId, String typeStr) {
+        GraphElementType type;
+        if (typeStr.equals("identification")) {
+            type = GraphElementType.Meta;
+        } else {
+            type = GraphElementType.valueOf(typeStr.substring(0, 1).toUpperCase() + typeStr.substring(1));
+        }
+        URI uri = new UserUris(
+                user
+        ).uriFromTypeAndShortId(type, shortId);
+        return graphElementOperatorFactory.withUri(uri);
     }
 
 }

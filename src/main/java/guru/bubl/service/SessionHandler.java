@@ -7,7 +7,6 @@ package guru.bubl.service;
 import guru.bubl.module.model.User;
 
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 
 public interface SessionHandler {

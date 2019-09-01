@@ -8,19 +8,16 @@ import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import guru.bubl.module.model.FriendlyResourceFactory;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.model.ModelTestModule;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
 import guru.bubl.module.neo4j_user_repository.Neo4jUserRepositoryModule;
 import guru.bubl.service.RedisSessionHandler;
-import guru.bubl.service.RestInterceptor;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
@@ -36,20 +33,13 @@ import guru.bubl.service.resources.schema.SchemaResourceFactory;
 import guru.bubl.service.resources.schema.SchemasResource;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
-import guru.bubl.service.usage_log.H2DataSource;
-import guru.bubl.service.usage_log.SQLConnection;
 import guru.bubl.service.usage_log.UsageLogFilter;
-import guru.bubl.service.usage_log.UsageLogModule;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.DataSource;
-import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.google.inject.jndi.JndiIntegration.fromJndi;
 
 public class GuiceConfig extends GuiceServletContextListener {
 
@@ -60,11 +50,6 @@ public class GuiceConfig extends GuiceServletContextListener {
             protected void configureServlets() {
                 bind(Context.class).to(InitialContext.class);
                 bind(Gson.class).toInstance(JsonUtils.getGson());
-                RestInterceptor restInterceptor = new RestInterceptor();
-                requestInjection(restInterceptor);
-
-                bindInterceptor(Matchers.any(), Matchers.annotatedWith(Path.class),
-                        restInterceptor);
                 filter("*").through(UsageLogFilter.class);
                 install(new Neo4jUserRepositoryModule());
 

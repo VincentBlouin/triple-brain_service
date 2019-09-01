@@ -20,9 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Ignore
 public class UsageLogFilterTest extends GraphManipulationRestTestUtils {

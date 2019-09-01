@@ -9,13 +9,8 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 
 import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;

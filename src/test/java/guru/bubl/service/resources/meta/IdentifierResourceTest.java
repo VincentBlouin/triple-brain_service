@@ -6,7 +6,6 @@ package guru.bubl.service.resources.meta;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
@@ -15,13 +14,10 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import java.net.URI;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;

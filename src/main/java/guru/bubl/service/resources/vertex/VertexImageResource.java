@@ -6,17 +6,16 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.FriendlyResourceFactory;
+import guru.bubl.module.model.Image;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.json.ImageJson;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.imgscalr.Scalr;
-import guru.bubl.module.model.FriendlyResourceFactory;
-import guru.bubl.module.model.Image;
-import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.json.ImageJson;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -68,7 +67,6 @@ public class VertexImageResource {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @GraphTransactional
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/")
     public Response add(@Context HttpServletRequest request) {

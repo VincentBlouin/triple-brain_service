@@ -4,19 +4,19 @@
 
 package guru.bubl.service.resources.test;
 
-import guru.bubl.module.model.graph.*;
-import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.service.SessionHandler;
-import org.codehaus.jettison.json.JSONArray;
 import guru.bubl.module.common_utils.Uris;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.service.SessionHandler;
+import org.codehaus.jettison.json.JSONArray;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +42,6 @@ public class VertexResourceTestUtils {
     SessionHandler sessionHandler;
 
     @Path("{vertexId}")
-    @GraphTransactional
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(
@@ -61,7 +60,6 @@ public class VertexResourceTestUtils {
     }
 
     @Path("{vertexId}/connected_edges")
-    @GraphTransactional
     @GET
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
@@ -79,7 +77,6 @@ public class VertexResourceTestUtils {
 
     @Path("{vertexId}/has_destination/{otherVertexId}")
     @Produces(MediaType.TEXT_PLAIN)
-    @GraphTransactional
     @GET
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));

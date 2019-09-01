@@ -12,7 +12,6 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgePojo;

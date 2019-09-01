@@ -9,7 +9,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.search.GraphSearch;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -39,22 +38,21 @@ public class SearchResource {
 
     @POST
     @Path("own_all_resource/auto_complete")
-    @GraphTransactional
     public Response searchAllOwnResourcesForAutoComplete(
             JSONObject options
     ) {
-        return NoEx.wrap(() -> Response.ok(
+        return Response.ok(
                 gson.toJson(
                         graphSearch.searchForAllOwnResources(
-                                options.getString("searchText"),
+                                options.optString("searchText"),
                                 user
                         )
-                )).build()).get();
+                )
+        ).build();
     }
 
     @POST
     @Path("own_vertices/auto_complete")
-    @GraphTransactional
     public Response searchOwnVerticesForAutoComplete(
             JSONObject options
     ) {
@@ -70,7 +68,6 @@ public class SearchResource {
 
     @POST
     @Path("own_tags/auto_complete")
-    @GraphTransactional
     public Response searchOwnTagsForAutoComplete(
             JSONObject options
     ) {
@@ -86,7 +83,6 @@ public class SearchResource {
 
     @POST
     @Path("own_vertices_and_schemas/auto_complete")
-    @GraphTransactional
     public Response searchOwnVerticesAndSchemasForAutoComplete(
             JSONObject options
     ) {
@@ -102,7 +98,6 @@ public class SearchResource {
 
     @POST
     @Path("vertices/auto_complete")
-    @GraphTransactional
     public Response searchVerticesForAutoComplete(
             JSONObject options
     ) {
@@ -117,7 +112,6 @@ public class SearchResource {
 
     @POST
     @Path("relations/auto_complete")
-    @GraphTransactional
     public Response searchRelationsForAutoComplete(
             JSONObject options
     ) {
@@ -132,7 +126,6 @@ public class SearchResource {
 
     @GET
     @Path("details")
-    @GraphTransactional
     public Response getDetails(
             @QueryParam("uri") String uri
     ) {

@@ -7,11 +7,11 @@ package js_test_data;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import guru.bubl.module.model.ModelTestModule;
-import org.neo4j.graphdb.GraphDatabaseService;
 import guru.bubl.module.model.ModelModule;
-import guru.bubl.test.module.utils.ModelTestScenarios;
+import guru.bubl.module.model.ModelTestModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class JsTestScenariosStarter {
 

@@ -10,7 +10,6 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementType;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -54,7 +53,6 @@ public class EdgeResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
-    @GraphTransactional
     public Response addRelation(
             @QueryParam("sourceVertexId") String sourceVertexId,
             @QueryParam("destinationVertexId") String destinationVertexId
@@ -80,7 +78,6 @@ public class EdgeResource {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{edgeShortId}")
-    @GraphTransactional
     public Response removeRelation(
             @PathParam("edgeShortId") String edgeShortId
     ) {
@@ -92,7 +89,6 @@ public class EdgeResource {
     @POST
     @Path("{edgeShortId}/label")
     @Produces(MediaType.TEXT_PLAIN)
-    @GraphTransactional
     public Response modifyEdgeLabel(
             @PathParam("edgeShortId") String edgeShortId,
             JSONObject localizedLabel) {
@@ -110,7 +106,6 @@ public class EdgeResource {
 
     @PUT
     @Path("{shortId}/inverse")
-    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response inverse(@PathParam("shortId") String shortId) {
         edgeFromShortId(shortId).inverse();
@@ -118,16 +113,14 @@ public class EdgeResource {
     }
 
     @Path("{shortId}/identification")
-    @GraphTransactional
     public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forGraphElement(
                 edgeFromShortId(shortId),
-                GraphElementType.edge
+                GraphElementType.Edge
         );
     }
 
     @POST
-    @GraphTransactional
     @Path("{shortId}/comment")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateComment(
@@ -140,7 +133,6 @@ public class EdgeResource {
     }
 
     @PUT
-    @GraphTransactional
     @Path("{shortId}/source-vertex/{sourceVertexShortId}")
     public Response changeSourceVertex(
             @PathParam("shortId") String shortId,
@@ -160,7 +152,6 @@ public class EdgeResource {
     }
 
     @PUT
-    @GraphTransactional
     @Path("{shortId}/destination-vertex/{destinationVertexShortId}")
     public Response changeDestinationVertex(
             @PathParam("shortId") String shortId,
@@ -179,7 +170,6 @@ public class EdgeResource {
         return Response.noContent().build();
     }
 
-    @GraphTransactional
     @Path("{shortId}/surround_graph")
     public OwnedSurroundGraphResource getSurroundGraph(
             @PathParam("shortId") String shortId

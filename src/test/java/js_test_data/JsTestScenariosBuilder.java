@@ -6,14 +6,14 @@ package js_test_data;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Injector;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.test.GraphComponentTest;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
 import js_test_data.scenarios.*;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.test.GraphComponentTest;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
 
 import javax.inject.Inject;
 import java.io.File;

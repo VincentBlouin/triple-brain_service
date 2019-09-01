@@ -7,15 +7,17 @@ package guru.bubl.service.resources.schema;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.graph.*;
+import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.graph.GraphElement;
+import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.GraphElementOperatorFactory;
+import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
 import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.schema.SchemaOperator;
-import guru.bubl.module.model.json.LocalizedStringJson;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -49,7 +51,6 @@ public class SchemaPropertyResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/")
     public Response create() {
         GraphElement property = schemaOperator.addProperty();
@@ -61,7 +62,6 @@ public class SchemaPropertyResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/{shortId}/label")
     public Response updateLabel(@PathParam("shortId") String shortId, JSONObject label) {
         URI uri = uriFromShortId(shortId);
@@ -77,7 +77,6 @@ public class SchemaPropertyResource {
     }
 
     @DELETE
-    @GraphTransactional
     @Path("/{shortId}")
     public Response delete(@PathParam("shortId") String shortId) {
         graphElementOperatorFromShortId(shortId).remove();
@@ -85,7 +84,6 @@ public class SchemaPropertyResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("{shortId}/comment")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateComment(
@@ -99,7 +97,6 @@ public class SchemaPropertyResource {
     }
 
     @GET
-    @GraphTransactional
     @Path("{shortId}/surround_graph")
     public Response getSurroundGraph(
             @PathParam("shortId") String shortId
@@ -113,7 +110,6 @@ public class SchemaPropertyResource {
         );
     }
 
-    @GraphTransactional
     @Path("/{shortId}/identification")
     public GraphElementIdentificationResource getGraphElementIdentificationResource(@PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forSchemaProperty(

@@ -5,9 +5,10 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import org.junit.Test;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.net.URI;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+@Ignore("schema feature suspended")
 public class SchemaNonOwnedResourceTest extends GraphManipulationRestTestUtils {
 
     @Test

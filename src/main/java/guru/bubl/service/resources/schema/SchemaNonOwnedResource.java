@@ -7,9 +7,8 @@ package guru.bubl.service.resources.schema;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.schema.SchemaJson;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,7 +29,6 @@ public class SchemaNonOwnedResource {
     }
 
     @GET
-    @GraphTransactional
     @Path("/{shortId}")
     public Response get(@PathParam("shortId") String shortId){
         return Response.ok().entity(SchemaJson.toJson(

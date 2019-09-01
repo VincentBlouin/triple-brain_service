@@ -5,12 +5,11 @@
 package guru.bubl.service.resources.test;
 
 import com.google.gson.Gson;
-import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
+import org.neo4j.driver.v1.Session;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,7 +17,6 @@ import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.Connection;
 import java.util.HashMap;
 
 @Path("test/users")
@@ -26,7 +24,7 @@ import java.util.HashMap;
 public class UserResourceTestUtils {
 
     @Inject
-    protected Connection connection;
+    protected Session session;
 
     @Inject
     @Named("session")
@@ -57,14 +55,12 @@ public class UserResourceTestUtils {
 
     @Path("/")
     @DELETE
-    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteAllUsers() {
         sessionsInTests.clear();
-        NoEx.wrap(() ->
-                connection.createStatement().executeQuery(
-                        "START n=node:node_auto_index('type:user') OPTIONAL MATCH n-[r]->o DELETE r,n"
-                )).get();
+        session.run(
+                "MATCH(n:User) DETACH DELETE n"
+        );
         return Response.noContent().build();
     }
 

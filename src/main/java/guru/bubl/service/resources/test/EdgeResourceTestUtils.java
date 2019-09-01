@@ -5,11 +5,10 @@
 package guru.bubl.service.resources.test;
 
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.GraphTransactional;
+import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.service.SessionHandler;
 
 import javax.inject.Inject;
@@ -33,7 +32,6 @@ public class EdgeResourceTestUtils {
     SessionHandler sessionHandler;
 
     @Path("{edgeId}")
-    @GraphTransactional
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId)throws Exception{
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));

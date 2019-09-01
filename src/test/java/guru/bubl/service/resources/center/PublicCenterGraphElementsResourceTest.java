@@ -10,7 +10,6 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;

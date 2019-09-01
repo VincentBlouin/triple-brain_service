@@ -6,25 +6,24 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
-import org.junit.Test;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static guru.bubl.module.model.json.UserJson.*;
+import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
+import static guru.bubl.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
-import static guru.bubl.module.model.validator.UserValidator.USER_NAME_ALREADY_REGISTERED;
-import static guru.bubl.module.model.json.UserJson.*;
 
 public class UserResourceTest extends GraphManipulationRestTestUtils {
 

@@ -13,6 +13,7 @@ import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -24,6 +25,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@Ignore("schema feature suspended")
 public class SchemaResourceTest extends GraphManipulationRestTestUtils {
 
     @Test

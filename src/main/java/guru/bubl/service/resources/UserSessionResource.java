@@ -5,7 +5,6 @@
 package guru.bubl.service.resources;
 
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.NonExistingUserException;
 import guru.bubl.module.repository.user.UserRepository;
@@ -18,7 +17,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -48,7 +49,6 @@ public class UserSessionResource {
 
     @POST
     @Produces(MediaType.WILDCARD)
-    @GraphTransactional
     @Path("/")
     public Response authenticate(
             JSONObject loginInfo,

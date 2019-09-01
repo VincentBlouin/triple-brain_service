@@ -15,6 +15,7 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -25,6 +26,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
 
+@Ignore("schema feature suspended")
 public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
 
     @Test

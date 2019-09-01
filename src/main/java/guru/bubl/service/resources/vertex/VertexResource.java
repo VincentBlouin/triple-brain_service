@@ -6,12 +6,10 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementType;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
@@ -33,7 +31,6 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +76,6 @@ public class VertexResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/")
     public Response createVertex() {
         VertexPojo newVertex = userGraph.createVertex();
@@ -105,7 +101,6 @@ public class VertexResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/{sourceVertexShortId}")
     public Response addVertexAndEdgeToSourceVertex(
             @PathParam("sourceVertexShortId") String sourceVertexShortId,
@@ -158,7 +153,6 @@ public class VertexResource {
     }
 
     @DELETE
-    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{shortId}")
     public Response removeVertex(
@@ -182,7 +176,6 @@ public class VertexResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("{shortId}/label")
     public Response updateVertexLabel(
             @PathParam("shortId") String shortId,
@@ -201,7 +194,6 @@ public class VertexResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("{shortId}/comment")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateVertexComments(
@@ -218,7 +210,6 @@ public class VertexResource {
 
 
     @Path("{shortId}/image")
-    @GraphTransactional
     public VertexImageResource image(
             @PathParam("shortId") String shortId
     ) {
@@ -229,7 +220,6 @@ public class VertexResource {
 
     @Path("any")
     @GET
-    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response getAnyVertexUri(
     ) {
@@ -239,7 +229,6 @@ public class VertexResource {
     }
 
     @Path("{shortId}/surround_graph")
-    @GraphTransactional
     public OwnedSurroundGraphResource getVertexSurroundGraphResource(
             @PathParam("shortId") String shortId,
             @QueryParam("center") String isCenter
@@ -259,17 +248,15 @@ public class VertexResource {
     }
 
     @Path("{shortId}/identification")
-    @GraphTransactional
     public GraphElementIdentificationResource getVertexIdentificationResource(
             @PathParam("shortId") String shortId) {
         return graphElementIdentificationResourceFactory.forGraphElement(
                 vertexFromShortId(shortId),
-                GraphElementType.vertex
+                GraphElementType.Vertex
         );
     }
 
     @Path("{shortId}/suggestions")
-    @GraphTransactional
     public VertexSuggestionResource getVertexSuggestionResource(
             @PathParam("shortId") String shortId
     ) {
@@ -280,7 +267,6 @@ public class VertexResource {
 
     @Path("{shortId}/shareLevel")
     @POST
-    @GraphTransactional
     public Response setShareLevel(@PathParam("shortId") String shortId, JSONObject shareLevel) {
         vertexFromShortId(shortId).setShareLevel(
                 ShareLevel.valueOf(
@@ -291,7 +277,6 @@ public class VertexResource {
     }
 
     @Path("collection")
-    @GraphTransactional
     public VertexCollectionResource getCollectionResource() {
         return vertexCollectionResourceFactory.withUserGraph(
                 userGraph
@@ -304,7 +289,6 @@ public class VertexResource {
      * Unsupported media type. I don't understand.
      */
     @Path("collection/public_access")
-    @GraphTransactional
     public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {
         return vertexCollectionPublicAccessResourceFactory.withUserGraph(
                 userGraph
@@ -312,7 +296,6 @@ public class VertexResource {
     }
 
     @Path("{shortId}/public_access")
-    @GraphTransactional
     public VertexPublicAccessResource getPublicAccessResource(
             @PathParam("shortId") String shortId
     ) {
@@ -323,7 +306,6 @@ public class VertexResource {
 
     @POST
     @Path("{shortId}/childrenIndex")
-    @GraphTransactional
     public Response saveChildrenIndexes(
             @PathParam("shortId") String shortId,
             JSONObject childrenIndexes
@@ -336,7 +318,6 @@ public class VertexResource {
 
     @POST
     @Path("{shortId}/colors")
-    @GraphTransactional
     public Response saveColors(
             @PathParam("shortId") String shortId,
             JSONObject colors
@@ -349,7 +330,6 @@ public class VertexResource {
 
     @POST
     @Path("{shortId}/font")
-    @GraphTransactional
     public Response saveFont(
             @PathParam("shortId") String shortId,
             JSONObject font
@@ -362,7 +342,6 @@ public class VertexResource {
 
     @POST
     @Path("{shortId}/mergeTo/{destinationShortId}")
-    @GraphTransactional
     public Response mergeTo(
             @PathParam("shortId") String shortId,
             @PathParam("destinationShortId") String destinationShortId

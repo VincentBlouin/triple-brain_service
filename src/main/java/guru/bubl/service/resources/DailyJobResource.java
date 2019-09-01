@@ -5,7 +5,6 @@
 package guru.bubl.service.resources;
 
 import guru.bubl.module.model.admin.WholeGraphAdminDailyJob;
-import guru.bubl.module.model.graph.GraphTransactional;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -22,7 +21,6 @@ public class DailyJobResource {
     WholeGraphAdminDailyJob wholeGraphAdminDailyJob;
 
     @GET
-    @GraphTransactional
     @Path("/")
     public Response doDailyJob(){
         System.out.println("Current DateTime: " + LocalDateTime.now());

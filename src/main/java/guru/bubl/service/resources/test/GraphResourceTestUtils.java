@@ -34,7 +34,6 @@ public class GraphResourceTestUtils {
     SessionHandler sessionHandler;
 
     @Path("graph_element/{graphElementId}/exists")
-    @GraphTransactional
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("graphElementId") String graphElementId)throws Exception{
@@ -48,7 +47,6 @@ public class GraphResourceTestUtils {
 
 
     @Path("set_all_number_of_connected_edges_to_zero")
-    @GraphTransactional
     @Produces(MediaType.TEXT_PLAIN)
     public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
         for(VertexInSubGraphOperator vertex: wholeGraph.getAllVertices()){

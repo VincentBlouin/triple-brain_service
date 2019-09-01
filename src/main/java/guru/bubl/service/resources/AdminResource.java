@@ -5,10 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import guru.bubl.module.model.WholeGraph;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.search.GraphIndexer;
 
 import javax.ws.rs.POST;
@@ -24,7 +21,6 @@ public class AdminResource {
     protected WholeGraphAdmin wholeGraphAdmin;
 
     @Path("reindex")
-    @GraphTransactional
     @POST
     public Response reindexAll(){
         wholeGraphAdmin.reindexAll();
@@ -32,7 +28,6 @@ public class AdminResource {
     }
 
     @Path("refresh_number_of_connected_edges")
-    @GraphTransactional
     @POST
     public Response refreshNumberOfConnectedEdges(){
         wholeGraphAdmin.refreshNumberOfConnectedEdges();
@@ -40,7 +35,6 @@ public class AdminResource {
     }
 
     @Path("refresh_identifications_nb_references")
-    @GraphTransactional
     @POST
     public Response refreshAllIdentificationsNumberOfReferences(){
         wholeGraphAdmin.refreshNumberOfReferencesToAllIdentifications();
@@ -48,7 +42,6 @@ public class AdminResource {
     }
 
     @Path("remove_metas_having_zero_references")
-    @GraphTransactional
     @POST
     public Response removeMetasHavingZeroReferences(){
         wholeGraphAdmin.removeMetasHavingZeroReferences();
@@ -56,7 +49,6 @@ public class AdminResource {
     }
 
     @Path("re_add_identifications")
-    @GraphTransactional
     @POST
     public Response reAddIdentifications(){
         wholeGraphAdmin.reAddIdentifications();

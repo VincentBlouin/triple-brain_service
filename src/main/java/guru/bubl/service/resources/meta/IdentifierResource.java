@@ -11,7 +11,6 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.IdentificationOperator;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -49,7 +48,6 @@ public class IdentifierResource {
     }
 
     @GET
-    @GraphTransactional
     @Path("/{identificationShortId}")
     public Response get(@PathParam("identificationShortId") String identificationShortId) {
         IdentificationOperator identificationOperator = identificationFactory.withUri(
@@ -65,7 +63,6 @@ public class IdentifierResource {
 
 
     @POST
-    @GraphTransactional
     @Path("/{identificationShortId}/label")
     public Response updateLabel(
             @PathParam("identificationShortId") String identificationShortId,
@@ -87,7 +84,6 @@ public class IdentifierResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/{identificationShortId}/comment")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateNote(
@@ -109,7 +105,6 @@ public class IdentifierResource {
 
     @POST
     @Path("{shortId}/mergeTo/{destinationShortId}")
-    @GraphTransactional
     public Response mergeTo(
             @PathParam("shortId") String shortId,
             @PathParam("destinationShortId") String destinationShortId
@@ -135,7 +130,6 @@ public class IdentifierResource {
     }
 
     @Path("{shortId}/surround_graph")
-    @GraphTransactional
     public OwnedSurroundGraphResource getSurroundGraphResource(
             @PathParam("shortId") String identificationShortId
     ) {
@@ -158,4 +152,6 @@ public class IdentifierResource {
                 identificationOperator
         );
     }
+
+
 }

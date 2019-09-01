@@ -6,15 +6,14 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.search.GraphIndexer;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.SuggestionJson;
+import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.model.suggestion.SuggestionPojo;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -41,7 +40,6 @@ public class VertexSuggestionResource {
 
     @GET
     @Path("/")
-    @GraphTransactional
     public Response getSuggestions() {
         return Response.ok(
                 SuggestionJson.multipleToJson(
@@ -52,7 +50,6 @@ public class VertexSuggestionResource {
 
     @POST
     @Path("/")
-    @GraphTransactional
     public Response addSuggestions(JSONObject suggestions) {
         vertex.addSuggestions(
                 SuggestionJson.fromJsonArray(
@@ -64,7 +61,6 @@ public class VertexSuggestionResource {
 
     @POST
     @Path("/accept")
-    @GraphTransactional
     public Response acceptSuggestion(String suggestionJson) {
         Edge newEdge = vertex.acceptSuggestion(
                 SuggestionJson.fromJson(suggestionJson)
@@ -84,7 +80,6 @@ public class VertexSuggestionResource {
 
     @DELETE
     @Path("/")
-    @GraphTransactional
     public Response deleteSuggestions(JSONArray uris) {
         Map<URI, SuggestionPojo> suggestions = vertex.getSuggestions();
         for(int i = 0; i < uris.length(); i++){

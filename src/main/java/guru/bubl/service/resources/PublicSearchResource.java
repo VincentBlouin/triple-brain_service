@@ -5,7 +5,6 @@
 package guru.bubl.service.resources;
 
 import com.google.gson.Gson;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
 
@@ -29,7 +28,6 @@ public class PublicSearchResource {
 
     @GET
     @Path("/")
-    @GraphTransactional
     public Response search(@QueryParam("text") String searchText) {
         return Response.ok(
                 gson.toJson(
@@ -42,7 +40,6 @@ public class PublicSearchResource {
 
     @GET
     @Path("/details")
-    @GraphTransactional
     public Response searchDetails(@QueryParam("uri") String uri) {
         GraphElementSearchResult searchResult = graphSearch.getDetailsAnonymously(
                 URI.create(uri)

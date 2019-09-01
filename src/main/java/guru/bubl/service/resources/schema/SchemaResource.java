@@ -6,18 +6,17 @@ package guru.bubl.service.resources.schema;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.search.GraphIndexer;
-import guru.bubl.service.resources.GraphElementIdentificationResource;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphElementType;
-import guru.bubl.module.model.graph.GraphTransactional;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.graph.schema.SchemaPojo;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.graph.schema.SchemaJson;
+import guru.bubl.module.model.search.GraphIndexer;
+import guru.bubl.service.resources.GraphElementIdentificationResource;
 import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -49,7 +48,6 @@ public class SchemaResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/")
     public Response create() {
         SchemaPojo schema = userGraph.createSchema();
@@ -63,7 +61,6 @@ public class SchemaResource {
     }
 
     @GET
-    @GraphTransactional
     @Path("/{shortId}")
     public Response get(@PathParam("shortId") String shortId) {
         return Response.ok().entity(SchemaJson.toJson(
@@ -74,7 +71,6 @@ public class SchemaResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/{shortId}/label")
     public Response updateLabel(@PathParam("shortId") String shortId, JSONObject label) {
         SchemaOperator schema = userGraph.schemaOperatorWithUri(schemaUriFromShortId(
@@ -88,7 +84,6 @@ public class SchemaResource {
         return Response.noContent().build();
     }
 
-    @GraphTransactional
     @Path("/{shortId}/property")
     public SchemaPropertyResource getPropertyResource(@PathParam("shortId") String shortId) {
         SchemaOperator schema = userGraph.schemaOperatorWithUri(schemaUriFromShortId(
@@ -101,7 +96,6 @@ public class SchemaResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("{shortId}/comment")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateDescription(
@@ -115,7 +109,6 @@ public class SchemaResource {
         return Response.noContent().build();
     }
 
-    @GraphTransactional
     @Path("/{shortId}/identification")
     public GraphElementIdentificationResource getGraphElementIdentificationResource(@PathParam("shortId") String shortId) {
         SchemaOperator schema = userGraph.schemaOperatorWithUri(schemaUriFromShortId(
@@ -123,7 +116,7 @@ public class SchemaResource {
         ));
         return graphElementIdentificationResourceFactory.forGraphElement(
                 schema,
-                GraphElementType.schema
+                GraphElementType.Schema
         );
     }
 

@@ -6,12 +6,12 @@ package guru.bubl.service.resources;
 
 import com.google.inject.name.Named;
 import com.sun.jersey.api.core.HttpContext;
+import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.forgot_password.email.ForgotPasswordEmail;
+import guru.bubl.module.repository.user.UserRepository;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import guru.bubl.module.model.User;
-import guru.bubl.module.repository.user.UserRepository;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

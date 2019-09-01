@@ -4,8 +4,8 @@
 
 package guru.bubl.service.resources.schema;
 
-import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 
 public interface SchemaPropertyResourceFactory {
     SchemaPropertyResource forSchema(

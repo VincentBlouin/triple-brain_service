@@ -5,24 +5,21 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.Identifier;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Set;
 
 import static guru.bubl.module.model.json.UserJson.USER_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
+@Ignore("fork feature suspended")
 public class ForkResourceTest extends GraphManipulationRestTestUtils {
 
     @Test

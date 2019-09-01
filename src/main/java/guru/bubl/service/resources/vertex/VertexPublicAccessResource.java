@@ -6,7 +6,6 @@ package guru.bubl.service.resources.vertex;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphIndexer;
 
@@ -33,7 +32,6 @@ public class VertexPublicAccessResource {
 
     @POST
     @Path("/")
-    @GraphTransactional
     public Response makePublic(){
         vertex.makePublic();
         return Response.ok().build();
@@ -41,7 +39,6 @@ public class VertexPublicAccessResource {
 
     @DELETE
     @Path("/")
-    @GraphTransactional
     public Response makePrivate(){
         vertex.makePrivate();
         return Response.ok().build();

@@ -7,11 +7,11 @@ package js_test_data.scenarios;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.graph.SubGraphJson;
 import js_test_data.JsTestScenario;
 
 import javax.inject.Inject;

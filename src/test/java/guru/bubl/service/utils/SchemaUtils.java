@@ -6,10 +6,10 @@ package guru.bubl.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.graph.schema.Schema;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;

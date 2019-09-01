@@ -10,11 +10,9 @@ import com.lambdaworks.redis.api.sync.RedisStringCommands;
 import guru.bubl.module.model.User;
 import guru.bubl.module.repository.user.NonExistingUserException;
 import guru.bubl.module.repository.user.UserRepository;
-import org.eclipse.jetty.util.annotation.Name;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 import java.util.UUID;
 

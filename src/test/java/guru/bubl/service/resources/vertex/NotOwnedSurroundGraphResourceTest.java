@@ -5,16 +5,16 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
+import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.subgraph.SubGraph;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

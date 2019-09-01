@@ -8,17 +8,16 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Test;
-import guru.bubl.module.model.graph.edge.Edge;
 
 import javax.ws.rs.core.Response;
-
 import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;

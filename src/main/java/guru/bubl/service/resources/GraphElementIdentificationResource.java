@@ -9,7 +9,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementType;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.Identifier;
 import guru.bubl.module.model.graph.identification.IdentifierPojo;
@@ -53,14 +52,13 @@ public class GraphElementIdentificationResource {
     ) {
         this(
                 graphElement,
-                GraphElementType.property
+                GraphElementType.Property
         );
         this.schemaUri = schemaUri;
         this.userGraph = userGraph;
     }
 
     @POST
-    @GraphTransactional
     @Path("/")
     public Response add(JSONObject identificationJson) {
         IdentificationValidator validator = new IdentificationValidator();
@@ -81,7 +79,6 @@ public class GraphElementIdentificationResource {
     }
 
     @DELETE
-    @GraphTransactional
     @Path("/")
     public Response removeFriendlyResource(
             @QueryParam("uri") String identificationUri

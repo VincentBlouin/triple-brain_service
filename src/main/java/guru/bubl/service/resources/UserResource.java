@@ -15,7 +15,6 @@ import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -36,8 +35,6 @@ import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResource;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
-import guru.bubl.service.resources.schema.SchemaNonOwnedResource;
-import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -84,9 +81,6 @@ public class UserResource {
 
     @Inject
     SearchResourceFactory searchResourceFactory;
-
-    @Inject
-    SchemaNonOwnedResourceFactory schemaNonOwnedResourceFactory;
 
     @Inject
     CenterGraphElementsResourceFactory centerGraphElementsResourceFactory;
@@ -158,7 +152,6 @@ public class UserResource {
     }
 
     @Path("{username}/non_owned/vertex/{shortId}/surround_graph")
-    @GraphTransactional
     public NotOwnedSurroundGraphResource surroundGraphResource(
             @PathParam("username") String username,
             @PathParam("shortId") String shortId,
@@ -175,7 +168,6 @@ public class UserResource {
     }
 
     @Path("{username}/non_owned/edge/{shortId}/surround_graph")
-    @GraphTransactional
     public NotOwnedSurroundGraphResource surroundEdgeGraphResource(
             @PathParam("username") String username,
             @PathParam("shortId") String shortId,
@@ -196,7 +188,6 @@ public class UserResource {
     }
 
     @POST
-    @GraphTransactional
     @Path("/confirm-friendship-with-token")
     public Response confirmFriendship(
             JSONObject confirmation,
@@ -234,7 +225,6 @@ public class UserResource {
     }
 
     @Path("{username}/friends")
-    @GraphTransactional
     public FriendsResource friendsResource(
             @PathParam("username") String username,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
@@ -276,16 +266,16 @@ public class UserResource {
         );
     }
 
-    @Path("{username}/non_owned/schema")
-    public SchemaNonOwnedResource schemaNonOwnedResource(
-            @PathParam("username") String username
-    ) {
-        return schemaNonOwnedResourceFactory.fromUserGraph(
-                graphFactory.loadForUser(
-                        userRepository.findByUsername(username)
-                )
-        );
-    }
+//    @Path("{username}/non_owned/schema")
+//    public SchemaNonOwnedResource schemaNonOwnedResource(
+//            @PathParam("username") String username
+//    ) {
+//        return schemaNonOwnedResourceFactory.fromUserGraph(
+//                graphFactory.loadForUser(
+//                        userRepository.findByUsername(username)
+//                )
+//        );
+//    }
 
     @Path("{username}/search")
     public SearchResource searchResource(
@@ -371,7 +361,6 @@ public class UserResource {
 
     @POST
     @Produces(MediaType.WILDCARD)
-    @GraphTransactional
     @Path("/")
     public Response createUser(JSONObject jsonUser, @QueryParam("skipDefaultContent") Boolean skipDefaultContent) throws JSONException {
         User user = User.withEmailAndUsername(

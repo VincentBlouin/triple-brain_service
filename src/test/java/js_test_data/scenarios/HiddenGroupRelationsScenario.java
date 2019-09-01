@@ -6,19 +6,19 @@ package js_test_data.scenarios;
 
 import com.google.common.collect.Sets;
 import guru.bubl.module.common_utils.NoEx;
-import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.test.module.utils.ModelTestScenarios;
-import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
-import js_test_data.JsTestScenario;
-import org.codehaus.jettison.json.JSONObject;
 import guru.bubl.module.model.Image;
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.test.module.utils.ModelTestScenarios;
+import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import java.net.URI;

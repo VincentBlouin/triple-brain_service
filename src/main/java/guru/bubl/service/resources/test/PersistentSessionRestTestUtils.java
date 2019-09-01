@@ -6,7 +6,6 @@ package guru.bubl.service.resources.test;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import guru.bubl.module.model.graph.GraphTransactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,7 +31,6 @@ public class PersistentSessionRestTestUtils {
     Gson gson = new Gson();
 
     @Path("/")
-    @GraphTransactional
     @GET
     public Response getSession() {
         Type type = new TypeToken<Map<String, String>>(){}.getType();

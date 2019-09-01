@@ -15,7 +15,6 @@ import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
 import guru.bubl.module.model.friend.friend_request_email.FriendRequestEmail;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.repository.user.UserRepository;
 import org.codehaus.jettison.json.JSONObject;
@@ -58,7 +57,6 @@ public class FriendsResource {
 
     @GET
     @Path("/")
-    @GraphTransactional
     public Response list() {
         return Response.ok(
                 JsonUtils.getGson().toJson(
@@ -69,7 +67,6 @@ public class FriendsResource {
 
     @POST
     @Path("/")
-    @GraphTransactional
     public Response addFriend(JSONObject friendJson) {
         String friendUsername = friendJson.optString("friendUsername");
         User destinationUser = userRepository.findByUsername(friendUsername);
@@ -101,7 +98,6 @@ public class FriendsResource {
 
     @GET
     @Path("/{other-username}/status")
-    @GraphTransactional
     public Response getStatusWithFriend(@PathParam("other-username") String otherUsername) {
         User otherUser = userRepository.findByUsername(otherUsername);
         return NoEx.wrap(() -> {

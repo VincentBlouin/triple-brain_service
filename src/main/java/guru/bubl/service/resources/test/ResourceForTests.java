@@ -7,7 +7,6 @@ package guru.bubl.service.resources.test;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -72,7 +71,6 @@ public class ResourceForTests {
     VertexFactory vertexFactory;
 
     @Path("login")
-    @GraphTransactional
     @GET
     public Response createUserAuthenticateAndRedirectToHomePage(@Context HttpServletRequest request) throws Exception {
         User user = User.withEmail(
@@ -155,7 +153,6 @@ public class ResourceForTests {
 
     @Path("search/index_graph")
     @Produces(MediaType.TEXT_PLAIN)
-    @GraphTransactional
     @GET
     public Response reindexAll(@Context HttpServletRequest request) {
         wholeGraphAdmin.reindexAll();
@@ -176,7 +173,6 @@ public class ResourceForTests {
 
 
     @Path("make_graph_have_3_serial_vertices_with_long_labels")
-    @GraphTransactional
     @GET
     public Response makeGraphHave3SerialVerticesWithLongLabels(@Context HttpServletRequest request) throws Exception {
         User currentUser = sessionHandler.userFromSession(

@@ -24,11 +24,9 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertTrue;
 
 public class GraphElementIdentificationResourceTest extends GraphManipulationRestTestUtils {
 
