@@ -149,7 +149,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                     install(
                             isTesting ?
                                     Neo4jModule.forTestingUsingEmbedded() :
-                                    Neo4jModule.notForTestingUsingEmbedded()
+                                    Neo4jModule.notForTestingUsingEmbedded(
+                                            (String) jndiContext.lookup("dbUser"),
+                                            (String) jndiContext.lookup("dbPassword")
+                                    )
                     );
                     if (isTesting) {
                         install(
