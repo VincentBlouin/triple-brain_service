@@ -41,7 +41,7 @@ public class CenterGraphElementsResource {
     }
 
     @GET
-    @Path("/page/{nbSkip}")
+    @Path("/skip/{nbSkip}")
     public Response getPage(@PathParam("nbSkip") Integer nbSkip) {
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
