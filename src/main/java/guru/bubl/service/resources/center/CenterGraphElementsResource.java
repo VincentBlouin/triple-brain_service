@@ -41,11 +41,11 @@ public class CenterGraphElementsResource {
     }
 
     @GET
-    @Path("/page/{pageNumber}")
-    public Response getPage(@PathParam("pageNumber") Integer pageNumber) {
+    @Path("/page/{nbSkip}")
+    public Response getPage(@PathParam("nbSkip") Integer nbSkip) {
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
-                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimitAndSkip(10, pageNumber)
+                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimitAndSkip(8, nbSkip)
                 )
         ).build();
     }

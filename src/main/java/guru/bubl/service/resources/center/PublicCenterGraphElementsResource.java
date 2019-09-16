@@ -11,6 +11,8 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFa
 import guru.bubl.module.model.json.CenterGraphElementsJson;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 public class PublicCenterGraphElementsResource {
@@ -34,7 +36,17 @@ public class PublicCenterGraphElementsResource {
                 CenterGraphElementsJson.toJson(
                         centerGraphElementsOperatorFactory.forUser(
                                 user
-                        ).getPublicOnlyOfTypeWithLimitAndSkip(20, 0)
+                        ).getPublicOnlyOfTypeWithLimitAndSkip(30, 0)
+                )
+        ).build();
+    }
+
+    @GET
+    @Path("/skip/{nbSkip}")
+    public Response getPage(@PathParam("nbSkip") Integer nbSkip) {
+        return Response.ok().entity(
+                CenterGraphElementsJson.toJson(
+                        centerGraphElementsOperatorFactory.forUser(user).getPublicOnlyOfTypeWithLimitAndSkip(8, nbSkip)
                 )
         ).build();
     }
