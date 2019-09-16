@@ -35,7 +35,7 @@ public class CenterGraphElementsResource {
     public Response get() {
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
-                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimitAndSkip(30, 0)
+                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimitAndSkip(28, 0)
                 )
         ).build();
     }
