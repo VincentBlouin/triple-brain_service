@@ -10,9 +10,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFactory;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -37,7 +35,17 @@ public class CenterGraphElementsResource {
     public Response get() {
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
-                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimit(20)
+                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimitAndSkip(30, 0)
+                )
+        ).build();
+    }
+
+    @GET
+    @Path("/page/{pageNumber}")
+    public Response getPage(@PathParam("pageNumber") Integer pageNumber) {
+        return Response.ok().entity(
+                CenterGraphElementsJson.toJson(
+                        centerGraphElementsOperatorFactory.forUser(user).getPublicAndPrivateWithLimitAndSkip(10, pageNumber)
                 )
         ).build();
     }

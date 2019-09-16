@@ -34,7 +34,7 @@ public class PublicCenterGraphElementsResource {
                 CenterGraphElementsJson.toJson(
                         centerGraphElementsOperatorFactory.forUser(
                                 user
-                        ).getPublicOnlyOfTypeWithLimit(20)
+                        ).getPublicOnlyOfTypeWithLimitAndSkip(20, 0)
                 )
         ).build();
     }
