@@ -103,15 +103,9 @@ public class GraphResource {
     }
 
     private GraphElementOperator graphElementFromShortIdAndType(String shortId, String typeStr) {
-        GraphElementType type;
-        if (typeStr.equals("identification")) {
-            type = GraphElementType.Meta;
-        } else {
-            type = GraphElementType.valueOf(typeStr.substring(0, 1).toUpperCase() + typeStr.substring(1));
-        }
         URI uri = new UserUris(
                 user
-        ).uriFromTypeAndShortId(type, shortId);
+        ).uriFromTypeStringAndShortId(typeStr, shortId);
         return graphElementOperatorFactory.withUri(uri);
     }
 

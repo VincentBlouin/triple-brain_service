@@ -176,6 +176,29 @@ public class VertexResource {
     }
 
     @POST
+    @Path("/{shortId}/pattern")
+    public Response setAsPattern(@PathParam("shortId") String shortId) {
+        URI vertexId = uriFromShortId(shortId);
+        VertexOperator vertex = userGraph.vertexWithUri(
+                vertexId
+        );
+        vertex.makePattern();
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{shortId}/pattern")
+    public Response undoPattern(@PathParam("shortId") String shortId) {
+        URI vertexId = uriFromShortId(shortId);
+        VertexOperator vertex = userGraph.vertexWithUri(
+                vertexId
+        );
+        vertex.undoPattern();
+        return Response.noContent().build();
+    }
+
+
+    @POST
     @Path("{shortId}/label")
     public Response updateVertexLabel(
             @PathParam("shortId") String shortId,

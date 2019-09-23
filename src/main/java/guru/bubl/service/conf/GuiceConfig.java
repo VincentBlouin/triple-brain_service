@@ -27,6 +27,8 @@ import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.meta.IdentificationResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
+import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
+import guru.bubl.service.resources.pattern.PatternResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResourceFactory;
@@ -57,6 +59,7 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 bind(DailyJobResource.class);
                 bind(UserResource.class);
+                bind(PatternResource.class);
                 bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
                 bind(PublicSearchResource.class);
@@ -73,6 +76,9 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 install(builder.build(
                         GraphResourceFactory.class
+                ));
+                install(builder.build(
+                        PatternConsumerResourceFactory.class
                 ));
                 install(builder.build(
                         VertexResourceFactory.class

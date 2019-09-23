@@ -35,6 +35,8 @@ import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResource;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
+import guru.bubl.service.resources.pattern.PatternConsumerResource;
+import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -78,6 +80,9 @@ public class UserResource {
 
     @Inject
     GraphResourceFactory graphResourceFactory;
+
+    @Inject
+    PatternConsumerResourceFactory patternConsumerResourceFactory;
 
     @Inject
     SearchResourceFactory searchResourceFactory;
@@ -150,6 +155,20 @@ public class UserResource {
         }
         throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
+
+    @Path("{username}/patterns")
+    public PatternConsumerResource getPatternConsumerResource(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
+            return patternConsumerResourceFactory.withUser(
+                    sessionHandler.userFromSession(request.getSession())
+            );
+        }
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
 
     @Path("{username}/non_owned/vertex/{shortId}/surround_graph")
     public NotOwnedSurroundGraphResource surroundGraphResource(
