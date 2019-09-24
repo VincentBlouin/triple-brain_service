@@ -9,7 +9,6 @@ import com.google.inject.name.Named;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.content.AllContentFactory;
 import guru.bubl.module.model.friend.FriendManager;
 import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
@@ -65,9 +64,6 @@ public class UserResource {
 
     @Inject
     UserRepository userRepository;
-
-    @Inject
-    AllContentFactory allContentFactory;
 
     @Inject
     protected UserGraphFactoryNeo4j neo4jUserGraphFactory;
@@ -381,7 +377,7 @@ public class UserResource {
     @POST
     @Produces(MediaType.WILDCARD)
     @Path("/")
-    public Response createUser(JSONObject jsonUser, @QueryParam("skipDefaultContent") Boolean skipDefaultContent) throws JSONException {
+    public Response createUser(JSONObject jsonUser) throws JSONException {
         User user = User.withEmailAndUsername(
                 jsonUser.optString(EMAIL, ""),
                 jsonUser.optString(USER_NAME, "")
@@ -424,11 +420,6 @@ public class UserResource {
             );
         }
         user = userRepository.createUser(user);
-        if (skipDefaultContent == null || !skipDefaultContent) {
-            allContentFactory.forUserGraph(
-                    neo4jUserGraphFactory.withUser(user)
-            ).add();
-        }
         UserSessionResource.authenticateUserInSession(
                 user, request.getSession()
         );

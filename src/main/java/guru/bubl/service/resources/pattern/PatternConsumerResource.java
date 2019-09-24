@@ -6,6 +6,8 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.pattern.PatternUserFactory;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,7 +36,7 @@ public class PatternConsumerResource {
             @PathParam("ownerUsername") String ownerUsername,
             @PathParam("type") String type,
             @PathParam("shortId") String shortId
-    ) {
+    ) throws JSONException {
         UserUris userUris = new UserUris(
                 ownerUsername
         );
@@ -44,7 +46,12 @@ public class PatternConsumerResource {
                         type, shortId
                 )
         ).use();
-        return Response.created(newCenterUri).build();
+        //would use Response.created(newCenterUri) but I can't get the created uri with axios javascript
+        return Response.ok(new JSONObject().put(
+                "uri",
+                newCenterUri
+                )
+        ).build();
     }
 
 }

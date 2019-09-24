@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 public class PatternConsumerResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
-    public void returns_created_status() {
+    public void returns_ok_status() {
         PatternResourceTest.makePattern(
                 vertexBUri(),
                 authCookie
@@ -24,7 +24,7 @@ public class PatternConsumerResourceTest extends GraphManipulationRestTestUtils 
         );
         assertThat(
                 response.getStatus(),
-                is(Response.Status.CREATED.getStatusCode())
+                is(Response.Status.OK.getStatusCode())
         );
     }
 
