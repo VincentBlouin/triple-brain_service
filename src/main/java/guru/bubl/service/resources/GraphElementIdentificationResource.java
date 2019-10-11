@@ -7,6 +7,7 @@ package guru.bubl.service.resources;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.identification.IdentificationFactory;
@@ -89,5 +90,4 @@ public class GraphElementIdentificationResource {
         graphElement.removeIdentification(identification);
         return Response.noContent().build();
     }
-
 }

@@ -49,13 +49,9 @@ public class IdentifierResource {
 
     @GET
     @Path("/{identificationShortId}")
-    public Response get(@PathParam("identificationShortId") String identificationShortId) {
+    public Response get(@PathParam("identificationShortId") String shortId) {
         IdentificationOperator identificationOperator = identificationFactory.withUri(
-                new UserUris(
-                        authenticatedUser
-                ).identificationUriFromShortId(
-                        identificationShortId
-                )
+                tagUriFromShortId(shortId)
         );
         IdentifierPojo identifierPojo = identificationOperator.buildPojo();
         return Response.ok().entity(MetaJson.singleToJson(identifierPojo)).build();
@@ -65,15 +61,11 @@ public class IdentifierResource {
     @POST
     @Path("/{identificationShortId}/label")
     public Response updateLabel(
-            @PathParam("identificationShortId") String identificationShortId,
+            @PathParam("identificationShortId") String shortId,
             JSONObject localizedLabel
     ) {
         IdentificationOperator identificationOperator = identificationFactory.withUri(
-                new UserUris(
-                        authenticatedUser
-                ).identificationUriFromShortId(
-                        identificationShortId
-                )
+                tagUriFromShortId(shortId)
         );
         identificationOperator.label(
                 localizedLabel.optString(
@@ -87,15 +79,11 @@ public class IdentifierResource {
     @Path("/{identificationShortId}/comment")
     @Consumes(MediaType.TEXT_PLAIN)
     public Response updateNote(
-            @PathParam("identificationShortId") String identificationShortId,
+            @PathParam("identificationShortId") String shortId,
             String comment
     ) {
         IdentificationOperator identificationOperator = identificationFactory.withUri(
-                new UserUris(
-                        authenticatedUser
-                ).identificationUriFromShortId(
-                        identificationShortId
-                )
+                tagUriFromShortId(shortId)
         );
         identificationOperator.comment(
                 comment
@@ -131,15 +119,10 @@ public class IdentifierResource {
 
     @Path("{shortId}/surround_graph")
     public OwnedSurroundGraphResource getSurroundGraphResource(
-            @PathParam("shortId") String identificationShortId
+            @PathParam("shortId") String shortId
     ) {
-        URI tagUri = new UserUris(
-                authenticatedUser
-        ).identificationUriFromShortId(
-                identificationShortId
-        );
         IdentificationOperator identificationOperator = identificationFactory.withUri(
-                tagUri
+                tagUriFromShortId(shortId)
         );
         CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
                 identificationOperator
@@ -153,5 +136,49 @@ public class IdentifierResource {
         );
     }
 
+    @POST
+    @Path("{shortId}/childrenIndex")
+    public Response saveChildrenIndexes(
+            @PathParam("shortId") String shortId,
+            JSONObject childrenIndexes
+    ) {
+        identificationFactory.withUri(tagUriFromShortId(shortId)).setChildrenIndex(
+                childrenIndexes.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("{shortId}/colors")
+    public Response saveColors(
+            @PathParam("shortId") String shortId,
+            JSONObject colors
+    ) {
+        identificationFactory.withUri(tagUriFromShortId(shortId)).setColors(
+                colors.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("{shortId}/font")
+    public Response saveFont(
+            @PathParam("shortId") String shortId,
+            JSONObject font
+    ) {
+        identificationFactory.withUri(tagUriFromShortId(shortId)).setFont(
+                font.toString()
+        );
+        return Response.noContent().build();
+    }
+
+
+    private URI tagUriFromShortId(String shortId) {
+        return new UserUris(
+                authenticatedUser
+        ).identificationUriFromShortId(
+                shortId
+        );
+    }
 
 }
