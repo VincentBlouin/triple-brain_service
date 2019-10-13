@@ -9,6 +9,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
+import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.Session;
 
 import javax.inject.Inject;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 public class UserResourceTestUtils {
 
     @Inject
-    protected Session session;
+    protected Driver driver;
 
     @Inject
     @Named("session")
@@ -58,10 +59,12 @@ public class UserResourceTestUtils {
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteAllUsers() {
         sessionsInTests.clear();
-        session.run(
-                "MATCH(n:User) DETACH DELETE n"
-        );
-        return Response.noContent().build();
+        try (Session session = driver.session()) {
+            session.run(
+                    "MATCH(n:User) DETACH DELETE n"
+            );
+            return Response.noContent().build();
+        }
     }
 
 
