@@ -10,6 +10,7 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -31,11 +32,11 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
     @Test
     public void returns_only_public_centers() {
         graphUtils().graphWithCenterVertexUri(vertexA().uri());
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         assertFalse(
                 centerElements.isEmpty()
         );
-        Set<CenterGraphElementPojo> centers = graphUtils().getCenterGraphElementsFromClientResponse(
+        List<CenterGraphElementPojo> centers = graphUtils().getCenterGraphElementsFromClientResponse(
                 graphUtils().getPublicCenterGraphElementsResponse()
         );
         assertThat(
@@ -71,7 +72,7 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
                         Response.Status.OK.getStatusCode()
                 )
         );
-        Set<CenterGraphElementPojo> centers = graphUtils().getCenterGraphElementsFromClientResponse(
+        List<CenterGraphElementPojo> centers = graphUtils().getCenterGraphElementsFromClientResponse(
                 response
         );
         assertThat(

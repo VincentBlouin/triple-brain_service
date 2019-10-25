@@ -5,15 +5,15 @@
 package guru.bubl.service.resources;
 
 
-import guru.bubl.service.resources.pattern.PatternConsumerResourceTest;
-import guru.bubl.service.resources.pattern.PatternResourceTest;
+import guru.bubl.service.resources.center.CenterGraphElementsResourceTest;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        PatternResourceTest.class
+        PublicCenterGraphElementsResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

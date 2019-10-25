@@ -240,7 +240,6 @@ public class VertexRestTestUtils {
 
     private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
                 authCookie,
                 authenticatedUser
         );

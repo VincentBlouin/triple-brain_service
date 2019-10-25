@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
@@ -17,7 +18,7 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void remove_center_returns_no_content_status() {
         graphUtils().graphWithCenterVertexUri(vertexA().uri());
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         assertFalse(
                 centerElements.isEmpty()
         );
@@ -30,7 +31,7 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_remove_centers() {
         graphUtils().graphWithCenterVertexUri(vertexA().uri());
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         assertFalse(
                 centerElements.isEmpty()
         );
@@ -44,7 +45,7 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void cannot_remove_centers_of_another_user() {
         graphUtils().graphWithCenterVertexUri(vertexA().uri());
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer nbCenters = centerElements.size();
         createAUser();
         ClientResponse response = removeCenter(defaultAuthenticatedUser, centerElements.iterator().next());

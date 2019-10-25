@@ -363,7 +363,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void creating_a_single_vertex_increment_its_number_of_visits() {
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
         vertexUtils().createSingleVertex();
         centerElements = graphUtils().getCenterGraphElements();
@@ -376,7 +376,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void creating_a_single_vertex_sets_last_center_date() {
         vertexUtils().createSingleVertex();
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfLastCenterDateNull = 0;
         for (CenterGraphElementPojo centerGraphElementPojo : centerElements) {
             if (null == centerGraphElementPojo.getLastCenterDate()) {

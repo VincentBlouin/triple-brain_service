@@ -9,7 +9,6 @@ import com.google.inject.name.Named;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.friend.FriendManager;
 import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
@@ -27,7 +26,6 @@ import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
-import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.fork.ForkResource;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResource;
@@ -85,9 +83,6 @@ public class UserResource {
 
     @Inject
     CenterGraphElementsResourceFactory centerGraphElementsResourceFactory;
-
-    @Inject
-    PublicCenterGraphElementsResourceFactory publicCenterGraphElementsResourceFactory;
 
     @Inject
     private Injector injector;
@@ -202,43 +197,6 @@ public class UserResource {
 
     }
 
-    @POST
-    @Path("/confirm-friendship-with-token")
-    public Response confirmFriendship(
-            JSONObject confirmation,
-            @Context HttpServletRequest request,
-            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) {
-        String requestUsername = confirmation.optString("requestUsername");
-        String destinationUsername = confirmation.optString("destinationUsername");
-        User destinationUser = userRepository.findByUsername(destinationUsername);
-        User requestUser = userRepository.findByUsername(requestUsername);
-        FriendManager friendManager = friendManagerFactory.forUser(destinationUser);
-        FriendStatus friendStatus = friendManager.getStatusWithUser(requestUser);
-        if (friendStatus != FriendStatus.waitingForYourAnswer) {
-            return Response.status(Response.Status.NO_CONTENT).build();
-        }
-        String confirmToken = confirmation.optString("confirmToken");
-        Boolean hasConfirmed = friendManager.confirmWithToken(requestUser, confirmToken);
-        if (!hasConfirmed) {
-            throw new WebApplicationException(Response.Status.FORBIDDEN);
-        }
-        if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
-            UserSessionResource.authenticateUserInSession(
-                    destinationUser,
-                    request.getSession()
-            );
-        }
-        friendConfirmationEmail.sendForUserToUser(
-                destinationUser,
-                requestUser,
-                appUrl + "/user/" + destinationUser.username()
-        );
-        return Response.ok(
-                UserJson.toJson(destinationUser)
-        ).build();
-    }
-
     @Path("{username}/friends")
     public FriendsResource friendsResource(
             @PathParam("username") String username,
@@ -348,15 +306,6 @@ public class UserResource {
         }
         return forkResourceFactory.forUser(
                 sessionHandler.userFromSession(request.getSession())
-        );
-    }
-
-    @Path("{username}/center-elements/public")
-    public PublicCenterGraphElementsResource getPublicCenterGraphElementsResource(
-            @PathParam("username") String username
-    ) {
-        return publicCenterGraphElementsResourceFactory.forUser(
-                User.withUsername(username)
         );
     }
 

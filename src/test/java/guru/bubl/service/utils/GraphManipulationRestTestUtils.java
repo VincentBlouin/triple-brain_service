@@ -77,7 +77,6 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
 
     protected GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
                 authCookie,
                 defaultAuthenticatedUser
         );

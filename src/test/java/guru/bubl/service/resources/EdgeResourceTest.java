@@ -18,6 +18,7 @@ import org.hamcrest.core.Is;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
@@ -328,7 +329,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updates_last_visit_date_when_getting_surround_graph() {
         graphUtils().graphWithCenterVertexUri(vertexAUri());
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
         getSurroundGraphOfEdgeBetweenAAndB();
         centerElements = graphUtils().getCenterGraphElements();

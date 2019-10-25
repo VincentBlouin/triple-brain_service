@@ -21,14 +21,14 @@ import guru.bubl.service.RedisSessionHandler;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
-import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceFactory;
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
+import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.meta.IdentificationResourceFactory;
 import guru.bubl.service.resources.meta.UserMetasResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
-import guru.bubl.service.resources.pattern.PatternResource;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResourceFactory;
@@ -59,21 +59,17 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 bind(DailyJobResource.class);
                 bind(UserResource.class);
-                bind(PatternResource.class);
                 bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
                 bind(PublicSearchResource.class);
                 bind(SessionHandler.class).to(RedisSessionHandler.class);
                 bind(RedisSessionHandler.class);
+                bind(PublicCenterGraphElementsResource.class);
+                bind(FriendListResource.class);
 
                 install(builder.build(
                         CenterGraphElementsResourceFactory.class
                 ));
-
-                install(builder.build(
-                        PublicCenterGraphElementsResourceFactory.class
-                ));
-
                 install(builder.build(
                         GraphResourceFactory.class
                 ));

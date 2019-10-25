@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Set;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -146,7 +146,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     public void updates_last_visit_date_when_getting_surround_graph() {
         graphElementUtils().addFoafPersonTypeToVertexA();
         Identifier meta = vertexA().getIdentifications().values().iterator().next();
-        Set<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
+        List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
         graphUtils().graphWithCenterVertexUri(meta.uri());
         centerElements = graphUtils().getCenterGraphElements();

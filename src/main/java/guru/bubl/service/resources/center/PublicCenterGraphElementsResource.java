@@ -4,50 +4,63 @@
 
 package guru.bubl.service.resources.center;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementsOperatorFactory;
+import guru.bubl.module.model.center_graph_element.CenteredGraphElementsOperator;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.inject.Singleton;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Path("/center-elements/public")
+@Singleton
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class PublicCenterGraphElementsResource {
 
-    private User user;
-
+    @Inject
     private CenterGraphElementsOperatorFactory centerGraphElementsOperatorFactory;
-
-    @AssistedInject
-    PublicCenterGraphElementsResource(
-            CenterGraphElementsOperatorFactory centerGraphElementsOperatorFactory,
-            @Assisted User user
-    ) {
-        this.centerGraphElementsOperatorFactory = centerGraphElementsOperatorFactory;
-        this.user = user;
-    }
 
     @GET
     public Response get() {
-        return Response.ok().entity(
-                CenterGraphElementsJson.toJson(
-                        centerGraphElementsOperatorFactory.forUser(
-                                user
-                        ).getPublicOnlyOfTypeWithLimitAndSkip(28, 0)
-                )
-        ).build();
+        return this.getAtSkip(null);
     }
 
     @GET
     @Path("/skip/{nbSkip}")
-    public Response getPage(@PathParam("nbSkip") Integer nbSkip) {
+    public Response getAtSkip(@PathParam("nbSkip") Integer nbSkip) {
         return Response.ok().entity(
                 CenterGraphElementsJson.toJson(
-                        centerGraphElementsOperatorFactory.forUser(user).getPublicOnlyOfTypeWithLimitAndSkip(8, nbSkip)
+                        getFromNbSkip(nbSkip).getAllPublic()
                 )
         ).build();
+    }
+
+    @GET
+    @Path("/user/{username}")
+    public Response getForSpecificUser(@PathParam("username") String username) {
+        return this.getForSpecificUserAtSkip(username, null);
+    }
+
+    @GET
+    @Path("/user/{username}/skip/{nbSkip}")
+    public Response getForSpecificUserAtSkip(@PathParam("username") String username, @PathParam("nbSkip") Integer nbSkip) {
+        User user = User.withUsername(username);
+        return Response.ok().entity(
+                CenterGraphElementsJson.toJson(
+                        getFromNbSkip(nbSkip).getPublicOfUser(user)
+                )
+        ).build();
+    }
+
+    private CenteredGraphElementsOperator getFromNbSkip(Integer nbSkip) {
+        return nbSkip == null ?
+                centerGraphElementsOperatorFactory.usingDefaultLimits() :
+                centerGraphElementsOperatorFactory.usingLimitAndSkip(16, 0);
     }
 }

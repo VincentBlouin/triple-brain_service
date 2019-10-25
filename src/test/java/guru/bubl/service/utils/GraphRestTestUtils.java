@@ -22,15 +22,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 import static guru.bubl.service.utils.GraphManipulationRestTestUtils.getUsersBaseUri;
+import static guru.bubl.service.utils.RestTestUtils.resource;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class GraphRestTestUtils {
 
-    private WebResource resource;
     private NewCookie authCookie;
 
     private VertexRestTestUtils vertexUtils;
@@ -42,12 +43,11 @@ public class GraphRestTestUtils {
 
     private User authenticatedUser;
 
-    public static GraphRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
-        return new GraphRestTestUtils(resource, authCookie, authenticatedUser);
+    public static GraphRestTestUtils withWebResourceAndAuthCookie(NewCookie authCookie, User authenticatedUser) {
+        return new GraphRestTestUtils(authCookie, authenticatedUser);
     }
 
-    protected GraphRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
-        this.resource = resource;
+    protected GraphRestTestUtils(NewCookie authCookie, User authenticatedUser) {
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
         vertexUtils = VertexRestTestUtils.withWebResourceAndAuthCookie(
@@ -58,6 +58,13 @@ public class GraphRestTestUtils {
     }
 
     public SubGraphPojo graphWithCenterVertexUri(URI vertexUri) {
+        return graphWithCenterVertexUri(
+                vertexUri,
+                authCookie
+        );
+    }
+
+    public static SubGraphPojo graphWithCenterVertexUri(URI vertexUri, NewCookie authCookie) {
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .path("surround_graph")
@@ -163,20 +170,22 @@ public class GraphRestTestUtils {
 
     public ClientResponse getPublicCenterGraphElementsResponseForUser(User user) {
         return resource
-                .path(user.id())
+                .path("service")
                 .path("center-elements")
                 .path("public")
+                .path("user")
+                .path(user.username())
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }
 
-    public Set<CenterGraphElementPojo> getCenterGraphElements() {
+    public List<CenterGraphElementPojo> getCenterGraphElements() {
         return getCenterGraphElementsFromClientResponse(
                 getCenterGraphElementsResponse()
         );
     }
 
-    public Set<CenterGraphElementPojo> getCenterGraphElementsFromClientResponse(ClientResponse clientResponse) {
+    public static List<CenterGraphElementPojo> getCenterGraphElementsFromClientResponse(ClientResponse clientResponse) {
         return CenterGraphElementsJson.fromJson(
                 clientResponse.getEntity(
                         String.class
@@ -221,9 +230,9 @@ public class GraphRestTestUtils {
                 .get(ClientResponse.class);
     }
 
-    public CenterGraphElementPojo getCenterWithUri(Set<CenterGraphElementPojo> centers, URI centerUri){
-        for(CenterGraphElementPojo centerGraphElement: centers){
-            if(centerGraphElement.getGraphElement().uri().equals(centerUri)){
+    public CenterGraphElementPojo getCenterWithUri(List<CenterGraphElementPojo> centers, URI centerUri) {
+        for (CenterGraphElementPojo centerGraphElement : centers) {
+            if (centerGraphElement.getGraphElement().uri().equals(centerUri)) {
                 return centerGraphElement;
             }
         }

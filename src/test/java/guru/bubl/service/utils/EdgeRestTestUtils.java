@@ -38,7 +38,6 @@ public class EdgeRestTestUtils {
         this.resource = resource;
         this.authCookie = authCookie;
         graphUtils = GraphRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
                 authCookie,
                 authenticatedUser
         );

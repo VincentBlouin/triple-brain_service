@@ -70,7 +70,6 @@ public class GraphElementRestTestUtils {
 
     private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
-                resource,
                 authCookie,
                 authenticatedUser
         );
