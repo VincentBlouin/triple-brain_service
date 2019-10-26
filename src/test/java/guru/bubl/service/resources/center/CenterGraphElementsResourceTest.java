@@ -55,35 +55,6 @@ public class CenterGraphElementsResourceTest extends GraphManipulationRestTestUt
     }
 
     @Test
-    public void getting_list_returns_ok_status() {
-        ClientResponse response = getPatternsListResponse();
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-    }
-
-    @Test
-    public void can_get_list() {
-        List<CenterGraphElementPojo> patterns = getPatternsList();
-        assertThat(
-                patterns.size(),
-                is(0)
-        );
-        ClientResponse response = PatternConsumerResourceTest.makePattern(vertexAUri(), authCookie);
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.NO_CONTENT.getStatusCode())
-        );
-        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie);
-        patterns = getPatternsList();
-        assertThat(
-                patterns.size(),
-                is(2)
-        );
-    }
-
-    @Test
     public void can_for_a_specific_friend() {
         vertexUtils().setShareLevel(
                 vertexBUri(),
@@ -156,17 +127,4 @@ public class CenterGraphElementsResourceTest extends GraphManipulationRestTestUt
                 .get(ClientResponse.class);
     }
 
-
-    private ClientResponse getPatternsListResponse() {
-        return resource
-                .path(currentAuthenticatedUser.id())
-                .path("center-elements")
-                .path("pattern")
-                .cookie(authCookie)
-                .get(ClientResponse.class);
-    }
-
-    private List<CenterGraphElementPojo> getPatternsList() {
-        return getCenterGraphElementsFromClientResponse(getPatternsListResponse());
-    }
 }

@@ -59,22 +59,6 @@ public class CenterGraphElementsResource {
     }
 
     @GET
-    @Path("/pattern")
-    public Response getPatterns() {
-        return this.getPatternsAtSkip(null);
-    }
-
-    @GET
-    @Path("/pattern/skip/{nbSkip}")
-    public Response getPatternsAtSkip(@PathParam("nbSkip") Integer nbSkip) {
-        return Response.ok().entity(
-                CenterGraphElementsJson.toJson(
-                        getFromNbSkip(nbSkip).getAllPatterns()
-                )
-        ).build();
-    }
-
-    @GET
     @Path("/friend")
     public Response getOfFriends() {
         return this.getOfFriendsAtSkip(null);

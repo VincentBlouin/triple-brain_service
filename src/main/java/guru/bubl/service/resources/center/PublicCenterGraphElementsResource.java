@@ -58,6 +58,22 @@ public class PublicCenterGraphElementsResource {
         ).build();
     }
 
+    @GET
+    @Path("/pattern")
+    public Response getPatterns() {
+        return this.getPatternsAtSkip(null);
+    }
+
+    @GET
+    @Path("/pattern/skip/{nbSkip}")
+    public Response getPatternsAtSkip(@PathParam("nbSkip") Integer nbSkip) {
+        return Response.ok().entity(
+                CenterGraphElementsJson.toJson(
+                        getFromNbSkip(nbSkip).getAllPatterns()
+                )
+        ).build();
+    }
+
     private CenteredGraphElementsOperator getFromNbSkip(Integer nbSkip) {
         return nbSkip == null ?
                 centerGraphElementsOperatorFactory.usingDefaultLimits() :
