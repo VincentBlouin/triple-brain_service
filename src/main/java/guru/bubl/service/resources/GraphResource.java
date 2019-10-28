@@ -67,6 +67,20 @@ public class GraphResource {
         return Response.noContent().build();
     }
 
+
+    /*
+        removeIdentificationCenter should not be necessary because removeCenter is a generic method
+        for any graph element type but somehow "removeCenter" does not work for identification
+     */
+    @Path("/identification/{shortId}/center")
+    @DELETE
+    public Response removeIdentificationCenter(@PathParam("shortId") String shortId) {
+        centerGraphElementOperatorFactory.usingFriendlyResource(
+                graphElementFromShortIdAndType(shortId, "identification")
+        ).remove();
+        return Response.noContent().build();
+    }
+
     @Path("/vertex")
     public VertexResource vertexResource() {
         return vertexResourceFactory.withUserGraph(
