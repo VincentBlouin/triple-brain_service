@@ -9,6 +9,7 @@ import guru.bubl.module.model.graph.identification.IdentificationFactory;
 import guru.bubl.module.model.graph.identification.IdentificationOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.AbstractScenario;
@@ -28,7 +29,7 @@ public class MetasWithSameLabelSearchResultScenario extends AbstractScenario imp
     */
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     @Inject
     IdentificationFactory identificationFactory;
@@ -46,8 +47,9 @@ public class MetasWithSameLabelSearchResultScenario extends AbstractScenario imp
     public Object build() {
         createVertices();
         buildMetas();
-        List<GraphElementSearchResult> searchResultsForMeta = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
-                "meta",
+        List<GraphElementSearchResult> searchResultsForMeta = graphSearchFactory.usingSearchTerm(
+                "meta"
+        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 user
         );
         return new Gson().toJson(

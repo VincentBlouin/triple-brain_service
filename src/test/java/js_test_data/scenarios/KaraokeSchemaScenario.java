@@ -14,6 +14,7 @@ import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
@@ -41,7 +42,7 @@ public class KaraokeSchemaScenario implements JsTestScenario {
     ModelTestScenarios modelTestScenarios;
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -59,8 +60,9 @@ public class KaraokeSchemaScenario implements JsTestScenario {
         GraphElementOperator location = karaoke.addProperty();
         location.label("location");
         location.addMeta(modelTestScenarios.location());
-        List<GraphElementSearchResult> searchResultsForKaraoke = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
-                "karaoke",
+        List<GraphElementSearchResult> searchResultsForKaraoke = graphSearchFactory.usingSearchTerm(
+                "karaoke"
+        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 user
         );
         return NoEx.wrap(() ->

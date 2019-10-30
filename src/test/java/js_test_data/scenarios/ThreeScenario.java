@@ -16,7 +16,7 @@ import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
@@ -28,25 +28,26 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+
 public class ThreeScenario implements JsTestScenario {
 
     /*
-    * b1-r1->b2
-    * b1-r2->b3
-    * b2 has two hidden relations
-    * b2 child are private
-    * b3 has two hidden relations
-    * b3 has the comment "b3 comment"
-    */
+     * b1-r1->b2
+     * b1-r2->b3
+     * b2 has two hidden relations
+     * b2 child are private
+     * b3 has two hidden relations
+     * b3 has the comment "b3 comment"
+     */
 
     /*
-    * b3<-r2-b1
-    * b3-r3->-b4
-    * b4 is public
-    * b3-r4->b5
-    * b5 is public
-    * b4 has hidden relations
-    */
+     * b3<-r2-b1
+     * b3-r3->-b4
+     * b4 is public
+     * b3-r4->b5
+     * b5 is public
+     * b4 has hidden relations
+     */
 
     /*
     Also a fork of subgraph b1 b2 and b3
@@ -69,7 +70,7 @@ public class ThreeScenario implements JsTestScenario {
     VertexFactory vertexFactory;
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     @Inject
     SubGraphForkerFactory subGraphForkerFactory;
@@ -116,12 +117,14 @@ public class ThreeScenario implements JsTestScenario {
                 ShareLevel.allShareLevels
         );
         wholeGraphAdmin.reindexAll();
-        List<GraphElementSearchResult> searchResultsForB1 = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
-                "b1",
+        List<GraphElementSearchResult> searchResultsForB1 = graphSearchFactory.usingSearchTerm(
+                "b1"
+        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 user
         );
-        List<GraphElementSearchResult> searchResultsForR2 = graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
-                "r2",
+        List<GraphElementSearchResult> searchResultsForR2 = graphSearchFactory.usingSearchTerm(
+                "r2"
+        ).searchRelationsForAutoCompletionByLabel(
                 user
         );
         SubGraphPojo subGraphForParent = userGraph.aroundVertexUriInShareLevels(
@@ -257,9 +260,9 @@ public class ThreeScenario implements JsTestScenario {
                 forkerUser
         );
         wholeGraphAdmin.reindexAll();
-        forkedB1SearchResults = graphSearch.searchPublicVerticesOnly(
+        forkedB1SearchResults = graphSearchFactory.usingSearchTerm(
                 "b1"
-        );
+        ).searchPublicVerticesOnly();
         Map<URI, VertexOperator> vertices = subGraphForker.fork(
                 subGraphForB1
         );

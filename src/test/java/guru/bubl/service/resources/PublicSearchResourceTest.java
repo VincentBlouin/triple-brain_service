@@ -7,6 +7,7 @@ package guru.bubl.service.resources;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -15,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
+@Ignore("Anonymous search is suspended")
 public class PublicSearchResourceTest extends GraphManipulationRestTestUtils {
 
     @Test

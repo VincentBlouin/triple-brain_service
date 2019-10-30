@@ -19,6 +19,7 @@ import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
@@ -56,7 +57,7 @@ public class GroupRelationsScenario implements JsTestScenario {
     ModelTestScenarios modelTestScenarios;
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     private DateTime
             book1Date = new DateTime().minusSeconds(30),
@@ -94,8 +95,9 @@ public class GroupRelationsScenario implements JsTestScenario {
                 me.uri(),
                 ShareLevel.allShareLevels
         );
-        List<GraphElementSearchResult> bookSearchResults = graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
-                "book",
+        List<GraphElementSearchResult> bookSearchResults = graphSearchFactory.usingSearchTerm(
+                "book"
+        ).searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 user
         );
         setupCreationDates();

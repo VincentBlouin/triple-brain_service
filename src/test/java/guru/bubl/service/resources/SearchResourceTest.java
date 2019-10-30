@@ -10,6 +10,7 @@ import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -72,29 +73,18 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
                 vertexAUri()
         );
         searchUtils().indexAll();
-        JSONObject anotherUser = createAUser();
-        authenticate(anotherUser);
-        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForUserVerticesOnly(
                 vertexA().label(),
-                anotherUser
+                defaultAuthenticatedUserAsJson
         );
         assertThat(results.size(), is(greaterThan(0)));
+        JSONObject anotherUser = createAUser();
+        authenticate(anotherUser);
         results = searchUtils().autoCompletionResultsForUserVerticesOnly(
                 vertexA().label(),
                 anotherUser
         );
         assertThat(results.size(), is(0));
-    }
-
-    @Test
-    public void searching_for_only_owned_schemas_or_vertices_returns_correct_status() {
-        assertThat(
-                searchUtils().autoCompletionResultsForUserVerticesOnly(
-                        defaultAuthenticatedUserAsJson,
-                        "test"
-                ).getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
     }
 
     @Test
@@ -108,6 +98,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    @Ignore("get search details is suspended")
     public void can_get_search_details_by_uri() {
         searchUtils().indexAll();
         GraphElement result = searchUtils().searchDetailsByUri(

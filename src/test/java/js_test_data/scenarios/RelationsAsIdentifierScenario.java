@@ -16,6 +16,7 @@ import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONArray;
@@ -36,7 +37,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
     */
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     @Inject
     protected GraphFactory graphFactory;
@@ -66,8 +67,9 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
                         "searchSome",
                         new JSONArray(
                                 new Gson().toJson(
-                                        graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
-                                                "some",
+                                        graphSearchFactory.usingSearchTerm(
+                                                "some"
+                                        ).searchRelationsForAutoCompletionByLabel(
                                                 user
                                         )
                                 )

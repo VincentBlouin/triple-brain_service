@@ -21,6 +21,7 @@ import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
@@ -75,7 +76,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
     ModelTestScenarios modelTestScenarios;
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -95,30 +96,34 @@ public class ProjectSchemaScenario implements JsTestScenario {
                 user.username()
         ).label("impact");
         wholeGraphAdmin.reindexAll();
-        List<GraphElementSearchResult> searchResultsForProject = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
-                "project",
+        List<GraphElementSearchResult> searchResultsForProject = graphSearchFactory.usingSearchTerm(
+                "project"
+        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 user
         );
-        List<GraphElementSearchResult> resultsForImpact = graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
-                "impact",
+        List<GraphElementSearchResult> resultsForImpact = graphSearchFactory.usingSearchTerm(
+                "impact"
+        ).searchRelationsForAutoCompletionByLabel(
                 user
         );
-        GraphElementSearchResult projectSearchDetails = graphSearch.getDetails(
-                project.uri(),
-                user
-        );
-        GraphElementSearchResult impactOnSocietySearchDetails = graphSearch.getDetails(
-                impactOnSocietyProperty.uri(),
-                user
-        );
+//        GraphElementSearchResult projectSearchDetails = graphSearch.getDetails(
+//                project.uri(),
+//                user
+//        );
+//        GraphElementSearchResult impactOnSocietySearchDetails = graphSearchFactory.getDetails(
+//                impactOnSocietyProperty.uri(),
+//                user
+//        );
         buildSomeProject();
         wholeGraphAdmin.reindexAll();
-        List<GraphElementSearchResult> searchResultsForProjectAfterIdentificationAdded = graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
-                "project",
+        List<GraphElementSearchResult> searchResultsForProjectAfterIdentificationAdded = graphSearchFactory.usingSearchTerm(
+                "project"
+        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
                 user
         );
-        List<GraphElementSearchResult> searchResultsForImpactBubbles = graphSearch.searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
-                "impact",
+        List<GraphElementSearchResult> searchResultsForImpactBubbles = graphSearchFactory.usingSearchTerm(
+                "impact"
+        ).searchOnlyForOwnVerticesForAutoCompletionByLabel(
                 user
         );
         SubGraphPojo someProjectGraph = userGraph.aroundVertexUriInShareLevels(
@@ -152,21 +157,24 @@ public class ProjectSchemaScenario implements JsTestScenario {
                                     resultsForImpact
                             )
                     )
-            ).put(
-                    "projectSearchDetails",
-                    new JSONObject(
-                            new Gson().toJson(
-                                    projectSearchDetails
-                            )
-                    )
-            ).put(
-                    "impactOnSocietySearchDetails",
-                    new JSONObject(
-                            new Gson().toJson(
-                                    impactOnSocietySearchDetails
-                            )
-                    )
-            ).put(
+            )
+//                    .put(
+//                    "projectSearchDetails",
+//                    new JSONObject(
+//                            new Gson().toJson(
+//                                    projectSearchDetails
+//                            )
+//                    )
+//            )
+//                    .put(
+//                    "impactOnSocietySearchDetails",
+//                    new JSONObject(
+//                            new Gson().toJson(
+//                                    impactOnSocietySearchDetails
+//                            )
+//                    )
+//            )
+            .put(
                     "impactVerticesSearchResults",
                     new JSONArray(
                             new Gson().toJson(

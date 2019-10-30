@@ -237,6 +237,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    @Ignore("get search details is suspended")
     public void updating_note_updates_search() {
         searchUtils().indexAll();
         GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
@@ -284,6 +285,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    @Ignore("searching for public vertices is suspended")
     public void making_vertex_public_re_indexes_it() {
         searchUtils().indexAll();
         JSONObject anotherUser = createAUser();
@@ -313,28 +315,29 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    @Ignore("searching for public vertices is suspended")
     public void making_vertex_private_re_indexes_it() {
-        vertexUtils().makePublicVertexWithUri(
-                vertexAUri()
-        );
-        searchUtils().indexAll();
-        JSONObject anotherUser = createAUser();
-        authenticate(anotherUser);
-        JSONArray results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
-                vertexA().label(),
-                anotherUser
-        ).getEntity(JSONArray.class);
-        Assert.assertThat(results.length(), Is.is(greaterThan(0)));
-        authenticate(defaultAuthenticatedUser);
-        vertexUtils().makePrivateVertexWithUri(
-                vertexAUri()
-        );
-        authenticate(anotherUser);
-        results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
-                vertexA().label(),
-                anotherUser
-        ).getEntity(JSONArray.class);
-        Assert.assertThat(results.length(), Is.is(0));
+//        vertexUtils().makePublicVertexWithUri(
+//                vertexAUri()
+//        );
+//        searchUtils().indexAll();
+//        JSONObject anotherUser = createAUser();
+//        authenticate(anotherUser);
+//        JSONArray results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
+//                vertexA().label(),
+//                anotherUser
+//        ).getEntity(JSONArray.class);
+//        Assert.assertThat(results.length(), Is.is(greaterThan(0)));
+//        authenticate(defaultAuthenticatedUser);
+//        vertexUtils().makePrivateVertexWithUri(
+//                vertexAUri()
+//        );
+//        authenticate(anotherUser);
+//        results = searchUtils().clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
+//                vertexA().label(),
+//                anotherUser
+//        ).getEntity(JSONArray.class);
+//        Assert.assertThat(results.length(), Is.is(0));
     }
 
     @Test

@@ -61,7 +61,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                 bind(UserResource.class);
                 bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
-                bind(PublicSearchResource.class);
                 bind(SessionHandler.class).to(RedisSessionHandler.class);
                 bind(RedisSessionHandler.class);
                 bind(PublicCenterGraphElementsResource.class);

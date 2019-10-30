@@ -133,23 +133,6 @@ public class SearchRestTestUtils {
                 );
     }
 
-    public ClientResponse autoCompletionResultsForUserVerticesOnly(JSONObject user, String text) {
-        return NoEx.wrap(() -> resource
-                .path("service")
-                .path("users")
-                .path(user.optString(UserJson.USER_NAME))
-                .path("search")
-                .path("own_vertices_and_schemas")
-                .path("auto_complete")
-                .queryParam("text", text)
-                .cookie(authCookie)
-                .post(ClientResponse.class, new JSONObject().put(
-                        "searchText",
-                        text
-                ))
-        ).get();
-    }
-
     public List<GraphElementSearchResult> autoCompletionResultsForCurrentUserVerticesOnly(String textToSearchWith) {
         return vertexSearchResultsFromResponse(
                 clientResponseOfAutoCompletionOfCurrentUserVerticesOnly(
@@ -168,17 +151,9 @@ public class SearchRestTestUtils {
     }
 
     public ClientResponse clientResponseOfAutoCompletionOfCurrentUserVerticesOnly(String textToSearchWith) {
-        return clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(
+        return clientResponseOfAutoCompletionOfUserOwnedVertices(
                 textToSearchWith,
                 authenticatedUserAsJson
-        );
-    }
-
-    public ClientResponse clientResponseOfAutoCompletionForPublicAndUserOwnedVertices(String textToSearchWith, JSONObject user) {
-        return clientResponseOfAutoCompletionForVerticesOfUser(
-                textToSearchWith,
-                user,
-                false
         );
     }
 

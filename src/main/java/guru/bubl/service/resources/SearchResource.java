@@ -10,20 +10,20 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.search.GraphSearch;
+import guru.bubl.module.model.search.GraphSearchFactory;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SearchResource {
 
     @Inject
-    GraphSearch graphSearch;
+    GraphSearchFactory graphSearchFactory;
 
     private User user;
 
@@ -43,8 +43,7 @@ public class SearchResource {
     ) {
         return Response.ok(
                 gson.toJson(
-                        graphSearch.searchForAllOwnResources(
-                                options.optString("searchText"),
+                        getGraphSearch(options).searchForAllOwnResources(
                                 user
                         )
                 )
@@ -58,8 +57,7 @@ public class SearchResource {
     ) {
         return NoEx.wrap(() -> Response.ok(
                 gson.toJson(
-                        graphSearch.searchOnlyForOwnVerticesForAutoCompletionByLabel(
-                                options.getString("searchText"),
+                        getGraphSearch(options).searchOnlyForOwnVerticesForAutoCompletionByLabel(
                                 user
                         )
                 )).build()
@@ -73,42 +71,13 @@ public class SearchResource {
     ) {
         return NoEx.wrap(() -> Response.ok(
                 gson.toJson(
-                        graphSearch.searchOwnTagsForAutoCompletionByLabel(
-                                options.getString("searchText"),
+                        getGraphSearch(options).searchOwnTagsForAutoCompletionByLabel(
                                 user
                         )
                 )).build()
         ).get();
     }
 
-    @POST
-    @Path("own_vertices_and_schemas/auto_complete")
-    public Response searchOwnVerticesAndSchemasForAutoComplete(
-            JSONObject options
-    ) {
-        return NoEx.wrap(() -> Response.ok(
-                gson.toJson(
-                        graphSearch.searchOnlyForOwnVerticesOrSchemasForAutoCompletionByLabel(
-                                options.getString("searchText"),
-                                user
-                        )
-                )).build()
-        ).get();
-    }
-
-    @POST
-    @Path("vertices/auto_complete")
-    public Response searchVerticesForAutoComplete(
-            JSONObject options
-    ) {
-        return NoEx.wrap(() -> Response.ok(
-                gson.toJson(
-                        graphSearch.searchForAnyResourceThatCanBeUsedAsAnIdentifier(
-                                options.getString("searchText"),
-                                user
-                        ))).build()
-        ).get();
-    }
 
     @POST
     @Path("relations/auto_complete")
@@ -117,23 +86,31 @@ public class SearchResource {
     ) {
         return NoEx.wrap(() -> Response.ok(
                 gson.toJson(
-                        graphSearch.searchRelationsPropertiesSchemasForAutoCompletionByLabel(
-                                options.getString("searchText"),
+                        getGraphSearch(options).searchRelationsForAutoCompletionByLabel(
                                 user
-                        ))).build()
+                        ))
+                ).build()
         ).get();
     }
 
-    @GET
-    @Path("details")
-    public Response getDetails(
-            @QueryParam("uri") String uri
-    ) {
-        return Response.ok(gson.toJson(
-                graphSearch.getDetails(
-                        URI.create(uri),
-                        user
-                )
-        )).build();
+//    @GET
+//    @Path("details")
+//    public Response getDetails(
+//            @QueryParam("uri") String uri
+//    ) {
+//        return Response.ok(gson.toJson(
+//                graphSearch.getDetails(
+//                        URI.create(uri),
+//                        user
+//                )
+//        )).build();
+//    }
+
+    private GraphSearch getGraphSearch(JSONObject options) {
+        return graphSearchFactory.usingSearchTermSkipAndLimit(
+                options.optString("searchText", ""),
+                options.optInt("nbSkip", 0),
+                GraphSearch.LIMIT
+        );
     }
 }
