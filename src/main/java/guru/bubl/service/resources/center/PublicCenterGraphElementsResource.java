@@ -77,6 +77,6 @@ public class PublicCenterGraphElementsResource {
     private CenteredGraphElementsOperator getFromNbSkip(Integer nbSkip) {
         return nbSkip == null ?
                 centerGraphElementsOperatorFactory.usingDefaultLimits() :
-                centerGraphElementsOperatorFactory.usingLimitAndSkip(8, nbSkip);
+                centerGraphElementsOperatorFactory.usingLimitAndSkip(16, nbSkip);
     }
 }
