@@ -8,6 +8,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
@@ -20,12 +21,14 @@ import guru.bubl.service.resources.meta.IdentificationResourceFactory;
 import guru.bubl.service.resources.meta.IdentifierResource;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Date;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -59,6 +62,40 @@ public class GraphResource {
     }
 
     @Path("/{type}/{shortId}/center")
+    @POST
+    public Response makeCenter(@PathParam("type") String type, @PathParam("shortId") String shortId, JSONObject data) {
+        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
+                graphElementFromShortIdAndType(shortId, type)
+        );
+        centerGraphElementOperator.incrementNumberOfVisits();
+        centerGraphElementOperator.setLastCenterDate(
+                new Date(
+                        data.optLong(
+                                "lastCenterDate",
+                                new Date().getTime()
+                        )
+                )
+        );
+        return Response.noContent().build();
+    }
+
+    /*
+        makeCenterIdentification should not be necessary because makeCenter is a generic method
+        for any graph element type but somehow "makeCenter" does not work for identification
+     */
+    @Path("/identification/{shortId}/center")
+    @POST
+    public Response makeCenterIdentification(@PathParam("shortId") String shortId,
+                                             JSONObject data
+    ) {
+        return this.makeCenter(
+                "identification",
+                shortId,
+                data
+        );
+    }
+
+    @Path("/{type}/{shortId}/center")
     @DELETE
     public Response removeCenter(@PathParam("type") String type, @PathParam("shortId") String shortId) {
         centerGraphElementOperatorFactory.usingFriendlyResource(
@@ -75,10 +112,10 @@ public class GraphResource {
     @Path("/identification/{shortId}/center")
     @DELETE
     public Response removeIdentificationCenter(@PathParam("shortId") String shortId) {
-        centerGraphElementOperatorFactory.usingFriendlyResource(
-                graphElementFromShortIdAndType(shortId, "identification")
-        ).remove();
-        return Response.noContent().build();
+        return this.removeCenter(
+                "identification",
+                shortId
+        );
     }
 
     @Path("/vertex")
