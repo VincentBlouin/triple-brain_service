@@ -70,10 +70,9 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo aroundTodo = userGraph.aroundVertexUriInShareLevelsWithDepth(
+        SubGraphPojo aroundTodo = userGraph.aroundVertexUriInShareLevels(
                 toDo.uri(),
-                ShareLevel.allShareLevels,
-                2
+                ShareLevel.allShareLevels
         );
         SubGraphPojo aroundEvent = userGraph.aroundVertexUriInShareLevelsWithDepth(
                 event.uri(),

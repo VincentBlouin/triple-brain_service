@@ -60,14 +60,15 @@ public class JsTestScenariosBuilder {
             new MetasWithSameLabelSearchResultScenario(),
             new MetaCenterChildHavingGroupRelationScenario(),
             new ThreeLevelDeepGroupRelationScenario(),
-            new ConvertVertexToGroupRelationScenario()
+            new ConvertVertexToGroupRelationScenario(),
+            new LeaveContextScenario()
     );
 
 
     public void build(Injector injector) throws Exception {
         Transaction transaction = graphDb.beginTx();
         JSONObject jsonObject = new JSONObject();
-        for(JsTestScenario scenario :scenarios){
+        for (JsTestScenario scenario : scenarios) {
             graphComponentTest.removeWholeGraph();
             injector.injectMembers(scenario);
             jsonObject.put(
@@ -85,7 +86,7 @@ public class JsTestScenariosBuilder {
         transaction.close();
     }
 
-    private String jsonKeyNameFromTestScenario(JsTestScenario testScenario){
+    private String jsonKeyNameFromTestScenario(JsTestScenario testScenario) {
         String className = testScenario.getClass().getSimpleName();
         String firstChar = (className.charAt(0) + "").toLowerCase();
         return firstChar + className.substring(1).replace("Scenario", "");

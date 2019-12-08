@@ -36,6 +36,7 @@ public class JsTestScenariosStarter {
         jsTestScenariosBuilder.build(injector);
         injector.getInstance(GraphDatabaseService.class).shutdown();
         Neo4jModule.clearDb();
+        System.exit(0);
     }
 
 }
