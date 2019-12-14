@@ -61,7 +61,8 @@ public class JsTestScenariosBuilder {
             new MetaCenterChildHavingGroupRelationScenario(),
             new ThreeLevelDeepGroupRelationScenario(),
             new ConvertVertexToGroupRelationScenario(),
-            new LeaveContextScenario()
+            new LeaveContextScenario(),
+            new TwoLevelGroupRelationScenario()
     );
 
 
