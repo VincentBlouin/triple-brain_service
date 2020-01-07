@@ -105,6 +105,19 @@ public class GraphResource {
     }
 
 
+    @POST
+    @Path("/{type}/{shortId}/colors")
+    public Response saveColors(
+            @PathParam("type") String type,
+            @PathParam("shortId") String shortId,
+            JSONObject colors
+    ) {
+        graphElementFromShortIdAndType(shortId, type).setColors(
+                colors.toString()
+        );
+        return Response.noContent().build();
+    }
+
     /*
         removeIdentificationCenter should not be necessary because removeCenter is a generic method
         for any graph element type but somehow "removeCenter" does not work for identification

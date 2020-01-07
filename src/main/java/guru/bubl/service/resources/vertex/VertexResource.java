@@ -340,18 +340,6 @@ public class VertexResource {
     }
 
     @POST
-    @Path("{shortId}/colors")
-    public Response saveColors(
-            @PathParam("shortId") String shortId,
-            JSONObject colors
-    ) {
-        vertexFactory.withUri(uriFromShortId(shortId)).setColors(
-                colors.toString()
-        );
-        return Response.noContent().build();
-    }
-
-    @POST
     @Path("{shortId}/font")
     public Response saveFont(
             @PathParam("shortId") String shortId,
