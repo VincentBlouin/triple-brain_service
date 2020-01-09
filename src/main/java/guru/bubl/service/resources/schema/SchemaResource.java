@@ -14,8 +14,8 @@ import guru.bubl.module.model.graph.schema.SchemaPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.search.GraphIndexer;
-import guru.bubl.service.resources.GraphElementIdentificationResource;
-import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
+import guru.bubl.service.resources.GraphElementTagResource;
+import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ public class SchemaResource {
     SchemaPropertyResourceFactory schemaPropertyResourceFactory;
 
     @Inject
-    GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
+    GraphElementTagResourceFactory graphElementTagResourceFactory;
 
     private UserGraph userGraph;
 
@@ -110,11 +110,11 @@ public class SchemaResource {
     }
 
     @Path("/{shortId}/identification")
-    public GraphElementIdentificationResource getGraphElementIdentificationResource(@PathParam("shortId") String shortId) {
+    public GraphElementTagResource getGraphElementIdentificationResource(@PathParam("shortId") String shortId) {
         SchemaOperator schema = userGraph.schemaOperatorWithUri(schemaUriFromShortId(
                 shortId
         ));
-        return graphElementIdentificationResourceFactory.forGraphElement(
+        return graphElementTagResourceFactory.forGraphElement(
                 schema,
                 GraphElementType.Schema
         );

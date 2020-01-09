@@ -12,13 +12,12 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
-import guru.bubl.service.resources.meta.IdentificationResourceFactory;
-import guru.bubl.service.resources.meta.IdentifierResource;
+import guru.bubl.service.resources.tag.TagResourceFactory;
+import guru.bubl.service.resources.tag.TagResource;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
 import org.codehaus.jettison.json.JSONObject;
@@ -44,7 +43,7 @@ public class GraphResource {
     EdgeResourceFactory edgeResourceFactory;
 
     @Inject
-    IdentificationResourceFactory identificationResourceFactory;
+    TagResourceFactory tagResourceFactory;
 
     @Inject
     GraphElementOperatorFactory graphElementOperatorFactory;
@@ -153,8 +152,8 @@ public class GraphResource {
 //    }
 
     @Path("/identification")
-    public IdentifierResource identificationResource() {
-        return identificationResourceFactory.forAuthenticatedUserAndGraph(
+    public TagResource identificationResource() {
+        return tagResourceFactory.forAuthenticatedUserAndGraph(
                 user,
                 userGraph()
         );

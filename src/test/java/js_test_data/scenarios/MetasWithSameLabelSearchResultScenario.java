@@ -5,10 +5,9 @@
 package js_test_data.scenarios;
 
 import com.google.gson.Gson;
-import guru.bubl.module.model.graph.identification.IdentificationFactory;
-import guru.bubl.module.model.graph.identification.IdentificationOperator;
+import guru.bubl.module.model.graph.tag.TagFactory;
+import guru.bubl.module.model.graph.tag.TagOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -32,12 +31,12 @@ public class MetasWithSameLabelSearchResultScenario extends AbstractScenario imp
     GraphSearchFactory graphSearchFactory;
 
     @Inject
-    IdentificationFactory identificationFactory;
+    TagFactory tagFactory;
 
     @Inject
     ModelTestScenarios modelTestScenarios;
 
-    IdentificationOperator
+    TagOperator
             meta0,
             meta1,
             meta2,
@@ -58,25 +57,25 @@ public class MetasWithSameLabelSearchResultScenario extends AbstractScenario imp
     }
 
     private void buildMetas() {
-        meta0 = identificationFactory.withUri(
+        meta0 = tagFactory.withUri(
                 center.addMeta(
                         modelTestScenarios.person()
                 ).values().iterator().next().uri());
         meta0.label("meta0");
         meta0.setNbReferences(0);
-        meta1 = identificationFactory.withUri(
+        meta1 = tagFactory.withUri(
                 center.addMeta(
                         TestScenarios.identificationFromFriendlyResource(b1)
                 ).values().iterator().next().uri());
         meta1.label("meta1");
         meta1.setNbReferences(1);
-        meta2 = identificationFactory.withUri(
+        meta2 = tagFactory.withUri(
                 center.addMeta(
                         TestScenarios.identificationFromFriendlyResource(b2)
                 ).values().iterator().next().uri());
         meta2.label("meta2");
         meta2.setNbReferences(2);
-        meta3 = identificationFactory.withUri(
+        meta3 = tagFactory.withUri(
                 center.addMeta(
                         TestScenarios.identificationFromFriendlyResource(b3)
                 ).values().iterator().next().uri());

@@ -9,7 +9,7 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -30,7 +30,7 @@ public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario
     @Inject
     ModelTestScenarios modelTestScenarios;
 
-    IdentifierPojo r2AsMeta;
+    TagPojo r2AsMeta;
 
     @Override
     public Object build() {

@@ -11,11 +11,10 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import js_test_data.JsTestScenario;
@@ -111,7 +110,7 @@ public class RelationsAsIdentifierScenario implements JsTestScenario {
     private void createRelations() {
         EdgeOperator firstSomeRelation = center.addRelationToVertex(b1);
         firstSomeRelation.label("original some relation");
-        IdentifierPojo firstSomeRelationAsIdentifier = TestScenarios.identificationFromFriendlyResource(
+        TagPojo firstSomeRelationAsIdentifier = TestScenarios.identificationFromFriendlyResource(
                 firstSomeRelation
         );
         EdgeOperator secondSomeRelation = center.addRelationToVertex(b2);

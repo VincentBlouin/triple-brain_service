@@ -12,7 +12,7 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFac
 import guru.bubl.module.model.graph.*;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.module.model.graph.schema.SchemaOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -20,7 +20,6 @@ import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.schema.SchemaFactory;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -245,8 +244,8 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
     }
 
-    private IdentifierPojo projectIdentification(){
-        return new IdentifierPojo(
+    private TagPojo projectIdentification(){
+        return new TagPojo(
                 project.uri(),
                 new FriendlyResourcePojo(
                         "Project"
@@ -254,8 +253,8 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
     }
 
-    private IdentifierPojo impactOnSocietyIdentification(){
-        return new IdentifierPojo(
+    private TagPojo impactOnSocietyIdentification(){
+        return new TagPojo(
                 impactOnSocietyProperty.uri(),
                 new FriendlyResourcePojo(
                         "Impact on society"
@@ -263,8 +262,8 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
     }
 
-    private IdentifierPojo impactOnTheIndividualIdentification(){
-        return new IdentifierPojo(
+    private TagPojo impactOnTheIndividualIdentification(){
+        return new TagPojo(
                 impactOnTheIndividualProperty.uri(),
                 new FriendlyResourcePojo(
                         "Impact on the individual"

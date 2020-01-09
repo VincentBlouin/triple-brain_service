@@ -5,7 +5,7 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.Identifier;
+import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
@@ -155,9 +155,9 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
     @Test
     public void getting_surround_graph_of_an_identifier_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier identifier = vertexA().getIdentifications().values().iterator().next();
+        Tag tag = vertexA().getIdentifications().values().iterator().next();
         assertThat(
-                getSurroundGraphOfAnIdentifier(identifier).getStatus(),
+                getSurroundGraphOfAnIdentifier(tag).getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
     }
@@ -191,9 +191,9 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
                 .get(ClientResponse.class);
     }
 
-    private ClientResponse getSurroundGraphOfAnIdentifier(Identifier identifier) {
+    private ClientResponse getSurroundGraphOfAnIdentifier(Tag tag) {
         return resource
-                .path(identifier.uri().getPath())
+                .path(tag.uri().getPath())
                 .path("surround_graph")
                 .cookie(authCookie)
                 .get(ClientResponse.class);

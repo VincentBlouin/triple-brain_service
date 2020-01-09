@@ -2,12 +2,12 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources.meta;
+package guru.bubl.service.resources.tag;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class UserMetasResourceTest extends GraphManipulationRestTestUtils {
+public class UserTagsResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void returns_ok_status() {
@@ -60,8 +60,8 @@ public class UserMetasResourceTest extends GraphManipulationRestTestUtils {
                 .get(ClientResponse.class);
     }
 
-    private Set<IdentifierPojo> getDataForUser(User user) {
-        return MetaJson.getSetFromJson(
+    private Set<TagPojo> getDataForUser(User user) {
+        return TagJson.getSetFromJson(
                 getForUser(user).getEntity(String.class)
         );
     }

@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources.meta;
+package guru.bubl.service.resources.tag;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -11,12 +11,12 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.identification.IdentificationFactory;
-import guru.bubl.module.model.graph.identification.IdentificationOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagFactory;
+import guru.bubl.module.model.graph.tag.TagOperator;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -27,10 +27,10 @@ import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class IdentifierResource {
+public class TagResource {
 
     @Inject
-    IdentificationFactory identificationFactory;
+    TagFactory tagFactory;
 
     @javax.inject.Inject
     CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
@@ -39,7 +39,7 @@ public class IdentifierResource {
     protected UserGraph userGraph;
 
     @AssistedInject
-    public IdentifierResource(
+    public TagResource(
             @Assisted User authenticatedUser,
             @Assisted UserGraph userGraph
     ) {
@@ -50,11 +50,11 @@ public class IdentifierResource {
     @GET
     @Path("/{identificationShortId}")
     public Response get(@PathParam("identificationShortId") String shortId) {
-        IdentificationOperator identificationOperator = identificationFactory.withUri(
+        TagOperator tagOperator = tagFactory.withUri(
                 tagUriFromShortId(shortId)
         );
-        IdentifierPojo identifierPojo = identificationOperator.buildPojo();
-        return Response.ok().entity(MetaJson.singleToJson(identifierPojo)).build();
+        TagPojo tagPojo = tagOperator.buildPojo();
+        return Response.ok().entity(TagJson.singleToJson(tagPojo)).build();
     }
 
 
@@ -64,10 +64,10 @@ public class IdentifierResource {
             @PathParam("identificationShortId") String shortId,
             JSONObject localizedLabel
     ) {
-        IdentificationOperator identificationOperator = identificationFactory.withUri(
+        TagOperator tagOperator = tagFactory.withUri(
                 tagUriFromShortId(shortId)
         );
-        identificationOperator.label(
+        tagOperator.label(
                 localizedLabel.optString(
                         LocalizedStringJson.content.name()
                 )
@@ -82,10 +82,10 @@ public class IdentifierResource {
             @PathParam("identificationShortId") String shortId,
             String comment
     ) {
-        IdentificationOperator identificationOperator = identificationFactory.withUri(
+        TagOperator tagOperator = tagFactory.withUri(
                 tagUriFromShortId(shortId)
         );
-        identificationOperator.comment(
+        tagOperator.comment(
                 comment
         );
         return Response.noContent().build();
@@ -100,7 +100,7 @@ public class IdentifierResource {
         UserUris userUris = new UserUris(
                 authenticatedUser
         );
-        IdentificationOperator identificationOperator = identificationFactory.withUri(
+        TagOperator tagOperator = tagFactory.withUri(
                 userUris.identificationUriFromShortId(
                         shortId
                 )
@@ -111,8 +111,8 @@ public class IdentifierResource {
                     Response.Status.BAD_REQUEST
             ).build();
         }
-        identificationOperator.mergeTo(
-                identificationFactory.withUri(destinationTagUri)
+        tagOperator.mergeTo(
+                tagFactory.withUri(destinationTagUri)
         );
         return Response.noContent().build();
     }
@@ -121,18 +121,18 @@ public class IdentifierResource {
     public OwnedSurroundGraphResource getSurroundGraphResource(
             @PathParam("shortId") String shortId
     ) {
-        IdentificationOperator identificationOperator = identificationFactory.withUri(
+        TagOperator tagOperator = tagFactory.withUri(
                 tagUriFromShortId(shortId)
         );
         CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
-                identificationOperator
+                tagOperator
         );
         centerGraphElementOperator.incrementNumberOfVisits();
         centerGraphElementOperator.updateLastCenterDate();
 
         return new OwnedSurroundGraphResource(
                 userGraph,
-                identificationOperator
+                tagOperator
         );
     }
 
@@ -142,7 +142,7 @@ public class IdentifierResource {
             @PathParam("shortId") String shortId,
             JSONObject childrenIndexes
     ) {
-        identificationFactory.withUri(tagUriFromShortId(shortId)).setChildrenIndex(
+        tagFactory.withUri(tagUriFromShortId(shortId)).setChildrenIndex(
                 childrenIndexes.toString()
         );
         return Response.noContent().build();
@@ -154,7 +154,7 @@ public class IdentifierResource {
             @PathParam("shortId") String shortId,
             JSONObject colors
     ) {
-        identificationFactory.withUri(tagUriFromShortId(shortId)).setColors(
+        tagFactory.withUri(tagUriFromShortId(shortId)).setColors(
                 colors.toString()
         );
         return Response.noContent().build();
@@ -166,7 +166,7 @@ public class IdentifierResource {
             @PathParam("shortId") String shortId,
             JSONObject font
     ) {
-        identificationFactory.withUri(tagUriFromShortId(shortId)).setFont(
+        tagFactory.withUri(tagUriFromShortId(shortId)).setFont(
                 font.toString()
         );
         return Response.noContent().build();

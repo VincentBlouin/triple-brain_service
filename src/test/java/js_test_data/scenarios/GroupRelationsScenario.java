@@ -12,13 +12,12 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
-import guru.bubl.module.model.search.GraphSearch;
 import guru.bubl.module.model.search.GraphSearchFactory;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -127,7 +126,7 @@ public class GroupRelationsScenario implements JsTestScenario {
                 user.username()
         );
         book1.label("book 1");
-        IdentifierPojo bookMeta = book1.addMeta(
+        TagPojo bookMeta = book1.addMeta(
                 modelTestScenarios.book()
         ).values().iterator().next();
         book2 = vertexFactory.createForOwner(
@@ -168,7 +167,7 @@ public class GroupRelationsScenario implements JsTestScenario {
     private void createEdges() {
         rBook1 = me.addRelationToVertex(book1);
         rBook1.label("Possession of book 1");
-        IdentifierPojo possession = book1.addMeta(
+        TagPojo possession = book1.addMeta(
                 modelTestScenarios.possessionIdentification()
         ).values().iterator().next();
         rBook1.addMeta(
@@ -205,7 +204,7 @@ public class GroupRelationsScenario implements JsTestScenario {
         originalRelation.label("original relation");
         EdgeOperator sameAsOriginalRelation = me.addRelationToVertex(b2);
         sameAsOriginalRelation.label("same as original relation");
-        IdentifierPojo b1RelationIdentification = new IdentifierPojo(
+        TagPojo b1RelationIdentification = new TagPojo(
                 originalRelation.uri(),
                 new FriendlyResourcePojo("original relation")
         );

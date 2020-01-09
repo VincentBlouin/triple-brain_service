@@ -12,7 +12,7 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -115,7 +115,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                         URI.create("big_url")
                 )
         ));
-        IdentifierPojo ideaIdentification = new IdentifierPojo(
+        TagPojo ideaIdentification = new TagPojo(
                 URI.create(
                         "http://external-uri.com/idea"
                 ),
@@ -129,7 +129,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         rIdea2.label("idea for 2");
         rIdea2.addMeta(ideaIdentification);
 
-        IdentifierPojo componentIdentification = new IdentifierPojo(
+        TagPojo componentIdentification = new TagPojo(
                 URI.create(
                         "http://external-uri.com/component"
                 ),

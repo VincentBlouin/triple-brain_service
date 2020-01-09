@@ -19,7 +19,7 @@ import guru.bubl.module.model.graph.vertex.*;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphIndexer;
-import guru.bubl.service.resources.GraphElementIdentificationResource;
+import guru.bubl.service.resources.GraphElementTagResource;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -52,7 +52,7 @@ public class VertexResource {
     VertexCollectionPublicAccessResourceFactory vertexCollectionPublicAccessResourceFactory;
 
     @Inject
-    GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
+    GraphElementTagResourceFactory graphElementTagResourceFactory;
 
     @Inject
     VertexGroupResourceFactory vertexGroupResourceFactory;
@@ -271,9 +271,9 @@ public class VertexResource {
     }
 
     @Path("{shortId}/identification")
-    public GraphElementIdentificationResource getVertexIdentificationResource(
+    public GraphElementTagResource getVertexIdentificationResource(
             @PathParam("shortId") String shortId) {
-        return graphElementIdentificationResourceFactory.forGraphElement(
+        return graphElementTagResourceFactory.forGraphElement(
                 vertexFromShortId(shortId),
                 GraphElementType.Vertex
         );

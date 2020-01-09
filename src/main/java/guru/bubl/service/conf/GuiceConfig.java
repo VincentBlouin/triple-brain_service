@@ -26,8 +26,8 @@ import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
-import guru.bubl.service.resources.meta.IdentificationResourceFactory;
-import guru.bubl.service.resources.meta.UserMetasResourceFactory;
+import guru.bubl.service.resources.tag.TagResourceFactory;
+import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
@@ -91,7 +91,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexCollectionPublicAccessResourceFactory.class
                 ));
                 install(builder.build(
-                        GraphElementIdentificationResourceFactory.class
+                        GraphElementTagResourceFactory.class
                 ));
                 install(builder.build(
                         EdgeResourceFactory.class
@@ -109,10 +109,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                         SchemaResourceFactory.class
                 ));
                 install(builder.build(
-                        IdentificationResourceFactory.class
+                        TagResourceFactory.class
                 ));
                 install(builder.build(
-                        UserMetasResourceFactory.class
+                        UserTagsResourceFactory.class
                 ));
                 install(builder.build(
                         SchemaPropertyResourceFactory.class

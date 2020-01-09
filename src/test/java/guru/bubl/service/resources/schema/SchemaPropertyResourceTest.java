@@ -5,11 +5,11 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.schema.Schema;
 import guru.bubl.module.model.graph.schema.SchemaJson;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -100,11 +100,11 @@ public class SchemaPropertyResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void adding_identification_returns_ok_status() throws Exception {
-        IdentifierPojo identification = modelTestScenarios.creatorPredicate();
+        TagPojo identification = modelTestScenarios.creatorPredicate();
         identification.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
-        JSONObject creatorPredicate = MetaJson.singleToJson(identification);
+        JSONObject creatorPredicate = TagJson.singleToJson(identification);
         ClientResponse response = graphElementUtils().addIdentificationToGraphElementWithUri(
                 creatorPredicate,
                 uriOfCreatedProperty()

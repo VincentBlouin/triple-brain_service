@@ -11,9 +11,9 @@ import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
-import guru.bubl.module.model.graph.identification.Identifier;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.graph.tag.Tag;
+import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -28,7 +28,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-public class GraphElementIdentificationResourceTest extends GraphManipulationRestTestUtils {
+public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void setting_type_of_a_vertex_returns_ok_response_status() {
@@ -51,7 +51,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     @Test
     public void identifications_are_returned_when_adding() {
         ClientResponse response = graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentifierPojo identification = MetaJson.fromJson(
+        TagPojo identification = TagJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();
         assertThat(
@@ -81,7 +81,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 vertexA().getIdentifications().size(),
                 is(1)
         );
-        Identifier addedIdentification = vertexA().getIdentifications().values().iterator().next();
+        Tag addedIdentification = vertexA().getIdentifications().values().iterator().next();
         removeIdentificationToResource(
                 addedIdentification,
                 vertexA()
@@ -130,7 +130,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         EdgePojo newEdge = EdgeJson.fromJson(
                 tripleAsJson.getJSONObject("edge")
         );
-        IdentifierPojo edgeAsIdentifier = new IdentifierPojo(
+        TagPojo edgeAsIdentifier = new TagPojo(
                 newEdge.uri(),
                 new FriendlyResourcePojo(
                         newEdge.uri(),
@@ -142,7 +142,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
-        IdentifierPojo newEdgeAsMeta = MetaJson.fromJson(
+        TagPojo newEdgeAsMeta = TagJson.fromJson(
                 graphElementUtils().addIdentificationToGraphElementWithUri(
                         edgeAsIdentifier,
                         edgeBetweenAAndB.uri()
@@ -160,7 +160,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
     }
 
     private ClientResponse addCreatorPredicateToEdge(Edge edge) {
-        IdentifierPojo creatorPredicate = modelTestScenarios.creatorPredicate();
+        TagPojo creatorPredicate = modelTestScenarios.creatorPredicate();
         creatorPredicate.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
@@ -170,7 +170,7 @@ public class GraphElementIdentificationResourceTest extends GraphManipulationRes
         );
     }
 
-    private ClientResponse removeIdentificationToResource(Identifier identification, FriendlyResource resource) {
+    private ClientResponse removeIdentificationToResource(Tag identification, FriendlyResource resource) {
         return NoEx.wrap(() -> RestTestUtils.resource
                 .path(resource.uri().getPath())
                 .path("identification")

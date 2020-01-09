@@ -5,7 +5,7 @@
 package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
@@ -64,7 +64,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void refreshing_identifications_number_of_references_returns_ok_status() throws Exception {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentifierPojo possession = new ModelTestScenarios().possessionIdentification();
+        TagPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
@@ -88,7 +88,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void re_adding_identifications_returns_ok_status() throws Exception {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        IdentifierPojo possession = new ModelTestScenarios().possessionIdentification();
+        TagPojo possession = new ModelTestScenarios().possessionIdentification();
         possession.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );

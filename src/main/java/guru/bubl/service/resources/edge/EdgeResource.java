@@ -17,8 +17,8 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.service.resources.GraphElementIdentificationResource;
-import guru.bubl.service.resources.vertex.GraphElementIdentificationResourceFactory;
+import guru.bubl.service.resources.GraphElementTagResource;
+import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -36,7 +36,7 @@ import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 public class EdgeResource {
 
     @Inject
-    GraphElementIdentificationResourceFactory graphElementIdentificationResourceFactory;
+    GraphElementTagResourceFactory graphElementTagResourceFactory;
 
     @Inject
     CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
@@ -113,8 +113,8 @@ public class EdgeResource {
     }
 
     @Path("{shortId}/identification")
-    public GraphElementIdentificationResource getVertexIdentificationResource(@PathParam("shortId") String shortId) {
-        return graphElementIdentificationResourceFactory.forGraphElement(
+    public GraphElementTagResource getVertexIdentificationResource(@PathParam("shortId") String shortId) {
+        return graphElementTagResourceFactory.forGraphElement(
                 edgeFromShortId(shortId),
                 GraphElementType.Edge
         );

@@ -7,8 +7,8 @@ package guru.bubl.service.utils;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
-import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -32,9 +32,9 @@ public class GraphElementRestTestUtils {
         this.authenticatedUser = authenticatedUser;
     }
 
-    public ClientResponse addIdentificationToGraphElementWithUri(IdentifierPojo identification, URI graphElementUri) {
+    public ClientResponse addIdentificationToGraphElementWithUri(TagPojo identification, URI graphElementUri) {
         return addIdentificationToGraphElementWithUri(
-                MetaJson.singleToJson(identification),
+                TagJson.singleToJson(identification),
                 graphElementUri
         );
     }
@@ -49,11 +49,11 @@ public class GraphElementRestTestUtils {
     }
 
     public ClientResponse addFoafPersonTypeToVertexA() {
-        IdentifierPojo identification = new ModelTestScenarios().person();
+        TagPojo identification = new ModelTestScenarios().person();
         identification.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
-        JSONObject personType = MetaJson.singleToJson(identification);
+        JSONObject personType = TagJson.singleToJson(identification);
         return addIdentificationToGraphElementWithUri(
                 personType,
                 graphUtils().vertexAUri()
@@ -62,8 +62,8 @@ public class GraphElementRestTestUtils {
     }
 
 
-    public IdentifierPojo getIdentificationsFromResponse(ClientResponse response) {
-        return MetaJson.fromJson(
+    public TagPojo getIdentificationsFromResponse(ClientResponse response) {
+        return TagJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();
     }

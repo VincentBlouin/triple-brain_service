@@ -6,12 +6,11 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentificationFactory;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagFactory;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 
 import javax.inject.Inject;
@@ -40,7 +39,7 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
     protected VertexFactory vertexFactory;
 
     @Inject
-    protected IdentificationFactory identificationFactory;
+    protected TagFactory tagFactory;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -96,8 +95,8 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
         EdgeOperator g1 = center.addRelationToVertex(bbbb);
         g1.label("g1");
 
-        IdentifierPojo group1 = g1.addMeta(
-                new IdentifierPojo(
+        TagPojo group1 = g1.addMeta(
+                new TagPojo(
                         g1.uri(),
                         new FriendlyResourcePojo(
                                 "group1"
@@ -111,8 +110,8 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
 
         EdgeOperator g21 = center.addRelationToVertex(dddd);
         g21.label("g21");
-        IdentifierPojo group2 = g21.addMeta(
-                new IdentifierPojo(
+        TagPojo group2 = g21.addMeta(
+                new TagPojo(
                         g21.uri(),
                         new FriendlyResourcePojo(
                                 "group2"

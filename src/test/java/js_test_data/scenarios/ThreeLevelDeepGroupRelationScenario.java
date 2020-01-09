@@ -10,7 +10,7 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -37,7 +37,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
      * r3 and r4 are tagged to sub-region-b
     */
 
-    private IdentifierPojo region = new IdentifierPojo(
+    private TagPojo region = new TagPojo(
             URI.create(
                     "https://mindrespect.com/e6452d32-8015-4d8e-89ad-58f14699680d"
             ),
@@ -45,7 +45,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
                     "region"
             )
     );
-    private IdentifierPojo subRegion = new IdentifierPojo(
+    private TagPojo subRegion = new TagPojo(
             URI.create(
                     "https://mindrespect.com/077e5cd5-0adf-471a-8145-228107cf66e5"
             ),
@@ -53,7 +53,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
                     "sub-region"
             )
     );
-    private IdentifierPojo subRegionA = new IdentifierPojo(
+    private TagPojo subRegionA = new TagPojo(
             URI.create(
                     "https://mindrespect.com/f893f25b-7cf1-4fee-860a-18b0764949d3"
             ),
@@ -62,7 +62,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
             )
     );
 
-    private IdentifierPojo subRegionB = new IdentifierPojo(
+    private TagPojo subRegionB = new TagPojo(
             URI.create(
                     "https://mindrespect.com/fc5379ff-fdc8-4b9d-ab40-d9adcac83315"
             ),

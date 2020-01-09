@@ -2,14 +2,14 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources.meta;
+package guru.bubl.service.resources.tag;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.identification.Identifier;
-import guru.bubl.module.model.graph.identification.IdentifierPojo;
+import guru.bubl.module.model.graph.tag.Tag;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.meta.MetaJson;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -26,7 +26,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
+public class TagResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void updating_label_returns_no_content_status() {
@@ -36,7 +36,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
         );
 
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getIdentifications().values().iterator().next();
         ClientResponse clientResponse = updateIdentificationLabel(
                 identification,
                 "new label"
@@ -54,7 +54,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
                 is(0)
         );
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getIdentifications().values().iterator().next();
         assertFalse(
                 identification.label().equals("new label")
         );
@@ -73,7 +73,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void cannot_update_identification_label_of_another_user() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getIdentifications().values().iterator().next();
         JSONObject anotherUser = createAUser();
         authenticate(
                 anotherUser
@@ -100,7 +100,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_note_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getIdentifications().values().iterator().next();
         ClientResponse response = updateIdentificationNote(identification, "some note");
         assertThat(
                 response.getStatus(),
@@ -111,7 +111,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_update_note() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getIdentifications().values().iterator().next();
         String identificationNote = identification.comment();
         assertThat(identificationNote, is(not("some note")));
         updateIdentificationNote(identification, "some note");
@@ -122,7 +122,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void get_meta_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getIdentifications().values().iterator().next();
         assertThat(
                 getMeta(meta).getStatus(),
                 is(Response.Status.OK.getStatusCode())
@@ -132,8 +132,8 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_get_meta() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier meta = vertexA().getIdentifications().values().iterator().next();
-        IdentifierPojo person = MetaJson.singleFromJson(
+        Tag meta = vertexA().getIdentifications().values().iterator().next();
+        TagPojo person = TagJson.singleFromJson(
                 getMeta(meta).getEntity(String.class)
         );
         assertThat(
@@ -145,7 +145,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updates_last_visit_date_when_getting_surround_graph() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getIdentifications().values().iterator().next();
         List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
         graphUtils().graphWithCenterVertexUri(meta.uri());
@@ -159,7 +159,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void increments_number_of_visits_when_getting_surround_graph() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Identifier meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getIdentifications().values().iterator().next();
         graphUtils().graphWithCenterVertexUri(meta.uri());
         CenterGraphElementPojo centerMeta = graphUtils().getCenterWithUri(
                 graphUtils().getCenterGraphElements(),
@@ -180,7 +180,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-    private ClientResponse updateIdentificationLabel(Identifier identification, String label) {
+    private ClientResponse updateIdentificationLabel(Tag identification, String label) {
         try {
             JSONObject localizedLabel = new JSONObject().put(
                     LocalizedStringJson.content.name(),
@@ -196,7 +196,7 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
         }
     }
 
-    private ClientResponse updateIdentificationNote(Identifier identification, String note) {
+    private ClientResponse updateIdentificationNote(Tag identification, String note) {
         return resource
                 .path(identification.uri().getPath())
                 .path("comment")
@@ -205,9 +205,9 @@ public class IdentifierResourceTest extends GraphManipulationRestTestUtils {
                 .post(ClientResponse.class, note);
     }
 
-    private ClientResponse getMeta(Identifier identifier) {
+    private ClientResponse getMeta(Tag tag) {
         return resource
-                .path(identifier.uri().getPath())
+                .path(tag.uri().getPath())
                 .cookie(authCookie)
                 .get(ClientResponse.class);
     }

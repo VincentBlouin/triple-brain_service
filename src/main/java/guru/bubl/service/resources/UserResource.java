@@ -25,13 +25,12 @@ import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
-import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.fork.ForkResource;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
-import guru.bubl.service.resources.meta.UserMetasResource;
-import guru.bubl.service.resources.meta.UserMetasResourceFactory;
+import guru.bubl.service.resources.tag.UserTagsResource;
+import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResource;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
@@ -100,7 +99,7 @@ public class UserResource {
     EdgeFactory edgeFactory;
 
     @Inject
-    UserMetasResourceFactory userMetasResourceFactory;
+    UserTagsResourceFactory userTagsResourceFactory;
 
     @Inject
     FriendsResourceFactory friendsResourceFactory;
@@ -400,7 +399,7 @@ public class UserResource {
     }
 
     @Path("{username}/metas")
-    public UserMetasResource getUserMetas(
+    public UserTagsResource getUserMetas(
             @PathParam("username") String username,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId,
             @Context HttpServletRequest request
@@ -410,7 +409,7 @@ public class UserResource {
                     Response.Status.FORBIDDEN
             );
         }
-        return userMetasResourceFactory.forUser(
+        return userTagsResourceFactory.forUser(
                 sessionHandler.userFromSession(request.getSession())
         );
     }
