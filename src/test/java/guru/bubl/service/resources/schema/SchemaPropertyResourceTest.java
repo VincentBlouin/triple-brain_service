@@ -5,12 +5,12 @@
 package guru.bubl.service.resources.schema;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.schema.Schema;
 import guru.bubl.module.model.graph.schema.SchemaJson;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONException;

@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Set;
 
 import static guru.bubl.service.utils.GraphRestTestUtils.getCenterGraphElementsFromClientResponse;
 import static org.hamcrest.core.Is.is;

@@ -19,7 +19,6 @@ import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;

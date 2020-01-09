@@ -14,7 +14,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;

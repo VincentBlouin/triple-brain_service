@@ -5,8 +5,6 @@
 package guru.bubl.service.resources;
 
 
-import guru.bubl.service.resources.center.CenterGraphElementsResourceTest;
-import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

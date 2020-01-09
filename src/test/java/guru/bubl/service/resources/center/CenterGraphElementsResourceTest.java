@@ -7,13 +7,11 @@ package guru.bubl.service.resources.center;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.service.resources.pattern.PatternConsumerResourceTest;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 import static guru.bubl.service.utils.GraphRestTestUtils.getCenterGraphElementsFromClientResponse;
 import static org.hamcrest.core.Is.is;

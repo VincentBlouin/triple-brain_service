@@ -18,7 +18,6 @@ import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -33,7 +32,8 @@ import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
