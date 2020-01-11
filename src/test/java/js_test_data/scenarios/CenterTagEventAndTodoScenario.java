@@ -10,6 +10,7 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -21,7 +22,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class CenterMetaEventAndTodoScenario implements JsTestScenario {
+public class CenterTagEventAndTodoScenario implements JsTestScenario {
 
     /*
      * event->e1
@@ -39,6 +40,9 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
      * r1,r2,f1 are tagged to "to do"
      * "to do" is a tag
      * e2 has one hidden vertex
+     *
+     * single tagged to event
+     *
      */
 
     @Inject
@@ -63,7 +67,8 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
             e32,
             o1,
             o2,
-            a1;
+            a1,
+            singleTaggedToEvent;
 
     @Override
     public Object build() {
@@ -97,6 +102,14 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 "aroundE3",
                 SubGraphJson.toJson(
                         aroundE3
+                )
+        ).put(
+                "singleTaggedToEvent",
+                SubGraphJson.toJson(
+                        userGraph.aroundVertexUriInShareLevels(
+                                singleTaggedToEvent.uri(),
+                                ShareLevel.allShareLevels
+                        )
                 )
         )).get();
     }
@@ -141,6 +154,14 @@ public class CenterMetaEventAndTodoScenario implements JsTestScenario {
                 user.username()
         );
         a1.label("a1");
+
+        singleTaggedToEvent = vertexFactory.createForOwner(
+                user.username()
+        );
+        singleTaggedToEvent.label("single tagged to event");
+        singleTaggedToEvent.addMeta(
+                event
+        );
     }
 
     private void createEdges() {

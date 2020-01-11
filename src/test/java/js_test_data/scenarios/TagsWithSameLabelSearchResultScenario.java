@@ -17,7 +17,7 @@ import js_test_data.JsTestScenario;
 import javax.inject.Inject;
 import java.util.List;
 
-public class MetasWithSameLabelSearchResultScenario extends AbstractScenario implements JsTestScenario {
+public class TagsWithSameLabelSearchResultScenario extends AbstractScenario implements JsTestScenario {
 
     /*
     * meta0 nbReference 0

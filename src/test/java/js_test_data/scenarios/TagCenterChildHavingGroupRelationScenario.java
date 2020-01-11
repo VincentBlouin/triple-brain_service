@@ -17,7 +17,7 @@ import js_test_data.AbstractScenario;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 
-public class MetaCenterChildHavingGroupRelationScenario extends AbstractScenario implements JsTestScenario {
+public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario implements JsTestScenario {
 
     /*
      * center - r1 -> b1

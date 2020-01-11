@@ -23,7 +23,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
-public class RelationsAsIdentifierScenario implements JsTestScenario {
+public class RelationsAsTagScenario implements JsTestScenario {
 
     /*
     *

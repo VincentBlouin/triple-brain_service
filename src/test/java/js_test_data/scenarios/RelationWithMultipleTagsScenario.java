@@ -17,7 +17,7 @@ import js_test_data.JsTestScenario;
 
 import javax.inject.Inject;
 
-public class RelationWithMultipleIdentifiers implements JsTestScenario {
+public class RelationWithMultipleTagsScenario implements JsTestScenario {
 
     /*
     * Team - computer scientist -> Aria Sauley

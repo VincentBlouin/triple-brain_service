@@ -18,7 +18,7 @@ import js_test_data.JsTestScenario;
 
 import javax.inject.Inject;
 
-public class SameLevelRelationsWithMoreThanOneCommonMetaScenario implements JsTestScenario {
+public class SameLevelRelationsWithMoreThanOneCommonTagScenario implements JsTestScenario {
 
     /*
     * center - r1 -> b1
