@@ -62,7 +62,8 @@ public class JsTestScenariosBuilder {
             new ThreeLevelDeepGroupRelationScenario(),
             new ConvertVertexToGroupRelationScenario(),
             new LeaveContextScenario(),
-            new TwoLevelGroupRelationScenario()
+            new TwoLevelGroupRelationScenario(),
+            new ThreeLevelGroupRelationScenario()
     );
 
 
