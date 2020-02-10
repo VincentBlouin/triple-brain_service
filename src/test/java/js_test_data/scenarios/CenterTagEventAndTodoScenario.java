@@ -10,7 +10,6 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -77,16 +76,17 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
         createEdges();
         SubGraphPojo aroundTodo = userGraph.aroundVertexUriInShareLevels(
                 toDo.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo aroundEvent = userGraph.aroundVertexUriInShareLevelsWithDepth(
+        SubGraphPojo aroundEvent = userGraph.aroundVertexUriWithDepthInShareLevels(
                 event.uri(),
-                ShareLevel.allShareLevels,
-                2
+                2,
+                ShareLevel.allShareLevelsInt
+
         );
         SubGraphPojo aroundE3 = userGraph.aroundVertexUriInShareLevels(
                 e3.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         return NoEx.wrap(() -> new JSONObject().put(
                 "aroundEvent",
@@ -108,7 +108,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
                 SubGraphJson.toJson(
                         userGraph.aroundVertexUriInShareLevels(
                                 singleTaggedToEvent.uri(),
-                                ShareLevel.allShareLevels
+                                ShareLevel.allShareLevelsInt
                         )
                 )
         )).get();

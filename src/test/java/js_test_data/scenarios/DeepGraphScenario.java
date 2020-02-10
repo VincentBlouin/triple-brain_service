@@ -48,10 +48,10 @@ public class DeepGraphScenario implements JsTestScenario {
         b2.addRelationToVertex(b3).label("r2");
         b4.addRelationToVertex(b2).label("r3");
         b5.addRelationToVertex(b1).label("r4");
-        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevelsWithDepth(
+        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriWithDepthInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels,
-                2
+                2,
+                ShareLevel.allShareLevelsInt
         );
         return SubGraphJson.toJson(
                 subGraphPojo

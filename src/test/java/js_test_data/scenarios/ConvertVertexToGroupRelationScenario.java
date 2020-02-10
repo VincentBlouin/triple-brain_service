@@ -50,11 +50,11 @@ public class ConvertVertexToGroupRelationScenario implements JsTestScenario {
         createEdges();
         SubGraphPojo b1Graph = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo b2Graph = userGraph.aroundVertexUriInShareLevels(
                 b2.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         try {
             return new JSONObject().put(

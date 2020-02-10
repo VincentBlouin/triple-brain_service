@@ -39,22 +39,28 @@ public class NotOwnedSurroundGraphResource {
     @GET
     @Path("/")
     public Response get(@QueryParam("depth") Integer depth) {
-        Set<ShareLevel> inShareLevels = new HashSet<>();
-        inShareLevels.add(ShareLevel.PUBLIC);
-        inShareLevels.add(ShareLevel.PUBLIC_WITH_LINK);
+        Integer[] inShareLevels;
         if (skipVerification) {
-            inShareLevels.add(ShareLevel.PRIVATE);
-            inShareLevels.add(ShareLevel.FRIENDS);
+            inShareLevels = ShareLevel.allShareLevelsInt;
         } else if (isFriend) {
-            inShareLevels.add(ShareLevel.FRIENDS);
+            inShareLevels = new Integer[]{
+                    ShareLevel.PUBLIC.getIndex(),
+                    ShareLevel.PUBLIC_WITH_LINK.getIndex(),
+                    ShareLevel.FRIENDS.getIndex()
+            };
+        } else {
+            inShareLevels = new Integer[]{
+                    ShareLevel.PUBLIC.getIndex(),
+                    ShareLevel.PUBLIC_WITH_LINK.getIndex()
+            };
         }
         if (depth == null) {
             depth = 1;
         }
-        SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevelsWithDepth(
+        SubGraphPojo subGraph = userGraph.aroundVertexUriWithDepthInShareLevels(
                 centerVertex.uri(),
-                inShareLevels,
-                depth
+                depth,
+                inShareLevels
         );
         if (subGraph.vertices().isEmpty()) {
             return Response.status(

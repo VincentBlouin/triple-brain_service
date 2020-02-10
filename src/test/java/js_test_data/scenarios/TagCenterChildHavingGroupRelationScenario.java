@@ -40,14 +40,14 @@ public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario 
         /*
         I have to write a depth of 2 but a depth of one should be enough, I don't understand
          */
-        SubGraphPojo metaCenter = userGraph.aroundVertexUriInShareLevelsWithDepth(
+        SubGraphPojo metaCenter = userGraph.aroundVertexUriWithDepthInShareLevels(
                 r2AsMeta.uri(),
-                ShareLevel.allShareLevels,
-                2
+                2,
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo childOfB1 = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         return NoEx.wrap(() -> new JSONObject()
                 .put(

@@ -92,7 +92,7 @@ public class GroupRelationsScenario implements JsTestScenario {
         createEdges();
         subGraphForMe = userGraph.aroundVertexUriInShareLevels(
                 me.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         List<GraphElementSearchResult> bookSearchResults = graphSearchFactory.usingSearchTerm(
                 "book"

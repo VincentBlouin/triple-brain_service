@@ -56,19 +56,19 @@ public class AutomaticExpandScenario implements JsTestScenario {
         createRelations();
         SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo b2SubGraph = userGraph.aroundVertexUriInShareLevels(
                 b2.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo b3SubGraph = userGraph.aroundVertexUriInShareLevels(
                 b3.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo b31SubGraph = userGraph.aroundVertexUriInShareLevels(
                 b31.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         return NoEx.wrap(() -> new JSONObject()
                 .put(

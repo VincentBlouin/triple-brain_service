@@ -67,30 +67,30 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
         createRelations();
         SubGraphPojo b2Graph = userGraph.aroundVertexUriInShareLevels(
                 b2.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo b1Graph = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo shirt2Graph = userGraph.aroundVertexUriInShareLevels(
                 shirt2.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo distantBubbleGraph = userGraph.aroundVertexUriInShareLevels(
                 distantBubble.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         EdgeOperator distantToB2 = distantBubble.addRelationToVertex(b2);
         SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundVertexUriInShareLevels(
                 b2.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         distantToB2.remove();
         b1.addRelationToVertex(distantBubble);
         SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.aroundVertexUriInShareLevels(
                 distantBubble.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
 
         return NoEx.wrap(() ->

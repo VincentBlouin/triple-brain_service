@@ -71,7 +71,7 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
         return SubGraphJson.toJson(
                 userGraph.aroundVertexUriInShareLevels(
                         center.uri(),
-                        ShareLevel.allShareLevels
+                        ShareLevel.allShareLevelsInt
                 )
         );
     }

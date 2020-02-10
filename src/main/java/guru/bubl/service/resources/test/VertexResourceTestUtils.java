@@ -50,7 +50,7 @@ public class VertexResourceTestUtils {
         URI vertexUri = new URI(vertexId);
         SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevels(
                 vertexUri,
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         return Response.ok(VertexInSubGraphJson.toJson(
                 subGraph.vertexWithIdentifier(

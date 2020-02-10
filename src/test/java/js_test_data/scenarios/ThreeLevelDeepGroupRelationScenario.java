@@ -106,7 +106,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
         return SubGraphJson.toJson(
                 userGraph.aroundVertexUriInShareLevels(
                         fastChargingStation.uri(),
-                        ShareLevel.allShareLevels
+                        ShareLevel.allShareLevelsInt
                 )
         );
     }

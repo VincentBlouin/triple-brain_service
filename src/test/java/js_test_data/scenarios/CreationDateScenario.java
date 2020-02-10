@@ -84,12 +84,12 @@ public class CreationDateScenario implements JsTestScenario {
         createEdges();
         subGraphForB1 = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         setupcreationDatesForSubGraphForB1();
         subGraphForB7 = userGraph.aroundVertexUriInShareLevels(
                 b7.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         setupcreationDatesForSubGraphForB7();
         return NoEx.wrap(() -> new JSONObject().put(

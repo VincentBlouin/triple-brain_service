@@ -62,7 +62,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             userGraph.aroundVertexUriInShareLevels(
                                     event.uri(),
-                                    ShareLevel.allShareLevels
+                                    ShareLevel.allShareLevelsInt
                             )
                     )
             );
@@ -76,7 +76,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             userGraph.aroundVertexUriInShareLevels(
                                     center.uri(),
-                                    ShareLevel.allShareLevels
+                                    ShareLevel.allShareLevelsInt
                             )
                     )
             );

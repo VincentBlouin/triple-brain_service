@@ -64,7 +64,7 @@ public class  OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario 
                     SubGraphJson.toJson(
                             userGraph.aroundVertexUriInShareLevels(
                                     bubble.uri(),
-                                    ShareLevel.allShareLevels
+                                    ShareLevel.allShareLevelsInt
                             )
                     )
             );
@@ -78,7 +78,7 @@ public class  OneBubbleHavingSuggestionsGraphScenario implements JsTestScenario 
                     SubGraphJson.toJson(
                             userGraph.aroundVertexUriInShareLevels(
                                     center.uri(),
-                                    ShareLevel.allShareLevels
+                                    ShareLevel.allShareLevelsInt
                             )
                     )
             );

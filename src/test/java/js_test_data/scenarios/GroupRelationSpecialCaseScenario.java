@@ -54,7 +54,7 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
         createEdges();
         SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevels(
                 center.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         return SubGraphJson.toJson(
                 subGraph

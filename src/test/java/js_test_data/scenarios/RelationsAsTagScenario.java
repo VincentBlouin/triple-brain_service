@@ -78,7 +78,7 @@ public class RelationsAsTagScenario implements JsTestScenario {
                         SubGraphJson.toJson(
                                 userGraph.aroundVertexUriInShareLevels(
                                         center.uri(),
-                                        ShareLevel.allShareLevels
+                                        ShareLevel.allShareLevelsInt
                                 )
                         ))
         ).get();

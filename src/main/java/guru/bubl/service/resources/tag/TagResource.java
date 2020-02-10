@@ -11,6 +11,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.tag.TagFactory;
 import guru.bubl.module.model.graph.tag.TagOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
@@ -172,6 +173,18 @@ public class TagResource {
         return Response.noContent().build();
     }
 
+
+
+    @Path("{shortId}/shareLevel")
+    @POST
+    public Response setShareLevel(@PathParam("shortId") String shortId, JSONObject shareLevel) {
+        tagFactory.withUri(tagUriFromShortId(shortId)).setShareLevel(
+                ShareLevel.valueOf(
+                        shareLevel.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                )
+        );
+        return Response.noContent().build();
+    }
 
     private URI tagUriFromShortId(String shortId) {
         return new UserUris(

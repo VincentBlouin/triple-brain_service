@@ -54,7 +54,7 @@ public class LeaveContextScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             userGraph.aroundVertexUriInShareLevels(
                                     techChoice.uri(),
-                                    ShareLevel.allShareLevels
+                                    ShareLevel.allShareLevelsInt
                             )
                     )
             ).put(
@@ -62,7 +62,7 @@ public class LeaveContextScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             userGraph.aroundVertexUriInShareLevels(
                                     choiceA.uri(),
-                                    ShareLevel.allShareLevels
+                                    ShareLevel.allShareLevelsInt
                             )
                     )
             );

@@ -52,7 +52,7 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
         return SubGraphJson.toJson(
                 userGraph.aroundVertexUriInShareLevels(
                         team.uri(),
-                        ShareLevel.allShareLevels
+                        ShareLevel.allShareLevelsInt
                 )
         );
     }

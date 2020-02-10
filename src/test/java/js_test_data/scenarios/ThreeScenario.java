@@ -106,15 +106,15 @@ public class ThreeScenario implements JsTestScenario {
         createEdges();
         SubGraphPojo subGraphForB1 = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo subGraphForB2 = userGraph.aroundVertexUriInShareLevels(
                 b2.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         SubGraphPojo subGraphForB3 = userGraph.aroundVertexUriInShareLevels(
                 b3.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         wholeGraphAdmin.reindexAll();
         List<GraphElementSearchResult> searchResultsForB1 = graphSearchFactory.usingSearchTerm(
@@ -129,17 +129,17 @@ public class ThreeScenario implements JsTestScenario {
         );
         SubGraphPojo subGraphForParent = userGraph.aroundVertexUriInShareLevels(
                 parent.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         parent.addRelationToVertex(b1);
         SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         child.mergeTo(b1);
         SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         try {
             return new JSONObject().put(
@@ -280,7 +280,7 @@ public class ThreeScenario implements JsTestScenario {
         );
         return forkerUserGraph.aroundVertexUriInShareLevels(
                 forkedB1.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
     }
 }

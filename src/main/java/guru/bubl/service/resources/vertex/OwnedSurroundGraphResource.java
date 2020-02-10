@@ -52,7 +52,7 @@ public class OwnedSurroundGraphResource {
     private SubGraphPojo getGraph() {
         return userGraph.aroundVertexUriInShareLevels(
                 centerBubble.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
     }
 }

@@ -63,7 +63,7 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
         createEdges();
         SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevels(
                 someProject.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         return SubGraphJson.toJson(
                 subGraph

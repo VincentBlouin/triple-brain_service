@@ -127,7 +127,7 @@ public class ProjectSchemaScenario implements JsTestScenario {
         );
         SubGraphPojo someProjectGraph = userGraph.aroundVertexUriInShareLevels(
                 someProject.uri(),
-                ShareLevel.allShareLevels
+                ShareLevel.allShareLevelsInt
         );
         try {
             return new JSONObject().put(
