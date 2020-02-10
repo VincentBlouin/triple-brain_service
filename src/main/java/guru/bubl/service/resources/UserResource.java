@@ -12,10 +12,12 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.tag.TagFactory;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.json.JsonUtils;
@@ -96,6 +98,9 @@ public class UserResource {
     VertexFactory vertexFactory;
 
     @Inject
+    TagFactory tagFactory;
+
+    @Inject
     EdgeFactory edgeFactory;
 
     @Inject
@@ -167,10 +172,24 @@ public class UserResource {
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
         return getVertexSurroundGraphResource(
-                vertexFactory.withUri(
-                        new UserUris(
-                                username
-                        ).vertexUriFromShortId(shortId)
+                new UserUris(
+                        username
+                ).vertexUriFromShortId(shortId),
+                persistentSessionId
+        );
+    }
+
+    @Path("{username}/non_owned/meta/{shortId}/surround_graph")
+    public NotOwnedSurroundGraphResource surroundTagGraphResource(
+            @PathParam("username") String username,
+            @PathParam("shortId") String shortId,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        return getVertexSurroundGraphResource(
+                new UserUris(
+                        username
+                ).uriFromTypeAndShortId(
+                        GraphElementType.Meta, shortId
                 ),
                 persistentSessionId
         );
@@ -190,7 +209,7 @@ public class UserResource {
                 )
         );
         return getVertexSurroundGraphResource(
-                edge.sourceVertex(),
+                edge.sourceVertex().uri(),
                 persistentSessionId
         );
 
@@ -210,21 +229,20 @@ public class UserResource {
     }
 
     private NotOwnedSurroundGraphResource getVertexSurroundGraphResource(
-            Vertex centerVertex, String persistentSessionId
+            URI uri, String persistentSessionId
     ) {
-        User owner = userRepository.findByUsername(centerVertex.getOwnerUsername());
+
+        String ownerUsername = UserUris.ownerUserNameFromUri(uri);
+        User owner = User.withUsername(ownerUsername);
         UserGraph userGraph = graphFactory.loadForUser(
                 owner
         );
-        if (!userGraph.haveElementWithId(centerVertex.uri())) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
         Boolean skipVerification = false;
         Boolean isFriend = false;
         if (sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
             User userInSession = sessionHandler.userFromSession(request.getSession());
             skipVerification = userInSession.username().equals(
-                    centerVertex.getOwnerUsername()
+                    ownerUsername
             );
             isFriend = FriendStatus.confirmed == friendManagerFactory.forUser(
                     userInSession
@@ -232,7 +250,7 @@ public class UserResource {
         }
         return new NotOwnedSurroundGraphResource(
                 userGraph,
-                centerVertex,
+                uri,
                 skipVerification,
                 isFriend
         );

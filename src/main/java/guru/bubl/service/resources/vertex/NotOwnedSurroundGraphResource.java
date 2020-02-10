@@ -6,6 +6,7 @@ package guru.bubl.service.resources.vertex;
 
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.graph.exceptions.NonExistingResourceException;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
@@ -13,25 +14,26 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class NotOwnedSurroundGraphResource {
-    private Vertex centerVertex;
+    private URI centerUri;
     private UserGraph userGraph;
     private Boolean skipVerification;
     private Boolean isFriend;
 
     public NotOwnedSurroundGraphResource(
             UserGraph userGraph,
-            Vertex centerVertex,
+            URI centerUri,
             Boolean skipVerification,
             Boolean isFriend
     ) {
         this.userGraph = userGraph;
-        this.centerVertex = centerVertex;
+        this.centerUri = centerUri;
         this.skipVerification = skipVerification;
         this.isFriend = isFriend;
     }
@@ -57,21 +59,23 @@ public class NotOwnedSurroundGraphResource {
         if (depth == null) {
             depth = 1;
         }
-        SubGraphPojo subGraph = userGraph.aroundVertexUriWithDepthInShareLevels(
-                centerVertex.uri(),
-                depth,
-                inShareLevels
-        );
-        if (subGraph.vertices().isEmpty()) {
-            return Response.status(
-                    Response.Status.FORBIDDEN
+        try {
+            SubGraphPojo subGraph = userGraph.aroundVertexUriWithDepthInShareLevels(
+                    centerUri,
+                    depth,
+                    inShareLevels
+            );
+            if(subGraph.vertexWithIdentifier(centerUri) == null && subGraph.getCenterMeta() == null){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(
+                    SubGraphJson.toJson(
+                            subGraph
+                    )
             ).build();
+        } catch (NonExistingResourceException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(
-                SubGraphJson.toJson(
-                        subGraph
-                )
-        ).build();
     }
 
 

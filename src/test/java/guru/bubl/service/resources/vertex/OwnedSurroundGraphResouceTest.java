@@ -153,11 +153,11 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
 //    }
 
     @Test
-    public void getting_surround_graph_of_an_identifier_returns_ok_status() {
+    public void getting_surround_graph_of_a_tag_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
         Tag tag = vertexA().getIdentifications().values().iterator().next();
         assertThat(
-                getSurroundGraphOfAnIdentifier(tag).getStatus(),
+                getSurroundGraphOfATag(tag).getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
     }
@@ -191,7 +191,7 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
                 .get(ClientResponse.class);
     }
 
-    private ClientResponse getSurroundGraphOfAnIdentifier(Tag tag) {
+    private ClientResponse getSurroundGraphOfATag(Tag tag) {
         return resource
                 .path(tag.uri().getPath())
                 .path("surround_graph")

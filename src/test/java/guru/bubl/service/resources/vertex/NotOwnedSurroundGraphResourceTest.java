@@ -11,9 +11,11 @@ import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
+import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -41,7 +43,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
     }
 
     @Test
-    public void getting_graph_of_another_user_private_center_vertex_returns_forbidden_status() {
+    public void getting_graph_of_another_user_private_center_vertex_returns_not_found_status() {
         vertexUtils().makePrivateVertexWithUri(
                 vertexAUri()
         );
@@ -50,7 +52,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         assertThat(
                 graphUtils().getNonOwnedGraphOfCentralVertex(vertexA()).getStatus(),
                 is(
-                        Response.Status.FORBIDDEN.getStatusCode()
+                        Response.Status.NOT_FOUND.getStatusCode()
                 )
         );
     }
@@ -253,7 +255,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         ClientResponse response = graphUtils().getNonOwnedGraphOfCentralVertex(vertexA());
         assertThat(
                 response.getStatus(),
-                is(Response.Status.FORBIDDEN.getStatusCode())
+                is(Response.Status.NOT_FOUND.getStatusCode())
         );
     }
 
@@ -351,6 +353,16 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         );
     }
 
+    @Test
+    public void get_not_owned_surround_graph_tag_is_ok_status(){
+        graphElementUtils().addFoafPersonTypeToVertexA();
+        Tag tag = vertexA().getIdentifications().values().iterator().next();
+        assertThat(
+                getNotOwnedSurroundGraphOfATag(tag.uri()).getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+
     private ClientResponse getNonOwnedGraphOfEdgeBetweenAAndB() {
         vertexUtils().makePublicVertexWithUri(
                 vertexAUri()
@@ -405,6 +417,22 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
                 .path(getUsersBaseUri(UserUris.ownerUserNameFromUri(vertexUri)))
                 .path("non_owned")
                 .path("vertex")
+                .path(shortId)
+                .path("surround_graph")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+    }
+
+    private ClientResponse getNotOwnedSurroundGraphOfATag(URI tagUri) {
+        String shortId = UserUris.graphElementShortId(
+                tagUri
+        );
+        return resource
+                .path(getUsersBaseUri(UserUris.ownerUserNameFromUri(tagUri)))
+                .path("non_owned")
+                .path("meta")
                 .path(shortId)
                 .path("surround_graph")
                 .accept(MediaType.APPLICATION_JSON)
