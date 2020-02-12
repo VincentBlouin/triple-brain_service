@@ -4,9 +4,9 @@
 
 package guru.bubl.service.resources.vertex;
 
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -23,9 +23,6 @@ import java.net.URI;
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexCollectionResource {
 
-    @Inject
-    VertexCollectionPublicAccessResourceFactory vertexCollectionPublicAccessResourceFactory;
-
     private UserGraph userGraph;
 
     @AssistedInject
@@ -38,6 +35,9 @@ public class VertexCollectionResource {
     @DELETE
     @Path("/")
     public Response deleteVerticesRequest(JSONArray verticesUri) {
+        if (!areAllUrisOwned(verticesUri)) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
         deleteVertices(
                 verticesUri
         );
@@ -51,6 +51,9 @@ public class VertexCollectionResource {
                 shareLevelJson.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
         );
         JSONArray verticesUri = shareLevelJson.optJSONArray("verticesUri");
+        if (!areAllUrisOwned(verticesUri)) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
         for (int i = 0; i < verticesUri.length(); i++) {
             VertexOperator vertex = userGraph.vertexWithUri(
                     URI.create(
@@ -60,6 +63,19 @@ public class VertexCollectionResource {
             vertex.setShareLevel(shareLevel);
         }
         return Response.noContent().build();
+    }
+
+    private Boolean areAllUrisOwned(JSONArray uris) {
+        Boolean isAllOwned = true;
+        for (int i = 0; i < uris.length() && isAllOwned; i++) {
+            URI uri = URI.create(
+                    uris.optString(i)
+            );
+            if (!UserUris.ownerUserNameFromUri(uri).equals(userGraph.user().username())) {
+                isAllOwned = false;
+            }
+        }
+        return isAllOwned;
     }
 
     private void deleteVertices(JSONArray verticesUri) {
@@ -79,16 +95,4 @@ public class VertexCollectionResource {
         }
     }
 
-    /*
-     * public_access should be in the vertex collection
-     * resource but it doesn't work. I get 415 http status
-     * Unsupported media type. I don't understand.
-     */
-//    @Path("public_access")
-//    @GraphTransactional
-//    public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {
-//        return vertexCollectionPublicAccessResourceFactory.withUserGraph(
-//                userGraph
-//        );
-//    }
 }

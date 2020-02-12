@@ -11,6 +11,7 @@ import guru.bubl.module.model.suggestion.SuggestionPojo;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -23,6 +24,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 
+@Ignore("feature suspended")
 public class VertexSuggestionResourceTest extends GraphManipulationRestTestUtils {
 
     @Test

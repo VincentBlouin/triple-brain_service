@@ -349,22 +349,6 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_get_random_surround_graph() {
-        ClientResponse response = getAnyVertexUri();
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-        try {
-            URI.create(
-                    response.getEntity(String.class)
-            );
-        } catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
     public void creating_a_single_vertex_increment_its_number_of_visits() {
         List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
@@ -480,16 +464,6 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 is(6)
         );
 
-    }
-
-    private ClientResponse getAnyVertexUri() {
-        return resource
-                .path(
-                        new UserUris(defaultAuthenticatedUser).baseVertexUri().getPath()
-                )
-                .path("any")
-                .cookie(authCookie)
-                .get(ClientResponse.class);
     }
 
     private class AddChildToVertexARunner implements Runnable {

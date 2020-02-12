@@ -43,19 +43,10 @@ public class VertexResource {
     VertexSuggestionResourceFactory vertexSuggestionResourceFactory;
 
     @Inject
-    VertexPublicAccessResourceFactory vertexPublicAccessResourceFactory;
-
-    @Inject
     VertexCollectionResourceFactory vertexCollectionResourceFactory;
 
     @Inject
-    VertexCollectionPublicAccessResourceFactory vertexCollectionPublicAccessResourceFactory;
-
-    @Inject
     GraphElementTagResourceFactory graphElementTagResourceFactory;
-
-    @Inject
-    VertexGroupResourceFactory vertexGroupResourceFactory;
 
     @Inject
     VertexImageResourceFactory vertexImageResourceFactory;
@@ -91,13 +82,6 @@ public class VertexResource {
                         )
                 ))
                 .build();
-    }
-
-    @Path("/group")
-    public VertexGroupResource getVertexGroupResource() {
-        return vertexGroupResourceFactory.withUserGraph(
-                userGraph
-        );
     }
 
     @POST
@@ -232,24 +216,14 @@ public class VertexResource {
     }
 
 
-    @Path("{shortId}/image")
-    public VertexImageResource image(
-            @PathParam("shortId") String shortId
-    ) {
-        return vertexImageResourceFactory.ofVertex(
-                vertexFromShortId(shortId)
-        );
-    }
-
-    @Path("any")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getAnyVertexUri(
-    ) {
-        return Response.ok().entity(
-                userGraph.defaultVertex().uri().toString()
-        ).build();
-    }
+//    @Path("{shortId}/image")
+//    public VertexImageResource image(
+//            @PathParam("shortId") String shortId
+//    ) {
+//        return vertexImageResourceFactory.ofVertex(
+//                vertexFromShortId(shortId)
+//        );
+//    }
 
     @Path("{shortId}/surround_graph")
     public OwnedSurroundGraphResource getVertexSurroundGraphResource(
@@ -279,14 +253,14 @@ public class VertexResource {
         );
     }
 
-    @Path("{shortId}/suggestions")
-    public VertexSuggestionResource getVertexSuggestionResource(
-            @PathParam("shortId") String shortId
-    ) {
-        return vertexSuggestionResourceFactory.ofVertex(
-                vertexFromShortId(shortId)
-        );
-    }
+//    @Path("{shortId}/suggestions")
+//    public VertexSuggestionResource getVertexSuggestionResource(
+//            @PathParam("shortId") String shortId
+//    ) {
+//        return vertexSuggestionResourceFactory.ofVertex(
+//                vertexFromShortId(shortId)
+//        );
+//    }
 
     @Path("{shortId}/shareLevel")
     @POST
@@ -303,27 +277,6 @@ public class VertexResource {
     public VertexCollectionResource getCollectionResource() {
         return vertexCollectionResourceFactory.withUserGraph(
                 userGraph
-        );
-    }
-
-    /*
-     * public_access should be in the vertex collection
-     * resource but it doesn't work. I get 415 http status
-     * Unsupported media type. I don't understand.
-     */
-    @Path("collection/public_access")
-    public VertexCollectionPublicAccessResource getCollectionPublicAccessResource() {
-        return vertexCollectionPublicAccessResourceFactory.withUserGraph(
-                userGraph
-        );
-    }
-
-    @Path("{shortId}/public_access")
-    public VertexPublicAccessResource getPublicAccessResource(
-            @PathParam("shortId") String shortId
-    ) {
-        return vertexPublicAccessResourceFactory.ofVertex(
-                vertexFromShortId(shortId)
         );
     }
 
@@ -351,23 +304,23 @@ public class VertexResource {
         return Response.noContent().build();
     }
 
-    @POST
-    @Path("{shortId}/mergeTo/{destinationShortId}")
-    public Response mergeTo(
-            @PathParam("shortId") String shortId,
-            @PathParam("destinationShortId") String destinationShortId
-    ) {
-        URI destinationVertexUri = uriFromShortId(destinationShortId);
-        if (!userGraph.haveElementWithId(destinationVertexUri)) {
-            return Response.status(
-                    Response.Status.BAD_REQUEST
-            ).build();
-        }
-        vertexFactory.withUri(uriFromShortId(shortId)).mergeTo(
-                vertexFactory.withUri(destinationVertexUri)
-        );
-        return Response.noContent().build();
-    }
+//    @POST
+//    @Path("{shortId}/mergeTo/{destinationShortId}")
+//    public Response mergeTo(
+//            @PathParam("shortId") String shortId,
+//            @PathParam("destinationShortId") String destinationShortId
+//    ) {
+//        URI destinationVertexUri = uriFromShortId(destinationShortId);
+//        if (!userGraph.haveElementWithId(destinationVertexUri)) {
+//            return Response.status(
+//                    Response.Status.BAD_REQUEST
+//            ).build();
+//        }
+//        vertexFactory.withUri(uriFromShortId(shortId)).mergeTo(
+//                vertexFactory.withUri(destinationVertexUri)
+//        );
+//        return Response.noContent().build();
+//    }
 
     private URI uriFromShortId(String shortId) {
         return new UserUris(

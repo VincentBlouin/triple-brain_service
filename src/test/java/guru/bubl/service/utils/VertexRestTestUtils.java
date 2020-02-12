@@ -138,16 +138,10 @@ public class VertexRestTestUtils {
     }
 
     public ClientResponse makePublicVertexWithUri(URI vertexUri) {
-        ClientResponse clientResponse = resource
-                .path(vertexUri.getPath())
-                .path("public_access")
-                .cookie(authCookie)
-                .post(ClientResponse.class);
-        assertThat(
-                clientResponse.getStatus(),
-                is(Response.Status.OK.getStatusCode())
+        return this.setShareLevel(
+                vertexUri,
+                ShareLevel.PUBLIC
         );
-        return clientResponse;
     }
 
     public ClientResponse setShareLevel(URI uri, ShareLevel shareLevel) {
@@ -168,44 +162,50 @@ public class VertexRestTestUtils {
     }
 
     public ClientResponse makePrivateVertexWithUri(URI vertexUri) {
-        ClientResponse clientResponse = resource
-                .path(vertexUri.getPath())
-                .path("public_access")
-                .cookie(authCookie)
-                .delete(ClientResponse.class);
-        assertThat(
-                clientResponse.getStatus(),
-                is(Response.Status.OK.getStatusCode())
+        return this.setShareLevel(
+                vertexUri,
+                ShareLevel.PRIVATE
         );
-        return clientResponse;
     }
 
     public ClientResponse makePublicVerticesWithUri(URI... vertexUri) {
-        return makePublicOrPrivateVerticesWithUri(true, vertexUri);
+        return this.setShareLevelOfCollection(
+                ShareLevel.PUBLIC,
+                authCookie,
+                vertexUri
+        );
     }
 
     public ClientResponse makePrivateVerticesWithUri(URI... vertexUri) {
-        return makePublicOrPrivateVerticesWithUri(false, vertexUri);
+        return this.setShareLevelOfCollection(
+                ShareLevel.PRIVATE,
+                authCookie,
+                vertexUri
+        );
     }
 
     public String getVertexBaseUri() {
         return new UserUris(authenticatedUser).baseVertexUri().toString();
     }
 
-    private ClientResponse makePublicOrPrivateVerticesWithUri(Boolean makePublic, URI... vertexUri) {
-        WebResource.Builder builder = resource
-                .path(getVertexBaseUri())
-                .path("collection")
-                .path("public_access")
-                .cookie(authCookie);
-        return makePublic ? builder.post(
-                ClientResponse.class,
-                new JSONArray(Arrays.asList(vertexUri))
-        ) :
-                builder.delete(
-                        ClientResponse.class,
-                        new JSONArray(Arrays.asList(vertexUri))
-                );
+    public ClientResponse setShareLevelOfCollection(ShareLevel shareLevel, NewCookie cookie, URI... vertexUri) {
+        return NoEx.wrap(() ->
+                resource
+                        .path(this.getVertexBaseUri())
+                        .path("collection")
+                        .path("share-level")
+                        .cookie(cookie)
+                        .post(
+                                ClientResponse.class,
+                                new JSONObject().put(
+                                        "shareLevel",
+                                        shareLevel.name()
+                                ).put(
+                                        "verticesUri",
+                                        new JSONArray(Arrays.asList(vertexUri))
+                                )
+                        )
+        ).get();
     }
 
     public ClientResponse removeVertexB() {

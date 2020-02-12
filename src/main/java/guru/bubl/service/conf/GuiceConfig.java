@@ -26,13 +26,13 @@ import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
-import guru.bubl.service.resources.tag.TagResourceFactory;
-import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
 import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
 import guru.bubl.service.resources.schema.SchemaResourceFactory;
 import guru.bubl.service.resources.schema.SchemasResource;
+import guru.bubl.service.resources.tag.TagResourceFactory;
+import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
 import guru.bubl.service.usage_log.UsageLogFilter;
@@ -82,13 +82,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexSuggestionResourceFactory.class
                 ));
                 install(builder.build(
-                        VertexPublicAccessResourceFactory.class
-                ));
-                install(builder.build(
                         VertexCollectionResourceFactory.class
-                ));
-                install(builder.build(
-                        VertexCollectionPublicAccessResourceFactory.class
                 ));
                 install(builder.build(
                         GraphElementTagResourceFactory.class
@@ -101,9 +95,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         VertexImageResourceFactory.class
-                ));
-                install(builder.build(
-                        VertexGroupResourceFactory.class
                 ));
                 install(builder.build(
                         SchemaResourceFactory.class

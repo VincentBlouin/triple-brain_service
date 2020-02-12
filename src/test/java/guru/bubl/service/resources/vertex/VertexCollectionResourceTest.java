@@ -14,6 +14,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
     @Test
     public void removing_vertices_returns_no_content_status() {
         ClientResponse response = removeCollection(
+                authCookie,
                 vertexBUri(),
                 vertexCUri()
         );
@@ -49,6 +51,7 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
                 subGraph.containsVertex(vertexC)
         );
         removeCollection(
+                authCookie,
                 vertexAUri(),
                 vertexCUri()
         );
@@ -59,6 +62,42 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
                 subGraph.containsVertex(vertexA)
         );
         assertFalse(
+                subGraph.containsVertex(vertexC)
+        );
+    }
+
+    @Test
+    public void prevents_remove_not_owned_multiple_vertices_at_once() {
+        Vertex vertexA = vertexA();
+        Vertex vertexC = vertexC();
+        SubGraphPojo subGraph = graphUtils().graphWithCenterVertexUri(
+                vertexBUri()
+        );
+        assertTrue(
+                subGraph.containsVertex(vertexA)
+        );
+        assertTrue(
+                subGraph.containsVertex(vertexC)
+        );
+        ClientResponse response = removeCollection(
+                authenticate(
+                        createAUser()
+                ).getCookies().get(0),
+                vertexAUri(),
+                vertexCUri()
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.FORBIDDEN.getStatusCode())
+        );
+        authenticate(defaultAuthenticatedUser);
+        subGraph = graphUtils().graphWithCenterVertexUri(
+                vertexBUri()
+        );
+        assertTrue(
+                subGraph.containsVertex(vertexA)
+        );
+        assertTrue(
                 subGraph.containsVertex(vertexC)
         );
     }
@@ -77,8 +116,9 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
                 vertexC().getShareLevel(),
                 is(ShareLevel.PRIVATE)
         );
-        ClientResponse response = setShareLevelOfCollection(
+        ClientResponse response = vertexUtils().setShareLevelOfCollection(
                 ShareLevel.FRIENDS,
+                authCookie,
                 vertexAUri(),
                 vertexBUri()
         );
@@ -100,32 +140,48 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
         );
     }
 
-    private ClientResponse setShareLevelOfCollection(ShareLevel shareLevel, URI... vertexUri) {
-        return NoEx.wrap(() ->
-                resource
-                        .path(vertexUtils().getVertexBaseUri())
-                        .path("collection")
-                        .path("share-level")
-                        .cookie(authCookie)
-                        .post(
-                                ClientResponse.class,
-                                new JSONObject().put(
-                                        "shareLevel",
-                                        shareLevel.name()
-                                ).put(
-                                        "verticesUri",
-                                        new JSONArray(Arrays.asList(vertexUri))
-                                )
-                        )
-        ).get();
-
+    @Test
+    public void cannot_set_share_level_of_not_owned_multiple_vertices() {
+        assertThat(
+                vertexA().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        assertThat(
+                vertexB().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        assertThat(
+                vertexC().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        ClientResponse response = vertexUtils().setShareLevelOfCollection(
+                ShareLevel.PUBLIC,
+                authenticate(
+                        createAUser()
+                ).getCookies().get(0),
+                vertexAUri(),
+                vertexBUri()
+        );
+        assertThat(
+                response.getStatus(), is(
+                        Response.Status.FORBIDDEN.getStatusCode()
+                )
+        );
+        assertThat(
+                vertexA().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
+        assertThat(
+                vertexB().getShareLevel(),
+                is(ShareLevel.PRIVATE)
+        );
     }
 
-    private ClientResponse removeCollection(URI... vertexUri) {
+    private ClientResponse removeCollection(NewCookie cookie, URI... vertexUri) {
         return resource
                 .path(vertexUtils().getVertexBaseUri())
                 .path("collection")
-                .cookie(authCookie)
+                .cookie(cookie)
                 .delete(
                         ClientResponse.class,
                         new JSONArray(Arrays.asList(vertexUri))

@@ -9,6 +9,7 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+@Ignore("feature suspended")
 public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
