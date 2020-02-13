@@ -15,7 +15,6 @@ import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -150,7 +149,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
 
     @Test
     public void relations_related_to_private_vertices_are_absent() {
-        vertexUtils().makePublicVerticesWithUri(
+        graphElementUtils().makePublicGraphElementsWithUri(
                 vertexAUri(),
                 vertexBUri(),
                 vertexCUri()
@@ -179,7 +178,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
 
     @Test
     public void anonymous_users_can_get_it_too() {
-        vertexUtils().makePublicVerticesWithUri(
+        graphElementUtils().makePublicGraphElementsWithUri(
                 vertexAUri(),
                 vertexBUri(),
                 vertexCUri()
@@ -196,10 +195,10 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
 
     @Test
     public void works_if_vertices_have_more_than_one_relation_to_each_other() {
-        vertexUtils().makePublicVerticesWithUri(
+        graphElementUtils().makePublicGraphElementsWithUri(
                 vertexBUri()
         );
-        vertexUtils().makePrivateVerticesWithUri(
+        graphElementUtils().makePrivateGraphElementsWithUri(
                 vertexAUri(),
                 vertexCUri()
         );
@@ -219,10 +218,10 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
 
     @Test
     public void all_edges_are_removed_when_vertices_have_more_than_one_relation_to_each_other() {
-        vertexUtils().makePublicVerticesWithUri(
+        graphElementUtils().makePublicGraphElementsWithUri(
                 vertexBUri()
         );
-        vertexUtils().makePrivateVerticesWithUri(
+        graphElementUtils().makePrivateGraphElementsWithUri(
                 vertexAUri(),
                 vertexCUri()
         );

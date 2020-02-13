@@ -51,6 +51,9 @@ public class GraphResource {
     @Inject
     CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
+    @Inject
+    GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
+
     private User user;
 
     @AssistedInject
@@ -127,6 +130,13 @@ public class GraphResource {
         return this.removeCenter(
                 "identification",
                 shortId
+        );
+    }
+
+    @Path("/graphElement/collection")
+    public GraphElementCollectionResource graphElementCollectionResource() {
+        return graphElementCollectionResourceFactory.withUserGraph(
+                userGraph()
         );
     }
 

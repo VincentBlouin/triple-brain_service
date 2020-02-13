@@ -19,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
+import static guru.bubl.service.resources.GraphElementCollectionResource.areAllUrisOwned;
+
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexCollectionResource {
@@ -35,47 +37,13 @@ public class VertexCollectionResource {
     @DELETE
     @Path("/")
     public Response deleteVerticesRequest(JSONArray verticesUri) {
-        if (!areAllUrisOwned(verticesUri)) {
+        if (!areAllUrisOwned(verticesUri, userGraph.user().username())) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         deleteVertices(
                 verticesUri
         );
         return Response.noContent().build();
-    }
-
-    @Path("/share-level")
-    @POST
-    public Response setShareLevel(JSONObject shareLevelJson) {
-        ShareLevel shareLevel = ShareLevel.valueOf(
-                shareLevelJson.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-        );
-        JSONArray verticesUri = shareLevelJson.optJSONArray("verticesUri");
-        if (!areAllUrisOwned(verticesUri)) {
-            throw new WebApplicationException(Response.Status.FORBIDDEN);
-        }
-        for (int i = 0; i < verticesUri.length(); i++) {
-            VertexOperator vertex = userGraph.vertexWithUri(
-                    URI.create(
-                            verticesUri.optString(i)
-                    )
-            );
-            vertex.setShareLevel(shareLevel);
-        }
-        return Response.noContent().build();
-    }
-
-    private Boolean areAllUrisOwned(JSONArray uris) {
-        Boolean isAllOwned = true;
-        for (int i = 0; i < uris.length() && isAllOwned; i++) {
-            URI uri = URI.create(
-                    uris.optString(i)
-            );
-            if (!UserUris.ownerUserNameFromUri(uri).equals(userGraph.user().username())) {
-                isAllOwned = false;
-            }
-        }
-        return isAllOwned;
     }
 
     private void deleteVertices(JSONArray verticesUri) {

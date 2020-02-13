@@ -168,44 +168,8 @@ public class VertexRestTestUtils {
         );
     }
 
-    public ClientResponse makePublicVerticesWithUri(URI... vertexUri) {
-        return this.setShareLevelOfCollection(
-                ShareLevel.PUBLIC,
-                authCookie,
-                vertexUri
-        );
-    }
-
-    public ClientResponse makePrivateVerticesWithUri(URI... vertexUri) {
-        return this.setShareLevelOfCollection(
-                ShareLevel.PRIVATE,
-                authCookie,
-                vertexUri
-        );
-    }
-
     public String getVertexBaseUri() {
         return new UserUris(authenticatedUser).baseVertexUri().toString();
-    }
-
-    public ClientResponse setShareLevelOfCollection(ShareLevel shareLevel, NewCookie cookie, URI... vertexUri) {
-        return NoEx.wrap(() ->
-                resource
-                        .path(this.getVertexBaseUri())
-                        .path("collection")
-                        .path("share-level")
-                        .cookie(cookie)
-                        .post(
-                                ClientResponse.class,
-                                new JSONObject().put(
-                                        "shareLevel",
-                                        shareLevel.name()
-                                ).put(
-                                        "verticesUri",
-                                        new JSONArray(Arrays.asList(vertexUri))
-                                )
-                        )
-        ).get();
     }
 
     public ClientResponse removeVertexB() {

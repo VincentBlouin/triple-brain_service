@@ -6,15 +6,20 @@ package guru.bubl.service.utils;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.test.module.utils.ModelTestScenarios;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.net.URI;
+import java.util.Arrays;
 
 public class GraphElementRestTestUtils {
 
@@ -66,6 +71,47 @@ public class GraphElementRestTestUtils {
         return TagJson.fromJson(
                 response.getEntity(String.class)
         ).values().iterator().next();
+    }
+
+    public ClientResponse makePublicGraphElementsWithUri(URI... vertexUri) {
+        return this.setShareLevelOfCollection(
+                ShareLevel.PUBLIC,
+                authCookie,
+                vertexUri
+        );
+    }
+
+    public ClientResponse makePrivateGraphElementsWithUri(URI... vertexUri) {
+        return this.setShareLevelOfCollection(
+                ShareLevel.PRIVATE,
+                authCookie,
+                vertexUri
+        );
+    }
+
+    public ClientResponse setShareLevelOfCollection(ShareLevel shareLevel, NewCookie cookie, URI... graphElementUri) {
+        return NoEx.wrap(() ->
+                resource
+                        .path(this.baseGraphElementUri().toString())
+                        .path("collection")
+                        .path("share-level")
+                        .cookie(cookie)
+                        .post(
+                                ClientResponse.class,
+                                new JSONObject().put(
+                                        "shareLevel",
+                                        shareLevel.name()
+                                ).put(
+                                        "graphElementsUri",
+                                        new JSONArray(Arrays.asList(graphElementUri))
+                                )
+                        )
+        ).get();
+    }
+    public URI baseGraphElementUri() {
+        return new UserUris(
+                authenticatedUser
+        ).baseGraphElementUri();
     }
 
     private GraphRestTestUtils graphUtils() {
