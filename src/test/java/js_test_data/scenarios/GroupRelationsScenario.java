@@ -191,7 +191,7 @@ public class GroupRelationsScenario implements JsTestScenario {
                 possession
         );
         rBook3Copy.addMeta(
-                TestScenarios.identificationFromFriendlyResource(
+                TestScenarios.tagFromFriendlyResource(
                         rBook3
                 )
         );

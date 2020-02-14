@@ -110,7 +110,7 @@ public class RelationsAsTagScenario implements JsTestScenario {
     private void createRelations() {
         EdgeOperator firstSomeRelation = center.addRelationToVertex(b1);
         firstSomeRelation.label("original some relation");
-        TagPojo firstSomeRelationAsIdentifier = TestScenarios.identificationFromFriendlyResource(
+        TagPojo firstSomeRelationAsIdentifier = TestScenarios.tagFromFriendlyResource(
                 firstSomeRelation
         );
         EdgeOperator secondSomeRelation = center.addRelationToVertex(b2);

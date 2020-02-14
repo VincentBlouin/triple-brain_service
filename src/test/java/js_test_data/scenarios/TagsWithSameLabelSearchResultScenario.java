@@ -65,19 +65,19 @@ public class TagsWithSameLabelSearchResultScenario extends AbstractScenario impl
         meta0.setNbReferences(0);
         meta1 = tagFactory.withUri(
                 center.addMeta(
-                        TestScenarios.identificationFromFriendlyResource(b1)
+                        TestScenarios.tagFromFriendlyResource(b1)
                 ).values().iterator().next().uri());
         meta1.label("meta1");
         meta1.setNbReferences(1);
         meta2 = tagFactory.withUri(
                 center.addMeta(
-                        TestScenarios.identificationFromFriendlyResource(b2)
+                        TestScenarios.tagFromFriendlyResource(b2)
                 ).values().iterator().next().uri());
         meta2.label("meta2");
         meta2.setNbReferences(2);
         meta3 = tagFactory.withUri(
                 center.addMeta(
-                        TestScenarios.identificationFromFriendlyResource(b3)
+                        TestScenarios.tagFromFriendlyResource(b3)
                 ).values().iterator().next().uri());
         meta3.label("meta3");
         meta3.setNbReferences(3);

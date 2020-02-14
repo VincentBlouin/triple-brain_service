@@ -81,12 +81,12 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
         r1.label("r1'");
         EdgeOperator r2 = center.addRelationToVertex(b2);
         r2.label("r2");
-        TagPojo r1Identifier = TestScenarios.identificationFromFriendlyResource(
+        TagPojo r1Identifier = TestScenarios.tagFromFriendlyResource(
                 r1
         );
         r1Identifier.setLabel("r1");
         r2.addMeta(r1Identifier);
-        TagPojo r2Identifier = TestScenarios.identificationFromFriendlyResource(
+        TagPojo r2Identifier = TestScenarios.tagFromFriendlyResource(
                 r2
         );
         r1.addMeta(r2Identifier);
