@@ -98,16 +98,26 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
                 patterns.size(),
                 is(0)
         );
-        ClientResponse response = PatternConsumerResourceTest.makePattern(vertexAUri(), authCookie);
+        ClientResponse response = PatternConsumerResourceTest.makePattern(vertexAUri(), authCookie, false);
         assertThat(
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
         );
-        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie);
+        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie, false);
         patterns = getPatternsList();
         assertThat(
                 patterns.size(),
                 is(2)
+        );
+    }
+
+    @Test
+    public void can_get_list_of_patterns_when_non_centers() {
+        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie, true);
+        List<CenterGraphElementPojo> patterns = getPatternsList();
+        assertThat(
+                patterns.size(),
+                is(1)
         );
     }
 

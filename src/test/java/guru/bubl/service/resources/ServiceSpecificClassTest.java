@@ -5,6 +5,7 @@
 package guru.bubl.service.resources;
 
 
+import guru.bubl.service.resources.center.PublicCenterGraphElementsResourceTest;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResourceTest;
 import guru.bubl.service.resources.vertex.VertexCollectionResourceTest;
@@ -15,7 +16,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        VertexMergeResourceTest.class
+        PublicCenterGraphElementsResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

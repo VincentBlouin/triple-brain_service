@@ -18,7 +18,8 @@ public class PatternConsumerResourceTest extends GraphManipulationRestTestUtils 
     public void returns_ok_status() {
         makePattern(
                 vertexBUri(),
-                authCookie
+                authCookie,
+                false
         );
         ClientResponse response = consumePattern(
                 currentAuthenticatedUser.username(),
@@ -41,8 +42,10 @@ public class PatternConsumerResourceTest extends GraphManipulationRestTestUtils 
                 .post(ClientResponse.class);
     }
 
-    public static ClientResponse makePattern(URI uri, NewCookie authCookie) {
-        GraphRestTestUtils.graphWithCenterVertexUri(uri, authCookie);
+    public static ClientResponse makePattern(URI uri, NewCookie authCookie, Boolean preventCenter) {
+        if(!preventCenter){
+            GraphRestTestUtils.graphWithCenterVertexUri(uri, authCookie);
+        }
         return resource
                 .path(uri.getPath())
                 .path("pattern")
