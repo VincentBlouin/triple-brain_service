@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@Ignore("feature suspended")
 public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
