@@ -166,7 +166,9 @@ public class VertexResource {
         VertexOperator vertex = userGraph.vertexWithUri(
                 vertexId
         );
-        vertex.makePattern();
+        if (!vertex.makePattern()) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         return Response.noContent().build();
     }
 
@@ -316,9 +318,12 @@ public class VertexResource {
                     Response.Status.BAD_REQUEST
             ).build();
         }
-        vertexFactory.withUri(uriFromShortId(shortId)).mergeTo(
+        Boolean success = vertexFactory.withUri(uriFromShortId(shortId)).mergeTo(
                 vertexFactory.withUri(destinationVertexUri)
         );
+        if (!success) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         return Response.noContent().build();
     }
 

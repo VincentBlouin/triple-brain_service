@@ -202,6 +202,16 @@ public class VertexRestTestUtils {
                 .post(ClientResponse.class);
     }
 
+
+    public ClientResponse makePattern(URI uri) {
+        return resource
+                .path(
+                        uri.getPath()
+                )
+                .path("pattern")
+                .cookie(authCookie)
+                .post(ClientResponse.class);
+    }
     private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 authCookie,

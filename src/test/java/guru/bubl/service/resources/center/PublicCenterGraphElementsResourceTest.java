@@ -103,11 +103,10 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
         );
-        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie, false);
         patterns = getPatternsList();
         assertThat(
                 patterns.size(),
-                is(2)
+                is(1)
         );
     }
 

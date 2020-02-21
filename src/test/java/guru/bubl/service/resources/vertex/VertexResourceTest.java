@@ -236,22 +236,22 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         assertThat(response.getStatus(), is(Response.Status.NO_CONTENT.getStatusCode()));
     }
 
-    @Test
-    @Ignore("get search details is suspended")
-    public void updating_note_updates_search() {
-        searchUtils().indexAll();
-        GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-                vertexA().label()
-        ).get(0).getGraphElement();
-        assertThat(resultsForA.comment(), is(""));
-        vertexUtils().updateVertexANote(
-                "A description"
-        );
-        resultsForA = searchUtils().searchDetailsByUri(vertexAUri()).getGraphElement();
-        assertThat(
-                resultsForA.comment(), is("A description")
-        );
-    }
+//    @Test
+//    @Ignore("get search details is suspended")
+//    public void updating_note_updates_search() {
+//        searchUtils().indexAll();
+//        GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
+//                vertexA().label()
+//        ).get(0).getGraphElement();
+//        assertThat(resultsForA.comment(), is(""));
+//        vertexUtils().updateVertexANote(
+//                "A description"
+//        );
+//        resultsForA = searchUtils().searchDetailsByUri(vertexAUri()).getGraphElement();
+//        assertThat(
+//                resultsForA.comment(), is("A description")
+//        );
+//    }
 
     @Test
     public void when_deleting_a_vertex_its_relations_are_also_removed_from_search() {
@@ -284,39 +284,39 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-    @Test
-    @Ignore("searching for public vertices is suspended")
-    public void making_vertex_public_re_indexes_it() {
-        searchUtils().indexAll();
-        JSONObject anotherUser = createAUser();
-        authenticate(
-                anotherUser
-        );
-        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
-                vertexA().label(),
-                anotherUser
-        );
-        assertThat(
-                results.size(), is(0)
-        );
-        authenticate(defaultAuthenticatedUser);
-        vertexUtils().makePublicVertexWithUri(
-                vertexAUri()
-        );
-        authenticate(anotherUser);
-        results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
-                vertexA().label(),
-                anotherUser
-        );
-        assertThat(
-                results.size(),
-                is(1)
-        );
-    }
+//    @Test
+//    @Ignore("searching for public vertices is suspended")
+//    public void making_vertex_public_re_indexes_it() {
+//        searchUtils().indexAll();
+//        JSONObject anotherUser = createAUser();
+//        authenticate(
+//                anotherUser
+//        );
+//        List<GraphElementSearchResult> results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+//                vertexA().label(),
+//                anotherUser
+//        );
+//        assertThat(
+//                results.size(), is(0)
+//        );
+//        authenticate(defaultAuthenticatedUser);
+//        vertexUtils().makePublicVertexWithUri(
+//                vertexAUri()
+//        );
+//        authenticate(anotherUser);
+//        results = searchUtils().autoCompletionResultsForPublicAndUserVertices(
+//                vertexA().label(),
+//                anotherUser
+//        );
+//        assertThat(
+//                results.size(),
+//                is(1)
+//        );
+//    }
 
-    @Test
-    @Ignore("searching for public vertices is suspended")
-    public void making_vertex_private_re_indexes_it() {
+//    @Test
+//    @Ignore("searching for public vertices is suspended")
+//    public void making_vertex_private_re_indexes_it() {
 //        vertexUtils().makePublicVertexWithUri(
 //                vertexAUri()
 //        );
@@ -338,7 +338,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 //                anotherUser
 //        ).getEntity(JSONArray.class);
 //        Assert.assertThat(results.length(), Is.is(0));
-    }
+//    }
 
     @Test
     public void number_of_connected_vertices_are_included() {
@@ -438,33 +438,50 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    @Ignore(
-            "Using measures on the client side to avoid fast addition of multiple childs. " +
-                    "Also I consider it not dramatic that the number of connected edges is not totally accurate."
-    )
-    public void number_of_connected_edges_is_ok_after_adding_vertices_concurrently() {
+    public void make_pattern_returns_no_content_status() {
         assertThat(
-                vertexA().getNumberOfConnectedEdges(),
-                is(1)
+                vertexUtils().makePattern(vertexAUri()).getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
         );
-        Integer numberOfVerticesToAdd = 5;
-        CountDownLatch latch = new CountDownLatch(numberOfVerticesToAdd);
-        for (int i = 0; i < numberOfVerticesToAdd; i++) {
-            new Thread(new AddChildToVertexARunner(latch)).start();
-//            Thread.sleep(50);
-        }
-        try {
-            latch.await();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        assertThat(
-                vertexA().getNumberOfConnectedEdges(),
-                is(6)
-        );
-
     }
+
+    @Test
+    public void bad_request_status_when_trying_to_make_pattern_a_vertex_under_a_pattern() {
+        vertexUtils().makePattern(vertexAUri());
+        assertThat(
+                vertexUtils().makePattern(vertexBUri()).getStatus(),
+                is(Response.Status.BAD_REQUEST.getStatusCode())
+        );
+    }
+
+//    @Test
+//    @Ignore(
+//            "Using measures on the client side to avoid fast addition of multiple childs. " +
+//                    "Also I consider it not dramatic that the number of connected edges is not totally accurate."
+//    )
+//    public void number_of_connected_edges_is_ok_after_adding_vertices_concurrently() {
+//        assertThat(
+//                vertexA().getNumberOfConnectedEdges(),
+//                is(1)
+//        );
+//        Integer numberOfVerticesToAdd = 5;
+//        CountDownLatch latch = new CountDownLatch(numberOfVerticesToAdd);
+//        for (int i = 0; i < numberOfVerticesToAdd; i++) {
+//            new Thread(new AddChildToVertexARunner(latch)).start();
+////            Thread.sleep(50);
+//        }
+//        try {
+//            latch.await();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        assertThat(
+//                vertexA().getNumberOfConnectedEdges(),
+//                is(6)
+//        );
+//
+//    }
 
     private class AddChildToVertexARunner implements Runnable {
         CountDownLatch latch = null;

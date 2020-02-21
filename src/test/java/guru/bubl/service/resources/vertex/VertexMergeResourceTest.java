@@ -65,6 +65,23 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
+    @Test
+    public void bad_request_when_one_of_the_vertex_is_a_pattern_or_under_a_pattern() {
+        Vertex farVertex = vertexUtils().createSingleVertex();
+        vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
+        vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
+        Integer nbEdges = vertexC().getNumberOfConnectedEdges();
+        vertexUtils().makePattern(farVertex.uri());
+        assertThat(
+                mergeTo(farVertex, vertexC()).getStatus(),
+                is(Response.Status.BAD_REQUEST.getStatusCode())
+        );
+        assertThat(
+                vertexC().getNumberOfConnectedEdges(),
+                is(nbEdges)
+        );
+    }
+
     private ClientResponse mergeTo(Vertex source, Vertex destination) {
         return resource
                 .path(

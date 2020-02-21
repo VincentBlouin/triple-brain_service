@@ -70,6 +70,9 @@ public class EdgeResource {
                 destinationVertexId
         ));
         Edge createdEdge = sourceVertex.addRelationToVertex(destinationVertex);
+        if (createdEdge == null) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         return Response.created(URI.create(
                 UserUris.graphElementShortId(createdEdge.uri())
         )).build();

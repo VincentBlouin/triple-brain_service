@@ -72,6 +72,19 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     }
 
+    @Test
+    public void add_relation_involving_patterns_returns_bad_request() {
+        vertexUtils().makePattern(vertexAUri());
+        assertThat(
+                edgeUtils().addRelationBetweenVertexAAndC().getStatus(),
+                is(Response.Status.BAD_REQUEST.getStatusCode())
+        );
+        assertFalse(vertexUtils().vertexWithUriHasDestinationVertexWithUri(
+                vertexAUri(),
+                vertexCUri()
+        ));
+    }
+
 
     @Test
     public void can_remove_a_relation() {
