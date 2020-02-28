@@ -7,6 +7,7 @@ package guru.bubl.service.resources.center;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -122,6 +123,7 @@ public class CenterGraphElementsResourceTest extends GraphManipulationRestTestUt
                 .path("friend")
                 .path(friendUsername)
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 

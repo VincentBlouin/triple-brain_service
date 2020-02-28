@@ -10,6 +10,7 @@ import com.sun.jersey.api.client.WebResource;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -27,14 +28,16 @@ public class UserRestTestUtils {
 
     private WebResource resource;
     private NewCookie authCookie;
+    private String xsrfToken;
 
-    public static UserRestTestUtils withWebResourceAndCookie(WebResource resource, NewCookie authCookie) {
-        return new UserRestTestUtils(resource, authCookie);
+    public static UserRestTestUtils withWebResourceAndCookie(WebResource resource, NewCookie authCookie, String xsrfToken) {
+        return new UserRestTestUtils(resource, authCookie, xsrfToken);
     }
 
-    protected UserRestTestUtils(WebResource resource, NewCookie authCookie) {
+    protected UserRestTestUtils(WebResource resource, NewCookie authCookie, String xsrfToken) {
         this.resource = resource;
         this.authCookie = authCookie;
+        this.xsrfToken = xsrfToken;
     }
 
     public boolean emailExists(String email) {
@@ -70,6 +73,7 @@ public class UserRestTestUtils {
                 .path(username)
                 .path("locale")
                 .accept(MediaType.APPLICATION_JSON)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         assertThat(
                 response.getStatus(),
@@ -136,6 +140,7 @@ public class UserRestTestUtils {
                 .path(usernameA)
                 .path("friends")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(
                         ClientResponse.class,
                         new JSONObject().put(

@@ -42,6 +42,9 @@ public class OwnedSurroundGraphResource {
         } catch (NonExistingResourceException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        if(subGraphPojo.vertices().isEmpty()){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         return Response.ok(
                 SubGraphJson.toJson(
                         subGraphPojo

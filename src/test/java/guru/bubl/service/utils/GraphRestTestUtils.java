@@ -13,6 +13,7 @@ import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -42,33 +43,39 @@ public class GraphRestTestUtils {
 
     private User authenticatedUser;
 
-    public static GraphRestTestUtils withWebResourceAndAuthCookie(NewCookie authCookie, User authenticatedUser) {
-        return new GraphRestTestUtils(authCookie, authenticatedUser);
+    private String xsrfToken;
+
+    public static GraphRestTestUtils withWebResourceAndAuthCookie(NewCookie authCookie, User authenticatedUser, String xsrfToken) {
+        return new GraphRestTestUtils(authCookie, authenticatedUser, xsrfToken);
     }
 
-    protected GraphRestTestUtils(NewCookie authCookie, User authenticatedUser) {
+    protected GraphRestTestUtils(NewCookie authCookie, User authenticatedUser, String xsrfToken) {
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
         vertexUtils = VertexRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                authenticatedUser
+                authenticatedUser,
+                xsrfToken
         );
+        this.xsrfToken = xsrfToken;
     }
 
     public SubGraphPojo graphWithCenterVertexUri(URI vertexUri) {
         return graphWithCenterVertexUri(
                 vertexUri,
-                authCookie
+                authCookie,
+                xsrfToken
         );
     }
 
-    public static SubGraphPojo graphWithCenterVertexUri(URI vertexUri, NewCookie authCookie) {
+    public static SubGraphPojo graphWithCenterVertexUri(URI vertexUri, NewCookie authCookie, String xsrfToken) {
         ClientResponse response = resource
                 .path(vertexUri.getPath())
                 .path("surround_graph")
                 .queryParam("center", "true")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         assertThat(
                 response.getStatus(),
@@ -91,6 +98,7 @@ public class GraphRestTestUtils {
                 .path("test")
                 .path("make_graph_have_3_serial_vertices_with_long_labels")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         JSONArray verticesABAndC = response.getEntity(JSONArray.class);
         try {
@@ -164,6 +172,7 @@ public class GraphRestTestUtils {
                 .path(user.id())
                 .path("center-elements")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -175,6 +184,7 @@ public class GraphRestTestUtils {
                 .path("user")
                 .path(user.username())
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -191,7 +201,7 @@ public class GraphRestTestUtils {
                 ));
     }
 
-    public CenterGraphElementPojo getCenterGraphElementHavingUriInElements(URI uri, Set<CenterGraphElementPojo> elements) {
+    public CenterGraphElementPojo getCenterGraphElementHavingUriInElements(URI uri, List<CenterGraphElementPojo> elements) {
         return elements.stream().filter(
                 (centerGraphElement) -> centerGraphElement.getGraphElement().uri().equals(
                         uri
@@ -226,6 +236,7 @@ public class GraphRestTestUtils {
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
     }
 

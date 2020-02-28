@@ -7,6 +7,7 @@ package guru.bubl.service.resources.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
@@ -93,6 +94,7 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
                                 destination.uri()
                         )
                 ).cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
     }
 }

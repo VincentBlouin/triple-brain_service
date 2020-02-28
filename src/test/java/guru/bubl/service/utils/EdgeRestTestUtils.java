@@ -14,6 +14,7 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
@@ -29,18 +30,21 @@ public class EdgeRestTestUtils {
     private NewCookie authCookie;
     private GraphRestTestUtils graphUtils;
     private Gson gson = new Gson();
+    private String xsrfToken;
 
-    public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
-        return new EdgeRestTestUtils(resource, authCookie, authenticatedUser);
+    public static EdgeRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser, String xsrfToken) {
+        return new EdgeRestTestUtils(resource, authCookie, authenticatedUser, xsrfToken);
     }
 
-    protected EdgeRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
+    protected EdgeRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser, String xsrfToken) {
         this.resource = resource;
         this.authCookie = authCookie;
         graphUtils = GraphRestTestUtils.withWebResourceAndAuthCookie(
                 authCookie,
-                authenticatedUser
+                authenticatedUser,
+                xsrfToken
         );
+        this.xsrfToken = xsrfToken;
     }
 
     public ClientResponse updateEdgeLabel(String label, Edge edge) {
@@ -53,6 +57,7 @@ public class EdgeRestTestUtils {
                     .path(edge.uri().toString())
                     .path("label")
                     .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                     .post(ClientResponse.class, localizedLabel);
         }).get();
     }
@@ -62,6 +67,7 @@ public class EdgeRestTestUtils {
         return resource
                 .path(edgeBetweenAAndB.uri().toString())
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .delete(ClientResponse.class);
     }
 
@@ -72,6 +78,7 @@ public class EdgeRestTestUtils {
                 .path("edge")
                 .path(Uris.encodeURL(edgeUri.toString()))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         return gson.fromJson(
                 response.getEntity(JSONObject.class).toString(),
@@ -85,6 +92,7 @@ public class EdgeRestTestUtils {
                 .path("comment")
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class, note);
     }
 
@@ -139,6 +147,7 @@ public class EdgeRestTestUtils {
                         destinationVertexUri.toString()
                 ))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class);
     }
 

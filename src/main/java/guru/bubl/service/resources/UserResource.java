@@ -48,6 +48,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -387,7 +389,9 @@ public class UserResource {
         }
         user = userRepository.createUser(user);
         UserSessionResource.authenticateUserInSession(
-                user, request.getSession()
+                user,
+                request.getSession(),
+                request.getHeader(SessionHandler.X_XSRF_TOKEN)
         );
         Response.ResponseBuilder responseBuilder = Response.created(URI.create(
                 user.username()
@@ -396,7 +400,8 @@ public class UserResource {
             responseBuilder.cookie(
                     sessionHandler.persistSessionForUser(
                             request.getSession(),
-                            user
+                            user,
+                            request.getHeader(SessionHandler.X_XSRF_TOKEN)
                     )
             );
         }
@@ -438,7 +443,7 @@ public class UserResource {
             @PathParam("username") String username,
             String locales,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) throws JSONException {
+    ) {
         if (!isUserNameTheOneInSession(username, persistentSessionId)) {
             throw new WebApplicationException(
                     Response.Status.FORBIDDEN
@@ -457,7 +462,7 @@ public class UserResource {
             return false;
         }
         User authenticatedUser = sessionHandler.userFromSession(request.getSession());
-        return authenticatedUser.username().equals(userName);
+        return authenticatedUser.username().equals(userName) && UserSessionResource.isRightXsrfToken(request);
     }
 
 }

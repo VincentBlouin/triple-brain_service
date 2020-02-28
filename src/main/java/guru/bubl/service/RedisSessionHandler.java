@@ -14,10 +14,11 @@ import guru.bubl.module.repository.user.UserRepository;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.NewCookie;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 @Singleton
-public class RedisSessionHandler implements SessionHandler{
+public class RedisSessionHandler implements SessionHandler {
 
     @Inject
     RedisStringCommands redisStringCommands;
@@ -31,7 +32,7 @@ public class RedisSessionHandler implements SessionHandler{
 
     @Override
     public void removePersistentSession(String persistentSessionId) {
-        if(null == persistentSessionId){
+        if (null == persistentSessionId) {
             return;
         }
         redisStringCommands.set(
@@ -41,7 +42,7 @@ public class RedisSessionHandler implements SessionHandler{
     }
 
     @Override
-    public NewCookie persistSessionForUser(HttpSession session, User user) {
+    public NewCookie persistSessionForUser(HttpSession session, User user, String xsrfToken) {
         String persistentSessionId = UUID.randomUUID().toString();
         NewCookie jerseyCookie = new NewCookie(
                 PERSISTENT_SESSION,
@@ -55,7 +56,7 @@ public class RedisSessionHandler implements SessionHandler{
         );
         redisStringCommands.set(
                 persistentSessionId,
-                user.email()
+                user.email().trim() + " " + xsrfToken
         );
         return jerseyCookie;
     }
@@ -64,19 +65,26 @@ public class RedisSessionHandler implements SessionHandler{
         if (session.getAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY) != null) {
             return true;
         }
-        if(null == persistentSessionId){
+        if (null == persistentSessionId) {
             return false;
         }
-        String emailFromRedis = (String) redisStringCommands.get(
-                persistentSessionId
-        );
-        if (null == emailFromRedis) {
+        String stringFromRedis = (String) redisStringCommands.get(persistentSessionId);
+        if (null == stringFromRedis) {
             return false;
         }
+        StringTokenizer tokensFromRedis = new StringTokenizer(stringFromRedis);
+        if (tokensFromRedis.countTokens() != 2) {
+            return false;
+        }
+        String emailFromRedis = tokensFromRedis.nextToken();
         try {
             session.setAttribute(
                     SecurityInterceptor.AUTHENTICATED_USER_KEY,
                     userRepository.findByEmail(emailFromRedis)
+            );
+            session.setAttribute(
+                    SessionHandler.X_XSRF_TOKEN,
+                    tokensFromRedis.nextToken()
             );
         } catch (NonExistingUserException exception) {
             return false;

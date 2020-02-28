@@ -12,6 +12,7 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.tag.TagJson;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -26,15 +27,17 @@ public class GraphElementRestTestUtils {
     private WebResource resource;
     private NewCookie authCookie;
     private User authenticatedUser;
+    private String xsrfToken;
 
-    public static GraphElementRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
-        return new GraphElementRestTestUtils(resource, authCookie, authenticatedUser);
+    public static GraphElementRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser, String xsrfToken) {
+        return new GraphElementRestTestUtils(resource, authCookie, authenticatedUser, xsrfToken);
     }
 
-    protected GraphElementRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
+    protected GraphElementRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser, String xsrfToken) {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
+        this.xsrfToken = xsrfToken;
     }
 
     public ClientResponse addIdentificationToGraphElementWithUri(TagPojo identification, URI graphElementUri) {
@@ -50,6 +53,7 @@ public class GraphElementRestTestUtils {
                 .path("identification")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class, identification);
     }
 
@@ -96,6 +100,7 @@ public class GraphElementRestTestUtils {
                         .path("collection")
                         .path("share-level")
                         .cookie(cookie)
+                        .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                         .post(
                                 ClientResponse.class,
                                 new JSONObject().put(
@@ -117,7 +122,8 @@ public class GraphElementRestTestUtils {
     private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 authCookie,
-                authenticatedUser
+                authenticatedUser,
+                xsrfToken
         );
     }
 }

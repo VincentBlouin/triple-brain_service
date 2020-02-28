@@ -20,6 +20,7 @@ import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -40,15 +41,17 @@ public class VertexRestTestUtils {
     private NewCookie authCookie;
     private User authenticatedUser;
     private Gson gson = new Gson();
+    private String xsrfToken;
 
-    public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser) {
-        return new VertexRestTestUtils(resource, authCookie, authenticatedUser);
+    public static VertexRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, User authenticatedUser, String xsrfToken) {
+        return new VertexRestTestUtils(resource, authCookie, authenticatedUser, xsrfToken);
     }
 
-    protected VertexRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser) {
+    protected VertexRestTestUtils(WebResource resource, NewCookie authCookie, User authenticatedUser, String xsrfToken) {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUser = authenticatedUser;
+        this.xsrfToken = xsrfToken;
     }
 
     public ClientResponse updateVertexLabelUsingRest(URI vertexUri, String label) {
@@ -61,6 +64,7 @@ public class VertexRestTestUtils {
                     .path(vertexUri.getPath())
                     .path("label")
                     .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                     .post(ClientResponse.class, localizedLabel);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -74,6 +78,7 @@ public class VertexRestTestUtils {
                 .path("vertex")
                 .path(Uris.encodeURL(vertexUri.toString()))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         JSONObject jsonObject = response.getEntity(JSONObject.class);
         return vertexFromJson(
@@ -90,6 +95,7 @@ public class VertexRestTestUtils {
                 .path(Uris.encodeURL(vertexUri.toString()))
                 .path("connected_edges")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         JSONArray jsonArray = response.getEntity(JSONArray.class);
         return gson.fromJson(
@@ -108,6 +114,7 @@ public class VertexRestTestUtils {
                 .path("has_destination")
                 .path(Uris.encodeURL(destinationVertexUri.toString()))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         String hasDestinationStr = response.getEntity(String.class);
         return Boolean.valueOf(hasDestinationStr);
@@ -125,6 +132,7 @@ public class VertexRestTestUtils {
                 .path("comment")
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class, note);
     }
 
@@ -134,6 +142,7 @@ public class VertexRestTestUtils {
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class, "{}");
     }
 
@@ -150,6 +159,7 @@ public class VertexRestTestUtils {
                     .path(uri.getPath())
                     .path("shareLevel")
                     .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                     .post(ClientResponse.class, new JSONObject().put(
                             "shareLevel", shareLevel.name()
                     ));
@@ -176,6 +186,7 @@ public class VertexRestTestUtils {
         return resource
                 .path(graphUtils().vertexBUri().getPath())
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .delete(ClientResponse.class);
     }
 
@@ -199,6 +210,7 @@ public class VertexRestTestUtils {
                         new UserUris(authenticatedUser).baseVertexUri().getPath()
                 )
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class);
     }
 
@@ -210,12 +222,15 @@ public class VertexRestTestUtils {
                 )
                 .path("pattern")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class);
     }
+
     private GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 authCookie,
-                authenticatedUser
+                authenticatedUser,
+                xsrfToken
         );
     }
 

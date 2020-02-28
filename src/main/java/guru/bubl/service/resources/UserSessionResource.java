@@ -37,7 +37,7 @@ public class UserSessionResource {
             @Context HttpServletRequest request,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
+        if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId) || !isRightXsrfToken(request)) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         return Response.ok(
@@ -67,14 +67,19 @@ public class UserSessionResource {
             if (user.hasPassword(
                     loginInfo.getString(UserJson.PASSWORD)
             )) {
-                authenticateUserInSession(user, request.getSession());
+                authenticateUserInSession(
+                        user,
+                        request.getSession(),
+                        request.getHeader(SessionHandler.X_XSRF_TOKEN)
+                );
                 Response.ResponseBuilder response = Response.ok(
                         UserJson.toJson(user)
                 );
                 if (loginInfo.optBoolean("staySignedIn")) {
                     response.cookie(sessionHandler.persistSessionForUser(
                             request.getSession(),
-                            user
+                            user,
+                            request.getHeader(SessionHandler.X_XSRF_TOKEN)
                     ));
                 } else {
                     if (sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
@@ -101,14 +106,28 @@ public class UserSessionResource {
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId,
             @Context HttpServletRequest request
     ) {
+        if (!isRightXsrfToken(request)) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
         sessionHandler.removePersistentSession(persistentSessionId);
         request.getSession().setAttribute(SecurityInterceptor.AUTHENTICATION_ATTRIBUTE_KEY, false);
         request.getSession().setAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY, null);
         return Response.ok().build();
     }
 
-    public static void authenticateUserInSession(User user, HttpSession session) {
+    public static void authenticateUserInSession(User user, HttpSession session, String xsrfToken) {
         session.setAttribute(SecurityInterceptor.AUTHENTICATION_ATTRIBUTE_KEY, true);
         session.setAttribute(SecurityInterceptor.AUTHENTICATED_USER_KEY, user);
+        session.setAttribute(SessionHandler.X_XSRF_TOKEN, xsrfToken);
+    }
+
+    public static Boolean isRightXsrfToken(HttpServletRequest request) {
+        Object xsrfTokenInSessionObject = request.getSession().getAttribute(SessionHandler.X_XSRF_TOKEN);
+        if (xsrfTokenInSessionObject == null) {
+            return false;
+        }
+        return xsrfTokenInSessionObject.toString().equals(
+                request.getHeader(SessionHandler.X_XSRF_TOKEN)
+        );
     }
 }

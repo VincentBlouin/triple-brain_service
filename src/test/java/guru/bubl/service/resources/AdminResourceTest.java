@@ -6,10 +6,12 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
+import org.neo4j.driver.v1.Session;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -78,6 +80,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("admin")
                 .path("refresh_identifications_nb_references")
                 .cookie(loginAsVince())
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
         assertThat(
                 response.getStatus(),
@@ -102,6 +105,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("admin")
                 .path("re_add_identifications")
                 .cookie(loginAsVince())
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
         assertThat(
                 response.getStatus(),
@@ -117,6 +121,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("graph")
                 .path("set_all_number_of_connected_edges_to_zero")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
     }
 
@@ -128,6 +133,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("admin")
                 .path("refresh_number_of_connected_edges")
                 .cookie(vinceCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
     }
 
@@ -139,6 +145,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("admin")
                 .path("reindex")
                 .cookie(vinceCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
     }
 
@@ -161,6 +168,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("users")
                 .path("vince")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
     }
 
@@ -171,6 +179,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
                 .path("users")
                 .path("Vince")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
         assertThat(
                 response.getStatus(),

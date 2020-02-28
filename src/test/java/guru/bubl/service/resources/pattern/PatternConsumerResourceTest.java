@@ -1,6 +1,7 @@
 package guru.bubl.service.resources.pattern;
 
 import com.sun.jersey.api.client.ClientResponse;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.GraphRestTestUtils;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class PatternConsumerResourceTest extends GraphManipulationRestTestUtils 
         makePattern(
                 vertexBUri(),
                 authCookie,
+                currentXsrfToken,
                 false
         );
         ClientResponse response = consumePattern(
@@ -39,17 +41,19 @@ public class PatternConsumerResourceTest extends GraphManipulationRestTestUtils 
                 .path("patterns")
                 .path(uri.getPath().replaceFirst("/service", ""))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class);
     }
 
-    public static ClientResponse makePattern(URI uri, NewCookie authCookie, Boolean preventCenter) {
+    public static ClientResponse makePattern(URI uri, NewCookie authCookie, String xsrfToken, Boolean preventCenter) {
         if(!preventCenter){
-            GraphRestTestUtils.graphWithCenterVertexUri(uri, authCookie);
+            GraphRestTestUtils.graphWithCenterVertexUri(uri, authCookie, xsrfToken);
         }
         return resource
                 .path(uri.getPath())
                 .path("pattern")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class);
     }
 }

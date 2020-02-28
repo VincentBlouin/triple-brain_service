@@ -27,7 +27,7 @@ public class UserSessionResourceTest extends GraphManipulationRestTestUtils{
         assertFalse(
                 persistentSessionsRestTestUtils().get().isEmpty()
         );
-        logoutUsingCookies(authCookie);
+        logoutUsingCookies(authCookie, persistentSessionCookie);
         jsonUser.put("staySignedIn", false);
         authenticateWithPersistentSessionCookie(
                 jsonUser,

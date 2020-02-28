@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.tag.TagJson;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
@@ -57,6 +58,7 @@ public class UserTagsResourceTest extends GraphManipulationRestTestUtils {
                 .path(user.username())
                 .path("metas")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 

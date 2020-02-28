@@ -10,6 +10,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
 import guru.bubl.module.model.json.UserJson;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
@@ -55,7 +56,8 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return VertexRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                currentAuthenticatedUser
+                currentAuthenticatedUser,
+                currentXsrfToken
         );
     }
 
@@ -63,7 +65,8 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return GraphElementRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                defaultAuthenticatedUser
+                defaultAuthenticatedUser,
+                currentXsrfToken
         );
     }
 
@@ -71,14 +74,16 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return EdgeRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                defaultAuthenticatedUser
+                defaultAuthenticatedUser,
+                currentXsrfToken
         );
     }
 
     protected GraphRestTestUtils graphUtils() {
         return GraphRestTestUtils.withWebResourceAndAuthCookie(
                 authCookie,
-                defaultAuthenticatedUser
+                defaultAuthenticatedUser,
+                currentXsrfToken
         );
     }
 
@@ -93,7 +98,8 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
     protected UserRestTestUtils userUtils() {
         return UserRestTestUtils.withWebResourceAndCookie(
                 resource,
-                authCookie
+                authCookie,
+                currentXsrfToken
         );
     }
 
@@ -101,7 +107,8 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return SearchRestTestUtils.withWebResourceAndAuthCookie(
                 resource,
                 authCookie,
-                defaultAuthenticatedUserAsJson
+                defaultAuthenticatedUserAsJson,
+                currentXsrfToken
         );
     }
 
@@ -115,7 +122,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
     }
 
 
-    protected PersistentSessionRestTestUtils persistentSessionsRestTestUtils(){
+    protected PersistentSessionRestTestUtils persistentSessionsRestTestUtils() {
         return new PersistentSessionRestTestUtils(
                 resource
         );
@@ -129,6 +136,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
                 .path("search")
                 .path("delete_all_documents")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
         assertThat(response.getStatus(), is(200));
     }
@@ -142,6 +150,7 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
                 .path(Uris.encodeURL(graphElementId.toString()))
                 .path("exists")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
         String boolStr = response.getEntity(String.class);
         return Boolean.valueOf(boolStr);

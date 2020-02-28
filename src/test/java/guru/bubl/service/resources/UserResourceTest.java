@@ -8,14 +8,18 @@ package guru.bubl.service.resources;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.json.UserJson;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.UUID;
 
 import static guru.bubl.module.model.json.UserJson.*;
 import static guru.bubl.module.model.validator.UserValidator.ALREADY_REGISTERED_EMAIL;
@@ -127,7 +131,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void user_is_authenticated_after_creation() throws JSONException {
+    public void user_is_authenticated_after_creation() {
         logoutUsingCookies(authCookie);
         assertFalse(isUserAuthenticated(
                 authCookie
@@ -167,6 +171,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .path("session")
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
         JSONObject userFromResponse = response.getEntity(JSONObject.class);
         assertThat(userFromResponse.getString(EMAIL), is("roger_lamothe@example.org"));
@@ -180,6 +185,29 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .path("session")
                 .get(ClientResponse.class);
         assertThat(response.getStatus(), is(Response.Status.FORBIDDEN.getStatusCode()));
+    }
+
+
+    @Test
+    public void xsrf_token_is_required() throws Exception {
+        JSONObject user = createUserWithEmail("roger_lamothe@example.org");
+        String xsrfToken = UUID.randomUUID().toString();
+        authenticateWithXsrfToken(user, xsrfToken);
+        ClientResponse response = resource
+                .path("service")
+                .path("users")
+                .path("session")
+                .cookie(authCookie)
+                .get(ClientResponse.class);
+        assertThat(response.getStatus(), is(Response.Status.FORBIDDEN.getStatusCode()));
+        response = resource
+                .path("service")
+                .path("users")
+                .path("session")
+                .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
+                .get(ClientResponse.class);
+        assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
     }
 
 
@@ -348,6 +376,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .put(ClientResponse.class, locale);
     }
 }

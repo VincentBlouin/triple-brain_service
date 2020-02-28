@@ -10,11 +10,13 @@ import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.tag.TagJson;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Test;
+import org.neo4j.driver.v1.Session;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -190,6 +192,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
                     .path(identification.uri().getPath())
                     .path("label")
                     .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                     .post(ClientResponse.class, localizedLabel);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -202,6 +205,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
                 .path("comment")
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class, note);
     }
 
@@ -209,6 +213,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
         return resource
                 .path(tag.uri().getPath())
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 }

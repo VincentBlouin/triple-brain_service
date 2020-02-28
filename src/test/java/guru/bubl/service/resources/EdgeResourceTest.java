@@ -12,6 +12,7 @@ import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
@@ -389,6 +390,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .path(edgeBetweenAAndB.uri().toString())
                 .path("surround_graph")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -403,6 +405,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .path(edgeBetweenAAndB.uri().toString())
                 .path("inverse")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .put(ClientResponse.class);
     }
 
@@ -412,6 +415,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .path("source-vertex")
                 .path(UserUris.graphElementShortId(newSourceVertex.uri()))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .put(ClientResponse.class);
     }
 
@@ -421,6 +425,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .path("destination-vertex")
                 .path(UserUris.graphElementShortId(newDestinationVertex.uri()))
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .put(ClientResponse.class);
     }
 }

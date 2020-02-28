@@ -3,6 +3,7 @@ package guru.bubl.service.resources;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
 
@@ -66,6 +67,7 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
                 .path("center")
                 .cookie(authCookie)
                 .type(MediaType.APPLICATION_JSON_TYPE)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .delete(ClientResponse.class);
     }
 }

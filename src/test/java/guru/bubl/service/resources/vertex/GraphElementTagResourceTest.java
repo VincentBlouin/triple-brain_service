@@ -14,6 +14,7 @@ import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.tag.TagJson;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -121,7 +122,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
     }
 
     @Test
-    public void can_remove_self_identifier() throws Exception{
+    public void can_remove_self_identifier() throws Exception {
         JSONObject tripleAsJson = vertexUtils().addAVertexToVertexWithUri(
                 vertexAUri()
         ).getEntity(
@@ -179,6 +180,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
                         identification.uri().toString()
                 )
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .delete(ClientResponse.class)).get();
     }
 }

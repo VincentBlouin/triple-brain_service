@@ -17,6 +17,7 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
@@ -156,6 +157,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                         vertexAUri().getPath()
                 )
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class, options);
         assertThat(
                 response.getStatus(),
@@ -507,6 +509,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 )
                 .path("childrenIndex")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class, childrenIndexes);
     }
 
@@ -517,6 +520,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 )
                 .path("colors")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class, colors);
     }
 }

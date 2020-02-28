@@ -9,6 +9,7 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -107,6 +108,7 @@ public class VertexCollectionResourceTest extends GraphManipulationRestTestUtils
                 .path(vertexUtils().getVertexBaseUri())
                 .path("collection")
                 .cookie(cookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .delete(
                         ClientResponse.class,
                         new JSONArray(Arrays.asList(vertexUri))

@@ -12,6 +12,7 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.module.model.search.GraphElementSearchResultPojo;
+import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -28,17 +29,19 @@ public class SearchRestTestUtils {
     private WebResource resource;
     private NewCookie authCookie;
     private JSONObject authenticatedUserAsJson;
+    private String xsrfToken;
 
     private Gson gson = new Gson();
 
-    public static SearchRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, JSONObject authenticatedUser) {
-        return new SearchRestTestUtils(resource, authCookie, authenticatedUser);
+    public static SearchRestTestUtils withWebResourceAndAuthCookie(WebResource resource, NewCookie authCookie, JSONObject authenticatedUser, String xsrfToken) {
+        return new SearchRestTestUtils(resource, authCookie, authenticatedUser, xsrfToken);
     }
 
-    protected SearchRestTestUtils(WebResource resource, NewCookie authCookie, JSONObject authenticatedUserAsJson) {
+    protected SearchRestTestUtils(WebResource resource, NewCookie authCookie, JSONObject authenticatedUserAsJson, String xsrfToken) {
         this.resource = resource;
         this.authCookie = authCookie;
         this.authenticatedUserAsJson = authenticatedUserAsJson;
+        this.xsrfToken = xsrfToken;
     }
 
     public List<GraphElementSearchResult> searchForRelations(String textToSearchWith, JSONObject user) {
@@ -62,6 +65,7 @@ public class SearchRestTestUtils {
                 .path("auto_complete")
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class, new JSONObject().put(
                         "searchText",
                         textToSearchWith
@@ -105,6 +109,7 @@ public class SearchRestTestUtils {
                 .path("service")
                 .path("search")
                 .queryParam("text", textToSearch)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -116,6 +121,7 @@ public class SearchRestTestUtils {
                 .path("search")
                 .path("details")
                 .queryParam("uri", uri.toString())
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -183,6 +189,7 @@ public class SearchRestTestUtils {
                 .queryParam("uri", uri.toString())
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -193,6 +200,7 @@ public class SearchRestTestUtils {
                 .path("search")
                 .path("index_graph")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
         assertThat(response.getStatus(), is(200));
     }
@@ -207,6 +215,7 @@ public class SearchRestTestUtils {
                 .path("auto_complete")
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
+                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .post(ClientResponse.class, new JSONObject().put(
                         "searchText",
                         textToSearchWith

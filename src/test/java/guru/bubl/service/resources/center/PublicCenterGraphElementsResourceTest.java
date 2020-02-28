@@ -6,6 +6,7 @@ package guru.bubl.service.resources.center;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceTest;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.junit.Test;
@@ -98,7 +99,7 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
                 patterns.size(),
                 is(0)
         );
-        ClientResponse response = PatternConsumerResourceTest.makePattern(vertexAUri(), authCookie, false);
+        ClientResponse response = PatternConsumerResourceTest.makePattern(vertexAUri(), authCookie, currentXsrfToken, false);
         assertThat(
                 response.getStatus(),
                 is(Response.Status.NO_CONTENT.getStatusCode())
@@ -112,7 +113,7 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
 
     @Test
     public void can_get_list_of_patterns_when_non_centers() {
-        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie, true);
+        PatternConsumerResourceTest.makePattern(vertexCUri(), authCookie, currentXsrfToken, true);
         List<CenterGraphElementPojo> patterns = getPatternsList();
         assertThat(
                 patterns.size(),
@@ -127,6 +128,7 @@ public class PublicCenterGraphElementsResourceTest extends GraphManipulationRest
                 .path("public")
                 .path("pattern")
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 

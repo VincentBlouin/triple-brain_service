@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.search.GraphElementSearchResult;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Ignore;
@@ -34,6 +35,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
                 .path("auto_complete")
                 .cookie(authCookie)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .post(ClientResponse.class, new JSONObject().put(
                         "searchText",
                         "vert"
