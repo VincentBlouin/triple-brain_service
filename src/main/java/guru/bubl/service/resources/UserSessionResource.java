@@ -17,7 +17,6 @@ import guru.bubl.service.SecurityInterceptor;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import sun.misc.Launcher;
 
 import javax.inject.Inject;
 import javax.inject.Named;
