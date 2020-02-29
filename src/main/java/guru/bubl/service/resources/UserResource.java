@@ -25,6 +25,8 @@ import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
+import guru.bubl.service.recaptcha.Recaptcha;
+import guru.bubl.service.recaptcha.RecaptchaResult;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.fork.ForkResource;
@@ -120,6 +122,9 @@ public class UserResource {
     @Inject
     @Named("AppUrl")
     String appUrl;
+
+    @Inject
+    Recaptcha recaptcha;
 
     @POST
     @Path("{username}/search-users")
@@ -346,6 +351,17 @@ public class UserResource {
     @Produces(MediaType.WILDCARD)
     @Path("/")
     public Response createUser(JSONObject jsonUser) throws JSONException {
+        RecaptchaResult recaptchaResult = recaptcha.getResult(
+                jsonUser
+        );
+        if (!recaptchaResult.isOk()) {
+            return Response.status(
+                    Response.Status.UNAUTHORIZED.getStatusCode()
+            ).entity(new JSONObject().put(
+                    "reason",
+                    (recaptchaResult.isSuccess() ? "recaptcha score" : "problem connecting with recaptcha")
+            )).build();
+        }
         User user = User.withEmailAndUsername(
                 jsonUser.optString(EMAIL, ""),
                 jsonUser.optString(USER_NAME, "")
