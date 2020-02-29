@@ -19,14 +19,16 @@ import java.net.URI;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+
 public class ServiceTestRunner extends RunListener {
 
     @BeforeClass
-    public static void beforeAllTests() throws Exception{
+    public static void beforeAllTests() throws Exception {
         Neo4jModule.clearDb();
         RestTestUtils.BASE_URI = new URI("http://localhost:8786");
         RestTestUtils.launcher = new Launcher(
-                RestTestUtils.BASE_URI.getPort()
+                RestTestUtils.BASE_URI.getPort(),
+                true
         );
         RestTestUtils.launcher.launch();
 
@@ -37,13 +39,13 @@ public class ServiceTestRunner extends RunListener {
     }
 
     @AfterClass
-    public static void afterAllTests() throws Exception{
+    public static void afterAllTests() throws Exception {
 //        closeSearchEngine();
         closeGraphDatabase();
         RestTestUtils.launcher.stop();
     }
 
-    private static void closeGraphDatabase(){
+    private static void closeGraphDatabase() {
         ClientResponse response = RestTestUtils.resource
                 .path("service")
                 .path("test")

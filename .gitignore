@@ -1,3 +1,5 @@
 src/test/java/js_test_data/js-test-data-server-side.json
+src/test/java/js_test_data/js-test-data-server-side.json
+src/test/webapp/WEB-INF/jetty-web-local-dev.xml
 service.iml
 target

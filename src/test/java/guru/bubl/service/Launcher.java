@@ -3,6 +3,7 @@
  */
 
 package guru.bubl.service;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -15,11 +16,11 @@ public class Launcher {
 
     private int port = 0;
 
-    public Launcher() throws Exception{
-        this(8080);
+    public Launcher() throws Exception {
+        this(8080, false);
     }
 
-    public Launcher(int port) throws Exception {
+    public Launcher(int port, Boolean isForServiceTests) throws Exception {
         this.port = port;
         server = new Server(port);
         HandlerCollection handlers = new HandlerCollection();
@@ -27,7 +28,8 @@ public class Launcher {
         WebAppContext wac = new WebAppContext("src/main/webapp", "/service");
         handlers.addHandler(wac);
 
-        XmlConfiguration conf = new XmlConfiguration(new File("src/test/webapp/WEB-INF/jetty-web.xml").toURI().toURL().openStream());
+        String fileName = isForServiceTests ? "jetty-web-service-tests.xml" : "jetty-web-local-dev.xml";
+        XmlConfiguration conf = new XmlConfiguration(new File("src/test/webapp/WEB-INF/" + fileName).toURI().toURL().openStream());
         conf.configure(wac);
 
         server.setHandler(handlers);

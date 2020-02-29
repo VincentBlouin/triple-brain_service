@@ -36,6 +36,7 @@ import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
 import guru.bubl.service.usage_log.UsageLogFilter;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -128,6 +129,12 @@ public class GuiceConfig extends GuiceServletContextListener {
                     final InitialContext jndiContext = new InitialContext();
                     bindConstant().annotatedWith(Names.named("AppUrl")).to(
                             (String) jndiContext.lookup("appUrl")
+                    );
+                    bindConstant().annotatedWith(Names.named("googleRecaptchaKey")).to(
+                            (String) jndiContext.lookup("googleRecaptchaKey")
+                    );
+                    bindConstant().annotatedWith(Names.named("skipRecaptcha")).to(
+                            "yes".equals(jndiContext.lookup("skipRecaptcha"))
                     );
                     String isTestingStr = (String) jndiContext.lookup("is_testing");
                     Boolean isTesting = "yes".equals(isTestingStr);
