@@ -131,11 +131,12 @@ public class ThreeScenario implements JsTestScenario {
                 parent.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        parent.addRelationToVertex(b1);
+        EdgeOperator singleParentToB1Relation = parent.addRelationToVertex(b1);
         SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
+        singleParentToB1Relation.remove();
         child.mergeTo(b1);
         SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
