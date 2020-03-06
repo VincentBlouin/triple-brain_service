@@ -51,6 +51,18 @@ public class SearchResource {
     }
 
     @POST
+    @Path("all_patterns/auto_complete")
+    public Response searchForAllPatterns(
+            JSONObject options
+    ) {
+        return NoEx.wrap(() -> Response.ok(
+                gson.toJson(
+                        getGraphSearch(options).searchAllPatterns()
+                )).build()
+        ).get();
+    }
+
+    @POST
     @Path("own_vertices/auto_complete")
     public Response searchOwnVerticesForAutoComplete(
             JSONObject options
