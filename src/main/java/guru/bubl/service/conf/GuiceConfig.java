@@ -27,16 +27,11 @@ import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
-import guru.bubl.service.resources.schema.SchemaNonOwnedResourceFactory;
-import guru.bubl.service.resources.schema.SchemaPropertyResourceFactory;
-import guru.bubl.service.resources.schema.SchemaResourceFactory;
-import guru.bubl.service.resources.schema.SchemasResource;
 import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
 import guru.bubl.service.usage_log.UsageLogFilter;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -58,9 +53,9 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 FactoryModuleBuilder builder = new FactoryModuleBuilder();
 
+                bind(ConnectivityResource.class);
                 bind(DailyJobResource.class);
                 bind(UserResource.class);
-                bind(SchemasResource.class);
                 bind(ResetPasswordResource.class);
                 bind(SessionHandler.class).to(RedisSessionHandler.class);
                 bind(RedisSessionHandler.class);
@@ -101,19 +96,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexImageResourceFactory.class
                 ));
                 install(builder.build(
-                        SchemaResourceFactory.class
-                ));
-                install(builder.build(
                         TagResourceFactory.class
                 ));
                 install(builder.build(
                         UserTagsResourceFactory.class
-                ));
-                install(builder.build(
-                        SchemaPropertyResourceFactory.class
-                ));
-                install(builder.build(
-                        SchemaNonOwnedResourceFactory.class
                 ));
                 install(builder.build(
                         ForkResourceFactory.class

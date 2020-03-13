@@ -45,8 +45,6 @@ public class JsTestScenariosBuilder {
             new GroupRelationSpecialCaseScenario(),
             new OneBubbleHavingSuggestionsGraphScenario(),
             new WithAcceptedSuggestionScenario(),
-            new KaraokeSchemaScenario(),
-            new ProjectSchemaScenario(),
             new WikidataSearchResultForProjectScenario(),
             new CircularityScenario(),
             new PublicPrivateScenario(),

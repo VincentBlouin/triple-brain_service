@@ -87,14 +87,6 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         );
     }
 
-    protected SchemaUtils schemaUtils() {
-        return SchemaUtils.withWebResourceAndAuthCookie(
-                resource,
-                authCookie,
-                graphUtils()
-        );
-    }
-
     protected UserRestTestUtils userUtils() {
         return UserRestTestUtils.withWebResourceAndCookie(
                 resource,
