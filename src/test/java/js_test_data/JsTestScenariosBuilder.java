@@ -43,8 +43,6 @@ public class JsTestScenariosBuilder {
             new GroupRelationWithImageScenario(),
             new HiddenGroupRelationsScenario(),
             new GroupRelationSpecialCaseScenario(),
-            new OneBubbleHavingSuggestionsGraphScenario(),
-            new WithAcceptedSuggestionScenario(),
             new WikidataSearchResultForProjectScenario(),
             new CircularityScenario(),
             new PublicPrivateScenario(),

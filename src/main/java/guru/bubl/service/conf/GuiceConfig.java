@@ -74,9 +74,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexResourceFactory.class
                 ));
                 install(builder.build(
-                        VertexSuggestionResourceFactory.class
-                ));
-                install(builder.build(
                         GraphElementCollectionResourceFactory.class
                 ));
                 install(builder.build(

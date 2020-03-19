@@ -50,11 +50,6 @@ public class ThreeScenario implements JsTestScenario {
      */
 
     /*
-    Also a fork of subgraph b1 b2 and b3
-    b1 fork is identified to "Event" and has 2 suggestions
-    */
-
-    /*
     Also single child scenario
     parent-relation->child
     graph where child is connected to parent.
@@ -272,12 +267,6 @@ public class ThreeScenario implements JsTestScenario {
         );
         forkedB1.addTag(
                 modelTestScenarios.event()
-        );
-        forkedB1.addSuggestions(
-                modelTestScenarios.suggestionsToMap(
-                        modelTestScenarios.peopleInvolvedSuggestionFromEventIdentification(user),
-                        modelTestScenarios.startDateSuggestionFromEventIdentification(user)
-                )
         );
         return forkerUserGraph.aroundVertexUriInShareLevels(
                 forkedB1.uri(),

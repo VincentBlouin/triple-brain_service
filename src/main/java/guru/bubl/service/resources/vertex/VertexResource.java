@@ -39,8 +39,6 @@ public class VertexResource {
     @Inject
     GraphIndexer graphIndexer;
 
-    @Inject
-    VertexSuggestionResourceFactory vertexSuggestionResourceFactory;
 
     @Inject
     VertexCollectionResourceFactory vertexCollectionResourceFactory;
@@ -254,15 +252,6 @@ public class VertexResource {
                 GraphElementType.Vertex
         );
     }
-
-//    @Path("{shortId}/suggestions")
-//    public VertexSuggestionResource getVertexSuggestionResource(
-//            @PathParam("shortId") String shortId
-//    ) {
-//        return vertexSuggestionResourceFactory.ofVertex(
-//                vertexFromShortId(shortId)
-//        );
-//    }
 
     @Path("{shortId}/shareLevel")
     @POST
