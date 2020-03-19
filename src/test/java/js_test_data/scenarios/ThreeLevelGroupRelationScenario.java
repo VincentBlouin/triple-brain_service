@@ -109,7 +109,7 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
         EdgeOperator g1 = center.addRelationToVertex(bbbb);
         g1.label("g1");
 
-        TagPojo group1 = g1.addMeta(
+        TagPojo group1 = g1.addTag(
                 new TagPojo(
                         g1.uri(),
                         new FriendlyResourcePojo(
@@ -120,11 +120,11 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
 
         EdgeOperator g2 = center.addRelationToVertex(cccc);
         g2.label("g2");
-        g2.addMeta(group1);
+        g2.addTag(group1);
 
         EdgeOperator g21 = center.addRelationToVertex(dddd);
         g21.label("g21");
-        TagPojo group2 = g21.addMeta(
+        TagPojo group2 = g21.addTag(
                 new TagPojo(
                         g21.uri(),
                         new FriendlyResourcePojo(
@@ -132,29 +132,29 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                         )
                 )
         ).values().iterator().next();
-        g21.addMeta(group1);
-        g21.addMeta(group2);
+        g21.addTag(group1);
+        g21.addTag(group2);
 
         EdgeOperator g22 = center.addRelationToVertex(eeee);
         g22.label("g22");
-        g22.addMeta(group1);
-        g22.addMeta(group2);
+        g22.addTag(group1);
+        g22.addTag(group2);
 
 
         EdgeOperator g23 = center.addRelationToVertex(ffff);
         g23.label("g23");
-        g23.addMeta(group1);
-        g23.addMeta(group2);
+        g23.addTag(group1);
+        g23.addTag(group2);
 
         EdgeOperator g3 = center.addRelationToVertex(gggg);
         g3.label("g3");
-        g3.addMeta(group1);
+        g3.addTag(group1);
 
         center.addRelationToVertex(hhhh).label("r2");
 
         EdgeOperator g31 = center.addRelationToVertex(jjjj);
         g31.label("g31");
-        TagPojo group3 = g31.addMeta(
+        TagPojo group3 = g31.addTag(
                 new TagPojo(
                         g31.uri(),
                         new FriendlyResourcePojo(
@@ -162,21 +162,21 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                         )
                 )
         ).values().iterator().next();
-        g31.addMeta(group1);
-        g31.addMeta(group2);
+        g31.addTag(group1);
+        g31.addTag(group2);
 
 
         EdgeOperator g32 = center.addRelationToVertex(kkkk);
         g32.label("g32");
-        g32.addMeta(group1);
-        g32.addMeta(group2);
-        g32.addMeta(group3);
+        g32.addTag(group1);
+        g32.addTag(group2);
+        g32.addTag(group3);
 
         EdgeOperator g33 = center.addRelationToVertex(llll);
         g33.label("g33");
-        g33.addMeta(group1);
-        g33.addMeta(group2);
-        g33.addMeta(group3);
+        g33.addTag(group1);
+        g33.addTag(group2);
+        g33.addTag(group3);
 
     }
 }

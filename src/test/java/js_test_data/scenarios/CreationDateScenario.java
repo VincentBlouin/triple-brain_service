@@ -188,13 +188,13 @@ public class CreationDateScenario implements JsTestScenario {
         r4.label("r4");
         EdgeOperator similar1 = b1.addRelationToVertex(s1);
         similar1.label("similar");
-        similar1.addMeta(modelTestScenarios.toDo());
+        similar1.addTag(modelTestScenarios.toDo());
         EdgeOperator similar2 = b1.addRelationToVertex(s2);
         similar2.label("similar");
-        similar2.addMeta(modelTestScenarios.toDo());
+        similar2.addTag(modelTestScenarios.toDo());
         EdgeOperator similar3 = b1.addRelationToVertex(s3);
         similar3.label("similar");
-        similar3.addMeta(modelTestScenarios.toDo());
+        similar3.addTag(modelTestScenarios.toDo());
         EdgeOperator r5 = b1.addRelationToVertex(b6);
         r5.label("r5");
         EdgeOperator r6 = b1.addRelationToVertex(b7);

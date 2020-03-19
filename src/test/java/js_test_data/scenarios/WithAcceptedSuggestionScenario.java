@@ -89,7 +89,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         event.label("Event");
-        event.addMeta(
+        event.addTag(
                 modelTestScenarios.event()
         );
         event.addSuggestions(
@@ -104,7 +104,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         startDate.label("2016/01/17");
-        startDate.addMeta(
+        startDate.addTag(
                 modelTestScenarios.startDateIdentification()
         );
 
@@ -112,7 +112,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         jeremy.label("Jemery");
-        jeremy.addMeta(
+        jeremy.addTag(
                 modelTestScenarios.person()
         );
 
@@ -120,7 +120,7 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
                 user.username()
         );
         noemi.label("Noemi");
-        noemi.addMeta(
+        noemi.addTag(
                 modelTestScenarios.person()
         );
     }
@@ -128,14 +128,14 @@ public class WithAcceptedSuggestionScenario implements JsTestScenario {
     private void buildRelations() {
         EdgeOperator startDateEdge = event.addRelationToVertex(startDate);
         startDateEdge.label("start date");
-        startDateEdge.addMeta(modelTestScenarios.startDateIdentification());
+        startDateEdge.addTag(modelTestScenarios.startDateIdentification());
 
         EdgeOperator jeremyEdge = event.addRelationToVertex(jeremy);
         jeremyEdge.label("people involved");
-        jeremyEdge.addMeta(modelTestScenarios.personFromFreebase());
+        jeremyEdge.addTag(modelTestScenarios.personFromFreebase());
 
         EdgeOperator noemiEdge = event.addRelationToVertex(noemi);
         noemiEdge.label("people involved");
-        noemiEdge.addMeta(modelTestScenarios.personFromFreebase());
+        noemiEdge.addTag(modelTestScenarios.personFromFreebase());
     }
 }

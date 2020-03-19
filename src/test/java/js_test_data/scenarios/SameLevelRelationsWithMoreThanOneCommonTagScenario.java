@@ -92,15 +92,15 @@ public class SameLevelRelationsWithMoreThanOneCommonTagScenario implements JsTes
     private void createRelations() {
         EdgeOperator r1 = center.addRelationToVertex(b1);
         r1.label("r1");
-        r1.addMeta(modelTestScenarios.creatorPredicate());
-        r1.addMeta(modelTestScenarios.possessionIdentification());
+        r1.addTag(modelTestScenarios.creatorPredicate());
+        r1.addTag(modelTestScenarios.possessionIdentification());
         EdgeOperator r2 = center.addRelationToVertex(b2);
         r2.label("r2");
-        r2.addMeta(modelTestScenarios.creatorPredicate());
-        r2.addMeta(modelTestScenarios.possessionIdentification());
+        r2.addTag(modelTestScenarios.creatorPredicate());
+        r2.addTag(modelTestScenarios.possessionIdentification());
         EdgeOperator r3 = center.addRelationToVertex(b3);
         r3.label("r3");
-        r3.addMeta(modelTestScenarios.creatorPredicate());
+        r3.addTag(modelTestScenarios.creatorPredicate());
         center.addRelationToVertex(otherBubble).label("other relation");
     }
 }

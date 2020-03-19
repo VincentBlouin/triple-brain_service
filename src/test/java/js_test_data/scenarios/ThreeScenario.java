@@ -119,7 +119,7 @@ public class ThreeScenario implements JsTestScenario {
         wholeGraphAdmin.reindexAll();
         List<GraphElementSearchResult> searchResultsForB1 = graphSearchFactory.usingSearchTerm(
                 "b1"
-        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+        ).searchForAllOwnResources(
                 user
         );
         List<GraphElementSearchResult> searchResultsForR2 = graphSearchFactory.usingSearchTerm(
@@ -263,14 +263,14 @@ public class ThreeScenario implements JsTestScenario {
         wholeGraphAdmin.reindexAll();
         forkedB1SearchResults = graphSearchFactory.usingSearchTerm(
                 "b1"
-        ).searchPublicVerticesOnly();
+        ).searchForAllOwnResources(forkerUser);
         Map<URI, VertexOperator> vertices = subGraphForker.fork(
                 subGraphForB1
         );
         VertexOperator forkedB1 = vertices.get(
                 b1.uri()
         );
-        forkedB1.addMeta(
+        forkedB1.addTag(
                 modelTestScenarios.event()
         );
         forkedB1.addSuggestions(

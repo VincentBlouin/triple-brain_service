@@ -55,18 +55,8 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        VertexOperator mergeBubble = vertexFactory.createFromGraphElements(
-                Sets.<Vertex>newHashSet(
-                        b1,
-                        b2,
-                        b3,
-                        b4
-                ),
-                Sets.<Edge>newHashSet(
-                        r1,
-                        r2,
-                        r4
-                )
+        VertexOperator mergeBubble = vertexFactory.createForOwner(
+                user.username()
         );
         mergeBubble.label("merge");
         SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(

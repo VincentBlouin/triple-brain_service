@@ -115,12 +115,12 @@ public class RelationsAsTagScenario implements JsTestScenario {
         );
         EdgeOperator secondSomeRelation = center.addRelationToVertex(b2);
         secondSomeRelation.label("some relation");
-        secondSomeRelation.addMeta(
+        secondSomeRelation.addTag(
                 firstSomeRelationAsIdentifier
         );
         EdgeOperator thirdSomeRelation = center.addRelationToVertex(b3);
         thirdSomeRelation.label("some relation");
-        thirdSomeRelation.addMeta(
+        thirdSomeRelation.addTag(
                 firstSomeRelationAsIdentifier
         );
         EdgeOperator differentRelation = center.addRelationToVertex(b4);

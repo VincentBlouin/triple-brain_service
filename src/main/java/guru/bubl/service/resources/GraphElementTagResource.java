@@ -70,7 +70,7 @@ public class GraphElementTagResource {
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        Map<URI, TagPojo> identifications = graphElement.addMeta(
+        Map<URI, TagPojo> identifications = graphElement.addTag(
                 identification
         );
         return Response.ok().entity(
@@ -86,7 +86,7 @@ public class GraphElementTagResource {
         Tag identification = tagFactory.withUri(
                 URI.create(identificationUri)
         );
-        graphElement.removeIdentification(identification);
+        graphElement.removeTag(identification);
         return Response.noContent().build();
     }
 }

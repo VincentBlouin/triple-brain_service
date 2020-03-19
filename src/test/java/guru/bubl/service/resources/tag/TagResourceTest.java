@@ -16,7 +16,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Test;
-import org.neo4j.driver.v1.Session;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -33,12 +32,12 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_label_returns_no_content_status() {
         assertThat(
-                vertexA().getIdentifications().size(),
+                vertexA().getTags().size(),
                 is(0)
         );
 
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getTags().values().iterator().next();
         ClientResponse clientResponse = updateIdentificationLabel(
                 identification,
                 "new label"
@@ -52,11 +51,11 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_update_identification_label() {
         assertThat(
-                vertexA().getIdentifications().size(),
+                vertexA().getTags().size(),
                 is(0)
         );
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getTags().values().iterator().next();
         assertFalse(
                 identification.label().equals("new label")
         );
@@ -64,7 +63,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
                 identification,
                 "new label"
         );
-        identification = vertexA().getIdentifications().values().iterator().next();
+        identification = vertexA().getTags().values().iterator().next();
         assertTrue(
                 identification.label().equals(
                         "new label"
@@ -75,7 +74,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void cannot_update_identification_label_of_another_user() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getTags().values().iterator().next();
         JSONObject anotherUser = createAUser();
         authenticate(
                 anotherUser
@@ -91,7 +90,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
         authenticate(
                 defaultAuthenticatedUser
         );
-        identification = vertexA().getIdentifications().values().iterator().next();
+        identification = vertexA().getTags().values().iterator().next();
         assertFalse(
                 identification.label().equals(
                         "new label"
@@ -102,7 +101,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updating_note_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getTags().values().iterator().next();
         ClientResponse response = updateIdentificationNote(identification, "some note");
         assertThat(
                 response.getStatus(),
@@ -113,18 +112,18 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_update_note() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag identification = vertexA().getIdentifications().values().iterator().next();
+        Tag identification = vertexA().getTags().values().iterator().next();
         String identificationNote = identification.comment();
         assertThat(identificationNote, is(not("some note")));
         updateIdentificationNote(identification, "some note");
-        identification = vertexA().getIdentifications().values().iterator().next();
+        identification = vertexA().getTags().values().iterator().next();
         assertThat(identification.comment(), is("some note"));
     }
 
     @Test
     public void get_meta_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getTags().values().iterator().next();
         assertThat(
                 getMeta(meta).getStatus(),
                 is(Response.Status.OK.getStatusCode())
@@ -134,7 +133,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void can_get_meta() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getTags().values().iterator().next();
         TagPojo person = TagJson.singleFromJson(
                 getMeta(meta).getEntity(String.class)
         );
@@ -147,7 +146,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void updates_last_visit_date_when_getting_surround_graph() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getTags().values().iterator().next();
         List<CenterGraphElementPojo> centerElements = graphUtils().getCenterGraphElements();
         Integer numberOfVisitedElements = centerElements.size();
         graphUtils().graphWithCenterVertexUri(meta.uri());
@@ -161,7 +160,7 @@ public class TagResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void increments_number_of_visits_when_getting_surround_graph() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag meta = vertexA().getIdentifications().values().iterator().next();
+        Tag meta = vertexA().getTags().values().iterator().next();
         graphUtils().graphWithCenterVertexUri(meta.uri());
         CenterGraphElementPojo centerMeta = graphUtils().getCenterWithUri(
                 graphUtils().getCenterGraphElements(),

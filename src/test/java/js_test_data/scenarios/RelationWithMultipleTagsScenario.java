@@ -76,19 +76,19 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
     private void buildRelations(){
         EdgeOperator scientistRelation = team.addRelationToVertex(aria);
         scientistRelation.label("computer scientist");
-        scientistRelation.addMeta(
+        scientistRelation.addTag(
                 modelTestScenarios.computerScientistType()
         );
-        scientistRelation.addMeta(
+        scientistRelation.addTag(
                 modelTestScenarios.person()
         );
 
         EdgeOperator memberRelation = team.addRelationToVertex(john);
         memberRelation.label("member");
-        memberRelation.addMeta(
+        memberRelation.addTag(
                 modelTestScenarios.person()
         );
-        memberRelation.addMeta(
+        memberRelation.addTag(
                 modelTestScenarios.personFromFreebase()
         );
     }

@@ -20,12 +20,12 @@ import java.util.List;
 public class TagsWithSameLabelSearchResultScenario extends AbstractScenario implements JsTestScenario {
 
     /*
-    * meta0 nbReference 0
-    * meta1 nbReference 1
-    * meta2 nbReference 2
-    * meta3 nbReference 3
-    * meta4 nbReference 4
-    */
+     * meta0 nbReference 0
+     * meta1 nbReference 1
+     * meta2 nbReference 2
+     * meta3 nbReference 3
+     * meta4 nbReference 4
+     */
 
     @Inject
     GraphSearchFactory graphSearchFactory;
@@ -48,7 +48,7 @@ public class TagsWithSameLabelSearchResultScenario extends AbstractScenario impl
         buildMetas();
         List<GraphElementSearchResult> searchResultsForMeta = graphSearchFactory.usingSearchTerm(
                 "meta"
-        ).searchForAnyResourceThatCanBeUsedAsAnIdentifier(
+        ).searchForAllOwnResources(
                 user
         );
         return new Gson().toJson(
@@ -58,28 +58,28 @@ public class TagsWithSameLabelSearchResultScenario extends AbstractScenario impl
 
     private void buildMetas() {
         meta0 = tagFactory.withUri(
-                center.addMeta(
+                center.addTag(
                         modelTestScenarios.person()
                 ).values().iterator().next().uri());
         meta0.label("meta0");
-        meta0.setNbReferences(0);
+        meta0.getNbNeighbors().setPrivate(0);
         meta1 = tagFactory.withUri(
-                center.addMeta(
+                center.addTag(
                         TestScenarios.tagFromFriendlyResource(b1)
                 ).values().iterator().next().uri());
         meta1.label("meta1");
-        meta1.setNbReferences(1);
+        meta1.getNbNeighbors().setPrivate(1);
         meta2 = tagFactory.withUri(
-                center.addMeta(
+                center.addTag(
                         TestScenarios.tagFromFriendlyResource(b2)
                 ).values().iterator().next().uri());
         meta2.label("meta2");
-        meta2.setNbReferences(2);
+        meta2.getNbNeighbors().setPrivate(2);
         meta3 = tagFactory.withUri(
-                center.addMeta(
+                center.addTag(
                         TestScenarios.tagFromFriendlyResource(b3)
                 ).values().iterator().next().uri());
         meta3.label("meta3");
-        meta3.setNbReferences(3);
+        meta3.getNbNeighbors().setPrivate(3);
     }
 }

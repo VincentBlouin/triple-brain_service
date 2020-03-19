@@ -126,26 +126,26 @@ public class GroupRelationsScenario implements JsTestScenario {
                 user.username()
         );
         book1.label("book 1");
-        TagPojo bookMeta = book1.addMeta(
+        TagPojo bookMeta = book1.addTag(
                 modelTestScenarios.book()
         ).values().iterator().next();
         book2 = vertexFactory.createForOwner(
                 user.username()
         );
         book2.label("book 2");
-        book2.addMeta(bookMeta);
+        book2.addTag(bookMeta);
         book3 = vertexFactory.createForOwner(
                 user.username()
         );
         book3.label("book 3");
         book3.addVertexAndRelation();
         book3.addVertexAndRelation();
-        book3.addMeta(bookMeta);
+        book3.addTag(bookMeta);
         book3Copy = vertexFactory.createForOwner(
                 user.username()
         );
         book3Copy.label("book 3 copy");
-        book3Copy.addMeta(bookMeta);
+        book3Copy.addTag(bookMeta);
         otherBubble = vertexFactory.createForOwner(
                 user.username()
         );
@@ -167,30 +167,30 @@ public class GroupRelationsScenario implements JsTestScenario {
     private void createEdges() {
         rBook1 = me.addRelationToVertex(book1);
         rBook1.label("Possession of book 1");
-        TagPojo possession = book1.addMeta(
+        TagPojo possession = book1.addTag(
                 modelTestScenarios.possessionIdentification()
         ).values().iterator().next();
-        rBook1.addMeta(
+        rBook1.addTag(
                 possession
         );
         rBook2 = book2.addRelationToVertex(me);
         rBook2.label("Possessed by book 2");
-        rBook2.addMeta(
+        rBook2.addTag(
                 possession
         );
         rBook3 = me.addRelationToVertex(book3);
         rBook3.label("Possession of book 3");
-        rBook3.addMeta(
+        rBook3.addTag(
                 possession
         );
-        rBook3.addMeta(
+        rBook3.addTag(
                 possession
         );
         rBook3Copy = me.addRelationToVertex(book3Copy);
-        rBook3Copy.addMeta(
+        rBook3Copy.addTag(
                 possession
         );
-        rBook3Copy.addMeta(
+        rBook3Copy.addTag(
                 TestScenarios.tagFromFriendlyResource(
                         rBook3
                 )
@@ -208,7 +208,7 @@ public class GroupRelationsScenario implements JsTestScenario {
                 originalRelation.uri(),
                 new FriendlyResourcePojo("original relation")
         );
-        sameAsOriginalRelation.addMeta(b1RelationIdentification);
+        sameAsOriginalRelation.addTag(b1RelationIdentification);
     }
 
     private void setupCreationDates() {

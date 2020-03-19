@@ -33,8 +33,6 @@ import guru.bubl.service.resources.fork.ForkResource;
 import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
-import guru.bubl.service.resources.tag.UserTagsResource;
-import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResource;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
@@ -106,9 +104,6 @@ public class UserResource {
 
     @Inject
     EdgeFactory edgeFactory;
-
-    @Inject
-    UserTagsResourceFactory userTagsResourceFactory;
 
     @Inject
     FriendsResourceFactory friendsResourceFactory;
@@ -435,22 +430,6 @@ public class UserResource {
                         .put("is_authenticated", sessionHandler.isUserInSession(request.getSession(), persistentSessionId))
                 ).build()
         ).get();
-    }
-
-    @Path("{username}/metas")
-    public UserTagsResource getUserMetas(
-            @PathParam("username") String username,
-            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId,
-            @Context HttpServletRequest request
-    ) {
-        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
-            throw new WebApplicationException(
-                    Response.Status.FORBIDDEN
-            );
-        }
-        return userTagsResourceFactory.forUser(
-                sessionHandler.userFromSession(request.getSession())
-        );
     }
 
     @PUT

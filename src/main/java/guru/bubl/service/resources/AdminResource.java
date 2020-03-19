@@ -30,14 +30,14 @@ public class AdminResource {
     @Path("refresh_number_of_connected_edges")
     @POST
     public Response refreshNumberOfConnectedEdges(){
-        wholeGraphAdmin.refreshNumberOfConnectedEdges();
+        wholeGraphAdmin.refreshNbNeighbors();
         return Response.ok().build();
     }
 
     @Path("refresh_identifications_nb_references")
     @POST
     public Response refreshAllIdentificationsNumberOfReferences(){
-        wholeGraphAdmin.refreshNumberOfReferencesToAllIdentifications();
+        wholeGraphAdmin.refreshNbNeighborsToAllTags();
         return Response.ok().build();
     }
 

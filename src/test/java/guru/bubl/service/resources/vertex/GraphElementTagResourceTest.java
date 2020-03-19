@@ -65,12 +65,12 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
     @Test
     public void can_add_an_additional_type_to_vertex() {
         assertThat(
-                vertexA().getIdentifications().size(),
+                vertexA().getTags().size(),
                 is(0)
         );
         graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
-                vertexA().getIdentifications().size(),
+                vertexA().getTags().size(),
                 is(greaterThan(0))
         );
     }
@@ -79,16 +79,16 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
     public void can_remove_the_additional_type_of_vertex() {
         graphElementUtils().addFoafPersonTypeToVertexA();
         assertThat(
-                vertexA().getIdentifications().size(),
+                vertexA().getTags().size(),
                 is(1)
         );
-        Tag addedIdentification = vertexA().getIdentifications().values().iterator().next();
+        Tag addedIdentification = vertexA().getTags().values().iterator().next();
         removeIdentificationToResource(
                 addedIdentification,
                 vertexA()
         );
         assertThat(
-                vertexA().getIdentifications().size(),
+                vertexA().getTags().size(),
                 is(0)
         );
     }
@@ -96,13 +96,13 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
     @Test
     public void can_add_same_as_to_an_edge() {
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
-        Map<URI, ? extends FriendlyResource> sameAs = vertexA().getIdentifications();
+        Map<URI, ? extends FriendlyResource> sameAs = vertexA().getTags();
         assertThat(
                 sameAs.size(),
                 is(0)
         );
         addCreatorPredicateToEdge(edgeBetweenAAndB);
-        sameAs = edgeUtils().edgeBetweenAAndB().getIdentifications();
+        sameAs = edgeUtils().edgeBetweenAAndB().getTags();
         assertThat(
                 sameAs.size(),
                 is(greaterThan(0))

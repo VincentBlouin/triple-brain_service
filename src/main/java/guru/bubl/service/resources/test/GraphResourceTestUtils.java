@@ -50,7 +50,7 @@ public class GraphResourceTestUtils {
     @Produces(MediaType.TEXT_PLAIN)
     public Response setAlNumberOfConnectedEdgesToZero()throws Exception{
         for(VertexInSubGraphOperator vertex: wholeGraph.getAllVertices()){
-            vertex.setNumberOfConnectedEdges(0);
+            vertex.getNbNeighbors().setPrivate(0);
         }
         return Response.ok().build();
     }

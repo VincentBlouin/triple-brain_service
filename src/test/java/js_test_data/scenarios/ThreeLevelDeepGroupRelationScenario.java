@@ -137,26 +137,26 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
     private void createEdges() {
         r1 = fastChargingStation.addRelationToVertex(b1);
         r1.label("r1");
-        r1.addMeta(region);
-        r1.addMeta(subRegion);
-        r1.addMeta(subRegionA);
+        r1.addTag(region);
+        r1.addTag(subRegion);
+        r1.addTag(subRegionA);
 
         r2 = fastChargingStation.addRelationToVertex(b2);
         r2.label("r2");
-        r2.addMeta(region);
-        r2.addMeta(subRegion);
-        r2.addMeta(subRegionA);
+        r2.addTag(region);
+        r2.addTag(subRegion);
+        r2.addTag(subRegionA);
 
         r3 = fastChargingStation.addRelationToVertex(b3);
         r3.label("r3");
-        r3.addMeta(region);
-        r3.addMeta(subRegion);
-        r3.addMeta(subRegionB);
+        r3.addTag(region);
+        r3.addTag(subRegion);
+        r3.addTag(subRegionB);
 
         r4 = fastChargingStation.addRelationToVertex(b4);
         r4.label("r4");
-        r4.addMeta(region);
-        r4.addMeta(subRegion);
-        r4.addMeta(subRegionB);
+        r4.addTag(region);
+        r4.addTag(subRegion);
+        r4.addTag(subRegionB);
     }
 }

@@ -11,7 +11,6 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
-import org.neo4j.driver.v1.Session;
 
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -46,10 +45,10 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void can_refresh_number_of_connected_edges() throws Exception {
+    public void can_refresh_number_of_connected_edges(){
         setNumberOfConnectedOfAllVerticesToZero();
         assertThat(
-                vertexB().getNumberOfConnectedEdges(),
+                vertexB().getNbNeighbors().getTotal(),
                 is(0)
         );
         refreshNumberOfConnectedEdges(
@@ -57,7 +56,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
         );
         authenticate(defaultAuthenticatedUserAsJson);
         assertThat(
-                vertexB().getNumberOfConnectedEdges(),
+                vertexB().getNbNeighbors().getTotal(),
                 is(2)
         );
     }

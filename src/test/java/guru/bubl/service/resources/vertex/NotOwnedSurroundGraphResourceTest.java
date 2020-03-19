@@ -355,7 +355,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
     @Test
     public void get_not_owned_surround_graph_tag_is_ok_status(){
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag tag = vertexA().getIdentifications().values().iterator().next();
+        Tag tag = vertexA().getTags().values().iterator().next();
         assertThat(
                 getNotOwnedSurroundGraphOfATag(tag.uri()).getStatus(),
                 is(Response.Status.OK.getStatusCode())

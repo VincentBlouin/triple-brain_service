@@ -118,7 +118,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
         e1 = vertexFactory.createForOwner(
                 user.username()
         );
-        event = e1.addMeta(
+        event = e1.addTag(
                 modelTestScenarios.event()
         ).values().iterator().next();
         e1.label("e1");
@@ -126,7 +126,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
                 user.username()
         );
         e2.label("e2");
-        e2.addMeta(
+        e2.addTag(
                 event
         );
         e2.addVertexAndRelation();
@@ -159,7 +159,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
                 user.username()
         );
         singleTaggedToEvent.label("single tagged to event");
-        singleTaggedToEvent.addMeta(
+        singleTaggedToEvent.addTag(
                 event
         );
     }
@@ -167,15 +167,15 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
     private void createEdges() {
         EdgeOperator r1 = e1.addRelationToVertex(e2);
         r1.label("r1");
-        toDo = r1.addMeta(
+        toDo = r1.addTag(
                 modelTestScenarios.toDo()
         ).values().iterator().next();
         EdgeOperator r2 = e1.addRelationToVertex(e3);
         r2.label("r2");
-        r2.addMeta(toDo);
+        r2.addTag(toDo);
         EdgeOperator f1 = o1.addRelationToVertex(o2);
         f1.label("f1");
-        f1.addMeta(toDo);
+        f1.addTag(toDo);
         e1.addRelationToVertex(a1).label("ra1");
         e3.addRelationToVertex(e31).label("r3e1");
         e3.addRelationToVertex(e32).label("r3e2");

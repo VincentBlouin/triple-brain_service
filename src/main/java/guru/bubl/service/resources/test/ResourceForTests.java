@@ -86,9 +86,9 @@ public class ResourceForTests {
         UserGraph userGraph = graphFactory.loadForUser(
                 user
         );
-        graphIndexer.indexVertex(
-                userGraph.defaultVertex()
-        );
+//        graphIndexer.indexVertex(
+//                userGraph.defaultVertex()
+//        );
         graphIndexer.commit();
 //        addALotOfVerticesToVertex(
 //                userGraph.defaultVertex()

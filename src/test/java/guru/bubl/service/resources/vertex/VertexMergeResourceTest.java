@@ -35,10 +35,10 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
         Vertex farVertex = vertexUtils().createSingleVertex();
         vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
         vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
-        Integer nbEdges = vertexC().getNumberOfConnectedEdges();
+        Integer nbEdges = vertexC().getNbNeighbors().getTotal();
         mergeTo(farVertex, vertexC());
         assertThat(
-                vertexC().getNumberOfConnectedEdges(),
+                vertexC().getNbNeighbors().getTotal(),
                 is(nbEdges + 2)
         );
     }
@@ -53,7 +53,7 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
         Vertex farVertex = vertexUtils().createSingleVertex();
         Integer nbEdges = vertexUtils().vertexWithUriOfAnyUser(
                 anotherUserVertex.uri()
-        ).getNumberOfConnectedEdges();
+        ).getNbNeighbors().getTotal();
         assertThat(
                 mergeTo(farVertex, anotherUserVertex).getStatus(),
                 is(Response.Status.BAD_REQUEST.getStatusCode())
@@ -61,7 +61,7 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
         assertThat(
                 vertexUtils().vertexWithUriOfAnyUser(
                         anotherUserVertex.uri()
-                ).getNumberOfConnectedEdges(),
+                ).getNbNeighbors().getTotal(),
                 is(nbEdges)
         );
     }
@@ -71,14 +71,14 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
         Vertex farVertex = vertexUtils().createSingleVertex();
         vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
         vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
-        Integer nbEdges = vertexC().getNumberOfConnectedEdges();
+        Integer nbEdges = vertexC().getNbNeighbors().getTotal();
         vertexUtils().makePattern(farVertex.uri());
         assertThat(
                 mergeTo(farVertex, vertexC()).getStatus(),
                 is(Response.Status.BAD_REQUEST.getStatusCode())
         );
         assertThat(
-                vertexC().getNumberOfConnectedEdges(),
+                vertexC().getNbNeighbors().getTotal(),
                 is(nbEdges)
         );
     }

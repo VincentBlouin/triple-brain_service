@@ -345,7 +345,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void number_of_connected_vertices_are_included() {
         assertThat(
-                vertexB().getNumberOfConnectedEdges(),
+                vertexB().getNbNeighbors().getPrivate(),
                 is(2)
         );
     }

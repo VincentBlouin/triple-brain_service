@@ -164,7 +164,7 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
     @Test
     public void getting_surround_graph_of_a_tag_returns_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
-        Tag tag = vertexA().getIdentifications().values().iterator().next();
+        Tag tag = vertexA().getTags().values().iterator().next();
         assertThat(
                 getSurroundGraphOfATag(tag).getStatus(),
                 is(Response.Status.OK.getStatusCode())

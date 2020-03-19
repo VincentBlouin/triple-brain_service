@@ -64,7 +64,7 @@ public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario 
     public void createEdges() {
         EdgeOperator r1 = center.addRelationToVertex(b1);
         r1.label("r1");
-        r1.addMeta(
+        r1.addTag(
                 modelTestScenarios.human()
         );
         EdgeOperator r2 = b1.addRelationToVertex(b2);
@@ -74,7 +74,7 @@ public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario 
         r2AsMeta = TestScenarios.tagFromFriendlyResource(
                 r2
         );
-        r3.addMeta(
+        r3.addTag(
                 r2AsMeta
         );
     }

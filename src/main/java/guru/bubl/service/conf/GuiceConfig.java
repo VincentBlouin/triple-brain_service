@@ -28,7 +28,6 @@ import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.tag.TagResourceFactory;
-import guru.bubl.service.resources.tag.UserTagsResourceFactory;
 import guru.bubl.service.resources.test.*;
 import guru.bubl.service.resources.vertex.*;
 import guru.bubl.service.usage_log.UsageLogFilter;
@@ -97,9 +96,6 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ));
                 install(builder.build(
                         TagResourceFactory.class
-                ));
-                install(builder.build(
-                        UserTagsResourceFactory.class
                 ));
                 install(builder.build(
                         ForkResourceFactory.class
