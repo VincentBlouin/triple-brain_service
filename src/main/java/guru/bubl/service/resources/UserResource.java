@@ -313,20 +313,20 @@ public class UserResource {
         );
     }
 
-    @Path("{username}/fork")
-    public ForkResource getForkResource(
-            @PathParam("username") String username,
-            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) {
-        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
-            throw new WebApplicationException(
-                    Response.Status.FORBIDDEN
-            );
-        }
-        return forkResourceFactory.forUser(
-                sessionHandler.userFromSession(request.getSession())
-        );
-    }
+//    @Path("{username}/fork")
+//    public ForkResource getForkResource(
+//            @PathParam("username") String username,
+//            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+//    ) {
+//        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
+//            throw new WebApplicationException(
+//                    Response.Status.FORBIDDEN
+//            );
+//        }
+//        return forkResourceFactory.forUser(
+//                sessionHandler.userFromSession(request.getSession())
+//        );
+//    }
 
     @Path("session")
     public UserSessionResource sessionResource() {
