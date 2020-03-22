@@ -71,12 +71,11 @@ public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario 
         r2.label("r2");
         EdgeOperator r3 = b1.addRelationToVertex(b3);
         r3.label("r3");
-        r2AsMeta = TestScenarios.tagFromFriendlyResource(
-                r2
-        );
-        r3.addTag(
-                r2AsMeta
-        );
+        r2AsMeta = r3.addTag(
+                TestScenarios.tagFromFriendlyResource(
+                        r2
+                )
+        ).values().iterator().next();
     }
 
 }
