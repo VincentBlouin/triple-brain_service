@@ -14,6 +14,8 @@ import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.vertex.NbNeighbors;
+import guru.bubl.module.model.graph.vertex.VertexTypeOperatorFactory;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.tag.TagResourceFactory;
@@ -53,6 +55,9 @@ public class GraphResource {
 
     @Inject
     GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
+
+    @Inject
+    VertexTypeOperatorFactory vertexTypeOperatorFactory;
 
     private User user;
 
@@ -120,6 +125,29 @@ public class GraphResource {
         return Response.noContent().build();
     }
 
+    @POST
+    @Path("/{type}/{shortId}/nbNeighbors")
+    public Response setNbNeighbors(
+            @PathParam("type") String type,
+            @PathParam("shortId") String shortId,
+            JSONObject nbNeighbors
+    ) {
+        URI uri = new UserUris(
+                user
+        ).uriFromTypeStringAndShortId(type, shortId);
+        NbNeighbors nbNeighborsOperator = vertexTypeOperatorFactory.withUri(uri).getNbNeighbors();
+        if (nbNeighbors.has("nbPrivate")) {
+            nbNeighborsOperator.setPrivate(nbNeighbors.optInt("nbPrivate", 0));
+        }
+        if (nbNeighbors.has("nbFriend")) {
+            nbNeighborsOperator.setFriend(nbNeighbors.optInt("nbFriend", 0));
+        }
+        if (nbNeighbors.has("nbPublic")) {
+            nbNeighborsOperator.setPublic(nbNeighbors.optInt("nbPublic", 0));
+        }
+        return Response.noContent().build();
+    }
+
     /*
         removeIdentificationCenter should not be necessary because removeCenter is a generic method
         for any graph element type but somehow "removeCenter" does not work for identification
@@ -154,13 +182,6 @@ public class GraphResource {
         );
     }
 
-//    @Path("/schema")
-//    public SchemaResource schemaResource() {
-//        return schemaResourceFactory.fromUserGraph(
-//                userGraph()
-//        );
-//    }
-
     @Path("/identification")
     public TagResource identificationResource() {
         return tagResourceFactory.forAuthenticatedUserAndGraph(
@@ -181,5 +202,4 @@ public class GraphResource {
         ).uriFromTypeStringAndShortId(typeStr, shortId);
         return graphElementOperatorFactory.withUri(uri);
     }
-
 }

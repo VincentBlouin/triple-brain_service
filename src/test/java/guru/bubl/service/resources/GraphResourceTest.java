@@ -1,14 +1,21 @@
 package guru.bubl.service.resources;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.vertex.NbNeighbors;
+import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -61,6 +68,71 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
+
+    @Test
+    public void set_nb_neighbors_returns_no_content_status() throws JSONException {
+        ClientResponse response = setNbNeighbors(
+                vertexAUri(),
+                new JSONObject().put(
+                        "nbPrivate", 1
+                ).put(
+                        "nbFriend", 2
+                ).put(
+                        "nbPublic", 3
+                )
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+    }
+
+    @Test
+    public void set_nb_neighbors_does_the_job() throws JSONException {
+        SubGraphPojo subGraph = graphUtils().graphWithCenterVertexUri(
+                vertexAUri()
+        );
+        NbNeighbors nbNeighbors = subGraph.vertexWithIdentifier(vertexAUri()).getNbNeighbors();
+        assertThat(
+                nbNeighbors.getPrivate(),
+                is(1)
+        );
+        assertThat(
+                nbNeighbors.getFriend(),
+                is(0)
+        );
+        assertThat(
+                nbNeighbors.getPublic(),
+                is(0)
+        );
+        ClientResponse response = setNbNeighbors(
+                vertexAUri(),
+                new JSONObject().put(
+                        "nbPrivate", 3
+                ).put(
+                        "nbFriend", 2
+                ).put(
+                        "nbPublic", 1
+                )
+        );
+        subGraph = graphUtils().graphWithCenterVertexUri(
+                vertexAUri()
+        );
+        nbNeighbors = subGraph.vertexWithIdentifier(vertexAUri()).getNbNeighbors();
+        assertThat(
+                nbNeighbors.getPrivate(),
+                is(3)
+        );
+        assertThat(
+                nbNeighbors.getFriend(),
+                is(2)
+        );
+        assertThat(
+                nbNeighbors.getPublic(),
+                is(1)
+        );
+    }
+
     private ClientResponse removeCenter(User user, CenterGraphElementPojo center) {
         return resource
                 .path(center.getGraphElement().uri().getPath())
@@ -69,5 +141,16 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .delete(ClientResponse.class);
+    }
+
+
+    private ClientResponse setNbNeighbors(URI uri, JSONObject nbNeighbors) {
+        return resource
+                .path(uri.getPath())
+                .path("nbNeighbors")
+                .cookie(authCookie)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
+                .post(ClientResponse.class, nbNeighbors);
     }
 }

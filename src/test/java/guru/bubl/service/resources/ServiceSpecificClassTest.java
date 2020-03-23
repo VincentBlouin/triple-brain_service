@@ -14,7 +14,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        OwnedSurroundGraphResouceTest.class
+        GraphResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }
