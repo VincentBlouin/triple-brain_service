@@ -136,14 +136,14 @@ public class GraphResource {
                 user
         ).uriFromTypeStringAndShortId(type, shortId);
         NbNeighbors nbNeighborsOperator = vertexTypeOperatorFactory.withUri(uri).getNbNeighbors();
-        if (nbNeighbors.has("nbPrivate")) {
-            nbNeighborsOperator.setPrivate(nbNeighbors.optInt("nbPrivate", 0));
+        if (nbNeighbors.has("private_")) {
+            nbNeighborsOperator.setPrivate(nbNeighbors.optInt("private_", 0));
         }
-        if (nbNeighbors.has("nbFriend")) {
-            nbNeighborsOperator.setFriend(nbNeighbors.optInt("nbFriend", 0));
+        if (nbNeighbors.has("friend")) {
+            nbNeighborsOperator.setFriend(nbNeighbors.optInt("friend", 0));
         }
-        if (nbNeighbors.has("nbPublic")) {
-            nbNeighborsOperator.setPublic(nbNeighbors.optInt("nbPublic", 0));
+        if (nbNeighbors.has("public_")) {
+            nbNeighborsOperator.setPublic(nbNeighbors.optInt("public_", 0));
         }
         return Response.noContent().build();
     }

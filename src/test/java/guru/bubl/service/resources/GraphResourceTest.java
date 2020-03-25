@@ -74,11 +74,11 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
         ClientResponse response = setNbNeighbors(
                 vertexAUri(),
                 new JSONObject().put(
-                        "nbPrivate", 1
+                        "private_", 1
                 ).put(
-                        "nbFriend", 2
+                        "friend", 2
                 ).put(
-                        "nbPublic", 3
+                        "public_", 3
                 )
         );
         assertThat(
@@ -108,11 +108,11 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
         ClientResponse response = setNbNeighbors(
                 vertexAUri(),
                 new JSONObject().put(
-                        "nbPrivate", 3
+                        "private_", 3
                 ).put(
-                        "nbFriend", 2
+                        "friend", 2
                 ).put(
-                        "nbPublic", 1
+                        "public_", 1
                 )
         );
         subGraph = graphUtils().graphWithCenterVertexUri(
