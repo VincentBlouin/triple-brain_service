@@ -32,6 +32,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
      *
      * e1-r1->e2
      * e1-r2->e3
+     * e1-r3->e4
      * e3-re31->e31
      * e3-re32->e32
      * e1-ra1->a1
@@ -62,6 +63,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
             e1,
             e2,
             e3,
+            e4,
             e31,
             e32,
             o1,
@@ -134,6 +136,10 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
                 user.username()
         );
         e3.label("e3");
+        e4 = vertexFactory.createForOwner(
+                user.username()
+        );
+        e4.label("e4");
         e31 = vertexFactory.createForOwner(
                 user.username()
         );
@@ -177,6 +183,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
         f1.label("f1");
         f1.addTag(toDo);
         e1.addRelationToVertex(a1).label("ra1");
+        e1.addRelationToVertex(e4).label("r3");
         e3.addRelationToVertex(e31).label("r3e1");
         e3.addRelationToVertex(e32).label("r3e2");
     }
