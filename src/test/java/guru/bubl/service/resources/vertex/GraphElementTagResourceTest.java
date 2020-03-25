@@ -111,7 +111,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
 
     @Test
     public void if_invalid_identification_it_throws_an_exception() {
-        ClientResponse clientResponse = graphElementUtils().addIdentificationToGraphElementWithUri(
+        ClientResponse clientResponse = graphElementUtils().addTagToGraphElementWithUri(
                 new JSONObject(),
                 vertexAUri()
         );
@@ -144,7 +144,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         TagPojo newEdgeAsMeta = TagJson.fromJson(
-                graphElementUtils().addIdentificationToGraphElementWithUri(
+                graphElementUtils().addTagToGraphElementWithUri(
                         edgeAsIdentifier,
                         edgeBetweenAAndB.uri()
                 ).getEntity(String.class)
@@ -165,7 +165,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
         creatorPredicate.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
-        return graphElementUtils().addIdentificationToGraphElementWithUri(
+        return graphElementUtils().addTagToGraphElementWithUri(
                 creatorPredicate,
                 edge.uri()
         );

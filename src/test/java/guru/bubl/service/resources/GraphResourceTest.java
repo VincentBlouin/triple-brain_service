@@ -5,10 +5,13 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.vertex.NbNeighbors;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -105,7 +108,7 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
                 nbNeighbors.getPublic(),
                 is(0)
         );
-        ClientResponse response = setNbNeighbors(
+        setNbNeighbors(
                 vertexAUri(),
                 new JSONObject().put(
                         "private_", 3
@@ -119,6 +122,62 @@ public class GraphResourceTest extends GraphManipulationRestTestUtils {
                 vertexAUri()
         );
         nbNeighbors = subGraph.vertexWithIdentifier(vertexAUri()).getNbNeighbors();
+        assertThat(
+                nbNeighbors.getPrivate(),
+                is(3)
+        );
+        assertThat(
+                nbNeighbors.getFriend(),
+                is(2)
+        );
+        assertThat(
+                nbNeighbors.getPublic(),
+                is(1)
+        );
+    }
+
+    @Test
+    public void can_set_nb_neighbors_of_tags() throws JSONException {
+        TagPojo tag = TagJson.fromJson(
+                graphElementUtils().addTagToGraphElementWithUri(
+                        new ModelTestScenarios().person(),
+                        vertexAUri()
+                ).getEntity(String.class)
+        ).values().iterator().next();
+        SubGraphPojo subGraph = graphUtils().graphWithCenterVertexUri(
+                tag.uri()
+        );
+        NbNeighbors nbNeighbors = subGraph.getCenterMeta().getNbNeighbors();
+        assertThat(
+                nbNeighbors.getPrivate(),
+                is(1)
+        );
+        assertThat(
+                nbNeighbors.getFriend(),
+                is(0)
+        );
+        assertThat(
+                nbNeighbors.getPublic(),
+                is(0)
+        );
+        ClientResponse response = setNbNeighbors(
+                tag.uri(),
+                new JSONObject().put(
+                        "private_", 3
+                ).put(
+                        "friend", 2
+                ).put(
+                        "public_", 1
+                )
+        );
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NO_CONTENT.getStatusCode())
+        );
+        subGraph = graphUtils().graphWithCenterVertexUri(
+                tag.uri()
+        );
+        nbNeighbors = subGraph.getCenterMeta().getNbNeighbors();
         assertThat(
                 nbNeighbors.getPrivate(),
                 is(3)

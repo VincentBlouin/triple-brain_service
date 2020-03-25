@@ -18,8 +18,8 @@ import guru.bubl.module.model.graph.vertex.NbNeighbors;
 import guru.bubl.module.model.graph.vertex.VertexTypeOperatorFactory;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
-import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.tag.TagResource;
+import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
 import org.codehaus.jettison.json.JSONObject;
@@ -125,6 +125,19 @@ public class GraphResource {
         return Response.noContent().build();
     }
 
+    /*
+        setTagNbNeighbors should not be necessary because setNbNeighbors is a generic method
+        for any graph element type but somehow "setNbNeighbors" does not work for identification
+     */
+    @POST
+    @Path("/identification/{shortId}/nbNeighbors")
+    public Response setTagNbNeighbors(
+            @PathParam("shortId") String shortId,
+            JSONObject nbNeighbors
+    ) {
+        return _setNbNeighbors("identification", shortId, nbNeighbors);
+    }
+
     @POST
     @Path("/{type}/{shortId}/nbNeighbors")
     public Response setNbNeighbors(
@@ -132,6 +145,10 @@ public class GraphResource {
             @PathParam("shortId") String shortId,
             JSONObject nbNeighbors
     ) {
+        return _setNbNeighbors(type, shortId, nbNeighbors);
+    }
+
+    private Response _setNbNeighbors(String type, String shortId, JSONObject nbNeighbors) {
         URI uri = new UserUris(
                 user
         ).uriFromTypeStringAndShortId(type, shortId);

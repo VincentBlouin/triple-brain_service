@@ -69,7 +69,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
         possession.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
-        graphElementUtils().addIdentificationToGraphElementWithUri(
+        graphElementUtils().addTagToGraphElementWithUri(
                 possession,
                 edgeUtils().edgeBetweenAAndB().uri()
         );
@@ -94,7 +94,7 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
         possession.setRelationExternalResourceUri(
                 ModelTestScenarios.SAME_AS
         );
-        graphElementUtils().addIdentificationToGraphElementWithUri(
+        graphElementUtils().addTagToGraphElementWithUri(
                 possession,
                 edgeUtils().edgeBetweenAAndB().uri()
         );

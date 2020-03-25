@@ -40,14 +40,14 @@ public class GraphElementRestTestUtils {
         this.xsrfToken = xsrfToken;
     }
 
-    public ClientResponse addIdentificationToGraphElementWithUri(TagPojo identification, URI graphElementUri) {
-        return addIdentificationToGraphElementWithUri(
+    public ClientResponse addTagToGraphElementWithUri(TagPojo identification, URI graphElementUri) {
+        return addTagToGraphElementWithUri(
                 TagJson.singleToJson(identification),
                 graphElementUri
         );
     }
 
-    public ClientResponse addIdentificationToGraphElementWithUri(JSONObject identification, URI graphElementUri) {
+    public ClientResponse addTagToGraphElementWithUri(JSONObject identification, URI graphElementUri) {
         return resource
                 .path(graphElementUri.getPath())
                 .path("identification")
@@ -63,7 +63,7 @@ public class GraphElementRestTestUtils {
                 ModelTestScenarios.TYPE
         );
         JSONObject personType = TagJson.singleToJson(identification);
-        return addIdentificationToGraphElementWithUri(
+        return addTagToGraphElementWithUri(
                 personType,
                 graphUtils().vertexAUri()
         );
