@@ -12,13 +12,11 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFac
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.*;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.json.StatementJsonFields;
-import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.service.resources.GraphElementTagResource;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
@@ -29,16 +27,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexResource {
-
-    @Inject
-    GraphIndexer graphIndexer;
-
 
     @Inject
     VertexCollectionResourceFactory vertexCollectionResourceFactory;
@@ -143,16 +135,6 @@ public class VertexResource {
         VertexOperator vertex = vertexFromShortId(
                 shortId
         );
-        Set<VertexOperator> connectedVertices = new HashSet<VertexOperator>();
-        graphIndexer.deleteGraphElement(
-                vertex
-        );
-        for (EdgeOperator edge : vertex.connectedEdges().values()) {
-            graphIndexer.deleteGraphElement(
-                    edge
-            );
-            connectedVertices.add(edge.otherVertex(vertex));
-        }
         vertex.remove();
         return Response.ok().build();
     }

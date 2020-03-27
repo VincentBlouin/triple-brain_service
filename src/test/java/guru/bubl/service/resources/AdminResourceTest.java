@@ -87,31 +87,6 @@ public class AdminResourceTest extends GraphManipulationRestTestUtils {
         );
     }
 
-    @Test
-    public void re_adding_identifications_returns_ok_status() throws Exception {
-        graphElementUtils().addFoafPersonTypeToVertexA();
-        TagPojo possession = new ModelTestScenarios().possessionIdentification();
-        possession.setRelationExternalResourceUri(
-                ModelTestScenarios.SAME_AS
-        );
-        graphElementUtils().addTagToGraphElementWithUri(
-                possession,
-                edgeUtils().edgeBetweenAAndB().uri()
-        );
-        ClientResponse response = resource.path("service")
-                .path("users")
-                .path("vince")
-                .path("admin")
-                .path("re_add_identifications")
-                .cookie(loginAsVince())
-                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
-                .post(ClientResponse.class);
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-    }
-
 
     private ClientResponse setNumberOfConnectedOfAllVerticesToZero() {
         return resource

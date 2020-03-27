@@ -6,16 +6,12 @@ package guru.bubl.service.resources;
 
 import com.google.inject.Inject;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
-import guru.bubl.module.model.search.GraphIndexer;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 public class AdminResource {
-
-    @Inject
-    protected GraphIndexer graphIndexer;
 
     @Inject
     protected WholeGraphAdmin wholeGraphAdmin;
@@ -40,29 +36,5 @@ public class AdminResource {
         wholeGraphAdmin.refreshNbNeighborsToAllTags();
         return Response.ok().build();
     }
-
-    @Path("remove_metas_having_zero_references")
-    @POST
-    public Response removeMetasHavingZeroReferences(){
-        wholeGraphAdmin.removeMetasHavingZeroReferences();
-        return Response.ok().build();
-    }
-
-    @Path("re_add_identifications")
-    @POST
-    public Response reAddIdentifications(){
-        wholeGraphAdmin.reAddIdentifications();
-        return Response.ok().build();
-    }
-
-//    @Path("convert_small_images_to_base_64")
-//    @GraphTransactional
-//    @POST
-//    public Response convertSmallImagesToBase64(){
-//        new WholeGraphAdmin(
-//                wholeGraph
-//        ).convertAllSmallImagesToBase64();
-//        return Response.ok().build();
-//    }
 
 }

@@ -7,14 +7,9 @@ package guru.bubl.service.resources.test;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
 import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.model.search.GraphIndexer;
 import guru.bubl.module.model.test.GraphComponentTest;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
 import guru.bubl.module.model.test.scenarios.VerticesCalledABAndC;
@@ -47,16 +42,10 @@ public class ResourceForTests {
     UserRepository userRepository;
 
     @Inject
-    GraphIndexer graphIndexer;
-
-    @Inject
     SessionHandler sessionHandler;
 
     @Inject
     WholeGraphAdmin wholeGraphAdmin;
-
-//    @Inject
-//    SearchUtils searchUtils;
 
     @Inject
     private GraphFactory graphFactory;
@@ -66,9 +55,6 @@ public class ResourceForTests {
 
     @Inject
     GraphComponentTest graphComponentTest;
-
-    @Inject
-    VertexFactory vertexFactory;
 
     @Path("login")
     @GET
@@ -82,17 +68,6 @@ public class ResourceForTests {
             );
         }
         graphFactory.loadForUser(user).createVertex();
-//        deleteAllUserDocumentsForSearch(user);
-        UserGraph userGraph = graphFactory.loadForUser(
-                user
-        );
-//        graphIndexer.indexVertex(
-//                userGraph.defaultVertex()
-//        );
-        graphIndexer.commit();
-//        addALotOfVerticesToVertex(
-//                userGraph.defaultVertex()
-//        );
         request.getSession().setAttribute(AUTHENTICATION_ATTRIBUTE_KEY, true);
         request.getSession().setAttribute(AUTHENTICATED_USER_KEY, user);
         return Response.temporaryRedirect(
@@ -105,51 +80,12 @@ public class ResourceForTests {
         ).build();
     }
 
-    private void addALotOfVerticesToVertex(VertexOperator vertex){
-        VertexOperator destinationVertex = vertex;
-        for (int i = 0; i < 100; i++) {
-            Edge edge = destinationVertex.addVertexAndRelation();
-            destinationVertex = vertexFactory.withUri(
-                    edge.destinationVertex().uri()
-            );
-        }
-    }
-
-//    @Path("search/close")
-//    @Produces(MediaType.TEXT_PLAIN)
-//    @GET
-//    public Response closeSearchEngine() {
-//        searchUtils.close();
-//        return Response.ok().build();
-//    }
-
     @Path("search/delete_all_documents")
     @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response deleteAllUserDocuments(@Context HttpServletRequest request) {
-//        removeSearchIndex();
         return Response.ok().build();
     }
-//    public void removeSearchIndex() {
-//        SolrServer solrServer = searchUtils.getServer();
-//        try {
-//            solrServer.deleteByQuery("*:*");
-//            solrServer.commit();
-//        } catch (SolrServerException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-
-//    private void deleteAllUserDocumentsForSearch(User user) {
-//        SolrServer solrServer = searchUtils.getServer();
-//        try {
-//            solrServer.deleteByQuery("owner_username:" + user.username());
-//            solrServer.commit();
-//        } catch (SolrServerException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     @Path("search/index_graph")
     @Produces(MediaType.TEXT_PLAIN)
@@ -200,9 +136,4 @@ public class ResourceForTests {
 
         return Response.ok(verticesCalledABAndCAsJsonArray).build();
     }
-
-
-
-
-
 }
