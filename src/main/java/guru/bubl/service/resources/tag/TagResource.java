@@ -19,6 +19,7 @@ import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -120,7 +121,8 @@ public class TagResource {
 
     @Path("{shortId}/surround_graph")
     public OwnedSurroundGraphResource getSurroundGraphResource(
-            @PathParam("shortId") String shortId
+            @PathParam("shortId") String shortId,
+            @QueryParam("center") String isCenter
     ) {
         TagOperator tagOperator = tagFactory.withUri(
                 tagUriFromShortId(shortId)
@@ -128,9 +130,10 @@ public class TagResource {
         CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
                 tagOperator
         );
-        centerGraphElementOperator.incrementNumberOfVisits();
-        centerGraphElementOperator.updateLastCenterDate();
-
+        if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
+            centerGraphElementOperator.incrementNumberOfVisits();
+            centerGraphElementOperator.updateLastCenterDate();
+        }
         return new OwnedSurroundGraphResource(
                 userGraph,
                 tagOperator
@@ -172,7 +175,6 @@ public class TagResource {
         );
         return Response.noContent().build();
     }
-
 
 
     @Path("{shortId}/shareLevel")

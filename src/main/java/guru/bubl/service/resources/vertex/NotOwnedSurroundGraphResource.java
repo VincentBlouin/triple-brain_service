@@ -61,7 +61,7 @@ public class NotOwnedSurroundGraphResource {
                 depth,
                 inShareLevels
         );
-        if (subGraph.vertexWithIdentifier(centerUri) == null && subGraph.getCenterMeta() == null) {
+        if (!subGraph.hasCenter(centerUri)) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(

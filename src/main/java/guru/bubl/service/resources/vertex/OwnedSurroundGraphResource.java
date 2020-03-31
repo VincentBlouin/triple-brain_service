@@ -9,7 +9,6 @@ import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.tag.TagPojo;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -38,7 +37,7 @@ public class OwnedSurroundGraphResource {
     public Response get() {
         SubGraphPojo subGraphPojo;
         subGraphPojo = getGraph();
-        if (subGraphPojo.getCenterMeta() == null && subGraphPojo.vertexWithIdentifier(centerBubble.uri()) == null) {
+        if (!subGraphPojo.hasCenter(centerBubble.uri())) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(
