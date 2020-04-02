@@ -26,7 +26,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
     /*
      * event->e1
      * event->e2
-     * event is an identifier
+     * event is a tag
      *
      * e2 has 2 hidden relations
      *

@@ -12,6 +12,7 @@ import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
@@ -26,9 +27,9 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
             -g22->eeee
             -g23->ffff
         }
-        -g3->hhhh
+        -g3->gggg
     }
-    center -r2-> iiii
+    center -r2-> hhhh
 */
 
 
@@ -37,9 +38,6 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
 
     @Inject
     protected VertexFactory vertexFactory;
-
-    @Inject
-    protected TagFactory tagFactory;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -55,17 +53,34 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
             hhhh;
 
 
+    private TagPojo group1;
+
     @Override
     public Object build() {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        return SubGraphJson.toJson(
-                userGraph.aroundVertexUriInShareLevels(
-                        center.uri(),
-                        ShareLevel.allShareLevelsInt
-                )
-        );
+        try {
+            return new JSONObject().put(
+                    "getGraph",
+                    SubGraphJson.toJson(
+                            userGraph.aroundVertexUriInShareLevels(
+                                    center.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundGroup1",
+                    SubGraphJson.toJson(
+                            userGraph.aroundVertexUriInShareLevels(
+                                    group1.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createVertices() {
@@ -95,7 +110,7 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
         EdgeOperator g1 = center.addRelationToVertex(bbbb);
         g1.label("g1");
 
-        TagPojo group1 = g1.addTag(
+        group1 = g1.addTag(
                 new TagPojo(
                         g1.uri(),
                         new FriendlyResourcePojo(
