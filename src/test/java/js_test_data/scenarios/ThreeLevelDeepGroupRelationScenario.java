@@ -21,20 +21,17 @@ import javax.inject.Inject;
 import java.net.URI;
 
 public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
-
     /*
-       identifier region
-       identifier sub-region
-       identifier sub-sub-region-a
-       identifier sub-sub-region-b
-     * fast charging station - r1 -> b1
-     * fast charging station - r2 -> b2
-     * fast charging station - r3 -> b3
-     * fast charging station - r4 -> b4
-     *
-     * all relation are tagged to region and sub-region
-     * r1 and r2 are tagged to sub-region-a
-     * r3 and r4 are tagged to sub-region-b
+     fast charging station -region-> {
+        -sub-region-a->{
+            -r1->b1
+            -r2->b2
+        }
+        -sub-region-b->{
+            -r3->b3
+            -r4->b4
+        }
+     }
     */
 
     private TagPojo region = new TagPojo(

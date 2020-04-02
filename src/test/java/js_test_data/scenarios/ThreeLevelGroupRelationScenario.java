@@ -12,6 +12,7 @@ import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 
@@ -62,18 +63,35 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
             kkkk,
             llll;
 
+    private TagPojo group1;
 
     @Override
     public Object build() {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        return SubGraphJson.toJson(
-                userGraph.aroundVertexUriInShareLevels(
-                        center.uri(),
-                        ShareLevel.allShareLevelsInt
-                )
-        );
+        try {
+            return new JSONObject().put(
+                    "getGraph",
+                    SubGraphJson.toJson(
+                            userGraph.aroundVertexUriInShareLevels(
+                                    center.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundGroup1",
+                    SubGraphJson.toJson(
+                            userGraph.aroundVertexUriInShareLevels(
+                                    group1.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void createVertices() {
@@ -109,7 +127,7 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
         EdgeOperator g1 = center.addRelationToVertex(bbbb);
         g1.label("g1");
 
-        TagPojo group1 = g1.addTag(
+        group1 = g1.addTag(
                 new TagPojo(
                         g1.uri(),
                         new FriendlyResourcePojo(
