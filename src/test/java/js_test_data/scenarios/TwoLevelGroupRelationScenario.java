@@ -30,6 +30,8 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
         -g3->gggg
     }
     center -r2-> hhhh
+    other center -r3-> uuuu
+    r3 is tagged to group1
 */
 
 
@@ -50,7 +52,9 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
             eeee,
             ffff,
             gggg,
-            hhhh;
+            hhhh,
+            otherCenter,
+            uuuu;
 
 
     private TagPojo group1;
@@ -102,6 +106,10 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
         gggg.label("gggg");
         hhhh = vertexFactory.createForOwner(user.username());
         hhhh.label("hhhh");
+        otherCenter = vertexFactory.createForOwner(user.username());
+        otherCenter.label("other center");
+        uuuu = vertexFactory.createForOwner(user.username());
+        uuuu.label("uuuu");
     }
 
     private void createEdges() {
@@ -153,5 +161,8 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
 
         center.addRelationToVertex(hhhh).label("r2");
 
+        EdgeOperator r3 = otherCenter.addRelationToVertex(uuuu);
+        r3.label("r3");
+        r3.addTag(group1);
     }
 }
