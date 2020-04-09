@@ -16,9 +16,9 @@ import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
+import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexJson;
+import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
@@ -29,7 +29,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
@@ -71,7 +70,7 @@ public class VertexRestTestUtils {
         }
     }
 
-    public VertexInSubGraph vertexWithUriOfAnyUser(URI vertexUri) {
+    public Vertex vertexWithUriOfAnyUser(URI vertexUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -197,7 +196,7 @@ public class VertexRestTestUtils {
     }
 
     public Vertex createSingleVertex() {
-        return VertexInSubGraphJson.fromJson(
+        return VertexJson.fromJson(
                 responseForCreateSingleVertex().getEntity(
                         JSONObject.class
                 )
@@ -234,10 +233,10 @@ public class VertexRestTestUtils {
         );
     }
 
-    protected VertexInSubGraph vertexFromJson(JSONObject jsonObject) {
+    protected Vertex vertexFromJson(JSONObject jsonObject) {
         return gson.fromJson(
                 jsonObject.toString(),
-                VertexInSubGraphPojo.class
+                VertexPojo.class
         );
     }
 }

@@ -14,8 +14,8 @@ import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.vertex.NbNeighbors;
-import guru.bubl.module.model.graph.vertex.VertexTypeOperatorFactory;
+import guru.bubl.module.model.graph.fork.NbNeighbors;
+import guru.bubl.module.model.graph.fork.ForkOperatorFactory;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.tag.TagResource;
@@ -57,7 +57,7 @@ public class GraphResource {
     GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
 
     @Inject
-    VertexTypeOperatorFactory vertexTypeOperatorFactory;
+    ForkOperatorFactory forkOperatorFactory;
 
     private User user;
 
@@ -152,7 +152,7 @@ public class GraphResource {
         URI uri = new UserUris(
                 user
         ).uriFromTypeStringAndShortId(type, shortId);
-        NbNeighbors nbNeighborsOperator = vertexTypeOperatorFactory.withUri(uri).getNbNeighbors();
+        NbNeighbors nbNeighborsOperator = forkOperatorFactory.withUri(uri).getNbNeighbors();
         if (nbNeighbors.has("private_")) {
             nbNeighborsOperator.setPrivate(nbNeighbors.optInt("private_", 0));
         }

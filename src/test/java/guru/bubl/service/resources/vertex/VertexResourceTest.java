@@ -7,14 +7,13 @@ package guru.bubl.service.resources.vertex;
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
-import guru.bubl.module.model.graph.GraphElement;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
+import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.SessionHandler;
@@ -22,7 +21,6 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -65,7 +63,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
         ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
-        Vertex subject = VertexInSubGraphJson.fromJson(
+        Vertex subject = VertexJson.fromJson(
                 createdStatement.getJSONObject(
                         StatementJsonFields.source_vertex.name()
                 )
@@ -79,7 +77,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                         StatementJsonFields.edge.name()
                 )
         );
-        Vertex newVertex = VertexInSubGraphJson.fromJson(
+        Vertex newVertex = VertexJson.fromJson(
                 createdStatement.getJSONObject(
                         StatementJsonFields.end_vertex.name()
                 )
@@ -117,7 +115,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 newEdge.lastModificationDate(),
                 is(not(nullValue()))
         );
-        Vertex newVertex = VertexInSubGraphJson.fromJson(
+        Vertex newVertex = VertexJson.fromJson(
                 createdStatement.getJSONObject(
                         StatementJsonFields.end_vertex.name()
                 )
@@ -174,7 +172,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
                 is(edgeUri)
         );
         assertThat(
-                newEdge.destinationVertex().uri(),
+                newEdge.destinationUri(),
                 is(vertexUri)
         );
     }
@@ -259,21 +257,21 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     public void when_deleting_a_vertex_its_relations_are_also_removed_from_search() {
         searchUtils().indexAll();
         List<GraphElementSearchResult> relations = searchUtils().searchForRelations(
-                "between",
+                "edge",
+                defaultAuthenticatedUserAsJson
+        );
+        assertThat(
+                relations.size(),
+                is(4)
+        );
+        vertexUtils().removeVertexB();
+        relations = searchUtils().searchForRelations(
+                "edge",
                 defaultAuthenticatedUserAsJson
         );
         assertThat(
                 relations.size(),
                 is(2)
-        );
-        vertexUtils().removeVertexB();
-        relations = searchUtils().searchForRelations(
-                "between",
-                defaultAuthenticatedUserAsJson
-        );
-        assertThat(
-                relations.size(),
-                is(0)
         );
     }
 

@@ -44,7 +44,7 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
         List<GraphElementSearchResult> results = searchUtils().vertexSearchResultsFromResponse(
                 response
         );
-        assertThat(results.size(), is(3));
+        assertThat(results.size(), is(5));
     }
 
 
@@ -92,10 +92,10 @@ public class SearchResourceTest extends GraphManipulationRestTestUtils {
     public void can_search_relations() {
         searchUtils().indexAll();
         List<GraphElementSearchResult> relations = searchUtils().searchForRelations(
-                "between",
+                "edge",
                 defaultAuthenticatedUserAsJson
         );
-        assertThat(relations.size(), is(2));
+        assertThat(relations.size(), is(4));
     }
 
     @Test

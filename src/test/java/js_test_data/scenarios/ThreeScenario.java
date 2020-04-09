@@ -68,9 +68,6 @@ public class ThreeScenario implements JsTestScenario {
     GraphSearchFactory graphSearchFactory;
 
     @Inject
-    SubGraphForkerFactory subGraphForkerFactory;
-
-    @Inject
     ModelTestScenarios modelTestScenarios;
 
     @Inject
@@ -142,13 +139,6 @@ public class ThreeScenario implements JsTestScenario {
                     "getGraph",
                     SubGraphJson.toJson(
                             subGraphForB1
-                    )
-            ).put(
-                    "forkedGraph",
-                    SubGraphJson.toJson(
-                            buildForkSubGraph(
-                                    subGraphForB1
-                            )
                     )
             ).put(
                     "searchResultsForB1",
@@ -245,32 +235,5 @@ public class ThreeScenario implements JsTestScenario {
         b4.addVertexAndRelation();
         EdgeOperator relation = parent.addRelationToVertex(child);
         relation.label("relation");
-    }
-
-    private SubGraphPojo buildForkSubGraph(SubGraph subGraphForB1) {
-        b1.makePublic();
-        b2.makePublic();
-        b3.makePublic();
-        UserGraph forkerUserGraph = graphFactory.loadForUser(forkerUser);
-        SubGraphForker subGraphForker = subGraphForkerFactory.forUser(
-                forkerUser
-        );
-        wholeGraphAdmin.reindexAll();
-        forkedB1SearchResults = graphSearchFactory.usingSearchTerm(
-                "b1"
-        ).searchForAllOwnResources(forkerUser);
-        Map<URI, VertexOperator> vertices = subGraphForker.fork(
-                subGraphForB1
-        );
-        VertexOperator forkedB1 = vertices.get(
-                b1.uri()
-        );
-        forkedB1.addTag(
-                modelTestScenarios.event()
-        );
-        return forkerUserGraph.aroundVertexUriInShareLevels(
-                forkedB1.uri(),
-                ShareLevel.allShareLevelsInt
-        );
     }
 }

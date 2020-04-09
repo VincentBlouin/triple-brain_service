@@ -103,8 +103,8 @@ public class EdgeRestTestUtils {
     ) {
         try {
             for (Edge edge : edges.values()) {
-                URI sourceVertexId = edge.sourceVertex().uri();
-                URI destinationVertexId = edge.destinationVertex().uri();
+                URI sourceVertexId = edge.sourceUri();
+                URI destinationVertexId = edge.destinationUri();
                 if (oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&
                         oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, destinationVertexId)) {
                     return edge;

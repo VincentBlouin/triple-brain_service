@@ -8,12 +8,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Test;
@@ -156,11 +158,11 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
-                edgeBetweenAAndB.sourceVertex().uri().toString(), is(
+                edgeBetweenAAndB.sourceUri().toString(), is(
                         vertexAUri().toString()
                 ));
         assertThat(
-                edgeBetweenAAndB.destinationVertex().uri().toString(), is(
+                edgeBetweenAAndB.destinationUri().toString(), is(
                         vertexBUri().toString()
                 ));
         inverseRelationBetweenAAndB();
@@ -170,11 +172,11 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
         );
         assertThat(
-                edgeBetweenAAndB.sourceVertex().uri().toString(), is(
+                edgeBetweenAAndB.sourceUri().toString(), is(
                         vertexBUri().toString()
                 ));
         assertThat(
-                edgeBetweenAAndB.destinationVertex().uri().toString(), is(
+                edgeBetweenAAndB.destinationUri().toString(), is(
                         vertexAUri().toString()
                 ));
     }
@@ -232,7 +234,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         ClientResponse response = changeSourceVertex(
                 edgeBetweenBAndC,
-                vertexA()
+                vertexA(),
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE
         );
         assertThat(
                 response.getStatus(),
@@ -258,7 +263,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         changeSourceVertex(
                 edge,
-                vertexA()
+                vertexA(),
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE
         );
         graph = graphUtils().graphWithCenterVertexUri(
                 vertexAUri()
@@ -277,7 +285,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         ClientResponse response = changeDestinationVertex(
                 edgeBetweenAAndB,
-                vertexC()
+                vertexC(),
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE
         );
         assertThat(
                 response.getStatus(),
@@ -303,7 +314,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         changeDestinationVertex(
                 edge,
-                vertexC()
+                vertexC(),
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE
         );
         graph = graphUtils().graphWithCenterVertexUri(
                 vertexCUri()
@@ -409,23 +423,43 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .put(ClientResponse.class);
     }
 
-    private ClientResponse changeSourceVertex(Edge edge, Vertex newSourceVertex) {
-        return resource
-                .path(edge.uri().toString())
-                .path("source-vertex")
-                .path(UserUris.graphElementShortId(newSourceVertex.uri()))
-                .cookie(authCookie)
-                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
-                .put(ClientResponse.class);
+    private ClientResponse changeSourceVertex(Edge edge, Vertex newSourceVertex, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
+        try {
+            return resource
+                    .path(edge.uri().toString())
+                    .path("source-vertex")
+                    .path(UserUris.graphElementShortId(newSourceVertex.uri()))
+                    .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
+                    .put(ClientResponse.class, new JSONObject().put(
+                            "oldEndShareLevel", oldEndShareLevel.name().toUpperCase()
+                    ).put(
+                            "keptEndShareLevel", keptEndShareLevel.name().toUpperCase()
+                    ).put(
+                            "newEndShareLevel", newEndShareLevel.name().toUpperCase()
+                    ));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private ClientResponse changeDestinationVertex(Edge edge, Vertex newDestinationVertex) {
-        return resource
-                .path(edge.uri().toString())
-                .path("destination-vertex")
-                .path(UserUris.graphElementShortId(newDestinationVertex.uri()))
-                .cookie(authCookie)
-                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
-                .put(ClientResponse.class);
+    private ClientResponse changeDestinationVertex(Edge edge, Vertex newDestinationVertex, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
+        try {
+            return resource
+                    .path(edge.uri().toString())
+                    .path("destination-vertex")
+                    .path(UserUris.graphElementShortId(newDestinationVertex.uri()))
+                    .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
+                    .put(ClientResponse.class, new JSONObject().put(
+                            "oldEndShareLevel", oldEndShareLevel.name().toUpperCase()
+                    ).put(
+                            "keptEndShareLevel", keptEndShareLevel.name().toUpperCase()
+                    ).put(
+                            "newEndShareLevel", newEndShareLevel.name().toUpperCase()
+                    ));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

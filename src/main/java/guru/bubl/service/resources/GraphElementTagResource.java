@@ -28,53 +28,35 @@ import java.util.Map;
 public class GraphElementTagResource {
 
     private GraphElementOperator graphElement;
-    private GraphElementType graphElementType;
-    private URI schemaUri;
-    private UserGraph userGraph;
 
     @Inject
     TagFactory tagFactory;
 
     @AssistedInject
     public GraphElementTagResource(
-            @Assisted GraphElementOperator graphElement,
-            @Assisted GraphElementType graphElementType
+            @Assisted GraphElementOperator graphElement
     ) {
         this.graphElement = graphElement;
-        this.graphElementType = graphElementType;
     }
 
-    @AssistedInject
-    public GraphElementTagResource(
-            @Assisted GraphElementOperator graphElement,
-            @Assisted URI schemaUri,
-            @Assisted UserGraph userGraph
-    ) {
-        this(
-                graphElement,
-                GraphElementType.Property
-        );
-        this.schemaUri = schemaUri;
-        this.userGraph = userGraph;
-    }
 
     @POST
     @Path("/")
-    public Response add(JSONObject identificationJson) {
+    public Response add(JSONObject tagJson) {
         TagValidator validator = new TagValidator();
-        TagPojo identification = TagJson.singleFromJson(
-                identificationJson.toString()
+        TagPojo tag = TagJson.singleFromJson(
+                tagJson.toString()
         );
-        if (!validator.validate(identification).isEmpty()) {
+        if (!validator.validate(tag).isEmpty()) {
             throw new WebApplicationException(
                     Response.Status.NOT_ACCEPTABLE
             );
         }
-        Map<URI, TagPojo> identifications = graphElement.addTag(
-                identification
+        Map<URI, TagPojo> tags = graphElement.addTag(
+                tag
         );
         return Response.ok().entity(
-                TagJson.toJson(identifications)
+                TagJson.toJson(tags)
         ).build();
     }
 

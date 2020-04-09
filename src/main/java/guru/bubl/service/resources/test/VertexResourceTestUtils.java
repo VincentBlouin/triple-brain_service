@@ -13,7 +13,7 @@ import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
+import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
@@ -52,7 +52,7 @@ public class VertexResourceTestUtils {
                 vertexUri,
                 ShareLevel.allShareLevelsInt
         );
-        return Response.ok(VertexInSubGraphJson.toJson(
+        return Response.ok(VertexJson.toJson(
                 subGraph.vertexWithIdentifier(
                         vertexUri
                 )

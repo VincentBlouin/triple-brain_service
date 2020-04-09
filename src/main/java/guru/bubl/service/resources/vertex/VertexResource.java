@@ -9,12 +9,14 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.vertex.*;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
+import guru.bubl.module.model.graph.vertex.VertexJson;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
+import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.service.resources.GraphElementTagResource;
@@ -37,9 +39,6 @@ public class VertexResource {
 
     @Inject
     GraphElementTagResourceFactory graphElementTagResourceFactory;
-
-    @Inject
-    VertexImageResourceFactory vertexImageResourceFactory;
 
     @Inject
     CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
@@ -66,10 +65,8 @@ public class VertexResource {
         centerGraphElementOperator.incrementNumberOfVisits();
         centerGraphElementOperator.updateLastCenterDate();
         return Response.ok()
-                .entity(VertexInSubGraphJson.toJson(
-                        new VertexInSubGraphPojo(
-                                newVertex
-                        )
+                .entity(VertexJson.toJson(
+                        newVertex
                 ))
                 .build();
     }
@@ -92,15 +89,15 @@ public class VertexResource {
         } else {
             newEdge = sourceVertex.addVertexAndRelation();
         }
-        VertexInSubGraphPojo newVertex = newEdge.destinationVertex();
-        VertexInSubGraphPojo sourceVertexPojo = new VertexInSubGraphPojo(
+        VertexPojo newVertex = newEdge.getDestinationVertex();
+        VertexPojo sourceVertexPojo = new VertexPojo(
                 sourceVertex.uri()
         );
         JSONObject jsonCreatedStatement = new JSONObject();
         try {
             jsonCreatedStatement.put(
                     StatementJsonFields.source_vertex.name(),
-                    VertexInSubGraphJson.toJson(
+                    VertexJson.toJson(
                             sourceVertexPojo
                     )
             );
@@ -115,7 +112,7 @@ public class VertexResource {
             );
             jsonCreatedStatement.put(
                     StatementJsonFields.end_vertex.name(),
-                    VertexInSubGraphJson.toJson(
+                    VertexJson.toJson(
                             newVertex
                     )
             );
@@ -230,8 +227,7 @@ public class VertexResource {
     public GraphElementTagResource getVertexIdentificationResource(
             @PathParam("shortId") String shortId) {
         return graphElementTagResourceFactory.forGraphElement(
-                vertexFromShortId(shortId),
-                GraphElementType.Vertex
+                vertexFromShortId(shortId)
         );
     }
 

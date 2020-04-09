@@ -13,13 +13,6 @@ import java.net.URI;
 
 public interface GraphElementTagResourceFactory {
     GraphElementTagResource forGraphElement(
-            GraphElementOperator graphElement,
-            GraphElementType GraphElementType
-    );
-
-    GraphElementTagResource forSchemaProperty(
-            GraphElementOperator schemaProperty,
-            URI schemaUri,
-            UserGraph userGraph
+            GraphElementOperator graphElement
     );
 }

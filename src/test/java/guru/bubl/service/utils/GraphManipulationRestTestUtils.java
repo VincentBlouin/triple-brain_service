@@ -8,7 +8,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
+import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.test.module.utils.ModelTestScenarios;
@@ -152,15 +152,15 @@ public class GraphManipulationRestTestUtils extends RestTestUtils {
         return new UserUris(username).baseUri().toString();
     }
 
-    protected VertexInSubGraph vertexA() {
+    protected Vertex vertexA() {
         return graphUtils().vertexA();
     }
 
-    protected VertexInSubGraph vertexB() {
+    protected Vertex vertexB() {
         return graphUtils().vertexB();
     }
 
-    protected VertexInSubGraph vertexC() {
+    protected Vertex vertexC() {
         return graphUtils().vertexC();
     }
 

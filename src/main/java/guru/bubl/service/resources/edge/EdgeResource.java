@@ -9,7 +9,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementType;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -118,8 +118,7 @@ public class EdgeResource {
     @Path("{shortId}/identification")
     public GraphElementTagResource getVertexIdentificationResource(@PathParam("shortId") String shortId) {
         return graphElementTagResourceFactory.forGraphElement(
-                edgeFromShortId(shortId),
-                GraphElementType.Edge
+                edgeFromShortId(shortId)
         );
     }
 
@@ -139,7 +138,8 @@ public class EdgeResource {
     @Path("{shortId}/source-vertex/{sourceVertexShortId}")
     public Response changeSourceVertex(
             @PathParam("shortId") String shortId,
-            @PathParam("sourceVertexShortId") String sourceVertexShortId
+            @PathParam("sourceVertexShortId") String sourceVertexShortId,
+            JSONObject shareLevels
     ) {
         Vertex newSourceVertex = new VertexPojo(
                 new UserUris(
@@ -148,8 +148,17 @@ public class EdgeResource {
                         sourceVertexShortId
                 )
         );
-        edgeFromShortId(shortId).changeSourceVertex(
-                newSourceVertex
+        edgeFromShortId(shortId).changeSource(
+                newSourceVertex.uri(),
+                ShareLevel.valueOf(
+                        shareLevels.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                ),
+                ShareLevel.valueOf(
+                        shareLevels.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                ),
+                ShareLevel.valueOf(
+                        shareLevels.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                )
         );
         return Response.noContent().build();
     }
@@ -158,7 +167,8 @@ public class EdgeResource {
     @Path("{shortId}/destination-vertex/{destinationVertexShortId}")
     public Response changeDestinationVertex(
             @PathParam("shortId") String shortId,
-            @PathParam("destinationVertexShortId") String destinationVertexShortId
+            @PathParam("destinationVertexShortId") String destinationVertexShortId,
+            JSONObject shareLevels
     ) {
         Vertex newSourceVertex = new VertexPojo(
                 new UserUris(
@@ -167,8 +177,17 @@ public class EdgeResource {
                         destinationVertexShortId
                 )
         );
-        edgeFromShortId(shortId).changeDestinationVertex(
-                newSourceVertex
+        edgeFromShortId(shortId).changeDestination(
+                newSourceVertex.uri(),
+                ShareLevel.valueOf(
+                        shareLevels.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                ),
+                ShareLevel.valueOf(
+                        shareLevels.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                ),
+                ShareLevel.valueOf(
+                        shareLevels.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                )
         );
         return Response.noContent().build();
     }
@@ -185,9 +204,25 @@ public class EdgeResource {
         centerGraphElementOperator.updateLastCenterDate();
         return new OwnedSurroundGraphResource(
                 userGraph,
-                edge.sourceVertex()
+                edge.sourceFork()
         );
     }
+
+//    @POST
+//    @Path("{shortId}/convertToGroupRelation")
+//    public Response convertToGroupRelation(@PathParam("shortId") String shortId, JSONObject tagJson) {
+//        Edge edge = edgeFromShortId(shortId);
+//        TagPojo tag = TagJson.singleFromJson(
+//                tagJson.toString()
+//        );
+//        Map<URI, TagPojo> tags = graphElement.addTag(
+//                tag
+//        );
+//        return Response.ok().entity(
+//                TagJson.toJson(tags)
+//        ).build();
+//        return Response
+//    }
 
     private EdgeOperator edgeFromShortId(String shortId) {
         return userGraph.edgeWithUri(

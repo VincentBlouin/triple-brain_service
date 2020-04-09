@@ -11,7 +11,7 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraph;
+import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
@@ -129,15 +129,15 @@ public class GraphRestTestUtils {
         );
     }
 
-    public VertexInSubGraph vertexA() {
+    public Vertex vertexA() {
         return vertexUtils.vertexWithUriOfAnyUser(vertexAUri());
     }
 
-    public VertexInSubGraph vertexB() {
+    public Vertex vertexB() {
         return vertexUtils.vertexWithUriOfAnyUser(vertexBUri());
     }
 
-    public VertexInSubGraph vertexC() {
+    public Vertex vertexC() {
         return vertexUtils.vertexWithUriOfAnyUser(vertexCUri());
     }
 

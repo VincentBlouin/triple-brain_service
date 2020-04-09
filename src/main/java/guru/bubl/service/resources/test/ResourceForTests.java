@@ -7,12 +7,12 @@ package guru.bubl.service.resources.test;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphJson;
-import guru.bubl.module.model.graph.vertex.VertexInSubGraphPojo;
+import guru.bubl.module.model.graph.vertex.VertexJson;
+import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.test.GraphComponentTest;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
-import guru.bubl.module.model.test.scenarios.VerticesCalledABAndC;
+import guru.bubl.module.model.test.scenarios.GraphElementsOfTestScenario;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
@@ -62,7 +62,7 @@ public class ResourceForTests {
         User user = User.withEmail(
                 "test@triple_brain.org"
         ).password("password");
-        if(!userRepository.emailExists(user.email())){
+        if (!userRepository.emailExists(user.email())) {
             userRepository.createUser(
                     user
             );
@@ -115,25 +115,25 @@ public class ResourceForTests {
                 request.getSession()
         );
         graphComponentTest.user(currentUser);
-        VerticesCalledABAndC verticesCalledABAndC = testScenarios.makeGraphHave3SerialVerticesWithLongLabels(
+        GraphElementsOfTestScenario graphElementsOfTestScenario = testScenarios.changeTestScenarioVerticesToLongLabels(
                 graphFactory.loadForUser(currentUser)
         );
-        JSONArray verticesCalledABAndCAsJsonArray = new JSONArray();
-        verticesCalledABAndCAsJsonArray
+        JSONArray verticesOfTestScenarioAsJsonArray = new JSONArray();
+        verticesOfTestScenarioAsJsonArray
                 .put(
-                        VertexInSubGraphJson.toJson(
-                                new VertexInSubGraphPojo(verticesCalledABAndC.vertexA())
+                        VertexJson.toJson(
+                                new VertexPojo(graphElementsOfTestScenario.getVertexA())
                         )
                 )
                 .put(
-                        VertexInSubGraphJson.toJson(
-                                new VertexInSubGraphPojo(verticesCalledABAndC.vertexB())
+                        VertexJson.toJson(
+                                new VertexPojo(graphElementsOfTestScenario.getVertexB())
                         ))
                 .put(
-                        VertexInSubGraphJson.toJson(
-                                new VertexInSubGraphPojo(verticesCalledABAndC.vertexC())
+                        VertexJson.toJson(
+                                new VertexPojo(graphElementsOfTestScenario.getVertexC())
                         ));
 
-        return Response.ok(verticesCalledABAndCAsJsonArray).build();
+        return Response.ok(verticesOfTestScenarioAsJsonArray).build();
     }
 }

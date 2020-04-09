@@ -11,15 +11,11 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
-import guru.bubl.module.model.friend.friend_confirmation_email.FriendConfirmationEmail;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.tag.TagFactory;
-import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
@@ -29,8 +25,6 @@ import guru.bubl.service.recaptcha.Recaptcha;
 import guru.bubl.service.recaptcha.RecaptchaResult;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
-import guru.bubl.service.resources.fork.ForkResource;
-import guru.bubl.service.resources.fork.ForkResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResource;
@@ -48,8 +42,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -90,17 +82,8 @@ public class UserResource {
     @Inject
     private Injector injector;
 
-    @Inject
-    ForkResourceFactory forkResourceFactory;
-
     @Context
     HttpServletRequest request;
-
-    @Inject
-    VertexFactory vertexFactory;
-
-    @Inject
-    TagFactory tagFactory;
 
     @Inject
     EdgeFactory edgeFactory;
@@ -110,9 +93,6 @@ public class UserResource {
 
     @Inject
     FriendManagerFactory friendManagerFactory;
-
-    @Inject
-    FriendConfirmationEmail friendConfirmationEmail;
 
     @Inject
     @Named("AppUrl")
@@ -211,7 +191,7 @@ public class UserResource {
                 )
         );
         return getVertexSurroundGraphResource(
-                edge.sourceVertex().uri(),
+                edge.sourceUri(),
                 persistentSessionId
         );
 
@@ -312,21 +292,6 @@ public class UserResource {
                 sessionHandler.userFromSession(request.getSession())
         );
     }
-
-//    @Path("{username}/fork")
-//    public ForkResource getForkResource(
-//            @PathParam("username") String username,
-//            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-//    ) {
-//        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
-//            throw new WebApplicationException(
-//                    Response.Status.FORBIDDEN
-//            );
-//        }
-//        return forkResourceFactory.forUser(
-//                sessionHandler.userFromSession(request.getSession())
-//        );
-//    }
 
     @Path("session")
     public UserSessionResource sessionResource() {
