@@ -5,6 +5,7 @@
 package guru.bubl.service.resources.test;
 
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.edge.EdgePojo;
@@ -26,16 +27,19 @@ import java.net.URI;
 public class EdgeResourceTestUtils {
 
     @Inject
-    GraphFactory graphFactory;
+    private GraphFactory graphFactory;
 
     @Inject
-    SessionHandler sessionHandler;
+    private SessionHandler sessionHandler;
+
+    @Inject
+    private EdgeFactory edgeFactory;
 
     @Path("{edgeId}")
     @GET
-    public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId)throws Exception{
+    public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
-        EdgeOperator edge = userGraph.edgeWithUri(new URI(edgeId));
+        EdgeOperator edge = edgeFactory.withUri(new URI(edgeId));
         return Response.ok(EdgeJson.toJson(
                 new EdgePojo(edge)
         )).build();

@@ -25,6 +25,7 @@ import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
+import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.test.*;
@@ -96,8 +97,10 @@ public class GuiceConfig extends GuiceServletContextListener {
                 install(builder.build(
                         FriendsResourceFactory.class
                 ));
+                install(builder.build(
+                        GroupRelationResourceFactory.class
+                ));
                 final Map<String, String> params = new HashMap<>();
-                params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
                 serve("/*").with(GuiceContainer.class, params);
 
                 try {

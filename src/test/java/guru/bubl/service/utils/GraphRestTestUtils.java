@@ -9,10 +9,11 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.graph.group_relation.GroupRelationPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.CenterGraphElementsJson;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -23,7 +24,6 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 import static guru.bubl.service.utils.GraphManipulationRestTestUtils.getUsersBaseUri;
 import static guru.bubl.service.utils.RestTestUtils.resource;
@@ -39,7 +39,8 @@ public class GraphRestTestUtils {
     private static JSONObject
             vertexA,
             vertexB,
-            vertexC;
+            vertexC,
+            todoGroupRelationJson;
 
     private User authenticatedUser;
 
@@ -96,19 +97,20 @@ public class GraphRestTestUtils {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
-                .path("make_graph_have_3_serial_vertices_with_long_labels")
+                .path("rebuild_service_scenario")
                 .cookie(authCookie)
                 .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .get(ClientResponse.class);
-        JSONArray verticesABAndC = response.getEntity(JSONArray.class);
+        JSONArray graphElements = response.getEntity(JSONArray.class);
         try {
-            vertexA = verticesABAndC.getJSONObject(0);
-            vertexB = verticesABAndC.getJSONObject(1);
-            vertexC = verticesABAndC.getJSONObject(2);
+            vertexA = graphElements.getJSONObject(0);
+            vertexB = graphElements.getJSONObject(1);
+            vertexC = graphElements.getJSONObject(2);
+            todoGroupRelationJson = graphElements.getJSONObject(3);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        return verticesABAndC;
+        return graphElements;
     }
 
     public URI vertexAUri() {
@@ -126,6 +128,13 @@ public class GraphRestTestUtils {
     public URI vertexCUri() {
         return vertexUtils.uriOfVertex(
                 vertexC
+        );
+    }
+
+    public GroupRelationPojo getTodoGroupRelation() {
+        return JsonUtils.getGson().fromJson(
+                todoGroupRelationJson.toString(),
+                GroupRelationPojo.class
         );
     }
 

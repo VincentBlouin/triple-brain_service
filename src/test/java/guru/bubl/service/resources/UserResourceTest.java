@@ -282,7 +282,7 @@ public class UserResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void update_locale_returns_no_content_status_code() throws Exception {
+    public void update_locale_returns_no_content_status_code() {
         ClientResponse response = updateUserLocale(
                 defaultAuthenticatedUser.username(),
                 new JSONArray().put("es_ES")

@@ -13,6 +13,7 @@ import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.service.SessionHandler;
@@ -36,10 +37,13 @@ import java.net.URI;
 public class VertexResourceTestUtils {
 
     @Inject
-    GraphFactory graphFactory;
+    private GraphFactory graphFactory;
 
     @Inject
-    SessionHandler sessionHandler;
+    private SessionHandler sessionHandler;
+
+    @Inject
+    private VertexFactory vertexFactory;
 
     @Path("{vertexId}")
     @GET
@@ -62,8 +66,7 @@ public class VertexResourceTestUtils {
     @Path("{vertexId}/connected_edges")
     @GET
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId) throws Exception {
-        UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
-        VertexOperator vertex = userGraph.vertexWithUri(new URI(vertexId));
+        VertexOperator vertex = vertexFactory.withUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
         for (EdgeOperator edge : vertex.connectedEdges().values()) {
             edges.put(
@@ -79,9 +82,8 @@ public class VertexResourceTestUtils {
     @Produces(MediaType.TEXT_PLAIN)
     @GET
     public Response destinationVertices(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId, @PathParam("otherVertexId") String otherVertexId) throws Exception {
-        UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
-        VertexOperator vertex = userGraph.vertexWithUri(new URI(Uris.decodeUrlSafe(vertexId)));
-        Vertex otherVertex = userGraph.vertexWithUri(new URI(Uris.decodeUrlSafe(otherVertexId)));
+        VertexOperator vertex = vertexFactory.withUri(new URI(Uris.decodeUrlSafe(vertexId)));
+        Vertex otherVertex = vertexFactory.withUri(new URI(Uris.decodeUrlSafe(otherVertexId)));
         return Response.ok(
                 vertex.hasDestinationVertex(otherVertex).toString()
         ).build();

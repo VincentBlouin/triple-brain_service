@@ -10,7 +10,6 @@ import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -33,8 +32,8 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void mergeTo_merges() {
         Vertex farVertex = vertexUtils().createSingleVertex();
-        vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
-        vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
+        vertexUtils().addAVertexToForkWithUri(farVertex.uri());
+        vertexUtils().addAVertexToForkWithUri(farVertex.uri());
         Integer nbEdges = vertexC().getNbNeighbors().getTotal();
         mergeTo(farVertex, vertexC());
         assertThat(
@@ -69,8 +68,8 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void bad_request_when_one_of_the_vertex_is_a_pattern_or_under_a_pattern() {
         Vertex farVertex = vertexUtils().createSingleVertex();
-        vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
-        vertexUtils().addAVertexToVertexWithUri(farVertex.uri());
+        vertexUtils().addAVertexToForkWithUri(farVertex.uri());
+        vertexUtils().addAVertexToForkWithUri(farVertex.uri());
         Integer nbEdges = vertexC().getNbNeighbors().getTotal();
         vertexUtils().makePattern(farVertex.uri());
         assertThat(

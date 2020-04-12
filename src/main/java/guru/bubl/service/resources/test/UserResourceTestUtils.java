@@ -7,6 +7,7 @@ package guru.bubl.service.resources.test;
 import com.google.gson.Gson;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
 import org.neo4j.driver.v1.Driver;
@@ -49,9 +50,9 @@ public class UserResourceTestUtils {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserLocale(@PathParam("username") String username) {
-        return Response.ok(
+        return Response.ok(JsonUtils.getGson().toJson(
                 userRepository.findByUsername(username).getPreferredLocales()
-        ).build();
+        )).build();
     }
 
     @Path("/")

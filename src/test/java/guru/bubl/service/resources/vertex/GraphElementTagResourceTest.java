@@ -123,7 +123,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
 
     @Test
     public void can_remove_self_identifier() throws Exception {
-        JSONObject tripleAsJson = vertexUtils().addAVertexToVertexWithUri(
+        JSONObject tripleAsJson = vertexUtils().addAVertexToForkWithUri(
                 vertexAUri()
         ).getEntity(
                 JSONObject.class

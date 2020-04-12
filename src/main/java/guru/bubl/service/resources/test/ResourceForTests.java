@@ -7,8 +7,10 @@ package guru.bubl.service.resources.test;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationPojo;
 import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.model.test.GraphComponentTest;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
@@ -16,6 +18,8 @@ import guru.bubl.module.model.test.scenarios.GraphElementsOfTestScenario;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,9 +112,9 @@ public class ResourceForTests {
     }
 
 
-    @Path("make_graph_have_3_serial_vertices_with_long_labels")
+    @Path("rebuild_service_scenario")
     @GET
-    public Response makeGraphHave3SerialVerticesWithLongLabels(@Context HttpServletRequest request) throws Exception {
+    public Response makeGraphHave3SerialVerticesWithLongLabels(@Context HttpServletRequest request) {
         User currentUser = sessionHandler.userFromSession(
                 request.getSession()
         );
@@ -119,20 +123,31 @@ public class ResourceForTests {
                 graphFactory.loadForUser(currentUser)
         );
         JSONArray verticesOfTestScenarioAsJsonArray = new JSONArray();
-        verticesOfTestScenarioAsJsonArray
-                .put(
-                        VertexJson.toJson(
-                                new VertexPojo(graphElementsOfTestScenario.getVertexA())
-                        )
-                )
-                .put(
-                        VertexJson.toJson(
-                                new VertexPojo(graphElementsOfTestScenario.getVertexB())
-                        ))
-                .put(
-                        VertexJson.toJson(
-                                new VertexPojo(graphElementsOfTestScenario.getVertexC())
-                        ));
+        try {
+            verticesOfTestScenarioAsJsonArray
+                    .put(
+                            VertexJson.toJson(
+                                    new VertexPojo(graphElementsOfTestScenario.getVertexA())
+                            )
+                    )
+                    .put(
+                            VertexJson.toJson(
+                                    new VertexPojo(graphElementsOfTestScenario.getVertexB())
+                            ))
+                    .put(
+                            VertexJson.toJson(
+                                    new VertexPojo(graphElementsOfTestScenario.getVertexC())
+                            ))
+                    .put(
+                            new JSONObject(
+                                    JsonUtils.getGson().toJson(
+                                            new GroupRelationPojo(graphElementsOfTestScenario.getGroupRelation())
+                                    )
+                            )
+                    );
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
         return Response.ok(verticesOfTestScenarioAsJsonArray).build();
     }

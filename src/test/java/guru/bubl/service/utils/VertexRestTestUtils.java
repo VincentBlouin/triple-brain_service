@@ -135,7 +135,7 @@ public class VertexRestTestUtils {
                 .post(ClientResponse.class, note);
     }
 
-    public ClientResponse addAVertexToVertexWithUri(URI vertexUri) {
+    public ClientResponse addAVertexToForkWithUri(URI vertexUri) {
         return resource
                 .path(vertexUri.getPath())
                 .cookie(authCookie)

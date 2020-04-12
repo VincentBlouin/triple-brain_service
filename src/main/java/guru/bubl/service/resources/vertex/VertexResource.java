@@ -10,18 +10,17 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.fork.ForkOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.json.StatementJsonFields;
+import guru.bubl.service.resources.GraphElementResource;
 import guru.bubl.service.resources.GraphElementTagResource;
+import guru.bubl.service.resources.fork.ForkResource;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
@@ -32,7 +31,7 @@ import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VertexResource {
+public class VertexResource extends ForkResource implements GraphElementResource {
 
     @Inject
     VertexCollectionResourceFactory vertexCollectionResourceFactory;
@@ -71,57 +70,6 @@ public class VertexResource {
                 .build();
     }
 
-    @POST
-    @Path("/{sourceVertexShortId}")
-    public Response addVertexAndEdgeToSourceVertex(
-            @PathParam("sourceVertexShortId") String sourceVertexShortId,
-            JSONObject options
-    ) {
-        VertexOperator sourceVertex = vertexFromShortId(
-                sourceVertexShortId
-        );
-        EdgePojo newEdge;
-        if (options.has("vertexId") && options.has("edgeId")) {
-            newEdge = sourceVertex.addVertexAndRelationWithIds(
-                    options.optString("vertexId"),
-                    options.optString("edgeId")
-            );
-        } else {
-            newEdge = sourceVertex.addVertexAndRelation();
-        }
-        VertexPojo newVertex = newEdge.getDestinationVertex();
-        VertexPojo sourceVertexPojo = new VertexPojo(
-                sourceVertex.uri()
-        );
-        JSONObject jsonCreatedStatement = new JSONObject();
-        try {
-            jsonCreatedStatement.put(
-                    StatementJsonFields.source_vertex.name(),
-                    VertexJson.toJson(
-                            sourceVertexPojo
-                    )
-            );
-            jsonCreatedStatement.put(
-                    StatementJsonFields.edge.name(),
-                    EdgeJson.toJson(new EdgePojo(
-                                    newEdge.getGraphElement(),
-                                    sourceVertexPojo,
-                                    newVertex
-                            )
-                    )
-            );
-            jsonCreatedStatement.put(
-                    StatementJsonFields.end_vertex.name(),
-                    VertexJson.toJson(
-                            newVertex
-                    )
-            );
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        //TODO response should be of type created
-        return Response.ok(jsonCreatedStatement).build();
-    }
 
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
@@ -139,9 +87,8 @@ public class VertexResource {
     @POST
     @Path("/{shortId}/pattern")
     public Response setAsPattern(@PathParam("shortId") String shortId) {
-        URI vertexId = uriFromShortId(shortId);
-        VertexOperator vertex = userGraph.vertexWithUri(
-                vertexId
+        VertexOperator vertex = vertexFactory.withUri(
+                getUriFromShortId(shortId)
         );
         if (!vertex.makePattern()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -152,9 +99,8 @@ public class VertexResource {
     @DELETE
     @Path("/{shortId}/pattern")
     public Response undoPattern(@PathParam("shortId") String shortId) {
-        URI vertexId = uriFromShortId(shortId);
-        VertexOperator vertex = userGraph.vertexWithUri(
-                vertexId
+        VertexOperator vertex = vertexFactory.withUri(
+                getUriFromShortId(shortId)
         );
         vertex.undoPattern();
         return Response.noContent().build();
@@ -167,9 +113,8 @@ public class VertexResource {
             @PathParam("shortId") String shortId,
             JSONObject localizedLabel
     ) {
-        URI vertexId = uriFromShortId(shortId);
-        VertexOperator vertex = userGraph.vertexWithUri(
-                vertexId
+        VertexOperator vertex = vertexFactory.withUri(
+                getUriFromShortId(shortId)
         );
         vertex.label(
                 localizedLabel.optString(
@@ -186,10 +131,7 @@ public class VertexResource {
             @PathParam("shortId") String shortId,
             String comment
     ) {
-        URI vertexId = uriFromShortId(shortId);
-        VertexOperator vertex = userGraph.vertexWithUri(
-                vertexId
-        );
+        VertexOperator vertex = vertexFactory.withUri(getUriFromShortId(shortId));
         vertex.comment(comment);
         return Response.noContent().build();
     }
@@ -255,7 +197,7 @@ public class VertexResource {
             @PathParam("shortId") String shortId,
             JSONObject childrenIndexes
     ) {
-        vertexFactory.withUri(uriFromShortId(shortId)).setChildrenIndex(
+        vertexFactory.withUri(getUriFromShortId(shortId)).setChildrenIndex(
                 childrenIndexes.toString()
         );
         return Response.noContent().build();
@@ -267,7 +209,7 @@ public class VertexResource {
             @PathParam("shortId") String shortId,
             JSONObject font
     ) {
-        vertexFactory.withUri(uriFromShortId(shortId)).setFont(
+        vertexFactory.withUri(getUriFromShortId(shortId)).setFont(
                 font.toString()
         );
         return Response.noContent().build();
@@ -279,13 +221,13 @@ public class VertexResource {
             @PathParam("shortId") String shortId,
             @PathParam("destinationShortId") String destinationShortId
     ) {
-        URI destinationVertexUri = uriFromShortId(destinationShortId);
+        URI destinationVertexUri = getUriFromShortId(destinationShortId);
         if (!userGraph.haveElementWithId(destinationVertexUri)) {
             return Response.status(
                     Response.Status.BAD_REQUEST
             ).build();
         }
-        Boolean success = vertexFactory.withUri(uriFromShortId(shortId)).mergeTo(
+        Boolean success = vertexFactory.withUri(getUriFromShortId(shortId)).mergeTo(
                 vertexFactory.withUri(destinationVertexUri)
         );
         if (!success) {
@@ -294,7 +236,14 @@ public class VertexResource {
         return Response.noContent().build();
     }
 
-    private URI uriFromShortId(String shortId) {
+    private VertexOperator vertexFromShortId(String shortId) {
+        return vertexFactory.withUri(
+                getUriFromShortId(shortId)
+        );
+    }
+
+    @Override
+    public URI getUriFromShortId(String shortId) {
         return new UserUris(
                 userGraph.user()
         ).vertexUriFromShortId(
@@ -302,10 +251,8 @@ public class VertexResource {
         );
     }
 
-    private VertexOperator vertexFromShortId(String shortId) {
-        URI vertexId = uriFromShortId(shortId);
-        return userGraph.vertexWithUri(
-                vertexId
-        );
+    @Override
+    protected ForkOperator getForkOperatorFromURI(URI uri) {
+        return vertexFactory.withUri(uri);
     }
 }

@@ -11,12 +11,17 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.edge.EdgeFactory;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.group_relation.GroupRelationPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
+import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
@@ -28,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.util.UUID;
 
 import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 
@@ -36,10 +42,16 @@ import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 public class EdgeResource {
 
     @Inject
-    GraphElementTagResourceFactory graphElementTagResourceFactory;
+    private GraphElementTagResourceFactory graphElementTagResourceFactory;
 
     @Inject
-    CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+
+    @Inject
+    private VertexFactory vertexFactory;
+
+    @Inject
+    private EdgeFactory edgeFactory;
 
     private UserGraph userGraph;
 
@@ -63,10 +75,10 @@ public class EdgeResource {
         } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        VertexOperator sourceVertex = userGraph.vertexWithUri(URI.create(
+        VertexOperator sourceVertex = vertexFactory.withUri(URI.create(
                 sourceVertexId
         ));
-        VertexOperator destinationVertex = userGraph.vertexWithUri(URI.create(
+        VertexOperator destinationVertex = vertexFactory.withUri(URI.create(
                 destinationVertexId
         ));
         Edge createdEdge = sourceVertex.addRelationToVertex(destinationVertex);
@@ -96,7 +108,7 @@ public class EdgeResource {
             @PathParam("edgeShortId") String edgeShortId,
             JSONObject localizedLabel) {
         URI edgeId = edgeUriFromShortId(edgeShortId);
-        EdgeOperator edge = userGraph.edgeWithUri(
+        EdgeOperator edge = edgeFactory.withUri(
                 edgeId
         );
         edge.label(
@@ -208,6 +220,27 @@ public class EdgeResource {
         );
     }
 
+
+    @POST
+    @Path("{shortId}/convertToGroupRelation")
+    public Response convertToGroupRelation(
+            @PathParam("shortId") String shortId,
+            JSONObject params
+    ) {
+        EdgeOperator edge = edgeFromShortId(shortId);
+        GroupRelationPojo newGroupRelation = edge.convertToGroupRelation(
+                params.optString("newGroupRelationShortId", UUID.randomUUID().toString()),
+                TagJson.singleFromJson(params.optJSONObject("tag").toString()),
+                params.optBoolean("isNewTag"),
+                ShareLevel.valueOf(params.optString("initialShareLevel", ShareLevel.PRIVATE.name()))
+        );
+        return Response.ok(
+                JsonUtils.getGson().toJson(
+                        newGroupRelation
+                )
+        ).build();
+    }
+
 //    @POST
 //    @Path("{shortId}/convertToGroupRelation")
 //    public Response convertToGroupRelation(@PathParam("shortId") String shortId, JSONObject tagJson) {
@@ -225,7 +258,7 @@ public class EdgeResource {
 //    }
 
     private EdgeOperator edgeFromShortId(String shortId) {
-        return userGraph.edgeWithUri(
+        return edgeFactory.withUri(
                 edgeUriFromShortId(
                         shortId
                 )

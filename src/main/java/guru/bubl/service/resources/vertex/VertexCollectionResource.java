@@ -4,15 +4,14 @@
 
 package guru.bubl.service.resources.vertex;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +23,9 @@ import static guru.bubl.service.resources.GraphElementCollectionResource.areAllU
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexCollectionResource {
+
+    @Inject
+    private VertexFactory vertexFactory;
 
     private UserGraph userGraph;
 
@@ -49,7 +51,7 @@ public class VertexCollectionResource {
     private void deleteVertices(JSONArray verticesUri) {
         try {
             for (int i = 0; i < verticesUri.length(); i++) {
-                VertexOperator vertex = userGraph.vertexWithUri(
+                VertexOperator vertex = vertexFactory.withUri(
                         URI.create(
                                 verticesUri.getString(i)
                         )

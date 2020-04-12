@@ -40,145 +40,7 @@ import static org.junit.Assert.fail;
 public class VertexResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
-    public void adding_a_vertex_returns_correct_status() {
-        ClientResponse response = vertexUtils().addAVertexToVertexWithUri(
-                vertexAUri()
-        );
-        assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
-    }
-
-    @Test
-    public void can_add_a_vertex_and_relation() {
-        int numberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
-                vertexAUri()
-        ).size();
-        vertexUtils().addAVertexToVertexWithUri(vertexAUri());
-        int updatedNumberOfConnectedEdges = vertexUtils().connectedEdgesOfVertexWithURI(
-                vertexAUri()
-        ).size();
-        assertThat(updatedNumberOfConnectedEdges, is(numberOfConnectedEdges + 1));
-    }
-
-    @Test
-    public void adding_a_vertex_returns_the_new_edge_and_vertex_id() throws Exception {
-        ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
-        JSONObject createdStatement = response.getEntity(JSONObject.class);
-        Vertex subject = VertexJson.fromJson(
-                createdStatement.getJSONObject(
-                        StatementJsonFields.source_vertex.name()
-                )
-        );
-        assertThat(
-                subject.uri().toString(),
-                is(vertexAUri().toString())
-        );
-        Edge newEdge = EdgeJson.fromJson(
-                createdStatement.getJSONObject(
-                        StatementJsonFields.edge.name()
-                )
-        );
-        Vertex newVertex = VertexJson.fromJson(
-                createdStatement.getJSONObject(
-                        StatementJsonFields.end_vertex.name()
-                )
-        );
-        Set<Edge> edgesOfVertexA = vertexUtils().connectedEdgesOfVertexWithURI(
-                vertexAUri()
-        );
-        assertTrue(
-                edgesOfVertexA.contains(
-                        newEdge
-                )
-        );
-        assertTrue(
-                vertexUtils().vertexWithUriHasDestinationVertexWithUri(
-                        vertexAUri(),
-                        newVertex.uri()
-                )
-        );
-    }
-
-    @Test
-    public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception {
-        ClientResponse response = vertexUtils().addAVertexToVertexWithUri(vertexAUri());
-        JSONObject createdStatement = response.getEntity(JSONObject.class);
-        EdgePojo newEdge = EdgeJson.fromJson(
-                createdStatement.getJSONObject(
-                        StatementJsonFields.edge.name()
-                )
-        );
-        assertThat(
-                newEdge.creationDate(),
-                is(not(nullValue()))
-        );
-        assertThat(
-                newEdge.lastModificationDate(),
-                is(not(nullValue()))
-        );
-        Vertex newVertex = VertexJson.fromJson(
-                createdStatement.getJSONObject(
-                        StatementJsonFields.end_vertex.name()
-                )
-        );
-        assertThat(
-                newVertex.creationDate(),
-                is(not(nullValue()))
-        );
-        assertThat(
-                newVertex.lastModificationDate(),
-                is(not(nullValue()))
-        );
-    }
-
-    @Test
-    public void cannot_add_a_vertex_that_user_doesnt_own() throws Exception {
-        authenticate(createAUser());
-        ClientResponse response = resource
-                .path(
-                        vertexAUri().getPath()
-                )
-                .cookie(authCookie)
-                .post(ClientResponse.class);
-        assertThat(response.getStatus(), is(Response.Status.FORBIDDEN.getStatusCode()));
-    }
-
-    @Test
-    public void can_specify_id_when_adding_a_vertex_and_relation_with() throws Exception {
-        UserUris userUris = new UserUris(defaultAuthenticatedUser);
-        URI vertexUri = userUris.generateVertexUri();
-        URI edgeUri = userUris.generateEdgeUri();
-        JSONObject options = new JSONObject().put(
-                "vertexId", UserUris.graphElementShortId(vertexUri)
-        ).put("edgeId", UserUris.graphElementShortId(edgeUri));
-        ClientResponse response = resource
-                .path(
-                        vertexAUri().getPath()
-                )
-                .cookie(authCookie)
-                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
-                .post(ClientResponse.class, options);
-        assertThat(
-                response.getStatus(),
-                is(Response.Status.OK.getStatusCode())
-        );
-        JSONObject createdStatement = response.getEntity(JSONObject.class);
-        EdgePojo newEdge = EdgeJson.fromJson(
-                createdStatement.getJSONObject(
-                        StatementJsonFields.edge.name()
-                )
-        );
-        assertThat(
-                newEdge.uri(),
-                is(edgeUri)
-        );
-        assertThat(
-                newEdge.destinationUri(),
-                is(vertexUri)
-        );
-    }
-
-    @Test
-    public void can_remove_a_vertex() throws Exception {
+    public void can_remove_a_vertex() {
         assertTrue(graphElementWithIdExistsInCurrentGraph(
                 vertexBUri()
         ));
@@ -189,13 +51,13 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void removing_vertex_returns_correct_response_status() throws Exception {
+    public void removing_vertex_returns_correct_response_status() {
         ClientResponse response = vertexUtils().removeVertexB();
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
     }
 
     @Test
-    public void can_update_label() throws Exception {
+    public void can_update_label() {
         String vertexALabel = vertexA().label();
         assertThat(vertexALabel, is(not("new vertex label")));
         vertexUtils().updateVertexLabelUsingRest(
@@ -235,23 +97,6 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(response.getStatus(), is(Response.Status.NO_CONTENT.getStatusCode()));
     }
-
-//    @Test
-//    @Ignore("get search details is suspended")
-//    public void updating_note_updates_search() {
-//        searchUtils().indexAll();
-//        GraphElement resultsForA = searchUtils().autoCompletionResultsForCurrentUserVerticesOnly(
-//                vertexA().label()
-//        ).get(0).getGraphElement();
-//        assertThat(resultsForA.comment(), is(""));
-//        vertexUtils().updateVertexANote(
-//                "A description"
-//        );
-//        resultsForA = searchUtils().searchDetailsByUri(vertexAUri()).getGraphElement();
-//        assertThat(
-//                resultsForA.comment(), is("A description")
-//        );
-//    }
 
     @Test
     public void when_deleting_a_vertex_its_relations_are_also_removed_from_search() {

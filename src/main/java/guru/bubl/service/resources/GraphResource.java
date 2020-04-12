@@ -18,6 +18,8 @@ import guru.bubl.module.model.graph.fork.NbNeighbors;
 import guru.bubl.module.model.graph.fork.ForkOperatorFactory;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
+import guru.bubl.service.resources.group_relation.GroupRelationResource;
+import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
 import guru.bubl.service.resources.tag.TagResource;
 import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.vertex.VertexResource;
@@ -58,6 +60,9 @@ public class GraphResource {
 
     @Inject
     ForkOperatorFactory forkOperatorFactory;
+
+    @Inject
+    GroupRelationResourceFactory groupRelationResourceFactory;
 
     private User user;
 
@@ -195,6 +200,13 @@ public class GraphResource {
     @Path("/edge")
     public EdgeResource edgeResource() {
         return edgeResourceFactory.withUserGraph(
+                userGraph()
+        );
+    }
+
+    @Path("/gr")
+    public GroupRelationResource groupRelationResource() {
+        return groupRelationResourceFactory.withUserGraph(
                 userGraph()
         );
     }
