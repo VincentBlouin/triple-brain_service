@@ -425,8 +425,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         );
         ClientResponse response = convertToGroupRelation(
                 edgeAB.uri(),
-                modelTestScenarios.toDo(),
-                true,
+                UUID.randomUUID().toString(),
                 ShareLevel.PRIVATE
         );
         assertThat(
@@ -442,10 +441,11 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
+        graphElementUtils().addTagToGraphElementWithUri(modelTestScenarios.toDo(), edgeAB.uri());
+        String newGroupRelationShortId = UUID.randomUUID().toString();
         ClientResponse response = convertToGroupRelation(
                 edgeAB.uri(),
-                modelTestScenarios.toDo(),
-                true,
+                newGroupRelationShortId,
                 ShareLevel.PRIVATE
         );
         GroupRelationPojo newGroupRelation = JsonUtils.getGson().fromJson(
@@ -453,12 +453,12 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 GroupRelationPojo.class
         );
         assertThat(
-                newGroupRelation.getTag().getExternalResourceUri(),
-                is(modelTestScenarios.toDo().getExternalResourceUri())
+                newGroupRelation.uri(),
+                is(new UserUris(defaultAuthenticatedUser.username()).groupRelationUriFromShortId(newGroupRelationShortId))
         );
     }
 
-    private ClientResponse convertToGroupRelation(URI edgeUri, TagPojo tag, Boolean isNewTag, ShareLevel initialShareLevel) {
+    private ClientResponse convertToGroupRelation(URI edgeUri, String newGroupRelationShortId, ShareLevel initialShareLevel) {
         try {
             return resource
                     .path(edgeUri.toString())
@@ -467,11 +467,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                     .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                     .post(
                             ClientResponse.class, new JSONObject().put(
-                                    "newGroupRelationShortId", UUID.randomUUID().toString()
-                            ).put(
-                                    "tag", TagJson.singleToJson(tag)
-                            ).put(
-                                    "isNewTag", isNewTag
+                                    "newGroupRelationShortId", newGroupRelationShortId
                             ).put(
                                     "initialShareLevel", initialShareLevel.name().toUpperCase()
                             )

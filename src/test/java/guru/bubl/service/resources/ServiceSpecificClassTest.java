@@ -5,13 +5,14 @@
 package guru.bubl.service.resources;
 
 
+import guru.bubl.service.resources.edge.EdgeResource;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        UserResourceTest.class
+        EdgeResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

@@ -230,9 +230,8 @@ public class EdgeResource {
         EdgeOperator edge = edgeFromShortId(shortId);
         GroupRelationPojo newGroupRelation = edge.convertToGroupRelation(
                 params.optString("newGroupRelationShortId", UUID.randomUUID().toString()),
-                TagJson.singleFromJson(params.optJSONObject("tag").toString()),
-                params.optBoolean("isNewTag"),
-                ShareLevel.valueOf(params.optString("initialShareLevel", ShareLevel.PRIVATE.name()))
+                ShareLevel.valueOf(params.optString("initialShareLevel", ShareLevel.PRIVATE.name())),
+                params.optString("label", "")
         );
         return Response.ok(
                 JsonUtils.getGson().toJson(
