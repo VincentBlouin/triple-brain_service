@@ -204,22 +204,6 @@ public class EdgeResource {
         return Response.noContent().build();
     }
 
-    @Path("{shortId}/surround_graph")
-    public OwnedSurroundGraphResource getSurroundGraph(
-            @PathParam("shortId") String shortId
-    ) {
-        Edge edge = edgeFromShortId(shortId);
-        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
-                edge
-        );
-        centerGraphElementOperator.incrementNumberOfVisits();
-        centerGraphElementOperator.updateLastCenterDate();
-        return new OwnedSurroundGraphResource(
-                userGraph,
-                edge.sourceFork()
-        );
-    }
-
 
     @POST
     @Path("{shortId}/convertToGroupRelation")

@@ -21,6 +21,7 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -130,7 +131,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
 //    @Test
-//    @Ignore("searching for public vertices is suspended")
+//    @Test("searching for public vertices is suspended")
 //    public void making_vertex_public_re_indexes_it() {
 //        searchUtils().indexAll();
 //        JSONObject anotherUser = createAUser();
@@ -160,7 +161,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
 //    }
 
 //    @Test
-//    @Ignore("searching for public vertices is suspended")
+//    @Test("searching for public vertices is suspended")
 //    public void making_vertex_private_re_indexes_it() {
 //        vertexUtils().makePublicVertexWithUri(
 //                vertexAUri()
@@ -300,7 +301,7 @@ public class VertexResourceTest extends GraphManipulationRestTestUtils {
     }
 
 //    @Test
-//    @Ignore(
+//    @Test(
 //            "Using measures on the client side to avoid fast addition of multiple childs. " +
 //                    "Also I consider it not dramatic that the number of connected edges is not totally accurate."
 //    )

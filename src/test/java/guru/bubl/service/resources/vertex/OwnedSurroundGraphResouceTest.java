@@ -13,6 +13,7 @@ import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.NewCookie;
@@ -167,6 +168,16 @@ public class OwnedSurroundGraphResouceTest extends GraphManipulationRestTestUtil
         Tag tag = vertexA().getTags().values().iterator().next();
         assertThat(
                 getSurroundGraphOfATag(tag).getStatus(),
+                is(Response.Status.OK.getStatusCode())
+        );
+    }
+
+    @Test
+    public void getting_surround_graph_of_a_group_relation_returns_ok_status() {
+        assertThat(
+                getGraphAroundVertexWithUri(
+                        graphUtils().getTodoGroupRelation().uri()
+                ).getStatus(),
                 is(Response.Status.OK.getStatusCode())
         );
     }

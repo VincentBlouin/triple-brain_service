@@ -119,64 +119,6 @@ public class TagResource {
         return Response.noContent().build();
     }
 
-    @Path("{shortId}/surround_graph")
-    public OwnedSurroundGraphResource getSurroundGraphResource(
-            @PathParam("shortId") String shortId,
-            @QueryParam("center") String isCenter
-    ) {
-        TagOperator tagOperator = tagFactory.withUri(
-                tagUriFromShortId(shortId)
-        );
-        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
-                tagOperator
-        );
-        if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
-            centerGraphElementOperator.incrementNumberOfVisits();
-            centerGraphElementOperator.updateLastCenterDate();
-        }
-        return new OwnedSurroundGraphResource(
-                userGraph,
-                tagOperator
-        );
-    }
-
-    @POST
-    @Path("{shortId}/childrenIndex")
-    public Response saveChildrenIndexes(
-            @PathParam("shortId") String shortId,
-            JSONObject childrenIndexes
-    ) {
-        tagFactory.withUri(tagUriFromShortId(shortId)).setChildrenIndex(
-                childrenIndexes.toString()
-        );
-        return Response.noContent().build();
-    }
-
-    @POST
-    @Path("{shortId}/colors")
-    public Response saveColors(
-            @PathParam("shortId") String shortId,
-            JSONObject colors
-    ) {
-        tagFactory.withUri(tagUriFromShortId(shortId)).setColors(
-                colors.toString()
-        );
-        return Response.noContent().build();
-    }
-
-    @POST
-    @Path("{shortId}/font")
-    public Response saveFont(
-            @PathParam("shortId") String shortId,
-            JSONObject font
-    ) {
-        tagFactory.withUri(tagUriFromShortId(shortId)).setFont(
-                font.toString()
-        );
-        return Response.noContent().build();
-    }
-
-
     @Path("{shortId}/shareLevel")
     @POST
     public Response setShareLevel(@PathParam("shortId") String shortId, JSONObject shareLevel) {

@@ -12,18 +12,25 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
+import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.edge.EdgeFactory;
+import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.fork.NbNeighbors;
 import guru.bubl.module.model.graph.fork.ForkOperatorFactory;
+import guru.bubl.module.model.graph.tag.TagOperator;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.edge.EdgeResourceFactory;
 import guru.bubl.service.resources.group_relation.GroupRelationResource;
 import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
 import guru.bubl.service.resources.tag.TagResource;
 import guru.bubl.service.resources.tag.TagResourceFactory;
+import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
@@ -38,31 +45,34 @@ import java.util.Date;
 public class GraphResource {
 
     @Inject
-    GraphFactory graphFactory;
+    private GraphFactory graphFactory;
 
     @Inject
-    VertexResourceFactory vertexResourceFactory;
+    private VertexResourceFactory vertexResourceFactory;
 
     @Inject
-    EdgeResourceFactory edgeResourceFactory;
+    private EdgeResourceFactory edgeResourceFactory;
 
     @Inject
-    TagResourceFactory tagResourceFactory;
+    private TagResourceFactory tagResourceFactory;
 
     @Inject
-    GraphElementOperatorFactory graphElementOperatorFactory;
+    private GraphElementOperatorFactory graphElementOperatorFactory;
 
     @Inject
-    CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     @Inject
-    GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
+    private GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
 
     @Inject
-    ForkOperatorFactory forkOperatorFactory;
+    private ForkOperatorFactory forkOperatorFactory;
 
     @Inject
-    GroupRelationResourceFactory groupRelationResourceFactory;
+    private GroupRelationResourceFactory groupRelationResourceFactory;
+
+    @Inject
+    private EdgeFactory edgeFactory;
 
     private User user;
 
@@ -117,18 +127,6 @@ public class GraphResource {
     }
 
 
-    @POST
-    @Path("/{type}/{shortId}/colors")
-    public Response saveColors(
-            @PathParam("type") String type,
-            @PathParam("shortId") String shortId,
-            JSONObject colors
-    ) {
-        graphElementFromShortIdAndType(shortId, type).setColors(
-                colors.toString()
-        );
-        return Response.noContent().build();
-    }
 
     /*
         setTagNbNeighbors should not be necessary because setNbNeighbors is a generic method
@@ -169,6 +167,80 @@ public class GraphResource {
         }
         return Response.noContent().build();
     }
+
+    @Path("/{type}/{shortId}/surround_graph")
+    public OwnedSurroundGraphResource getSurroundGraph(
+            @PathParam("type") String type,
+            @PathParam("shortId") String shortId,
+            @QueryParam("center") String isCenter
+    ) {
+        GraphElementOperator graphElementOperator;
+        CenterGraphElementOperator centerGraphElementOperator;
+        if (type.toLowerCase().equals("edge")) {
+            EdgeOperator edgeOperator = edgeFactory.withUri(
+                    new UserUris(user).edgeUriFromShortId(shortId)
+            );
+            graphElementOperator = graphElementOperatorFactory.withUri(
+                    edgeOperator.sourceUri()
+            );
+            centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
+                    edgeOperator
+            );
+        } else {
+            graphElementOperator = graphElementFromShortIdAndType(shortId, type);
+            centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
+                    graphElementOperator
+            );
+        }
+        if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
+            centerGraphElementOperator.incrementNumberOfVisits();
+            centerGraphElementOperator.updateLastCenterDate();
+        }
+        return new OwnedSurroundGraphResource(
+                graphFactory.loadForUser(user),
+                graphElementOperator
+        );
+    }
+
+    @POST
+    @Path("/{type}/{shortId}/childrenIndex")
+    public Response saveChildrenIndexes(
+            @PathParam("type") String type,
+            @PathParam("shortId") String shortId,
+            JSONObject childrenIndexes
+    ) {
+        graphElementFromShortIdAndType(shortId, type).setChildrenIndex(
+                childrenIndexes.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{type}/{shortId}/colors")
+    public Response saveColors(
+            @PathParam("type") String type,
+            @PathParam("shortId") String shortId,
+            JSONObject colors
+    ) {
+        graphElementFromShortIdAndType(shortId, type).setColors(
+                colors.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{type}/{shortId}/font")
+    public Response saveFont(
+            @PathParam("type") String type,
+            @PathParam("shortId") String shortId,
+            JSONObject font
+    ) {
+        graphElementFromShortIdAndType(shortId, type).setFont(
+                font.toString()
+        );
+        return Response.noContent().build();
+    }
+
 
     /*
         removeIdentificationCenter should not be necessary because removeCenter is a generic method

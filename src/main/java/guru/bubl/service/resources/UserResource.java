@@ -59,9 +59,6 @@ public class UserResource {
     UserRepository userRepository;
 
     @Inject
-    protected UserGraphFactoryNeo4j neo4jUserGraphFactory;
-
-    @Inject
     SessionHandler sessionHandler;
 
     @Inject
@@ -147,54 +144,26 @@ public class UserResource {
     }
 
 
-    @Path("{username}/non_owned/vertex/{shortId}/surround_graph")
+    @Path("{username}/non_owned/{type}/{shortId}/surround_graph")
     public NotOwnedSurroundGraphResource surroundGraphResource(
             @PathParam("username") String username,
+            @PathParam("type") String type,
             @PathParam("shortId") String shortId,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        return getVertexSurroundGraphResource(
-                new UserUris(
-                        username
-                ).vertexUriFromShortId(shortId),
-                persistentSessionId
-        );
-    }
-
-    @Path("{username}/non_owned/meta/{shortId}/surround_graph")
-    public NotOwnedSurroundGraphResource surroundTagGraphResource(
-            @PathParam("username") String username,
-            @PathParam("shortId") String shortId,
-            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) {
-        return getVertexSurroundGraphResource(
-                new UserUris(
-                        username
-                ).uriFromTypeAndShortId(
-                        GraphElementType.Meta, shortId
-                ),
-                persistentSessionId
-        );
-    }
-
-    @Path("{username}/non_owned/edge/{shortId}/surround_graph")
-    public NotOwnedSurroundGraphResource surroundEdgeGraphResource(
-            @PathParam("username") String username,
-            @PathParam("shortId") String shortId,
-            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
-    ) {
-        Edge edge = edgeFactory.withUri(
+        URI centerUri = type.toLowerCase().equals("edge") ? edgeFactory.withUri(
                 new UserUris(
                         username
                 ).edgeUriFromShortId(
                         shortId
                 )
-        );
+        ).sourceUri() : new UserUris(
+                username
+        ).uriFromTypeStringAndShortId(type, shortId);
         return getVertexSurroundGraphResource(
-                edge.sourceUri(),
+                centerUri,
                 persistentSessionId
         );
-
     }
 
     @Path("{username}/friends")
@@ -237,17 +206,6 @@ public class UserResource {
                 isFriend
         );
     }
-
-//    @Path("{username}/non_owned/schema")
-//    public SchemaNonOwnedResource schemaNonOwnedResource(
-//            @PathParam("username") String username
-//    ) {
-//        return schemaNonOwnedResourceFactory.fromUserGraph(
-//                graphFactory.loadForUser(
-//                        userRepository.findByUsername(username)
-//                )
-//        );
-//    }
 
     @Path("{username}/search")
     public SearchResource searchResource(

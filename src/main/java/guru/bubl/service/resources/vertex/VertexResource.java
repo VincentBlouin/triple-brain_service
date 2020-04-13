@@ -146,25 +146,6 @@ public class VertexResource extends ForkResource implements GraphElementResource
 //        );
 //    }
 
-    @Path("{shortId}/surround_graph")
-    public OwnedSurroundGraphResource getVertexSurroundGraphResource(
-            @PathParam("shortId") String shortId,
-            @QueryParam("center") String isCenter
-    ) {
-        VertexOperator vertex = vertexFromShortId(shortId);
-        if (!StringUtils.isEmpty(isCenter) && isCenter.equals("true")) {
-            CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
-                    vertex
-            );
-            centerGraphElementOperator.incrementNumberOfVisits();
-            centerGraphElementOperator.updateLastCenterDate();
-        }
-        return new OwnedSurroundGraphResource(
-                userGraph,
-                vertex
-        );
-    }
-
     @Path("{shortId}/identification")
     public GraphElementTagResource getVertexIdentificationResource(
             @PathParam("shortId") String shortId) {
@@ -189,30 +170,6 @@ public class VertexResource extends ForkResource implements GraphElementResource
         return vertexCollectionResourceFactory.withUserGraph(
                 userGraph
         );
-    }
-
-    @POST
-    @Path("{shortId}/childrenIndex")
-    public Response saveChildrenIndexes(
-            @PathParam("shortId") String shortId,
-            JSONObject childrenIndexes
-    ) {
-        vertexFactory.withUri(getUriFromShortId(shortId)).setChildrenIndex(
-                childrenIndexes.toString()
-        );
-        return Response.noContent().build();
-    }
-
-    @POST
-    @Path("{shortId}/font")
-    public Response saveFont(
-            @PathParam("shortId") String shortId,
-            JSONObject font
-    ) {
-        vertexFactory.withUri(getUriFromShortId(shortId)).setFont(
-                font.toString()
-        );
-        return Response.noContent().build();
     }
 
     @POST
