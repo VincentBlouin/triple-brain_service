@@ -7,9 +7,9 @@ package guru.bubl.service.resources.edge;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
@@ -22,11 +22,9 @@ import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.resources.GraphElementResource;
 import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
-import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
@@ -45,9 +43,6 @@ public class EdgeResource extends GraphElementResource {
 
     @Inject
     private GraphElementTagResourceFactory graphElementTagResourceFactory;
-
-    @Inject
-    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     @Inject
     private VertexFactory vertexFactory;
@@ -149,58 +144,58 @@ public class EdgeResource extends GraphElementResource {
     }
 
     @PUT
-    @Path("{shortId}/source-vertex/{sourceVertexShortId}")
-    public Response changeSourceVertex(
+    @Path("{shortId}/source/{sourceVertexShortId}")
+    public Response changeSource(
             @PathParam("shortId") String shortId,
-            @PathParam("sourceVertexShortId") String sourceVertexShortId,
-            JSONObject shareLevels
+            @PathParam("sourceVertexShortId") String sourceShortId,
+            JSONObject params
     ) {
-        Vertex newSourceVertex = new VertexPojo(
-                new UserUris(
-                        userGraph.user()
-                ).vertexUriFromShortId(
-                        sourceVertexShortId
-                )
+        GraphElementType forkType = GraphElementType.valueOf(
+                params.optString("forkType", GraphElementType.Vertex.name())
         );
+        UserUris userUris = new UserUris(userGraph.user());
+        URI forkUri = forkType == GraphElementType.GroupRelation ?
+                userUris.groupRelationUriFromShortId(sourceShortId) :
+                userUris.vertexUriFromShortId(sourceShortId);
         edgeFromShortId(shortId).changeSource(
-                newSourceVertex.uri(),
+                forkUri,
                 ShareLevel.valueOf(
-                        shareLevels.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                        params.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 ),
                 ShareLevel.valueOf(
-                        shareLevels.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                        params.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 ),
                 ShareLevel.valueOf(
-                        shareLevels.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                        params.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 )
         );
         return Response.noContent().build();
     }
 
     @PUT
-    @Path("{shortId}/destination-vertex/{destinationVertexShortId}")
-    public Response changeDestinationVertex(
+    @Path("{shortId}/destination/{destinationShortId}")
+    public Response changeDestination(
             @PathParam("shortId") String shortId,
-            @PathParam("destinationVertexShortId") String destinationVertexShortId,
-            JSONObject shareLevels
+            @PathParam("destinationShortId") String destinationShortId,
+            JSONObject params
     ) {
-        Vertex newSourceVertex = new VertexPojo(
-                new UserUris(
-                        userGraph.user()
-                ).vertexUriFromShortId(
-                        destinationVertexShortId
-                )
+        GraphElementType forkType = GraphElementType.valueOf(
+                params.optString("forkType", GraphElementType.Vertex.name())
         );
+        UserUris userUris = new UserUris(userGraph.user());
+        URI forkUri = forkType == GraphElementType.GroupRelation ?
+                userUris.groupRelationUriFromShortId(destinationShortId) :
+                userUris.vertexUriFromShortId(destinationShortId);
         edgeFromShortId(shortId).changeDestination(
-                newSourceVertex.uri(),
+                forkUri,
                 ShareLevel.valueOf(
-                        shareLevels.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                        params.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 ),
                 ShareLevel.valueOf(
-                        shareLevels.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                        params.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 ),
                 ShareLevel.valueOf(
-                        shareLevels.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
+                        params.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 )
         );
         return Response.noContent().build();

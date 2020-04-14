@@ -8,16 +8,15 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
+import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
 import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.group_relation.GroupRelation;
 import guru.bubl.module.model.graph.group_relation.GroupRelationPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
-import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.JsonUtils;
-import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
@@ -235,14 +234,15 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void changing_source_vertex_returns_correct_status() {
-        Edge edgeBetweenBAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Edge edgeBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexBUri(),
                 vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
         );
-        ClientResponse response = changeSourceVertex(
-                edgeBetweenBAndC,
-                vertexA(),
+        ClientResponse response = changeSource(
+                edgeBC,
+                vertexA().uri(),
+                GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE
@@ -269,9 +269,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         assertFalse(
                 graph.containsEdge(edge)
         );
-        changeSourceVertex(
+        changeSource(
                 edge,
-                vertexA(),
+                vertexA().uri(),
+                GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE
@@ -285,15 +286,46 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
+    public void can_change_source_fork_to_a_group_relation() {
+        Edge edgeBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexBUri(),
+                vertexCUri(),
+                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
+        );
+        SubGraphPojo graph = graphUtils().graphWithCenterVertexUri(
+                graphUtils().getTodoGroupRelation().uri()
+        );
+        assertFalse(
+                graph.containsEdge(edgeBC)
+        );
+        changeSource(
+                edgeBC,
+                graphUtils().getTodoGroupRelation().uri(),
+                GraphElementType.GroupRelation,
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE,
+                ShareLevel.PRIVATE
+        );
+        graph = graphUtils().graphWithCenterVertexUri(
+                graphUtils().getTodoGroupRelation().uri()
+        );
+        assertTrue(
+                graph.containsEdge(edgeBC)
+        );
+    }
+
+
+    @Test
     public void changing_destination_vertex_returns_correct_status() {
         Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
-        ClientResponse response = changeDestinationVertex(
+        ClientResponse response = changeDestination(
                 edgeBetweenAAndB,
-                vertexC(),
+                vertexC().uri(),
+                GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE
@@ -320,9 +352,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         assertFalse(
                 graph.containsEdge(edge)
         );
-        changeDestinationVertex(
+        changeDestination(
                 edge,
-                vertexC(),
+                vertexC().uri(),
+                GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE,
                 ShareLevel.PRIVATE
@@ -493,15 +526,18 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 .put(ClientResponse.class);
     }
 
-    private ClientResponse changeSourceVertex(Edge edge, Vertex newSourceVertex, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
+    private ClientResponse changeSource(Edge edge, URI newSourceUri, GraphElementType sourceType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
         try {
             return resource
                     .path(edge.uri().toString())
-                    .path("source-vertex")
-                    .path(UserUris.graphElementShortId(newSourceVertex.uri()))
+                    .path("source")
+                    .path(UserUris.graphElementShortId(newSourceUri))
                     .cookie(authCookie)
                     .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                     .put(ClientResponse.class, new JSONObject().put(
+                            "forkType",
+                            sourceType.name()
+                    ).put(
                             "oldEndShareLevel", oldEndShareLevel.name().toUpperCase()
                     ).put(
                             "keptEndShareLevel", keptEndShareLevel.name().toUpperCase()
@@ -513,15 +549,18 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         }
     }
 
-    private ClientResponse changeDestinationVertex(Edge edge, Vertex newDestinationVertex, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
+    private ClientResponse changeDestination(Edge edge, URI destinationUri, GraphElementType destinationType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
         try {
             return resource
                     .path(edge.uri().toString())
-                    .path("destination-vertex")
-                    .path(UserUris.graphElementShortId(newDestinationVertex.uri()))
+                    .path("destination")
+                    .path(UserUris.graphElementShortId(destinationUri))
                     .cookie(authCookie)
                     .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                     .put(ClientResponse.class, new JSONObject().put(
+                            "forkType",
+                            destinationType
+                    ).put(
                             "oldEndShareLevel", oldEndShareLevel.name().toUpperCase()
                     ).put(
                             "keptEndShareLevel", keptEndShareLevel.name().toUpperCase()
