@@ -9,6 +9,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.fork.ForkOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -17,10 +18,8 @@ import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
-import guru.bubl.service.resources.GraphElementResource;
 import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.fork.ForkResource;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
@@ -31,7 +30,7 @@ import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VertexResource extends ForkResource implements GraphElementResource {
+public class VertexResource extends ForkResource {
 
     @Inject
     VertexCollectionResourceFactory vertexCollectionResourceFactory;
@@ -211,5 +210,12 @@ public class VertexResource extends ForkResource implements GraphElementResource
     @Override
     protected ForkOperator getForkOperatorFromURI(URI uri) {
         return vertexFactory.withUri(uri);
+    }
+
+    @Override
+    protected GraphElementOperator getOperatorFromShortId(String shortId) {
+        return vertexFactory.withUri(
+                getUriFromShortId(shortId)
+        );
     }
 }

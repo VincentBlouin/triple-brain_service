@@ -9,6 +9,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.Edge;
 import guru.bubl.module.model.graph.edge.EdgeFactory;
@@ -22,6 +23,7 @@ import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.tag.TagJson;
+import guru.bubl.service.resources.GraphElementResource;
 import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
@@ -39,7 +41,7 @@ import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 
 
 @Produces(MediaType.APPLICATION_JSON)
-public class EdgeResource {
+public class EdgeResource extends GraphElementResource {
 
     @Inject
     private GraphElementTagResourceFactory graphElementTagResourceFactory;
@@ -107,7 +109,7 @@ public class EdgeResource {
     public Response modifyEdgeLabel(
             @PathParam("edgeShortId") String edgeShortId,
             JSONObject localizedLabel) {
-        URI edgeId = edgeUriFromShortId(edgeShortId);
+        URI edgeId = getUriFromShortId(edgeShortId);
         EdgeOperator edge = edgeFactory.withUri(
                 edgeId
         );
@@ -242,17 +244,25 @@ public class EdgeResource {
 
     private EdgeOperator edgeFromShortId(String shortId) {
         return edgeFactory.withUri(
-                edgeUriFromShortId(
+                getUriFromShortId(
                         shortId
                 )
         );
     }
 
-    private URI edgeUriFromShortId(String shortId) {
+    @Override
+    protected URI getUriFromShortId(String shortId) {
         return new UserUris(
                 userGraph.user()
         ).edgeUriFromShortId(
                 shortId
+        );
+    }
+
+    @Override
+    protected GraphElementOperator getOperatorFromShortId(String shortId) {
+        return vertexFactory.withUri(
+                getUriFromShortId(shortId)
         );
     }
 }

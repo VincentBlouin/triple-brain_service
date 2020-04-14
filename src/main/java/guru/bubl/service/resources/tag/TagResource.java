@@ -9,17 +9,17 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
+import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.fork.ForkOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.tag.TagFactory;
 import guru.bubl.module.model.graph.tag.TagOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.module.model.tag.TagJson;
-import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
-import org.apache.commons.lang.StringUtils;
+import guru.bubl.service.resources.fork.ForkResource;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -29,7 +29,7 @@ import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TagResource {
+public class TagResource extends ForkResource {
 
     @Inject
     TagFactory tagFactory;
@@ -49,11 +49,16 @@ public class TagResource {
         this.userGraph = userGraph;
     }
 
+    @Override
+    public Response addVertexAndEdgeToSourceVertex(String sourceVertexShortId, JSONObject options) {
+        throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
+
     @GET
     @Path("/{identificationShortId}")
     public Response get(@PathParam("identificationShortId") String shortId) {
         TagOperator tagOperator = tagFactory.withUri(
-                tagUriFromShortId(shortId)
+                getUriFromShortId(shortId)
         );
         TagPojo tagPojo = tagOperator.buildPojo();
         return Response.ok().entity(TagJson.singleToJson(tagPojo)).build();
@@ -67,7 +72,7 @@ public class TagResource {
             JSONObject localizedLabel
     ) {
         TagOperator tagOperator = tagFactory.withUri(
-                tagUriFromShortId(shortId)
+                getUriFromShortId(shortId)
         );
         tagOperator.label(
                 localizedLabel.optString(
@@ -85,7 +90,7 @@ public class TagResource {
             String comment
     ) {
         TagOperator tagOperator = tagFactory.withUri(
-                tagUriFromShortId(shortId)
+                getUriFromShortId(shortId)
         );
         tagOperator.comment(
                 comment
@@ -122,7 +127,7 @@ public class TagResource {
     @Path("{shortId}/shareLevel")
     @POST
     public Response setShareLevel(@PathParam("shortId") String shortId, JSONObject shareLevel) {
-        tagFactory.withUri(tagUriFromShortId(shortId)).setShareLevel(
+        tagFactory.withUri(getUriFromShortId(shortId)).setShareLevel(
                 ShareLevel.valueOf(
                         shareLevel.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
                 )
@@ -130,7 +135,8 @@ public class TagResource {
         return Response.noContent().build();
     }
 
-    private URI tagUriFromShortId(String shortId) {
+    @Override
+    protected URI getUriFromShortId(String shortId) {
         return new UserUris(
                 authenticatedUser
         ).identificationUriFromShortId(
@@ -138,4 +144,13 @@ public class TagResource {
         );
     }
 
+    @Override
+    protected GraphElementOperator getOperatorFromShortId(String shortId) {
+        return tagFactory.withUri(getUriFromShortId(shortId));
+    }
+
+    @Override
+    protected ForkOperator getForkOperatorFromURI(URI uri) {
+        return tagFactory.withUri(uri);
+    }
 }

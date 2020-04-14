@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.fork.ForkOperator;
 import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -32,5 +33,12 @@ public class GroupRelationResource extends ForkResource {
     @Override
     protected ForkOperator getForkOperatorFromURI(URI uri) {
         return groupRelationFactory.withUri(uri);
+    }
+
+    @Override
+    protected GraphElementOperator getOperatorFromShortId(String shortId) {
+        return groupRelationFactory.withUri(
+                getUriFromShortId(shortId)
+        );
     }
 }

@@ -1,14 +1,14 @@
 package guru.bubl.service.resources.fork;
 
-import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.GraphElementOperatorFactory;
 import guru.bubl.module.model.graph.edge.EdgeJson;
 import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.fork.ForkOperator;
+import guru.bubl.module.model.graph.fork.NbNeighbors;
 import guru.bubl.module.model.graph.vertex.VertexJson;
-import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.StatementJsonFields;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.GraphElementSpecialOperatorFactory;
+import guru.bubl.service.resources.GraphElementResource;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -19,16 +19,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
-public abstract class ForkResource {
+public abstract class ForkResource extends GraphElementResource {
+
+    @Inject
+    GraphElementOperatorFactory graphElementOperatorFactory;
 
     @POST
-    @Path("/{sourceVertexShortId}")
+    @Path("/{sourceForkShortId}")
     public Response addVertexAndEdgeToSourceVertex(
-            @PathParam("sourceVertexShortId") String sourceVertexShortId,
+            @PathParam("sourceForkShortId") String sourceForkShortId,
             JSONObject options
     ) {
         URI sourceUri = getUriFromShortId(
-                sourceVertexShortId
+                sourceForkShortId
         );
         ForkOperator source = getForkOperatorFromURI(
                 sourceUri
@@ -76,7 +79,68 @@ public abstract class ForkResource {
         return Response.ok(jsonCreatedStatement).build();
     }
 
-    protected abstract URI getUriFromShortId(String shortId);
+    @POST
+    @Path("/{shortId}/childrenIndex")
+    public Response saveChildrenIndexes(
+            @PathParam("shortId") String shortId,
+            JSONObject childrenIndexes
+    ) {
+        graphElementOperatorFactory.withUri(getUriFromShortId(
+                shortId
+        )).setChildrenIndex(
+                childrenIndexes.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{shortId}/colors")
+    public Response saveColors(
+            @PathParam("shortId") String shortId,
+            JSONObject colors
+    ) {
+        graphElementOperatorFactory.withUri(getUriFromShortId(
+                shortId
+        )).setColors(
+                colors.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{shortId}/font")
+    public Response saveFont(
+            @PathParam("shortId") String shortId,
+            JSONObject font
+    ) {
+        graphElementOperatorFactory.withUri(getUriFromShortId(
+                shortId
+        )).setFont(
+                font.toString()
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{shortId}/nbNeighbors")
+    public Response setNbNeighbors(
+            @PathParam("shortId") String shortId,
+            JSONObject nbNeighbors
+    ) {
+        NbNeighbors nbNeighborsOperator = getForkOperatorFromURI(
+                getUriFromShortId(shortId)
+        ).getNbNeighbors();
+        if (nbNeighbors.has("private_")) {
+            nbNeighborsOperator.setPrivate(nbNeighbors.optInt("private_", 0));
+        }
+        if (nbNeighbors.has("friend")) {
+            nbNeighborsOperator.setFriend(nbNeighbors.optInt("friend", 0));
+        }
+        if (nbNeighbors.has("public_")) {
+            nbNeighborsOperator.setPublic(nbNeighbors.optInt("public_", 0));
+        }
+        return Response.noContent().build();
+    }
 
     protected abstract ForkOperator getForkOperatorFromURI(URI uri);
 }
