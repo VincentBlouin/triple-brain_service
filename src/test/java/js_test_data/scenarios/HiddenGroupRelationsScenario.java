@@ -11,7 +11,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -81,7 +81,7 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        EdgeOperator distantToB2 = distantBubble.addRelationToVertex(b2);
+        RelationOperator distantToB2 = distantBubble.addRelationToVertex(b2);
         SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundVertexUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
@@ -166,13 +166,13 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
 
     private void createRelations() {
         b1.addRelationToVertex(b2).label("r1");
-        EdgeOperator shirt1Relation = b2.addRelationToVertex(shirt1);
+        RelationOperator shirt1Relation = b2.addRelationToVertex(shirt1);
         shirt1Relation.label("shirt1");
         shirt1Relation.addTag(modelTestScenarios.tShirt());
-        EdgeOperator shirt2Relation = b2.addRelationToVertex(shirt2);
+        RelationOperator shirt2Relation = b2.addRelationToVertex(shirt2);
         shirt2Relation.label("shirt2");
         shirt2Relation.addTag(modelTestScenarios.tShirt());
-        EdgeOperator color = shirt2.addRelationToVertex(red);
+        RelationOperator color = shirt2.addRelationToVertex(red);
         color.label("color");
     }
 }

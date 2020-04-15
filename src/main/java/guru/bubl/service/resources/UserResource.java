@@ -11,14 +11,11 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.friend.FriendManagerFactory;
 import guru.bubl.module.model.friend.FriendStatus;
-import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgeFactory;
+import guru.bubl.module.model.graph.relation.RelationFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
-import guru.bubl.module.neo4j_graph_manipulator.graph.graph.UserGraphFactoryNeo4j;
 import guru.bubl.module.repository.user.UserRepository;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.recaptcha.Recaptcha;
@@ -83,7 +80,7 @@ public class UserResource {
     HttpServletRequest request;
 
     @Inject
-    EdgeFactory edgeFactory;
+    RelationFactory relationFactory;
 
     @Inject
     FriendsResourceFactory friendsResourceFactory;
@@ -151,7 +148,7 @@ public class UserResource {
             @PathParam("shortId") String shortId,
             @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
     ) {
-        URI centerUri = type.toLowerCase().equals("edge") ? edgeFactory.withUri(
+        URI centerUri = type.toLowerCase().equals("edge") ? relationFactory.withUri(
                 new UserUris(
                         username
                 ).edgeUriFromShortId(

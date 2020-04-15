@@ -8,8 +8,8 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.RelationOperator;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -43,7 +43,7 @@ public class DeepGraphWithCircularityScenario implements JsTestScenario {
             b3,
             b4;
 
-    private EdgeOperator
+    private RelationOperator
             r1,
             r2,
             r3;
@@ -60,7 +60,7 @@ public class DeepGraphWithCircularityScenario implements JsTestScenario {
                 3,
                 ShareLevel.allShareLevelsInt
         );
-        Map<URI, EdgePojo> relations = new LinkedHashMap<>();
+        Map<URI, RelationPojo> relations = new LinkedHashMap<>();
         relations.put(
                 r1.uri(),
                 subGraphPojo.edgeWithIdentifier(r1.uri())

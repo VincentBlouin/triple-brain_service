@@ -11,7 +11,7 @@ import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -77,7 +77,7 @@ public class GroupRelationsScenario implements JsTestScenario {
             b1,
             b2;
 
-    private EdgeOperator
+    private RelationOperator
             rBook1,
             rBook2,
             rBook3,
@@ -196,13 +196,13 @@ public class GroupRelationsScenario implements JsTestScenario {
                 )
         );
         rBook3Copy.label("Possession of book 3 copy");
-        EdgeOperator otherRelation = me.addRelationToVertex(otherBubble);
+        RelationOperator otherRelation = me.addRelationToVertex(otherBubble);
         otherRelation.label("other relation");
-        EdgeOperator otherRelation2 = me.addRelationToVertex(otherBubble2);
+        RelationOperator otherRelation2 = me.addRelationToVertex(otherBubble2);
         otherRelation2.label("other relation 2");
-        EdgeOperator originalRelation = me.addRelationToVertex(b1);
+        RelationOperator originalRelation = me.addRelationToVertex(b1);
         originalRelation.label("original relation");
-        EdgeOperator sameAsOriginalRelation = me.addRelationToVertex(b2);
+        RelationOperator sameAsOriginalRelation = me.addRelationToVertex(b2);
         sameAsOriginalRelation.label("same as original relation");
         TagPojo b1RelationIdentification = new TagPojo(
                 originalRelation.uri(),

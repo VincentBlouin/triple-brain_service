@@ -11,18 +11,16 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.relation.Relation;
 import guru.bubl.module.model.graph.group_relation.GroupRelationPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
-import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -36,7 +34,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 
-public class EdgeResourceTest extends GraphManipulationRestTestUtils {
+public class RelationResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_add_a_relation() {
@@ -63,7 +61,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     @Test
     public void adding_a_relation_returns_correct_headers() {
         ClientResponse response = edgeUtils().addRelationBetweenVertexAAndC();
-        Edge edgeBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
@@ -74,7 +72,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                             response.getHeaders().get("Location").get(0)
                     ),
                     is(
-                            BASE_URI + edgeBetweenAAndC.uri().toString()
+                            BASE_URI + relationBetweenAAndC.uri().toString()
                     ));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -98,13 +96,13 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_remove_a_relation() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         edgeUtils().removeEdgeBetweenVertexAAndB();
         assertFalse(
                 graphUtils().graphWithCenterVertexUri(
                         vertexAUri()
                 ).containsEdge(
-                        edgeBetweenAAndB
+                        relationBetweenAAndB
                 )
         );
     }
@@ -120,15 +118,15 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_update_label() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         assertThat(
-                edgeBetweenAAndB.label(),
+                relationBetweenAAndB.label(),
                 is(not("new edge label"))
         );
         updateEdgeLabelBetweenAAndB("new edge label");
-        edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        relationBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         assertThat(
-                edgeBetweenAAndB.label(),
+                relationBetweenAAndB.label(),
                 is("new edge label")
         );
     }
@@ -159,45 +157,45 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_inverse() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
-                edgeBetweenAAndB.sourceUri().toString(), is(
+                relationBetweenAAndB.sourceUri().toString(), is(
                         vertexAUri().toString()
                 ));
         assertThat(
-                edgeBetweenAAndB.destinationUri().toString(), is(
+                relationBetweenAAndB.destinationUri().toString(), is(
                         vertexBUri().toString()
                 ));
         inverseRelationBetweenAAndB();
-        edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
         );
         assertThat(
-                edgeBetweenAAndB.sourceUri().toString(), is(
+                relationBetweenAAndB.sourceUri().toString(), is(
                         vertexBUri().toString()
                 ));
         assertThat(
-                edgeBetweenAAndB.destinationUri().toString(), is(
+                relationBetweenAAndB.destinationUri().toString(), is(
                         vertexAUri().toString()
                 ));
     }
 
     @Test
     public void updating_note_returns_correct_status() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         ClientResponse response = edgeUtils().updateNoteOfEdge(
                 "some note",
-                edgeBetweenAAndB
+                relationBetweenAAndB
         );
         assertThat(
                 response.getStatus(),
@@ -207,25 +205,25 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_update_note() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
-                edgeBetweenAAndB.comment(),
+                relationBetweenAAndB.comment(),
                 is(
                         not("some note")
                 )
         );
-        edgeUtils().updateNoteOfEdge("some note", edgeBetweenAAndB);
-        edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        edgeUtils().updateNoteOfEdge("some note", relationBetweenAAndB);
+        relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         assertThat(
-                edgeBetweenAAndB.comment(),
+                relationBetweenAAndB.comment(),
                 is(
                         "some note"
                 )
@@ -234,13 +232,13 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void changing_source_vertex_returns_correct_status() {
-        Edge edgeBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexBUri(),
                 vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
         );
         ClientResponse response = changeSource(
-                edgeBC,
+                relationBC,
                 vertexA().uri(),
                 GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
@@ -257,7 +255,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_change_source_vertex() {
-        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relation = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexBUri(),
                 vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
@@ -267,10 +265,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 vertexAUri()
         );
         assertFalse(
-                graph.containsEdge(edge)
+                graph.containsEdge(relation)
         );
         changeSource(
-                edge,
+                relation,
                 vertexA().uri(),
                 GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
@@ -281,13 +279,13 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 vertexAUri()
         );
         assertTrue(
-                graph.containsEdge(edge)
+                graph.containsEdge(relation)
         );
     }
 
     @Test
     public void can_change_source_fork_to_a_group_relation() {
-        Edge edgeBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexBUri(),
                 vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
@@ -296,10 +294,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 graphUtils().getTodoGroupRelation().uri()
         );
         assertFalse(
-                graph.containsEdge(edgeBC)
+                graph.containsEdge(relationBC)
         );
         changeSource(
-                edgeBC,
+                relationBC,
                 graphUtils().getTodoGroupRelation().uri(),
                 GraphElementType.GroupRelation,
                 ShareLevel.PRIVATE,
@@ -310,20 +308,20 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 graphUtils().getTodoGroupRelation().uri()
         );
         assertTrue(
-                graph.containsEdge(edgeBC)
+                graph.containsEdge(relationBC)
         );
     }
 
 
     @Test
     public void changing_destination_vertex_returns_correct_status() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         ClientResponse response = changeDestination(
-                edgeBetweenAAndB,
+                relationBetweenAAndB,
                 vertexC().uri(),
                 GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
@@ -340,7 +338,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_change_destination_vertex() {
-        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relation = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
@@ -350,10 +348,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 vertexCUri()
         );
         assertFalse(
-                graph.containsEdge(edge)
+                graph.containsEdge(relation)
         );
         changeDestination(
-                edge,
+                relation,
                 vertexC().uri(),
                 GraphElementType.Vertex,
                 ShareLevel.PRIVATE,
@@ -364,7 +362,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 vertexCUri()
         );
         assertTrue(
-                graph.containsEdge(edge)
+                graph.containsEdge(relation)
         );
     }
 
@@ -409,7 +407,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void increments_number_of_visits_when_getting_surround_graph() {
-        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relation = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
@@ -418,7 +416,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         getSurroundGraphOfEdgeBetweenAAndB();
         CenterGraphElementPojo centerEdge = graphUtils().getCenterWithUri(
                 graphUtils().getCenterGraphElements(),
-                edge.uri()
+                relation.uri()
         );
         assertThat(
                 centerEdge.getNumberOfVisits(),
@@ -427,7 +425,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         getSurroundGraphOfEdgeBetweenAAndB();
         centerEdge = graphUtils().getCenterWithUri(
                 graphUtils().getCenterGraphElements(),
-                edge.uri()
+                relation.uri()
         );
         assertThat(
                 centerEdge.getNumberOfVisits(),
@@ -437,13 +435,13 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void convert_to_group_relation_returns_ok_status() {
-        Edge edgeAB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationAB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         ClientResponse response = convertToGroupRelation(
-                edgeAB.uri(),
+                relationAB.uri(),
                 UUID.randomUUID().toString(),
                 ShareLevel.PRIVATE
         );
@@ -455,15 +453,15 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void convert_to_group_relation_returns_group_relation_json_object() {
-        Edge edgeAB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationAB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
-        graphElementUtils().addTagToGraphElementWithUri(modelTestScenarios.toDo(), edgeAB.uri());
+        graphElementUtils().addTagToGraphElementWithUri(modelTestScenarios.toDo(), relationAB.uri());
         String newGroupRelationShortId = UUID.randomUUID().toString();
         ClientResponse response = convertToGroupRelation(
-                edgeAB.uri(),
+                relationAB.uri(),
                 newGroupRelationShortId,
                 ShareLevel.PRIVATE
         );
@@ -497,13 +495,13 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     }
 
     private ClientResponse getSurroundGraphOfEdgeBetweenAAndB() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         return resource
-                .path(edgeBetweenAAndB.uri().toString())
+                .path(relationBetweenAAndB.uri().toString())
                 .path("surround_graph")
                 .queryParam("center", "true")
                 .cookie(authCookie)
@@ -513,23 +511,23 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
 
     private ClientResponse inverseRelationBetweenAAndB() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
         );
         return resource
-                .path(edgeBetweenAAndB.uri().toString())
+                .path(relationBetweenAAndB.uri().toString())
                 .path("inverse")
                 .cookie(authCookie)
                 .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .put(ClientResponse.class);
     }
 
-    private ClientResponse changeSource(Edge edge, URI newSourceUri, GraphElementType sourceType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
+    private ClientResponse changeSource(Relation relation, URI newSourceUri, GraphElementType sourceType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
         try {
             return resource
-                    .path(edge.uri().toString())
+                    .path(relation.uri().toString())
                     .path("source")
                     .path(UserUris.graphElementShortId(newSourceUri))
                     .cookie(authCookie)
@@ -549,10 +547,10 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
         }
     }
 
-    private ClientResponse changeDestination(Edge edge, URI destinationUri, GraphElementType destinationType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
+    private ClientResponse changeDestination(Relation relation, URI destinationUri, GraphElementType destinationType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
         try {
             return resource
-                    .path(edge.uri().toString())
+                    .path(relation.uri().toString())
                     .path("destination")
                     .path(UserUris.graphElementShortId(destinationUri))
                     .cookie(authCookie)

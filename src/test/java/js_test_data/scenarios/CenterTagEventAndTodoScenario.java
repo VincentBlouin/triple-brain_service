@@ -9,7 +9,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -171,15 +171,15 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        EdgeOperator r1 = e1.addRelationToVertex(e2);
+        RelationOperator r1 = e1.addRelationToVertex(e2);
         r1.label("r1");
         toDo = r1.addTag(
                 modelTestScenarios.toDo()
         ).values().iterator().next();
-        EdgeOperator r2 = e1.addRelationToVertex(e3);
+        RelationOperator r2 = e1.addRelationToVertex(e3);
         r2.label("r2");
         r2.addTag(toDo);
-        EdgeOperator f1 = o1.addRelationToVertex(o2);
+        RelationOperator f1 = o1.addRelationToVertex(o2);
         f1.label("f1");
         f1.addTag(toDo);
         e1.addRelationToVertex(a1).label("ra1");

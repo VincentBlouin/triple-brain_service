@@ -9,7 +9,7 @@ import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -75,7 +75,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
             b3,
             b4;
 
-    private EdgeOperator
+    private RelationOperator
             r1,
             r2,
             r3,

@@ -8,7 +8,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -77,9 +77,9 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        EdgeOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToVertex(b1);
         r1.label("r1'");
-        EdgeOperator r2 = center.addRelationToVertex(b2);
+        RelationOperator r2 = center.addRelationToVertex(b2);
         r2.label("r2");
         TagPojo r1Identifier = TestScenarios.tagFromFriendlyResource(
                 r1

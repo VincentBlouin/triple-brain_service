@@ -1,8 +1,8 @@
 package guru.bubl.service.resources.fork;
 
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.RelationJson;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.fork.ForkOperator;
 import guru.bubl.module.model.graph.fork.NbNeighbors;
 import guru.bubl.module.model.graph.vertex.VertexJson;
@@ -36,7 +36,7 @@ public abstract class ForkResource extends GraphElementResource {
         ForkOperator source = getForkOperatorFromURI(
                 sourceUri
         );
-        EdgePojo newEdge;
+        RelationPojo newEdge;
         if (options.has("vertexId") && options.has("edgeId")) {
             newEdge = source.addVertexAndRelationWithIds(
                     options.optString("vertexId"),
@@ -59,7 +59,7 @@ public abstract class ForkResource extends GraphElementResource {
             );
             jsonCreatedStatement.put(
                     StatementJsonFields.edge.name(),
-                    EdgeJson.toJson(new EdgePojo(
+                    RelationJson.toJson(new RelationPojo(
                                     newEdge.getGraphElement(),
                                     sourceVertexPojo,
                                     newVertex

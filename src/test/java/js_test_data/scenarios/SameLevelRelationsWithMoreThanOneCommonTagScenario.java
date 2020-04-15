@@ -8,7 +8,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -90,15 +90,15 @@ public class SameLevelRelationsWithMoreThanOneCommonTagScenario implements JsTes
     }
 
     private void createRelations() {
-        EdgeOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToVertex(b1);
         r1.label("r1");
         r1.addTag(modelTestScenarios.creatorPredicate());
         r1.addTag(modelTestScenarios.possessionIdentification());
-        EdgeOperator r2 = center.addRelationToVertex(b2);
+        RelationOperator r2 = center.addRelationToVertex(b2);
         r2.label("r2");
         r2.addTag(modelTestScenarios.creatorPredicate());
         r2.addTag(modelTestScenarios.possessionIdentification());
-        EdgeOperator r3 = center.addRelationToVertex(b3);
+        RelationOperator r3 = center.addRelationToVertex(b3);
         r3.label("r3");
         r3.addTag(modelTestScenarios.creatorPredicate());
         center.addRelationToVertex(otherBubble).label("other relation");

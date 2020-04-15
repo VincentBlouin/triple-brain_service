@@ -11,7 +11,7 @@ import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -121,11 +121,11 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                 ),
                 ideaFriendlyResource
         );
-        EdgeOperator rIdea1 = someProject.addRelationToVertex(idea1);
+        RelationOperator rIdea1 = someProject.addRelationToVertex(idea1);
         rIdea1.label("idea for 1");
         rIdea1.addTag(ideaIdentification);
 
-        EdgeOperator rIdea2 = someProject.addRelationToVertex(idea2);
+        RelationOperator rIdea2 = someProject.addRelationToVertex(idea2);
         rIdea2.label("idea for 2");
         rIdea2.addTag(ideaIdentification);
 
@@ -137,11 +137,11 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                         "component"
                 )
         );
-        EdgeOperator rComponent1 = someProject.addRelationToVertex(component1);
+        RelationOperator rComponent1 = someProject.addRelationToVertex(component1);
         rComponent1.label("has component 1");
         rComponent1.addTag(componentIdentification);
 
-        EdgeOperator rComponent2 = someProject.addRelationToVertex(component2);
+        RelationOperator rComponent2 = someProject.addRelationToVertex(component2);
         rComponent2.label("has component 2");
         rComponent2.addTag(componentIdentification);
 

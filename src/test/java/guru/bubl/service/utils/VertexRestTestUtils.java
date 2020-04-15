@@ -13,9 +13,8 @@ import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgePojo;
-import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.module.model.graph.relation.Relation;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
@@ -86,7 +85,7 @@ public class VertexRestTestUtils {
     }
 
 
-    public Set<Edge> connectedEdgesOfVertexWithURI(URI vertexUri) {
+    public Set<Relation> connectedEdgesOfVertexWithURI(URI vertexUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -99,7 +98,7 @@ public class VertexRestTestUtils {
         JSONArray jsonArray = response.getEntity(JSONArray.class);
         return gson.fromJson(
                 jsonArray.toString(),
-                new TypeToken<Set<EdgePojo>>() {
+                new TypeToken<Set<RelationPojo>>() {
                 }.getType()
         );
     }

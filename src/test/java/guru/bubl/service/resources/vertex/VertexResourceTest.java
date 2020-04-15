@@ -5,29 +5,20 @@
 package guru.bubl.service.resources.vertex;
 
 import com.sun.jersey.api.client.ClientResponse;
-import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementPojo;
 import guru.bubl.module.model.graph.GraphElementOperator;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgePojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
-import guru.bubl.module.model.graph.vertex.VertexJson;
-import guru.bubl.module.model.json.StatementJsonFields;
 import guru.bubl.module.model.search.GraphElementSearchResult;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import static junit.framework.Assert.assertFalse;

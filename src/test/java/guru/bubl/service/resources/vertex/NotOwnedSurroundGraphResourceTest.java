@@ -9,7 +9,7 @@ import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.friend.FriendStatus;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.Edge;
+import guru.bubl.module.model.graph.relation.Relation;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.vertex.Vertex;
@@ -154,13 +154,13 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
                 vertexBUri(),
                 vertexCUri()
         );
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         SubGraph subGraph = SubGraphJson.fromJson(
                 graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getEntity(JSONObject.class)
         );
         assertTrue(
                 subGraph.hasEdgeWithUri(
-                        edgeBetweenAAndB.uri()
+                        relationBetweenAAndB.uri()
                 )
         );
         vertexUtils().makePrivateVertexWithUri(vertexAUri());
@@ -171,7 +171,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         );
         assertFalse(
                 subGraph.hasEdgeWithUri(
-                        edgeBetweenAAndB.uri()
+                        relationBetweenAAndB.uri()
                 )
         );
     }
@@ -369,17 +369,17 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         vertexUtils().makePublicVertexWithUri(
                 vertexBUri()
         );
-        Edge edge = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relation = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
 
         );
         String shortId = UserUris.graphElementShortId(
-                edge.uri()
+                relation.uri()
         );
         return resource
-                .path(getUsersBaseUri(edge.getOwnerUsername()))
+                .path(getUsersBaseUri(relation.getOwnerUsername()))
                 .path("non_owned")
                 .path("edge")
                 .path(shortId)

@@ -8,9 +8,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.FriendlyResource;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.Relation;
+import guru.bubl.module.model.graph.relation.RelationJson;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.tag.TagJson;
@@ -95,13 +95,13 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
 
     @Test
     public void can_add_same_as_to_an_edge() {
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenAAndB();
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenAAndB();
         Map<URI, ? extends FriendlyResource> sameAs = vertexA().getTags();
         assertThat(
                 sameAs.size(),
                 is(0)
         );
-        addCreatorPredicateToEdge(edgeBetweenAAndB);
+        addCreatorPredicateToEdge(relationBetweenAAndB);
         sameAs = edgeUtils().edgeBetweenAAndB().getTags();
         assertThat(
                 sameAs.size(),
@@ -128,7 +128,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
         ).getEntity(
                 JSONObject.class
         );
-        EdgePojo newEdge = EdgeJson.fromJson(
+        RelationPojo newEdge = RelationJson.fromJson(
                 tripleAsJson.getJSONObject("edge")
         );
         TagPojo edgeAsIdentifier = new TagPojo(
@@ -138,7 +138,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
                         "some label"
                 )
         );
-        Edge edgeBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
                 vertexAUri(),
                 vertexBUri(),
                 graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
@@ -146,7 +146,7 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
         TagPojo newEdgeAsMeta = TagJson.fromJson(
                 graphElementUtils().addTagToGraphElementWithUri(
                         edgeAsIdentifier,
-                        edgeBetweenAAndB.uri()
+                        relationBetweenAAndB.uri()
                 ).getEntity(String.class)
         ).values().iterator().next();
 
@@ -160,14 +160,14 @@ public class GraphElementTagResourceTest extends GraphManipulationRestTestUtils 
         );
     }
 
-    private ClientResponse addCreatorPredicateToEdge(Edge edge) {
+    private ClientResponse addCreatorPredicateToEdge(Relation relation) {
         TagPojo creatorPredicate = modelTestScenarios.creatorPredicate();
         creatorPredicate.setRelationExternalResourceUri(
                 ModelTestScenarios.TYPE
         );
         return graphElementUtils().addTagToGraphElementWithUri(
                 creatorPredicate,
-                edge.uri()
+                relation.uri()
         );
     }
 

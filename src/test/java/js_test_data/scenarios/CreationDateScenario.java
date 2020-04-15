@@ -9,7 +9,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -178,40 +178,40 @@ public class CreationDateScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        EdgeOperator r1 = b1.addRelationToVertex(b2);
+        RelationOperator r1 = b1.addRelationToVertex(b2);
         r1.label("r1");
-        EdgeOperator r2 = b1.addRelationToVertex(b3);
+        RelationOperator r2 = b1.addRelationToVertex(b3);
         r2.label("r2");
-        EdgeOperator r3 = b1.addRelationToVertex(b4);
+        RelationOperator r3 = b1.addRelationToVertex(b4);
         r3.label("r3");
-        EdgeOperator r4 = b1.addRelationToVertex(b5);
+        RelationOperator r4 = b1.addRelationToVertex(b5);
         r4.label("r4");
-        EdgeOperator similar1 = b1.addRelationToVertex(s1);
+        RelationOperator similar1 = b1.addRelationToVertex(s1);
         similar1.label("similar");
         similar1.addTag(modelTestScenarios.toDo());
-        EdgeOperator similar2 = b1.addRelationToVertex(s2);
+        RelationOperator similar2 = b1.addRelationToVertex(s2);
         similar2.label("similar");
         similar2.addTag(modelTestScenarios.toDo());
-        EdgeOperator similar3 = b1.addRelationToVertex(s3);
+        RelationOperator similar3 = b1.addRelationToVertex(s3);
         similar3.label("similar");
         similar3.addTag(modelTestScenarios.toDo());
-        EdgeOperator r5 = b1.addRelationToVertex(b6);
+        RelationOperator r5 = b1.addRelationToVertex(b6);
         r5.label("r5");
-        EdgeOperator r6 = b1.addRelationToVertex(b7);
+        RelationOperator r6 = b1.addRelationToVertex(b7);
         r6.label("r6");
-        EdgeOperator r71 = b7.addRelationToVertex(b71);
+        RelationOperator r71 = b7.addRelationToVertex(b71);
         r71.label("r71");
-        EdgeOperator r72 = b7.addRelationToVertex(b72);
+        RelationOperator r72 = b7.addRelationToVertex(b72);
         r72.label("r72");
-        EdgeOperator r73 = b7.addRelationToVertex(b73);
+        RelationOperator r73 = b7.addRelationToVertex(b73);
         r73.label("r73");
-        EdgeOperator r74 = b7.addRelationToVertex(b74);
+        RelationOperator r74 = b7.addRelationToVertex(b74);
         r74.label("r74");
-        EdgeOperator r8 = b1.addRelationToVertex(b8);
+        RelationOperator r8 = b1.addRelationToVertex(b8);
         r8.label("r8");
-        EdgeOperator r9 = b1.addRelationToVertex(b9);
+        RelationOperator r9 = b1.addRelationToVertex(b9);
         r9.label("r9");
-        EdgeOperator r10 = b1.addRelationToVertex(b10);
+        RelationOperator r10 = b1.addRelationToVertex(b10);
         r10.label("r10");
     }
 

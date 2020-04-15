@@ -13,11 +13,11 @@ import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFac
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.edge.EdgeFactory;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationFactory;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.service.resources.edge.EdgeResource;
-import guru.bubl.service.resources.edge.EdgeResourceFactory;
+import guru.bubl.service.resources.relation.RelationResource;
+import guru.bubl.service.resources.relation.RelationResourceFactory;
 import guru.bubl.service.resources.group_relation.GroupRelationResource;
 import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
 import guru.bubl.service.resources.tag.TagResource;
@@ -43,7 +43,7 @@ public class GraphResource {
     private VertexResourceFactory vertexResourceFactory;
 
     @Inject
-    private EdgeResourceFactory edgeResourceFactory;
+    private RelationResourceFactory relationResourceFactory;
 
     @Inject
     private TagResourceFactory tagResourceFactory;
@@ -55,7 +55,7 @@ public class GraphResource {
     private GroupRelationResourceFactory groupRelationResourceFactory;
 
     @Inject
-    private EdgeFactory edgeFactory;
+    private RelationFactory relationFactory;
 
     @Inject
     private GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
@@ -80,8 +80,8 @@ public class GraphResource {
     }
 
     @Path("/edge")
-    public EdgeResource edgeResource() {
-        return edgeResourceFactory.withUserGraph(
+    public RelationResource edgeResource() {
+        return relationResourceFactory.withUserGraph(
                 userGraph()
         );
     }
@@ -117,14 +117,14 @@ public class GraphResource {
         GraphElementOperator graphElementOperator;
         CenterGraphElementOperator centerGraphElementOperator;
         if (type.toLowerCase().equals("edge")) {
-            EdgeOperator edgeOperator = edgeFactory.withUri(
+            RelationOperator relationOperator = relationFactory.withUri(
                     new UserUris(user).edgeUriFromShortId(shortId)
             );
             graphElementOperator = graphElementOperatorFactory.withUri(
-                    edgeOperator.sourceUri()
+                    relationOperator.sourceUri()
             );
             centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
-                    edgeOperator
+                    relationOperator
             );
         } else {
             graphElementOperator = graphElementFromShortIdAndType(shortId, type);

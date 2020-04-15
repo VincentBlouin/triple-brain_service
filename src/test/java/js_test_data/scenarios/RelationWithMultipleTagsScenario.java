@@ -8,7 +8,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -74,7 +74,7 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
         aria.label("Aria Sauley");
     }
     private void buildRelations(){
-        EdgeOperator scientistRelation = team.addRelationToVertex(aria);
+        RelationOperator scientistRelation = team.addRelationToVertex(aria);
         scientistRelation.label("computer scientist");
         scientistRelation.addTag(
                 modelTestScenarios.computerScientistType()
@@ -83,7 +83,7 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
                 modelTestScenarios.person()
         );
 
-        EdgeOperator memberRelation = team.addRelationToVertex(john);
+        RelationOperator memberRelation = team.addRelationToVertex(john);
         memberRelation.label("member");
         memberRelation.addTag(
                 modelTestScenarios.person()

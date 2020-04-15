@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.test.scenarios.TestScenarios;
@@ -62,14 +62,14 @@ public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario 
     }
 
     public void createEdges() {
-        EdgeOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToVertex(b1);
         r1.label("r1");
         r1.addTag(
                 modelTestScenarios.human()
         );
-        EdgeOperator r2 = b1.addRelationToVertex(b2);
+        RelationOperator r2 = b1.addRelationToVertex(b2);
         r2.label("r2");
-        EdgeOperator r3 = b1.addRelationToVertex(b3);
+        RelationOperator r3 = b1.addRelationToVertex(b3);
         r3.label("r3");
         r2AsMeta = r3.addTag(
                 TestScenarios.tagFromFriendlyResource(

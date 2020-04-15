@@ -11,8 +11,8 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.Relation;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.SessionHandler;
 import org.codehaus.jettison.json.JSONObject;
@@ -47,14 +47,14 @@ public class EdgeRestTestUtils {
         this.xsrfToken = xsrfToken;
     }
 
-    public ClientResponse updateEdgeLabel(String label, Edge edge) {
+    public ClientResponse updateEdgeLabel(String label, Relation relation) {
         return NoEx.wrap(() -> {
             JSONObject localizedLabel = new JSONObject().put(
                     LocalizedStringJson.content.name(),
                     label
             );
             return resource
-                    .path(edge.uri().toString())
+                    .path(relation.uri().toString())
                     .path("label")
                     .cookie(authCookie)
                     .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
@@ -63,15 +63,15 @@ public class EdgeRestTestUtils {
     }
 
     public ClientResponse removeEdgeBetweenVertexAAndB() {
-        Edge edgeBetweenAAndB = edgeBetweenAAndB();
+        Relation relationBetweenAAndB = edgeBetweenAAndB();
         return resource
-                .path(edgeBetweenAAndB.uri().toString())
+                .path(relationBetweenAAndB.uri().toString())
                 .cookie(authCookie)
                 .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                 .delete(ClientResponse.class);
     }
 
-    public Edge edgeWithUri(URI edgeUri) {
+    public Relation edgeWithUri(URI edgeUri) {
         ClientResponse response = resource
                 .path("service")
                 .path("test")
@@ -82,13 +82,13 @@ public class EdgeRestTestUtils {
                 .get(ClientResponse.class);
         return gson.fromJson(
                 response.getEntity(JSONObject.class).toString(),
-                EdgePojo.class
+                RelationPojo.class
         );
     }
 
-    public ClientResponse updateNoteOfEdge(String note, Edge edge) {
+    public ClientResponse updateNoteOfEdge(String note, Relation relation) {
         return resource
-                .path(edge.uri().getPath())
+                .path(relation.uri().getPath())
                 .path("comment")
                 .cookie(authCookie)
                 .type(MediaType.TEXT_PLAIN)
@@ -96,18 +96,18 @@ public class EdgeRestTestUtils {
                 .post(ClientResponse.class, note);
     }
 
-    public Edge edgeBetweenTwoVerticesUriGivenEdges(
+    public Relation edgeBetweenTwoVerticesUriGivenEdges(
             URI firstVertexUri,
             URI secondVertexUri,
-            Map<URI, ? extends Edge> edges
+            Map<URI, ? extends Relation> edges
     ) {
         try {
-            for (Edge edge : edges.values()) {
-                URI sourceVertexId = edge.sourceUri();
-                URI destinationVertexId = edge.destinationUri();
+            for (Relation relation : edges.values()) {
+                URI sourceVertexId = relation.sourceUri();
+                URI destinationVertexId = relation.destinationUri();
                 if (oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, sourceVertexId) &&
                         oneOfTwoUriIsUri(firstVertexUri, secondVertexUri, destinationVertexId)) {
-                    return edge;
+                    return relation;
                 }
             }
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class EdgeRestTestUtils {
         throw new RuntimeException("none found !");
     }
 
-    public Edge edgeBetweenAAndB() {
+    public Relation edgeBetweenAAndB() {
         return edgeBetweenTwoVerticesUriGivenEdges(
                 graphUtils.vertexAUri(),
                 graphUtils.vertexBUri(),

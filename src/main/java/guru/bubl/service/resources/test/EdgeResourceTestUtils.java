@@ -5,10 +5,10 @@
 package guru.bubl.service.resources.test;
 
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.edge.EdgeFactory;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.RelationFactory;
+import guru.bubl.module.model.graph.relation.RelationJson;
+import guru.bubl.module.model.graph.relation.RelationOperator;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.service.SessionHandler;
 
@@ -33,15 +33,15 @@ public class EdgeResourceTestUtils {
     private SessionHandler sessionHandler;
 
     @Inject
-    private EdgeFactory edgeFactory;
+    private RelationFactory relationFactory;
 
     @Path("{edgeId}")
     @GET
     public Response vertexWithId(@Context HttpServletRequest request, @PathParam("edgeId") String edgeId) throws Exception {
         UserGraph userGraph = graphFactory.loadForUser(sessionHandler.userFromSession(request.getSession()));
-        EdgeOperator edge = edgeFactory.withUri(new URI(edgeId));
-        return Response.ok(EdgeJson.toJson(
-                new EdgePojo(edge)
+        RelationOperator edge = relationFactory.withUri(new URI(edgeId));
+        return Response.ok(RelationJson.toJson(
+                new RelationPojo(edge)
         )).build();
     }
 

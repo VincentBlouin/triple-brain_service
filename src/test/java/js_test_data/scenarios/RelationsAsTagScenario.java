@@ -10,7 +10,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -108,22 +108,22 @@ public class RelationsAsTagScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        EdgeOperator firstSomeRelation = center.addRelationToVertex(b1);
+        RelationOperator firstSomeRelation = center.addRelationToVertex(b1);
         firstSomeRelation.label("original some relation");
         TagPojo firstSomeRelationAsIdentifier = TestScenarios.tagFromFriendlyResource(
                 firstSomeRelation
         );
-        EdgeOperator secondSomeRelation = center.addRelationToVertex(b2);
+        RelationOperator secondSomeRelation = center.addRelationToVertex(b2);
         secondSomeRelation.label("some relation");
         secondSomeRelation.addTag(
                 firstSomeRelationAsIdentifier
         );
-        EdgeOperator thirdSomeRelation = center.addRelationToVertex(b3);
+        RelationOperator thirdSomeRelation = center.addRelationToVertex(b3);
         thirdSomeRelation.label("some relation");
         thirdSomeRelation.addTag(
                 firstSomeRelationAsIdentifier
         );
-        EdgeOperator differentRelation = center.addRelationToVertex(b4);
+        RelationOperator differentRelation = center.addRelationToVertex(b4);
         differentRelation.label("some different relation");
     }
 }

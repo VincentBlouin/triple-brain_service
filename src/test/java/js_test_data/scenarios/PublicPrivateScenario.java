@@ -8,7 +8,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -71,9 +71,9 @@ public class PublicPrivateScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        EdgeOperator r1 = b1.addRelationToVertex(b2);
+        RelationOperator r1 = b1.addRelationToVertex(b2);
         r1.label("r1");
-        EdgeOperator r2 = b1.addRelationToVertex(b3);
+        RelationOperator r2 = b1.addRelationToVertex(b3);
         r2.label("r2");
     }
 }

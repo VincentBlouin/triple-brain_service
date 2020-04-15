@@ -10,7 +10,7 @@ import guru.bubl.module.model.admin.WholeGraphAdmin;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.*;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -24,9 +24,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 
 public class ThreeScenario implements JsTestScenario {
@@ -123,7 +121,7 @@ public class ThreeScenario implements JsTestScenario {
                 parent.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        EdgeOperator singleParentToB1Relation = parent.addRelationToVertex(b1);
+        RelationOperator singleParentToB1Relation = parent.addRelationToVertex(b1);
         SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundVertexUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
@@ -223,17 +221,17 @@ public class ThreeScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        EdgeOperator r1 = b1.addRelationToVertex(b2);
+        RelationOperator r1 = b1.addRelationToVertex(b2);
         r1.label("r1");
-        EdgeOperator r2 = b1.addRelationToVertex(b3);
+        RelationOperator r2 = b1.addRelationToVertex(b3);
         r2.label("r2");
-        EdgeOperator r3 = b3.addRelationToVertex(b4);
+        RelationOperator r3 = b3.addRelationToVertex(b4);
         r3.label("r3");
-        EdgeOperator r4 = b3.addRelationToVertex(b5);
+        RelationOperator r4 = b3.addRelationToVertex(b5);
         r4.label("r4");
         b4.addVertexAndRelation();
         b4.addVertexAndRelation();
-        EdgeOperator relation = parent.addRelationToVertex(child);
+        RelationOperator relation = parent.addRelationToVertex(child);
         relation.label("relation");
     }
 }

@@ -5,8 +5,7 @@ import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.tag.TagFactory;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -115,7 +114,7 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
     private void createEdges() {
         center.addRelationToVertex(aaaa).label("r1");
 
-        EdgeOperator g1 = center.addRelationToVertex(bbbb);
+        RelationOperator g1 = center.addRelationToVertex(bbbb);
         g1.label("g1");
 
         group1 = g1.addTag(
@@ -127,11 +126,11 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
                 )
         ).values().iterator().next();
 
-        EdgeOperator g2 = center.addRelationToVertex(cccc);
+        RelationOperator g2 = center.addRelationToVertex(cccc);
         g2.label("g2");
         g2.addTag(group1);
 
-        EdgeOperator g21 = center.addRelationToVertex(dddd);
+        RelationOperator g21 = center.addRelationToVertex(dddd);
         g21.label("g21");
         TagPojo group2 = g21.addTag(
                 new TagPojo(
@@ -144,24 +143,24 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
         g21.addTag(group1);
         g21.addTag(group2);
 
-        EdgeOperator g22 = center.addRelationToVertex(eeee);
+        RelationOperator g22 = center.addRelationToVertex(eeee);
         g22.label("g22");
         g22.addTag(group1);
         g22.addTag(group2);
 
 
-        EdgeOperator g23 = center.addRelationToVertex(ffff);
+        RelationOperator g23 = center.addRelationToVertex(ffff);
         g23.label("g23");
         g23.addTag(group1);
         g23.addTag(group2);
 
-        EdgeOperator g3 = center.addRelationToVertex(gggg);
+        RelationOperator g3 = center.addRelationToVertex(gggg);
         g3.label("g3");
         g3.addTag(group1);
 
         center.addRelationToVertex(hhhh).label("r2");
 
-        EdgeOperator r3 = otherCenter.addRelationToVertex(uuuu);
+        RelationOperator r3 = otherCenter.addRelationToVertex(uuuu);
         r3.label("r3");
         r3.addTag(group1);
     }

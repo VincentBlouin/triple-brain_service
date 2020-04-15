@@ -8,7 +8,7 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
@@ -69,9 +69,9 @@ public class InverseRelationScenario implements JsTestScenario {
     }
 
     private void createEdges(){
-        EdgeOperator straight = me.addRelationToVertex(straightBubble);
+        RelationOperator straight = me.addRelationToVertex(straightBubble);
         straight.label("going straight");
-        EdgeOperator inverse = inverseBubble.addRelationToVertex(me);
+        RelationOperator inverse = inverseBubble.addRelationToVertex(me);
         inverse.label("going inverse");
     }
 }

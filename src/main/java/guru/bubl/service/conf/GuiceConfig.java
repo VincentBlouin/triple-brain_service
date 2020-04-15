@@ -22,7 +22,7 @@ import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
-import guru.bubl.service.resources.edge.EdgeResourceFactory;
+import guru.bubl.service.resources.relation.RelationResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
@@ -83,7 +83,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                         GraphElementTagResourceFactory.class
                 ));
                 install(builder.build(
-                        EdgeResourceFactory.class
+                        RelationResourceFactory.class
                 ));
                 install(builder.build(
                         SearchResourceFactory.class

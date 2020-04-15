@@ -2,24 +2,21 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources.edge;
+package guru.bubl.service.resources.relation;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgeFactory;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.Relation;
+import guru.bubl.module.model.graph.relation.RelationFactory;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.group_relation.GroupRelationPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
-import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.module.model.graph.vertex.VertexPojo;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.resources.GraphElementResource;
@@ -39,7 +36,7 @@ import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 
 
 @Produces(MediaType.APPLICATION_JSON)
-public class EdgeResource extends GraphElementResource {
+public class RelationResource extends GraphElementResource {
 
     @Inject
     private GraphElementTagResourceFactory graphElementTagResourceFactory;
@@ -48,12 +45,12 @@ public class EdgeResource extends GraphElementResource {
     private VertexFactory vertexFactory;
 
     @Inject
-    private EdgeFactory edgeFactory;
+    private RelationFactory relationFactory;
 
     private UserGraph userGraph;
 
     @AssistedInject
-    public EdgeResource(
+    public RelationResource(
             @Assisted UserGraph userGraph
     ) {
         this.userGraph = userGraph;
@@ -78,12 +75,12 @@ public class EdgeResource extends GraphElementResource {
         VertexOperator destinationVertex = vertexFactory.withUri(URI.create(
                 destinationVertexId
         ));
-        Edge createdEdge = sourceVertex.addRelationToVertex(destinationVertex);
-        if (createdEdge == null) {
+        Relation createdRelation = sourceVertex.addRelationToVertex(destinationVertex);
+        if (createdRelation == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         return Response.created(URI.create(
-                UserUris.graphElementShortId(createdEdge.uri())
+                UserUris.graphElementShortId(createdRelation.uri())
         )).build();
     }
 
@@ -93,7 +90,7 @@ public class EdgeResource extends GraphElementResource {
     public Response removeRelation(
             @PathParam("edgeShortId") String edgeShortId
     ) {
-        EdgeOperator edge = edgeFromShortId(edgeShortId);
+        RelationOperator edge = edgeFromShortId(edgeShortId);
         edge.remove();
         return Response.ok().build();
     }
@@ -105,7 +102,7 @@ public class EdgeResource extends GraphElementResource {
             @PathParam("edgeShortId") String edgeShortId,
             JSONObject localizedLabel) {
         URI edgeId = getUriFromShortId(edgeShortId);
-        EdgeOperator edge = edgeFactory.withUri(
+        RelationOperator edge = relationFactory.withUri(
                 edgeId
         );
         edge.label(
@@ -138,8 +135,8 @@ public class EdgeResource extends GraphElementResource {
             @PathParam("shortId") String shortId,
             String comment
     ) {
-        EdgeOperator edgeOperator = edgeFromShortId(shortId);
-        edgeOperator.comment(comment);
+        RelationOperator relationOperator = edgeFromShortId(shortId);
+        relationOperator.comment(comment);
         return Response.noContent().build();
     }
 
@@ -208,7 +205,7 @@ public class EdgeResource extends GraphElementResource {
             @PathParam("shortId") String shortId,
             JSONObject params
     ) {
-        EdgeOperator edge = edgeFromShortId(shortId);
+        RelationOperator edge = edgeFromShortId(shortId);
         GroupRelationPojo newGroupRelation = edge.convertToGroupRelation(
                 params.optString("newGroupRelationShortId", UUID.randomUUID().toString()),
                 ShareLevel.valueOf(params.optString("initialShareLevel", ShareLevel.PRIVATE.name())),
@@ -237,8 +234,8 @@ public class EdgeResource extends GraphElementResource {
 //        return Response
 //    }
 
-    private EdgeOperator edgeFromShortId(String shortId) {
-        return edgeFactory.withUri(
+    private RelationOperator edgeFromShortId(String shortId) {
+        return relationFactory.withUri(
                 getUriFromShortId(
                         shortId
                 )

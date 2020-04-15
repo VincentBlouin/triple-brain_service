@@ -5,7 +5,7 @@ import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.SubGraphJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.tag.TagFactory;
 import guru.bubl.module.model.graph.tag.TagPojo;
@@ -124,7 +124,7 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
     private void createEdges() {
         center.addRelationToVertex(aaaa).label("r1");
 
-        EdgeOperator g1 = center.addRelationToVertex(bbbb);
+        RelationOperator g1 = center.addRelationToVertex(bbbb);
         g1.label("g1");
 
         group1 = g1.addTag(
@@ -136,11 +136,11 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                 )
         ).values().iterator().next();
 
-        EdgeOperator g2 = center.addRelationToVertex(cccc);
+        RelationOperator g2 = center.addRelationToVertex(cccc);
         g2.label("g2");
         g2.addTag(group1);
 
-        EdgeOperator g21 = center.addRelationToVertex(dddd);
+        RelationOperator g21 = center.addRelationToVertex(dddd);
         g21.label("g21");
         TagPojo group2 = g21.addTag(
                 new TagPojo(
@@ -153,24 +153,24 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
         g21.addTag(group1);
         g21.addTag(group2);
 
-        EdgeOperator g22 = center.addRelationToVertex(eeee);
+        RelationOperator g22 = center.addRelationToVertex(eeee);
         g22.label("g22");
         g22.addTag(group1);
         g22.addTag(group2);
 
 
-        EdgeOperator g23 = center.addRelationToVertex(ffff);
+        RelationOperator g23 = center.addRelationToVertex(ffff);
         g23.label("g23");
         g23.addTag(group1);
         g23.addTag(group2);
 
-        EdgeOperator g3 = center.addRelationToVertex(gggg);
+        RelationOperator g3 = center.addRelationToVertex(gggg);
         g3.label("g3");
         g3.addTag(group1);
 
         center.addRelationToVertex(hhhh).label("r2");
 
-        EdgeOperator g31 = center.addRelationToVertex(jjjj);
+        RelationOperator g31 = center.addRelationToVertex(jjjj);
         g31.label("g31");
         TagPojo group3 = g31.addTag(
                 new TagPojo(
@@ -184,13 +184,13 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
         g31.addTag(group2);
 
 
-        EdgeOperator g32 = center.addRelationToVertex(kkkk);
+        RelationOperator g32 = center.addRelationToVertex(kkkk);
         g32.label("g32");
         g32.addTag(group1);
         g32.addTag(group2);
         g32.addTag(group3);
 
-        EdgeOperator g33 = center.addRelationToVertex(llll);
+        RelationOperator g33 = center.addRelationToVertex(llll);
         g33.label("g33");
         g33.addTag(group1);
         g33.addTag(group2);

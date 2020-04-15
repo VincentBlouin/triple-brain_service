@@ -7,9 +7,9 @@ package guru.bubl.service.resources.test;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.RelationJson;
+import guru.bubl.module.model.graph.relation.RelationOperator;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.Vertex;
@@ -68,10 +68,10 @@ public class VertexResourceTestUtils {
     public Response connectedEdges(@Context HttpServletRequest request, @PathParam("vertexId") String vertexId) throws Exception {
         VertexOperator vertex = vertexFactory.withUri(new URI(vertexId));
         JSONArray edges = new JSONArray();
-        for (EdgeOperator edge : vertex.connectedEdges().values()) {
+        for (RelationOperator edge : vertex.connectedEdges().values()) {
             edges.put(
-                    EdgeJson.toJson(
-                            new EdgePojo(edge)
+                    RelationJson.toJson(
+                            new RelationPojo(edge)
                     )
             );
         }

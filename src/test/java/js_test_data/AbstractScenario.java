@@ -6,7 +6,7 @@ package js_test_data;
 
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
-import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
@@ -27,7 +27,7 @@ public class AbstractScenario {
             b2,
             b3;
 
-    protected EdgeOperator
+    protected RelationOperator
             r1,
             r2,
             r3;
@@ -59,11 +59,11 @@ public class AbstractScenario {
     }
 
     public void createEdges() {
-        EdgeOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToVertex(b1);
         r1.label("r1");
-        EdgeOperator r2 = center.addRelationToVertex(b2);
+        RelationOperator r2 = center.addRelationToVertex(b2);
         r2.label("r2");
-        EdgeOperator r3 = center.addRelationToVertex(b3);
+        RelationOperator r3 = center.addRelationToVertex(b3);
         r3.label("r3");
     }
 }

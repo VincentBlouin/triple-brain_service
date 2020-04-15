@@ -6,9 +6,9 @@ package guru.bubl.service.resources;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.edge.Edge;
-import guru.bubl.module.model.graph.edge.EdgeJson;
-import guru.bubl.module.model.graph.edge.EdgePojo;
+import guru.bubl.module.model.graph.relation.Relation;
+import guru.bubl.module.model.graph.relation.RelationJson;
+import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.graph.vertex.Vertex;
 import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.json.StatementJsonFields;
@@ -70,7 +70,7 @@ public class ForkResourceTest extends GraphManipulationRestTestUtils {
                 subject.uri().toString(),
                 is(vertexAUri().toString())
         );
-        Edge newEdge = EdgeJson.fromJson(
+        Relation newRelation = RelationJson.fromJson(
                 createdStatement.getJSONObject(
                         StatementJsonFields.edge.name()
                 )
@@ -80,12 +80,12 @@ public class ForkResourceTest extends GraphManipulationRestTestUtils {
                         StatementJsonFields.end_vertex.name()
                 )
         );
-        Set<Edge> edgesOfVertexA = vertexUtils().connectedEdgesOfVertexWithURI(
+        Set<Relation> edgesOfVertexA = vertexUtils().connectedEdgesOfVertexWithURI(
                 vertexAUri()
         );
         assertTrue(
                 edgesOfVertexA.contains(
-                        newEdge
+                        newRelation
                 )
         );
         assertTrue(
@@ -100,7 +100,7 @@ public class ForkResourceTest extends GraphManipulationRestTestUtils {
     public void adding_a_vertex_returns_the_new_edge_and_vertex_creation_and_last_modification_date() throws Exception {
         ClientResponse response = vertexUtils().addAVertexToForkWithUri(vertexAUri());
         JSONObject createdStatement = response.getEntity(JSONObject.class);
-        EdgePojo newEdge = EdgeJson.fromJson(
+        RelationPojo newEdge = RelationJson.fromJson(
                 createdStatement.getJSONObject(
                         StatementJsonFields.edge.name()
                 )
@@ -160,7 +160,7 @@ public class ForkResourceTest extends GraphManipulationRestTestUtils {
                 is(Response.Status.OK.getStatusCode())
         );
         JSONObject createdStatement = response.getEntity(JSONObject.class);
-        EdgePojo newEdge = EdgeJson.fromJson(
+        RelationPojo newEdge = RelationJson.fromJson(
                 createdStatement.getJSONObject(
                         StatementJsonFields.edge.name()
                 )
