@@ -50,7 +50,7 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
         buildBubbles();
         buildRelations();
         return SubGraphJson.toJson(
-                userGraph.aroundVertexUriInShareLevels(
+                userGraph.aroundForkUriInShareLevels(
                         team.uri(),
                         ShareLevel.allShareLevelsInt
                 )

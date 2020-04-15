@@ -48,7 +48,7 @@ public class OwnedSurroundGraphResource {
     }
 
     private SubGraphPojo getGraph() {
-        return userGraph.aroundVertexUriInShareLevels(
+        return userGraph.aroundForkUriInShareLevels(
                 centerBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );

@@ -90,7 +90,7 @@ public class GroupRelationsScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        subGraphForMe = userGraph.aroundVertexUriInShareLevels(
+        subGraphForMe = userGraph.aroundForkUriInShareLevels(
                 me.uri(),
                 ShareLevel.allShareLevelsInt
         );

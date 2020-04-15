@@ -56,7 +56,7 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
                 user.username()
         );
         mergeBubble.label("merge");
-        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphPojo = userGraph.aroundForkUriInShareLevels(
                 mergeBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );

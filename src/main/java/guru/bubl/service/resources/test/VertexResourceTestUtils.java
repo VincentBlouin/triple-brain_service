@@ -52,7 +52,7 @@ public class VertexResourceTestUtils {
                 sessionHandler.userFromSession(request.getSession())
         );
         URI vertexUri = new URI(vertexId);
-        SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraph = userGraph.aroundForkUriInShareLevels(
                 vertexUri,
                 ShareLevel.allShareLevelsInt
         );

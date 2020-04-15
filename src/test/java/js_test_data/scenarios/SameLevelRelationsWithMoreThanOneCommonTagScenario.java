@@ -59,7 +59,7 @@ public class SameLevelRelationsWithMoreThanOneCommonTagScenario implements JsTes
         userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphPojo = userGraph.aroundForkUriInShareLevels(
                 center.uri(),
                 ShareLevel.allShareLevelsInt
         );

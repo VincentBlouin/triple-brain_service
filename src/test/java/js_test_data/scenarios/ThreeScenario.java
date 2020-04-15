@@ -94,15 +94,15 @@ public class ThreeScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForB1 = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphForB1 = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo subGraphForB2 = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphForB2 = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo subGraphForB3 = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphForB3 = userGraph.aroundForkUriInShareLevels(
                 b3.uri(),
                 ShareLevel.allShareLevelsInt
         );
@@ -117,18 +117,18 @@ public class ThreeScenario implements JsTestScenario {
         ).searchRelationsForAutoCompletionByLabel(
                 user
         );
-        SubGraphPojo subGraphForParent = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphForParent = userGraph.aroundForkUriInShareLevels(
                 parent.uri(),
                 ShareLevel.allShareLevelsInt
         );
         RelationOperator singleParentToB1Relation = parent.addRelationToVertex(b1);
-        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
         singleParentToB1Relation.remove();
         child.mergeTo(b1);
-        SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );

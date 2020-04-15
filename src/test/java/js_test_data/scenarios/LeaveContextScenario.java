@@ -1,6 +1,5 @@
 package js_test_data.scenarios;
 
-import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
@@ -52,7 +51,7 @@ public class LeaveContextScenario implements JsTestScenario {
             return new JSONObject().put(
                     "techChoiceCenter",
                     SubGraphJson.toJson(
-                            userGraph.aroundVertexUriInShareLevels(
+                            userGraph.aroundForkUriInShareLevels(
                                     techChoice.uri(),
                                     ShareLevel.allShareLevelsInt
                             )
@@ -60,7 +59,7 @@ public class LeaveContextScenario implements JsTestScenario {
             ).put(
                     "choiceACenter",
                     SubGraphJson.toJson(
-                            userGraph.aroundVertexUriInShareLevels(
+                            userGraph.aroundForkUriInShareLevels(
                                     choiceA.uri(),
                                     ShareLevel.allShareLevelsInt
                             )

@@ -67,7 +67,7 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
             return new JSONObject().put(
                     "getGraph",
                     SubGraphJson.toJson(
-                            userGraph.aroundVertexUriInShareLevels(
+                            userGraph.aroundForkUriInShareLevels(
                                     center.uri(),
                                     ShareLevel.allShareLevelsInt
                             )
@@ -75,7 +75,7 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
             ).put(
                     "aroundGroup1",
                     SubGraphJson.toJson(
-                            userGraph.aroundVertexUriInShareLevels(
+                            userGraph.aroundForkUriInShareLevels(
                                     group1.uri(),
                                     ShareLevel.allShareLevelsInt
                             )

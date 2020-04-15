@@ -65,30 +65,30 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo b2Graph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b2Graph = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo b1Graph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b1Graph = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo shirt2Graph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo shirt2Graph = userGraph.aroundForkUriInShareLevels(
                 shirt2.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo distantBubbleGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo distantBubbleGraph = userGraph.aroundForkUriInShareLevels(
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );
         RelationOperator distantToB2 = distantBubble.addRelationToVertex(b2);
-        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
         distantToB2.remove();
         b1.addRelationToVertex(distantBubble);
-        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.aroundForkUriInShareLevels(
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );

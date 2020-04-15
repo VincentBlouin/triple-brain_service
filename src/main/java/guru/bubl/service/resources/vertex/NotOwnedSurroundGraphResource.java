@@ -56,7 +56,7 @@ public class NotOwnedSurroundGraphResource {
             depth = 1;
         }
 
-        SubGraphPojo subGraph = userGraph.aroundVertexUriWithDepthInShareLevels(
+        SubGraphPojo subGraph = userGraph.aroundForkUriWithDepthInShareLevels(
                 centerUri,
                 depth,
                 inShareLevels

@@ -76,7 +76,7 @@ public class RelationsAsTagScenario implements JsTestScenario {
                 ).put(
                         "graph",
                         SubGraphJson.toJson(
-                                userGraph.aroundVertexUriInShareLevels(
+                                userGraph.aroundForkUriInShareLevels(
                                         center.uri(),
                                         ShareLevel.allShareLevelsInt
                                 )

@@ -82,12 +82,12 @@ public class CreationDateScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        subGraphForB1 = userGraph.aroundVertexUriInShareLevels(
+        subGraphForB1 = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
         setupcreationDatesForSubGraphForB1();
-        subGraphForB7 = userGraph.aroundVertexUriInShareLevels(
+        subGraphForB7 = userGraph.aroundForkUriInShareLevels(
                 b7.uri(),
                 ShareLevel.allShareLevelsInt
         );

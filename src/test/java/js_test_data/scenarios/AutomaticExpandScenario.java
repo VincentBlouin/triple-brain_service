@@ -54,19 +54,19 @@ public class AutomaticExpandScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphPojo = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo b2SubGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b2SubGraph = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo b3SubGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b3SubGraph = userGraph.aroundForkUriInShareLevels(
                 b3.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo b31SubGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b31SubGraph = userGraph.aroundForkUriInShareLevels(
                 b31.uri(),
                 ShareLevel.allShareLevelsInt
         );

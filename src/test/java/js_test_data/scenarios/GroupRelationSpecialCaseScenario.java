@@ -52,7 +52,7 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo subGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraph = userGraph.aroundForkUriInShareLevels(
                 center.uri(),
                 ShareLevel.allShareLevelsInt
         );

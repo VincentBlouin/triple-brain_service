@@ -55,7 +55,7 @@ public class DeepGraphWithCircularityScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createRelations();
-        SubGraphPojo subGraphPojo = userGraph.aroundVertexUriWithDepthInShareLevels(
+        SubGraphPojo subGraphPojo = userGraph.aroundForkUriWithDepthInShareLevels(
                 b3.uri(),
                 3,
                 ShareLevel.allShareLevelsInt

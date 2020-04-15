@@ -76,17 +76,17 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo aroundTodo = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo aroundTodo = userGraph.aroundForkUriInShareLevels(
                 toDo.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo aroundEvent = userGraph.aroundVertexUriWithDepthInShareLevels(
+        SubGraphPojo aroundEvent = userGraph.aroundForkUriWithDepthInShareLevels(
                 event.uri(),
                 2,
                 ShareLevel.allShareLevelsInt
 
         );
-        SubGraphPojo aroundE3 = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo aroundE3 = userGraph.aroundForkUriInShareLevels(
                 e3.uri(),
                 ShareLevel.allShareLevelsInt
         );
@@ -108,7 +108,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
         ).put(
                 "singleTaggedToEvent",
                 SubGraphJson.toJson(
-                        userGraph.aroundVertexUriInShareLevels(
+                        userGraph.aroundForkUriInShareLevels(
                                 singleTaggedToEvent.uri(),
                                 ShareLevel.allShareLevelsInt
                         )

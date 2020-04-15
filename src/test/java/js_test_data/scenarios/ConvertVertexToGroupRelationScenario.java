@@ -48,11 +48,11 @@ public class ConvertVertexToGroupRelationScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo b1Graph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b1Graph = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo b2Graph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b2Graph = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );

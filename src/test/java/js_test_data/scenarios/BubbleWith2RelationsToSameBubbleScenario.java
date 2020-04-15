@@ -48,7 +48,7 @@ public class BubbleWith2RelationsToSameBubbleScenario implements JsTestScenario 
         center.addRelationToVertex(child).label("r1");
         center.addRelationToVertex(child).label("r2");
         return SubGraphJson.toJson(
-                userGraph.aroundVertexUriInShareLevels(
+                userGraph.aroundForkUriInShareLevels(
                         center.uri(),
                         ShareLevel.allShareLevelsInt
                 )

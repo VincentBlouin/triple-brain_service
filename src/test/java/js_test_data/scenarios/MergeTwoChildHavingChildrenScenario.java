@@ -58,20 +58,20 @@ public class MergeTwoChildHavingChildrenScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        SubGraphPojo center1SubGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo center1SubGraph = userGraph.aroundForkUriInShareLevels(
                 center1.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo center2SubGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo center2SubGraph = userGraph.aroundForkUriInShareLevels(
                 center2.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        SubGraphPojo b2SubGraph = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b2SubGraph = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
         o2.mergeTo(b2);
-        SubGraphPojo b2SubGraphAfterMerge = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo b2SubGraphAfterMerge = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );

@@ -46,7 +46,7 @@ public class PublicPrivateScenario implements JsTestScenario {
         createVertices();
         createEdges();
         return SubGraphJson.toJson(
-                userGraph.aroundVertexUriInShareLevels(
+                userGraph.aroundForkUriInShareLevels(
                         b1.uri(),
                         ShareLevel.allShareLevelsInt
                 )

@@ -44,7 +44,7 @@ public class InverseRelationScenario implements JsTestScenario {
         userGraph.createVertex();
         createVertices();
         createEdges();
-        SubGraphPojo subGraphForMe = userGraph.aroundVertexUriInShareLevels(
+        SubGraphPojo subGraphForMe = userGraph.aroundForkUriInShareLevels(
                 me.uri(),
                 ShareLevel.allShareLevelsInt
         );
