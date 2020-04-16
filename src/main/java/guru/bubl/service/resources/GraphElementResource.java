@@ -1,32 +1,33 @@
 package guru.bubl.service.resources;
 
+import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.json.LocalizedStringJson;
 import org.codehaus.jettison.json.JSONObject;
 
-import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Date;
 
-public abstract class GraphElementResource {
+public interface GraphElementResource {
 
-    @Inject
-    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+    URI getUriFromShortId(String shortId);
 
-    protected abstract URI getUriFromShortId(String shortId);
+    UserGraph getUserGraph();
 
-    protected abstract GraphElementOperator getOperatorFromShortId(String shortId);
+    CenterGraphElementOperatorFactory getCenterOperatorFactory();
+
+    GraphElementOperator getOperatorFromShortId(String shortId);
 
     @Path("/{type}/{shortId}/center")
     @POST
-    public Response makeCenter(@PathParam("shortId") String shortId, JSONObject data) {
-        CenterGraphElementOperator centerGraphElementOperator = centerGraphElementOperatorFactory.usingFriendlyResource(
+    default Response makeCenter(@PathParam("shortId") String shortId, JSONObject data) {
+        CenterGraphElementOperator centerGraphElementOperator = getCenterOperatorFactory().usingFriendlyResource(
                 getOperatorFromShortId(shortId)
         );
         centerGraphElementOperator.incrementNumberOfVisits();
@@ -43,10 +44,40 @@ public abstract class GraphElementResource {
 
     @Path("/{shortId}/center")
     @DELETE
-    public Response removeCenter(@PathParam("shortId") String shortId) {
-        centerGraphElementOperatorFactory.usingFriendlyResource(
+    default Response removeCenter(@PathParam("shortId") String shortId) {
+        getCenterOperatorFactory().usingFriendlyResource(
                 getOperatorFromShortId(shortId)
         ).remove();
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("{shortId}/label")
+    default Response updateVertexLabel(
+            @PathParam("shortId") String shortId,
+            JSONObject localizedLabel
+    ) {
+        getOperatorFromShortId(shortId).label(
+                localizedLabel.optString(
+                        LocalizedStringJson.content.name()
+                )
+        );
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("{shortId}/comment")
+    @Consumes(MediaType.TEXT_PLAIN)
+    default Response updateVertexComments(
+            @PathParam("shortId") String shortId,
+            String comment
+    ) {
+        getOperatorFromShortId(shortId).comment(comment);
+        return Response.noContent().build();
+    }
+
+
+    default User getUser() {
+        return getUserGraph().user();
     }
 }

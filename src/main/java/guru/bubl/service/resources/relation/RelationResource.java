@@ -7,9 +7,11 @@ package guru.bubl.service.resources.relation;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.relation.Relation;
 import guru.bubl.module.model.graph.relation.RelationFactory;
 import guru.bubl.module.model.graph.relation.RelationOperator;
@@ -21,6 +23,7 @@ import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.resources.GraphElementResource;
 import guru.bubl.service.resources.GraphElementTagResource;
+import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -36,7 +39,7 @@ import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 
 
 @Produces(MediaType.APPLICATION_JSON)
-public class RelationResource extends GraphElementResource {
+public class RelationResource implements EdgeResource {
 
     @Inject
     private GraphElementTagResourceFactory graphElementTagResourceFactory;
@@ -46,6 +49,9 @@ public class RelationResource extends GraphElementResource {
 
     @Inject
     private RelationFactory relationFactory;
+
+    @Inject
+    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     private UserGraph userGraph;
 
@@ -95,24 +101,6 @@ public class RelationResource extends GraphElementResource {
         return Response.ok().build();
     }
 
-    @POST
-    @Path("{edgeShortId}/label")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response modifyEdgeLabel(
-            @PathParam("edgeShortId") String edgeShortId,
-            JSONObject localizedLabel) {
-        URI edgeId = getUriFromShortId(edgeShortId);
-        RelationOperator edge = relationFactory.withUri(
-                edgeId
-        );
-        edge.label(
-                localizedLabel.optString(
-                        LocalizedStringJson.content.name()
-                )
-        );
-        return Response.ok().build();
-    }
-
     @PUT
     @Path("{shortId}/inverse")
     @Produces(MediaType.TEXT_PLAIN)
@@ -127,77 +115,6 @@ public class RelationResource extends GraphElementResource {
                 edgeFromShortId(shortId)
         );
     }
-
-    @POST
-    @Path("{shortId}/comment")
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateComment(
-            @PathParam("shortId") String shortId,
-            String comment
-    ) {
-        RelationOperator relationOperator = edgeFromShortId(shortId);
-        relationOperator.comment(comment);
-        return Response.noContent().build();
-    }
-
-    @PUT
-    @Path("{shortId}/source/{sourceVertexShortId}")
-    public Response changeSource(
-            @PathParam("shortId") String shortId,
-            @PathParam("sourceVertexShortId") String sourceShortId,
-            JSONObject params
-    ) {
-        GraphElementType forkType = GraphElementType.valueOf(
-                params.optString("forkType", GraphElementType.Vertex.name())
-        );
-        UserUris userUris = new UserUris(userGraph.user());
-        URI forkUri = forkType == GraphElementType.GroupRelation ?
-                userUris.groupRelationUriFromShortId(sourceShortId) :
-                userUris.vertexUriFromShortId(sourceShortId);
-        edgeFromShortId(shortId).changeSource(
-                forkUri,
-                ShareLevel.valueOf(
-                        params.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                ),
-                ShareLevel.valueOf(
-                        params.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                ),
-                ShareLevel.valueOf(
-                        params.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                )
-        );
-        return Response.noContent().build();
-    }
-
-    @PUT
-    @Path("{shortId}/destination/{destinationShortId}")
-    public Response changeDestination(
-            @PathParam("shortId") String shortId,
-            @PathParam("destinationShortId") String destinationShortId,
-            JSONObject params
-    ) {
-        GraphElementType forkType = GraphElementType.valueOf(
-                params.optString("forkType", GraphElementType.Vertex.name())
-        );
-        UserUris userUris = new UserUris(userGraph.user());
-        URI forkUri = forkType == GraphElementType.GroupRelation ?
-                userUris.groupRelationUriFromShortId(destinationShortId) :
-                userUris.vertexUriFromShortId(destinationShortId);
-        edgeFromShortId(shortId).changeDestination(
-                forkUri,
-                ShareLevel.valueOf(
-                        params.optString("oldEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                ),
-                ShareLevel.valueOf(
-                        params.optString("keptEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                ),
-                ShareLevel.valueOf(
-                        params.optString("newEndShareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                )
-        );
-        return Response.noContent().build();
-    }
-
 
     @POST
     @Path("{shortId}/convertToGroupRelation")
@@ -218,22 +135,6 @@ public class RelationResource extends GraphElementResource {
         ).build();
     }
 
-//    @POST
-//    @Path("{shortId}/convertToGroupRelation")
-//    public Response convertToGroupRelation(@PathParam("shortId") String shortId, JSONObject tagJson) {
-//        Edge edge = edgeFromShortId(shortId);
-//        TagPojo tag = TagJson.singleFromJson(
-//                tagJson.toString()
-//        );
-//        Map<URI, TagPojo> tags = graphElement.addTag(
-//                tag
-//        );
-//        return Response.ok().entity(
-//                TagJson.toJson(tags)
-//        ).build();
-//        return Response
-//    }
-
     private RelationOperator edgeFromShortId(String shortId) {
         return relationFactory.withUri(
                 getUriFromShortId(
@@ -243,7 +144,7 @@ public class RelationResource extends GraphElementResource {
     }
 
     @Override
-    protected URI getUriFromShortId(String shortId) {
+    public URI getUriFromShortId(String shortId) {
         return new UserUris(
                 userGraph.user()
         ).edgeUriFromShortId(
@@ -252,8 +153,25 @@ public class RelationResource extends GraphElementResource {
     }
 
     @Override
-    protected GraphElementOperator getOperatorFromShortId(String shortId) {
+    public GraphElementOperator getOperatorFromShortId(String shortId) {
         return vertexFactory.withUri(
+                getUriFromShortId(shortId)
+        );
+    }
+
+    @Override
+    public UserGraph getUserGraph() {
+        return userGraph;
+    }
+
+    @Override
+    public CenterGraphElementOperatorFactory getCenterOperatorFactory() {
+        return centerGraphElementOperatorFactory;
+    }
+
+    @Override
+    public EdgeOperator getEdgeOperatorFromShortId(String shortId) {
+        return relationFactory.withUri(
                 getUriFromShortId(shortId)
         );
     }

@@ -30,7 +30,7 @@ import java.net.URI;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class VertexResource extends ForkResource {
+public class VertexResource implements ForkResource {
 
     @Inject
     VertexCollectionResourceFactory vertexCollectionResourceFactory;
@@ -106,36 +106,6 @@ public class VertexResource extends ForkResource {
     }
 
 
-    @POST
-    @Path("{shortId}/label")
-    public Response updateVertexLabel(
-            @PathParam("shortId") String shortId,
-            JSONObject localizedLabel
-    ) {
-        VertexOperator vertex = vertexFactory.withUri(
-                getUriFromShortId(shortId)
-        );
-        vertex.label(
-                localizedLabel.optString(
-                        LocalizedStringJson.content.name()
-                )
-        );
-        return Response.noContent().build();
-    }
-
-    @POST
-    @Path("{shortId}/comment")
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response updateVertexComments(
-            @PathParam("shortId") String shortId,
-            String comment
-    ) {
-        VertexOperator vertex = vertexFactory.withUri(getUriFromShortId(shortId));
-        vertex.comment(comment);
-        return Response.noContent().build();
-    }
-
-
 //    @Path("{shortId}/image")
 //    public VertexImageResource image(
 //            @PathParam("shortId") String shortId
@@ -151,17 +121,6 @@ public class VertexResource extends ForkResource {
         return graphElementTagResourceFactory.forGraphElement(
                 vertexFromShortId(shortId)
         );
-    }
-
-    @Path("{shortId}/shareLevel")
-    @POST
-    public Response setShareLevel(@PathParam("shortId") String shortId, JSONObject shareLevel) {
-        vertexFromShortId(shortId).setShareLevel(
-                ShareLevel.valueOf(
-                        shareLevel.optString("shareLevel", ShareLevel.PRIVATE.name()).toUpperCase()
-                )
-        );
-        return Response.noContent().build();
     }
 
     @Path("collection")
@@ -208,14 +167,24 @@ public class VertexResource extends ForkResource {
     }
 
     @Override
-    protected ForkOperator getForkOperatorFromURI(URI uri) {
+    public ForkOperator getForkOperatorFromURI(URI uri) {
         return vertexFactory.withUri(uri);
     }
 
     @Override
-    protected GraphElementOperator getOperatorFromShortId(String shortId) {
+    public GraphElementOperator getOperatorFromShortId(String shortId) {
         return vertexFactory.withUri(
                 getUriFromShortId(shortId)
         );
+    }
+
+    @Override
+    public UserGraph getUserGraph() {
+        return userGraph;
+    }
+
+    @Override
+    public CenterGraphElementOperatorFactory getCenterOperatorFactory() {
+        return centerGraphElementOperatorFactory;
     }
 }

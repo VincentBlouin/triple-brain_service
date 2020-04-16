@@ -132,11 +132,11 @@ public class RelationResourceTest extends GraphManipulationRestTestUtils {
     }
 
     @Test
-    public void updating_label_returns_correct_status() {
+    public void updating_label_returns_no_content_status() {
         ClientResponse response = updateEdgeLabelBetweenAAndB("new edge label");
         assertThat(
                 response.getStatus(), is(
-                        Response.Status.OK.getStatusCode()
+                        Response.Status.NO_CONTENT.getStatusCode()
                 ));
     }
 
@@ -227,142 +227,6 @@ public class RelationResourceTest extends GraphManipulationRestTestUtils {
                 is(
                         "some note"
                 )
-        );
-    }
-
-    @Test
-    public void changing_source_vertex_returns_correct_status() {
-        Relation relationBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
-                vertexBUri(),
-                vertexCUri(),
-                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
-        );
-        ClientResponse response = changeSource(
-                relationBC,
-                vertexA().uri(),
-                GraphElementType.Vertex,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE
-        );
-        assertThat(
-                response.getStatus(),
-                is(
-                        Response.Status.NO_CONTENT.getStatusCode()
-                )
-        );
-    }
-
-    @Test
-    public void can_change_source_vertex() {
-        Relation relation = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
-                vertexBUri(),
-                vertexCUri(),
-                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
-
-        );
-        SubGraph graph = graphUtils().graphWithCenterVertexUri(
-                vertexAUri()
-        );
-        assertFalse(
-                graph.containsEdge(relation)
-        );
-        changeSource(
-                relation,
-                vertexA().uri(),
-                GraphElementType.Vertex,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE
-        );
-        graph = graphUtils().graphWithCenterVertexUri(
-                vertexAUri()
-        );
-        assertTrue(
-                graph.containsEdge(relation)
-        );
-    }
-
-    @Test
-    public void can_change_source_fork_to_a_group_relation() {
-        Relation relationBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
-                vertexBUri(),
-                vertexCUri(),
-                graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
-        );
-        SubGraphPojo graph = graphUtils().graphWithCenterVertexUri(
-                graphUtils().getTodoGroupRelation().uri()
-        );
-        assertFalse(
-                graph.containsEdge(relationBC)
-        );
-        changeSource(
-                relationBC,
-                graphUtils().getTodoGroupRelation().uri(),
-                GraphElementType.GroupRelation,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE
-        );
-        graph = graphUtils().graphWithCenterVertexUri(
-                graphUtils().getTodoGroupRelation().uri()
-        );
-        assertTrue(
-                graph.containsEdge(relationBC)
-        );
-    }
-
-
-    @Test
-    public void changing_destination_vertex_returns_correct_status() {
-        Relation relationBetweenAAndB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
-                vertexAUri(),
-                vertexBUri(),
-                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
-        );
-        ClientResponse response = changeDestination(
-                relationBetweenAAndB,
-                vertexC().uri(),
-                GraphElementType.Vertex,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE
-        );
-        assertThat(
-                response.getStatus(),
-                is(
-                        Response.Status.NO_CONTENT.getStatusCode()
-                )
-        );
-    }
-
-    @Test
-    public void can_change_destination_vertex() {
-        Relation relation = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
-                vertexAUri(),
-                vertexBUri(),
-                graphUtils().graphWithCenterVertexUri(vertexAUri()).edges()
-
-        );
-        SubGraph graph = graphUtils().graphWithCenterVertexUri(
-                vertexCUri()
-        );
-        assertFalse(
-                graph.containsEdge(relation)
-        );
-        changeDestination(
-                relation,
-                vertexC().uri(),
-                GraphElementType.Vertex,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE,
-                ShareLevel.PRIVATE
-        );
-        graph = graphUtils().graphWithCenterVertexUri(
-                vertexCUri()
-        );
-        assertTrue(
-                graph.containsEdge(relation)
         );
     }
 
@@ -522,51 +386,5 @@ public class RelationResourceTest extends GraphManipulationRestTestUtils {
                 .cookie(authCookie)
                 .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .put(ClientResponse.class);
-    }
-
-    private ClientResponse changeSource(Relation relation, URI newSourceUri, GraphElementType sourceType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
-        try {
-            return resource
-                    .path(relation.uri().toString())
-                    .path("source")
-                    .path(UserUris.graphElementShortId(newSourceUri))
-                    .cookie(authCookie)
-                    .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
-                    .put(ClientResponse.class, new JSONObject().put(
-                            "forkType",
-                            sourceType.name()
-                    ).put(
-                            "oldEndShareLevel", oldEndShareLevel.name().toUpperCase()
-                    ).put(
-                            "keptEndShareLevel", keptEndShareLevel.name().toUpperCase()
-                    ).put(
-                            "newEndShareLevel", newEndShareLevel.name().toUpperCase()
-                    ));
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ClientResponse changeDestination(Relation relation, URI destinationUri, GraphElementType destinationType, ShareLevel oldEndShareLevel, ShareLevel keptEndShareLevel, ShareLevel newEndShareLevel) {
-        try {
-            return resource
-                    .path(relation.uri().toString())
-                    .path("destination")
-                    .path(UserUris.graphElementShortId(destinationUri))
-                    .cookie(authCookie)
-                    .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
-                    .put(ClientResponse.class, new JSONObject().put(
-                            "forkType",
-                            destinationType
-                    ).put(
-                            "oldEndShareLevel", oldEndShareLevel.name().toUpperCase()
-                    ).put(
-                            "keptEndShareLevel", keptEndShareLevel.name().toUpperCase()
-                    ).put(
-                            "newEndShareLevel", newEndShareLevel.name().toUpperCase()
-                    ));
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
