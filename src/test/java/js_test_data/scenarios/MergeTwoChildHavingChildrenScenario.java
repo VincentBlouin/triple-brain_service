@@ -139,12 +139,12 @@ public class MergeTwoChildHavingChildrenScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        center1.addRelationToVertex(b2).label("r1");
-        b2.addRelationToVertex(b21).label("r21");
-        b2.addRelationToVertex(b22).label("r22");
+        center1.addRelationToFork(b2).label("r1");
+        b2.addRelationToFork(b21).label("r21");
+        b2.addRelationToFork(b22).label("r22");
 
-        center2.addRelationToVertex(o2).label("or1");
-        o2.addRelationToVertex(o21).label("or21");
-        o2.addRelationToVertex(o22).label("or22");
+        center2.addRelationToFork(o2).label("or1");
+        o2.addRelationToFork(o21).label("or21");
+        o2.addRelationToFork(o22).label("or22");
     }
 }

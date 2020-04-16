@@ -74,7 +74,7 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
         aria.label("Aria Sauley");
     }
     private void buildRelations(){
-        RelationOperator scientistRelation = team.addRelationToVertex(aria);
+        RelationOperator scientistRelation = team.addRelationToFork(aria);
         scientistRelation.label("computer scientist");
         scientistRelation.addTag(
                 modelTestScenarios.computerScientistType()
@@ -83,7 +83,7 @@ public class RelationWithMultipleTagsScenario implements JsTestScenario {
                 modelTestScenarios.person()
         );
 
-        RelationOperator memberRelation = team.addRelationToVertex(john);
+        RelationOperator memberRelation = team.addRelationToFork(john);
         memberRelation.label("member");
         memberRelation.addTag(
                 modelTestScenarios.person()

@@ -165,7 +165,7 @@ public class GroupRelationsScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        rBook1 = me.addRelationToVertex(book1);
+        rBook1 = me.addRelationToFork(book1);
         rBook1.label("Possession of book 1");
         TagPojo possession = book1.addTag(
                 modelTestScenarios.possessionIdentification()
@@ -173,12 +173,12 @@ public class GroupRelationsScenario implements JsTestScenario {
         rBook1.addTag(
                 possession
         );
-        rBook2 = book2.addRelationToVertex(me);
+        rBook2 = book2.addRelationToFork(me);
         rBook2.label("Possessed by book 2");
         rBook2.addTag(
                 possession
         );
-        rBook3 = me.addRelationToVertex(book3);
+        rBook3 = me.addRelationToFork(book3);
         rBook3.label("Possession of book 3");
         rBook3.addTag(
                 possession
@@ -186,7 +186,7 @@ public class GroupRelationsScenario implements JsTestScenario {
         rBook3.addTag(
                 possession
         );
-        rBook3Copy = me.addRelationToVertex(book3Copy);
+        rBook3Copy = me.addRelationToFork(book3Copy);
         rBook3Copy.addTag(
                 possession
         );
@@ -196,13 +196,13 @@ public class GroupRelationsScenario implements JsTestScenario {
                 )
         );
         rBook3Copy.label("Possession of book 3 copy");
-        RelationOperator otherRelation = me.addRelationToVertex(otherBubble);
+        RelationOperator otherRelation = me.addRelationToFork(otherBubble);
         otherRelation.label("other relation");
-        RelationOperator otherRelation2 = me.addRelationToVertex(otherBubble2);
+        RelationOperator otherRelation2 = me.addRelationToFork(otherBubble2);
         otherRelation2.label("other relation 2");
-        RelationOperator originalRelation = me.addRelationToVertex(b1);
+        RelationOperator originalRelation = me.addRelationToFork(b1);
         originalRelation.label("original relation");
-        RelationOperator sameAsOriginalRelation = me.addRelationToVertex(b2);
+        RelationOperator sameAsOriginalRelation = me.addRelationToFork(b2);
         sameAsOriginalRelation.label("same as original relation");
         TagPojo b1RelationIdentification = new TagPojo(
                 originalRelation.uri(),

@@ -59,11 +59,11 @@ public class AbstractScenario {
     }
 
     public void createEdges() {
-        RelationOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToFork(b1);
         r1.label("r1");
-        RelationOperator r2 = center.addRelationToVertex(b2);
+        RelationOperator r2 = center.addRelationToFork(b2);
         r2.label("r2");
-        RelationOperator r3 = center.addRelationToVertex(b3);
+        RelationOperator r3 = center.addRelationToFork(b3);
         r3.label("r3");
     }
 }

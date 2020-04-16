@@ -81,13 +81,13 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        RelationOperator distantToB2 = distantBubble.addRelationToVertex(b2);
+        RelationOperator distantToB2 = distantBubble.addRelationToFork(b2);
         SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
         distantToB2.remove();
-        b1.addRelationToVertex(distantBubble);
+        b1.addRelationToFork(distantBubble);
         SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.aroundForkUriInShareLevels(
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
@@ -165,14 +165,14 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        b1.addRelationToVertex(b2).label("r1");
-        RelationOperator shirt1Relation = b2.addRelationToVertex(shirt1);
+        b1.addRelationToFork(b2).label("r1");
+        RelationOperator shirt1Relation = b2.addRelationToFork(shirt1);
         shirt1Relation.label("shirt1");
         shirt1Relation.addTag(modelTestScenarios.tShirt());
-        RelationOperator shirt2Relation = b2.addRelationToVertex(shirt2);
+        RelationOperator shirt2Relation = b2.addRelationToFork(shirt2);
         shirt2Relation.label("shirt2");
         shirt2Relation.addTag(modelTestScenarios.tShirt());
-        RelationOperator color = shirt2.addRelationToVertex(red);
+        RelationOperator color = shirt2.addRelationToFork(red);
         color.label("color");
     }
 }

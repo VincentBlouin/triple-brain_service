@@ -171,20 +171,20 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = e1.addRelationToVertex(e2);
+        RelationOperator r1 = e1.addRelationToFork(e2);
         r1.label("r1");
         toDo = r1.addTag(
                 modelTestScenarios.toDo()
         ).values().iterator().next();
-        RelationOperator r2 = e1.addRelationToVertex(e3);
+        RelationOperator r2 = e1.addRelationToFork(e3);
         r2.label("r2");
         r2.addTag(toDo);
-        RelationOperator f1 = o1.addRelationToVertex(o2);
+        RelationOperator f1 = o1.addRelationToFork(o2);
         f1.label("f1");
         f1.addTag(toDo);
-        e1.addRelationToVertex(a1).label("ra1");
-        e1.addRelationToVertex(e4).label("r3");
-        e3.addRelationToVertex(e31).label("r3e1");
-        e3.addRelationToVertex(e32).label("r3e2");
+        e1.addRelationToFork(a1).label("ra1");
+        e1.addRelationToFork(e4).label("r3");
+        e3.addRelationToFork(e31).label("r3e1");
+        e3.addRelationToFork(e32).label("r3e2");
     }
 }

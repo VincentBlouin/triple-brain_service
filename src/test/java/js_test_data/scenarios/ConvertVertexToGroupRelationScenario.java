@@ -97,9 +97,9 @@ public class ConvertVertexToGroupRelationScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        b1.addRelationToVertex(b2);
-        b2.addRelationToVertex(b3);
-        b2.addRelationToVertex(b4);
-        b2.addRelationToVertex(b5);
+        b1.addRelationToFork(b2);
+        b2.addRelationToFork(b3);
+        b2.addRelationToFork(b4);
+        b2.addRelationToFork(b5);
     }
 }

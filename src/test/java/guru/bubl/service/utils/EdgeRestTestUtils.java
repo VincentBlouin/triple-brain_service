@@ -140,10 +140,10 @@ public class EdgeRestTestUtils {
         );
         return resource
                 .path(userUris.baseEdgeUri().getPath())
-                .queryParam("sourceVertexId", encodeURL(
+                .queryParam("sourceUri", encodeURL(
                         sourceVertexUri.toString()
                 ))
-                .queryParam("destinationVertexId", encodeURL(
+                .queryParam("destinationUri", encodeURL(
                         destinationVertexUri.toString()
                 ))
                 .cookie(authCookie)

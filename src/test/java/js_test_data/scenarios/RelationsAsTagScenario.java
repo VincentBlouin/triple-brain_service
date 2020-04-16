@@ -108,22 +108,22 @@ public class RelationsAsTagScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        RelationOperator firstSomeRelation = center.addRelationToVertex(b1);
+        RelationOperator firstSomeRelation = center.addRelationToFork(b1);
         firstSomeRelation.label("original some relation");
         TagPojo firstSomeRelationAsIdentifier = TestScenarios.tagFromFriendlyResource(
                 firstSomeRelation
         );
-        RelationOperator secondSomeRelation = center.addRelationToVertex(b2);
+        RelationOperator secondSomeRelation = center.addRelationToFork(b2);
         secondSomeRelation.label("some relation");
         secondSomeRelation.addTag(
                 firstSomeRelationAsIdentifier
         );
-        RelationOperator thirdSomeRelation = center.addRelationToVertex(b3);
+        RelationOperator thirdSomeRelation = center.addRelationToFork(b3);
         thirdSomeRelation.label("some relation");
         thirdSomeRelation.addTag(
                 firstSomeRelationAsIdentifier
         );
-        RelationOperator differentRelation = center.addRelationToVertex(b4);
+        RelationOperator differentRelation = center.addRelationToFork(b4);
         differentRelation.label("some different relation");
     }
 }

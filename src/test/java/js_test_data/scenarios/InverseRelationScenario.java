@@ -69,9 +69,9 @@ public class InverseRelationScenario implements JsTestScenario {
     }
 
     private void createEdges(){
-        RelationOperator straight = me.addRelationToVertex(straightBubble);
+        RelationOperator straight = me.addRelationToFork(straightBubble);
         straight.label("going straight");
-        RelationOperator inverse = inverseBubble.addRelationToVertex(me);
+        RelationOperator inverse = inverseBubble.addRelationToFork(me);
         inverse.label("going inverse");
     }
 }

@@ -178,40 +178,40 @@ public class CreationDateScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = b1.addRelationToVertex(b2);
+        RelationOperator r1 = b1.addRelationToFork(b2);
         r1.label("r1");
-        RelationOperator r2 = b1.addRelationToVertex(b3);
+        RelationOperator r2 = b1.addRelationToFork(b3);
         r2.label("r2");
-        RelationOperator r3 = b1.addRelationToVertex(b4);
+        RelationOperator r3 = b1.addRelationToFork(b4);
         r3.label("r3");
-        RelationOperator r4 = b1.addRelationToVertex(b5);
+        RelationOperator r4 = b1.addRelationToFork(b5);
         r4.label("r4");
-        RelationOperator similar1 = b1.addRelationToVertex(s1);
+        RelationOperator similar1 = b1.addRelationToFork(s1);
         similar1.label("similar");
         similar1.addTag(modelTestScenarios.toDo());
-        RelationOperator similar2 = b1.addRelationToVertex(s2);
+        RelationOperator similar2 = b1.addRelationToFork(s2);
         similar2.label("similar");
         similar2.addTag(modelTestScenarios.toDo());
-        RelationOperator similar3 = b1.addRelationToVertex(s3);
+        RelationOperator similar3 = b1.addRelationToFork(s3);
         similar3.label("similar");
         similar3.addTag(modelTestScenarios.toDo());
-        RelationOperator r5 = b1.addRelationToVertex(b6);
+        RelationOperator r5 = b1.addRelationToFork(b6);
         r5.label("r5");
-        RelationOperator r6 = b1.addRelationToVertex(b7);
+        RelationOperator r6 = b1.addRelationToFork(b7);
         r6.label("r6");
-        RelationOperator r71 = b7.addRelationToVertex(b71);
+        RelationOperator r71 = b7.addRelationToFork(b71);
         r71.label("r71");
-        RelationOperator r72 = b7.addRelationToVertex(b72);
+        RelationOperator r72 = b7.addRelationToFork(b72);
         r72.label("r72");
-        RelationOperator r73 = b7.addRelationToVertex(b73);
+        RelationOperator r73 = b7.addRelationToFork(b73);
         r73.label("r73");
-        RelationOperator r74 = b7.addRelationToVertex(b74);
+        RelationOperator r74 = b7.addRelationToFork(b74);
         r74.label("r74");
-        RelationOperator r8 = b1.addRelationToVertex(b8);
+        RelationOperator r8 = b1.addRelationToFork(b8);
         r8.label("r8");
-        RelationOperator r9 = b1.addRelationToVertex(b9);
+        RelationOperator r9 = b1.addRelationToFork(b9);
         r9.label("r9");
-        RelationOperator r10 = b1.addRelationToVertex(b10);
+        RelationOperator r10 = b1.addRelationToFork(b10);
         r10.label("r10");
     }
 

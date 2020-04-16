@@ -85,11 +85,11 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        r1 = b1.addRelationToVertex(b2);
+        r1 = b1.addRelationToFork(b2);
         r1.label("r1");
-        r2 = b2.addRelationToVertex(b3);
+        r2 = b2.addRelationToFork(b3);
         r2.label("r2");
-        r4 = b4.addRelationToVertex(b1);
+        r4 = b4.addRelationToFork(b1);
         r4.label("r4");
     }
 }

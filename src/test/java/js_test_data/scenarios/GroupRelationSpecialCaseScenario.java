@@ -77,9 +77,9 @@ public class GroupRelationSpecialCaseScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToFork(b1);
         r1.label("r1'");
-        RelationOperator r2 = center.addRelationToVertex(b2);
+        RelationOperator r2 = center.addRelationToFork(b2);
         r2.label("r2");
         TagPojo r1Identifier = TestScenarios.tagFromFriendlyResource(
                 r1

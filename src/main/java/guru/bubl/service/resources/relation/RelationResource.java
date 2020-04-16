@@ -12,6 +12,7 @@ import guru.bubl.module.model.graph.GraphElementOperator;
 import guru.bubl.module.model.graph.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
+import guru.bubl.module.model.graph.fork.ForkOperator;
 import guru.bubl.module.model.graph.relation.Relation;
 import guru.bubl.module.model.graph.relation.RelationFactory;
 import guru.bubl.module.model.graph.relation.RelationOperator;
@@ -21,6 +22,7 @@ import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.LocalizedStringJson;
+import guru.bubl.module.neo4j_graph_manipulator.graph.graph.GraphElementSpecialOperatorFactory;
 import guru.bubl.service.resources.GraphElementResource;
 import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.edge.EdgeResource;
@@ -53,6 +55,9 @@ public class RelationResource implements EdgeResource {
     @Inject
     private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
+    @Inject
+    private GraphElementSpecialOperatorFactory graphElementSpecialOperatorFactory;
+
     private UserGraph userGraph;
 
     @AssistedInject
@@ -66,22 +71,22 @@ public class RelationResource implements EdgeResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response addRelation(
-            @QueryParam("sourceVertexId") String sourceVertexId,
-            @QueryParam("destinationVertexId") String destinationVertexId
+            @QueryParam("sourceUri") String sourceUri,
+            @QueryParam("destinationUri") String destinationUri
     ) {
         try {
-            sourceVertexId = decodeUrlSafe(sourceVertexId);
-            destinationVertexId = decodeUrlSafe(destinationVertexId);
+            sourceUri = decodeUrlSafe(sourceUri);
+            destinationUri = decodeUrlSafe(destinationUri);
         } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        VertexOperator sourceVertex = vertexFactory.withUri(URI.create(
-                sourceVertexId
-        ));
-        VertexOperator destinationVertex = vertexFactory.withUri(URI.create(
-                destinationVertexId
-        ));
-        Relation createdRelation = sourceVertex.addRelationToVertex(destinationVertex);
+        ForkOperator source = (ForkOperator) graphElementSpecialOperatorFactory.getFromUri(
+                URI.create(sourceUri)
+        );
+        ForkOperator destination = (ForkOperator) graphElementSpecialOperatorFactory.getFromUri(
+                URI.create(destinationUri)
+        );
+        Relation createdRelation = source.addRelationToFork(destination);
         if (createdRelation == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }

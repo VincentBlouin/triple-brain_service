@@ -121,11 +121,11 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                 ),
                 ideaFriendlyResource
         );
-        RelationOperator rIdea1 = someProject.addRelationToVertex(idea1);
+        RelationOperator rIdea1 = someProject.addRelationToFork(idea1);
         rIdea1.label("idea for 1");
         rIdea1.addTag(ideaIdentification);
 
-        RelationOperator rIdea2 = someProject.addRelationToVertex(idea2);
+        RelationOperator rIdea2 = someProject.addRelationToFork(idea2);
         rIdea2.label("idea for 2");
         rIdea2.addTag(ideaIdentification);
 
@@ -137,23 +137,23 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                         "component"
                 )
         );
-        RelationOperator rComponent1 = someProject.addRelationToVertex(component1);
+        RelationOperator rComponent1 = someProject.addRelationToFork(component1);
         rComponent1.label("has component 1");
         rComponent1.addTag(componentIdentification);
 
-        RelationOperator rComponent2 = someProject.addRelationToVertex(component2);
+        RelationOperator rComponent2 = someProject.addRelationToFork(component2);
         rComponent2.label("has component 2");
         rComponent2.addTag(componentIdentification);
 
-        someProject.addRelationToVertex(
+        someProject.addRelationToFork(
                 otherBubble
         ).label("other relation");
 
-        someProject.addRelationToVertex(
+        someProject.addRelationToFork(
                 otherBubble2
         ).label("other relation");
 
-        someProject.addRelationToVertex(
+        someProject.addRelationToFork(
                 otherBubble3
         ).label("other relation");
     }

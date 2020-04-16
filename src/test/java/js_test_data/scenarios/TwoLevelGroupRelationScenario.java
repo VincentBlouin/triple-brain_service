@@ -112,9 +112,9 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        center.addRelationToVertex(aaaa).label("r1");
+        center.addRelationToFork(aaaa).label("r1");
 
-        RelationOperator g1 = center.addRelationToVertex(bbbb);
+        RelationOperator g1 = center.addRelationToFork(bbbb);
         g1.label("g1");
 
         group1 = g1.addTag(
@@ -126,11 +126,11 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
                 )
         ).values().iterator().next();
 
-        RelationOperator g2 = center.addRelationToVertex(cccc);
+        RelationOperator g2 = center.addRelationToFork(cccc);
         g2.label("g2");
         g2.addTag(group1);
 
-        RelationOperator g21 = center.addRelationToVertex(dddd);
+        RelationOperator g21 = center.addRelationToFork(dddd);
         g21.label("g21");
         TagPojo group2 = g21.addTag(
                 new TagPojo(
@@ -143,24 +143,24 @@ public class TwoLevelGroupRelationScenario implements JsTestScenario {
         g21.addTag(group1);
         g21.addTag(group2);
 
-        RelationOperator g22 = center.addRelationToVertex(eeee);
+        RelationOperator g22 = center.addRelationToFork(eeee);
         g22.label("g22");
         g22.addTag(group1);
         g22.addTag(group2);
 
 
-        RelationOperator g23 = center.addRelationToVertex(ffff);
+        RelationOperator g23 = center.addRelationToFork(ffff);
         g23.label("g23");
         g23.addTag(group1);
         g23.addTag(group2);
 
-        RelationOperator g3 = center.addRelationToVertex(gggg);
+        RelationOperator g3 = center.addRelationToFork(gggg);
         g3.label("g3");
         g3.addTag(group1);
 
-        center.addRelationToVertex(hhhh).label("r2");
+        center.addRelationToFork(hhhh).label("r2");
 
-        RelationOperator r3 = otherCenter.addRelationToVertex(uuuu);
+        RelationOperator r3 = otherCenter.addRelationToFork(uuuu);
         r3.label("r3");
         r3.addTag(group1);
     }

@@ -90,17 +90,17 @@ public class SameLevelRelationsWithMoreThanOneCommonTagScenario implements JsTes
     }
 
     private void createRelations() {
-        RelationOperator r1 = center.addRelationToVertex(b1);
+        RelationOperator r1 = center.addRelationToFork(b1);
         r1.label("r1");
         r1.addTag(modelTestScenarios.creatorPredicate());
         r1.addTag(modelTestScenarios.possessionIdentification());
-        RelationOperator r2 = center.addRelationToVertex(b2);
+        RelationOperator r2 = center.addRelationToFork(b2);
         r2.label("r2");
         r2.addTag(modelTestScenarios.creatorPredicate());
         r2.addTag(modelTestScenarios.possessionIdentification());
-        RelationOperator r3 = center.addRelationToVertex(b3);
+        RelationOperator r3 = center.addRelationToFork(b3);
         r3.label("r3");
         r3.addTag(modelTestScenarios.creatorPredicate());
-        center.addRelationToVertex(otherBubble).label("other relation");
+        center.addRelationToFork(otherBubble).label("other relation");
     }
 }

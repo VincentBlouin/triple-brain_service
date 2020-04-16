@@ -109,10 +109,10 @@ public class CircularityScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        b1.addRelationToVertex(b2).label("r1");
-        b2.addRelationToVertex(b3).label("r2");
-        b2.addRelationToVertex(b4).label("r4");
-        b3.addRelationToVertex(b1).label("r3");
-        b3.addRelationToVertex(b5).label("r5");
+        b1.addRelationToFork(b2).label("r1");
+        b2.addRelationToFork(b3).label("r2");
+        b2.addRelationToFork(b4).label("r4");
+        b3.addRelationToFork(b1).label("r3");
+        b3.addRelationToFork(b5).label("r5");
     }
 }
