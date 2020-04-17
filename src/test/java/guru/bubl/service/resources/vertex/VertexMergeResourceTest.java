@@ -34,11 +34,19 @@ public class VertexMergeResourceTest extends GraphManipulationRestTestUtils {
         Vertex farVertex = vertexUtils().createSingleVertex();
         vertexUtils().addAVertexToForkWithUri(farVertex.uri());
         vertexUtils().addAVertexToForkWithUri(farVertex.uri());
-        Integer nbEdges = vertexC().getNbNeighbors().getTotal();
+        assertThat(
+                vertexC().getNbNeighbors().getTotal(),
+                is(2)
+        );
+        farVertex = vertexUtils().vertexWithUriOfAnyUser(farVertex.uri());
+        assertThat(
+                farVertex.getNbNeighbors().getTotal(),
+                is(2)
+        );
         mergeTo(farVertex, vertexC());
         assertThat(
                 vertexC().getNbNeighbors().getTotal(),
-                is(nbEdges + 2)
+                is(4)
         );
     }
 

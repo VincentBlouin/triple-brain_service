@@ -78,19 +78,19 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
 
     @Test
     public void can_change_source_fork_to_a_group_relation() {
-        Relation relationBC = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+        Relation relationAB = edgeUtils().edgeBetweenTwoVerticesUriGivenEdges(
+                vertexAUri(),
                 vertexBUri(),
-                vertexCUri(),
                 graphUtils().graphWithCenterVertexUri(vertexBUri()).edges()
         );
         SubGraphPojo graph = graphUtils().graphWithCenterVertexUri(
                 graphUtils().getTodoGroupRelation().uri()
         );
         assertFalse(
-                graph.containsEdge(relationBC)
+                graph.containsEdge(relationAB)
         );
         changeSource(
-                relationBC.uri(),
+                relationAB.uri(),
                 graphUtils().getTodoGroupRelation().uri(),
                 GraphElementType.GroupRelation,
                 ShareLevel.PRIVATE,
@@ -101,7 +101,7 @@ public class EdgeResourceTest extends GraphManipulationRestTestUtils {
                 graphUtils().getTodoGroupRelation().uri()
         );
         assertTrue(
-                graph.containsEdge(relationBC)
+                graph.containsEdge(relationAB)
         );
     }
 

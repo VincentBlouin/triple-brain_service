@@ -73,7 +73,7 @@ public class DeepGraphWithCircularityScenario implements JsTestScenario {
                 r3.uri(),
                 subGraphPojo.edgeWithIdentifier(r3.uri())
         );
-        SubGraphPojo subGraphPojoWithSpecificRelationsOrder = SubGraphPojo.withVerticesAndEdges(
+        SubGraphPojo subGraphPojoWithSpecificRelationsOrder = SubGraphPojo.withCenterUriVerticesAndEdges(
                 subGraphPojo.vertices(),
                 relations
         );
