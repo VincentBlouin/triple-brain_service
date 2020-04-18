@@ -10,17 +10,25 @@ import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.module.model.graph.fork.ForkOperator;
 import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.edge.EdgeResource;
 import guru.bubl.service.resources.fork.ForkResource;
+import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.net.URI;
 
 public class GroupRelationResource implements ForkResource, EdgeResource {
 
     @Inject
     private GroupRelationFactory groupRelationFactory;
+
     @Inject
     private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+
+    @Inject
+    GraphElementTagResourceFactory graphElementTagResourceFactory;
 
     private UserGraph userGraph;
 
@@ -29,6 +37,14 @@ public class GroupRelationResource implements ForkResource, EdgeResource {
             @Assisted UserGraph userGraph
     ) {
         this.userGraph = userGraph;
+    }
+
+    @Path("{shortId}/identification")
+    public GraphElementTagResource getTagResource(
+            @PathParam("shortId") String shortId) {
+        return graphElementTagResourceFactory.forGraphElement(
+                getOperatorFromShortId(shortId)
+        );
     }
 
     @Override
