@@ -191,7 +191,7 @@ public class UserResource {
             User userInSession = sessionHandler.userFromSession(request.getSession());
             skipVerification = userInSession.username().equals(
                     ownerUsername
-            );
+            ) && UserSessionResource.isRightXsrfToken(request);
             isFriend = FriendStatus.confirmed == friendManagerFactory.forUser(
                     userInSession
             ).getStatusWithUser(owner);

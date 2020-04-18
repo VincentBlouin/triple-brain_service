@@ -13,6 +13,7 @@ import guru.bubl.module.model.graph.relation.Relation;
 import guru.bubl.module.model.graph.subgraph.SubGraph;
 import guru.bubl.module.model.graph.tag.Tag;
 import guru.bubl.module.model.graph.vertex.Vertex;
+import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import org.junit.Test;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -34,7 +36,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         assertThat(
-                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB()).getStatus(),
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexB(), currentXsrfToken).getStatus(),
                 is(
                         Response.Status.OK.getStatusCode()
                 )
@@ -49,7 +51,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         JSONObject anotherUser = createAUser();
         authenticate(anotherUser);
         assertThat(
-                graphUtils().getNonOwnedGraphOfCentralVertex(vertexA()).getStatus(),
+                graphUtils().getNonOwnedGraphOfCentralVertex(vertexA(), currentXsrfToken).getStatus(),
                 is(
                         Response.Status.NOT_FOUND.getStatusCode()
                 )
@@ -84,7 +86,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
     }
 
     @Test
-    public void surround_vertices_have_to_public_to_be_included() {
+    public void surround_vertices_have_to_be_public_to_be_included() {
         vertexUtils().makePrivateVertexWithUri(
                 vertexAUri()
         );
@@ -144,6 +146,24 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
         assertThat(
                 subGraph.vertices().size(),
                 is(3)
+        );
+    }
+
+    @Test
+    public void owner_has_to_provide_xsrf_token_to_access_private_bubbles() {
+        vertexUtils().makePrivateVertexWithUri(
+                vertexAUri()
+        );
+        vertexUtils().makePrivateVertexWithUri(
+                vertexBUri()
+        );
+        vertexUtils().makePrivateVertexWithUri(
+                vertexCUri()
+        );
+        ClientResponse response = graphUtils().getNonOwnedGraphOfCentralVertex(vertexB(), UUID.randomUUID().toString());
+        assertThat(
+                response.getStatus(),
+                is(Response.Status.NOT_FOUND.getStatusCode())
         );
     }
 
@@ -353,7 +373,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
     }
 
     @Test
-    public void get_not_owned_surround_graph_tag_is_ok_status(){
+    public void get_not_owned_surround_graph_tag_is_ok_status() {
         graphElementUtils().addFoafPersonTypeToVertexA();
         Tag tag = vertexA().getTags().values().iterator().next();
         assertThat(
@@ -421,6 +441,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 
@@ -437,6 +458,7 @@ public class NotOwnedSurroundGraphResourceTest extends GraphManipulationRestTest
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .cookie(authCookie)
+                .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
     }
 }

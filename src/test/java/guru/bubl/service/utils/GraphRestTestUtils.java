@@ -219,19 +219,38 @@ public class GraphRestTestUtils {
     }
 
     public ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex) {
+        return getNonOwnedGraphOfCentralVertex(
+                vertex,
+                xsrfToken
+        );
+    }
+
+    public ClientResponse getNonOwnedGraphOfCentralVertex(Vertex vertex, String xsrfToken) {
         return getNonOwnedGraphOfCentralVertexWithUri(
-                vertex.uri()
+                vertex.uri(),
+                xsrfToken
         );
     }
 
     public ClientResponse getNonOwnedGraphOfCentralVertexWithUri(URI vertexUri) {
+        return getNonOwnedGraphOfCentralVertexWithUri(vertexUri, xsrfToken);
+    }
+
+    public ClientResponse getNonOwnedGraphOfCentralVertexWithUri(URI vertexUri, String xsrfToken) {
         return getNonOwnedGraphOfCentralVertexWithUriAtDepth(
                 vertexUri,
-                1
+                1,
+                xsrfToken
         );
     }
 
     public ClientResponse getNonOwnedGraphOfCentralVertexWithUriAtDepth(URI vertexUri, Integer depth) {
+        return getNonOwnedGraphOfCentralVertexWithUriAtDepth(
+                vertexUri, depth, xsrfToken
+        );
+    }
+
+    public ClientResponse getNonOwnedGraphOfCentralVertexWithUriAtDepth(URI vertexUri, Integer depth, String xsrfToken) {
         String shortId = UserUris.graphElementShortId(
                 vertexUri
         );
