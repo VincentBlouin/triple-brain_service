@@ -22,6 +22,7 @@ import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
+import guru.bubl.service.resources.fork.ForkCollectionResourceFactory;
 import guru.bubl.service.resources.relation.RelationResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
@@ -74,10 +75,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                         VertexResourceFactory.class
                 ));
                 install(builder.build(
-                        GraphElementCollectionResourceFactory.class
-                ));
-                install(builder.build(
-                        VertexCollectionResourceFactory.class
+                        ForkCollectionResourceFactory.class
                 ));
                 install(builder.build(
                         GraphElementTagResourceFactory.class

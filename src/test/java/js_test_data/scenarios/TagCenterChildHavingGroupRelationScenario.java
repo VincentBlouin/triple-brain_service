@@ -7,7 +7,7 @@ package js_test_data.scenarios;
 import com.google.inject.Inject;
 import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.SubGraphJson;
+import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;

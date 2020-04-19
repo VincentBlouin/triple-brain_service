@@ -33,7 +33,7 @@ public class AdminResource {
     @Path("refresh_identifications_nb_references")
     @POST
     public Response refreshAllIdentificationsNumberOfReferences(){
-        wholeGraphAdmin.refreshNbNeighborsToAllTags();
+        wholeGraphAdmin.refreshNbNeighborsOfTags();
         return Response.ok().build();
     }
 

@@ -4,12 +4,8 @@
 
 package guru.bubl.service.resources.vertex;
 
-import guru.bubl.module.model.graph.GraphElementOperator;
-import guru.bubl.module.model.graph.GraphElementType;
-import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.graph_element.GraphElementOperator;
 import guru.bubl.service.resources.GraphElementTagResource;
-
-import java.net.URI;
 
 public interface GraphElementTagResourceFactory {
     GraphElementTagResource forGraphElement(

@@ -10,12 +10,13 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementOperator;
-import guru.bubl.module.model.graph.GraphElementOperatorFactory;
+import guru.bubl.module.model.graph.graph_element.GraphElementOperator;
+import guru.bubl.module.model.graph.graph_element.GraphElementOperatorFactory;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.relation.RelationFactory;
 import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.service.resources.fork.ForkCollectionResourceFactory;
 import guru.bubl.service.resources.relation.RelationResource;
 import guru.bubl.service.resources.relation.RelationResourceFactory;
 import guru.bubl.service.resources.group_relation.GroupRelationResource;
@@ -23,6 +24,7 @@ import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
 import guru.bubl.service.resources.tag.TagResource;
 import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.vertex.OwnedSurroundGraphResource;
+import guru.bubl.service.resources.fork.ForkCollectionResource;
 import guru.bubl.service.resources.vertex.VertexResource;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
 import org.apache.commons.lang.StringUtils;
@@ -58,10 +60,10 @@ public class GraphResource {
     private RelationFactory relationFactory;
 
     @Inject
-    private GraphElementCollectionResourceFactory graphElementCollectionResourceFactory;
+    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
 
     @Inject
-    private CenterGraphElementOperatorFactory centerGraphElementOperatorFactory;
+    private ForkCollectionResourceFactory forkCollectionResourceFactory;
 
     private User user;
 
@@ -101,9 +103,10 @@ public class GraphResource {
         );
     }
 
-    @Path("/graphElement/collection")
-    public GraphElementCollectionResource graphElementCollectionResource() {
-        return graphElementCollectionResourceFactory.withUserGraph(
+    
+    @Path("/fork/collection")
+    public ForkCollectionResource forkCollectionResource() {
+        return forkCollectionResourceFactory.withUserGraph(
                 userGraph()
         );
     }

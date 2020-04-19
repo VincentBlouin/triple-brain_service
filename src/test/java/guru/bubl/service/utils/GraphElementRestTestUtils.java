@@ -96,7 +96,9 @@ public class GraphElementRestTestUtils {
     public ClientResponse setShareLevelOfCollection(ShareLevel shareLevel, NewCookie cookie, URI... graphElementUri) {
         return NoEx.wrap(() ->
                 resource
-                        .path(this.baseGraphElementUri().toString())
+                        .path(authenticatedUser.id())
+                        .path("graph")
+                        .path("fork")
                         .path("collection")
                         .path("share-level")
                         .cookie(cookie)
@@ -113,6 +115,7 @@ public class GraphElementRestTestUtils {
                         )
         ).get();
     }
+
     public URI baseGraphElementUri() {
         return new UserUris(
                 authenticatedUser

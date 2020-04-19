@@ -3,8 +3,9 @@ package guru.bubl.service.resources;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementOperator;
+import guru.bubl.module.model.graph.graph_element.GraphElementOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -49,6 +50,16 @@ public interface GraphElementResource {
                 getOperatorFromShortId(shortId)
         ).remove();
         return Response.noContent().build();
+    }
+
+
+    @DELETE
+    @Path("/{shortId}")
+    default Response remove(
+            @PathParam("shortId") String shortId
+    ) {
+        getOperatorFromShortId(shortId).remove();
+        return Response.ok().build();
     }
 
     @POST

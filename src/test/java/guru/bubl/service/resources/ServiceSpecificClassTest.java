@@ -5,18 +5,14 @@
 package guru.bubl.service.resources;
 
 
-import guru.bubl.service.resources.edge.EdgeResource;
-import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResourceTest;
-import guru.bubl.service.resources.vertex.VertexMergeResourceTest;
-import guru.bubl.service.resources.vertex.VertexResource;
-import guru.bubl.service.resources.vertex.VertexResourceTest;
+import guru.bubl.service.resources.fork.ForkCollectionResourceTest;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        NotOwnedSurroundGraphResourceTest.class
+        ForkCollectionResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }

@@ -1,7 +1,7 @@
 package guru.bubl.service.resources.edge;
 
 import guru.bubl.module.model.UserUris;
-import guru.bubl.module.model.graph.GraphElementType;
+import guru.bubl.module.model.graph.graph_element.GraphElementType;
 import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.edge.EdgeOperator;
 import guru.bubl.service.resources.GraphElementResource;

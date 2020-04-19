@@ -2,7 +2,7 @@
  * Copyright Vincent Blouin under the GPL License version 3
  */
 
-package guru.bubl.service.resources;
+package guru.bubl.service.resources.user;
 
 import com.sun.jersey.api.client.ClientResponse;
 import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;

@@ -9,18 +9,15 @@ import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
-import guru.bubl.module.model.graph.GraphElementOperator;
-import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.fork.ForkOperator;
+import guru.bubl.module.model.graph.graph_element.GraphElementOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexJson;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.graph.vertex.VertexPojo;
-import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.resources.GraphElementTagResource;
 import guru.bubl.service.resources.fork.ForkResource;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -31,9 +28,6 @@ import java.net.URI;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VertexResource implements ForkResource {
-
-    @Inject
-    VertexCollectionResourceFactory vertexCollectionResourceFactory;
 
     @Inject
     GraphElementTagResourceFactory graphElementTagResourceFactory;
@@ -67,20 +61,6 @@ public class VertexResource implements ForkResource {
                         newVertex
                 ))
                 .build();
-    }
-
-
-    @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/{shortId}")
-    public Response removeVertex(
-            @PathParam("shortId") String shortId
-    ) {
-        VertexOperator vertex = vertexFromShortId(
-                shortId
-        );
-        vertex.remove();
-        return Response.ok().build();
     }
 
     @POST
@@ -120,13 +100,6 @@ public class VertexResource implements ForkResource {
             @PathParam("shortId") String shortId) {
         return graphElementTagResourceFactory.forGraphElement(
                 vertexFromShortId(shortId)
-        );
-    }
-
-    @Path("collection")
-    public VertexCollectionResource getCollectionResource() {
-        return vertexCollectionResourceFactory.withUserGraph(
-                userGraph
         );
     }
 
