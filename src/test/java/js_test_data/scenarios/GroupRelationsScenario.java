@@ -10,11 +10,13 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.subgraph.SubGraphJson;
+import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationOperator;
 import guru.bubl.module.model.graph.relation.RelationOperator;
-import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import guru.bubl.module.model.search.GraphElementSearchResult;
@@ -28,23 +30,27 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 
 public class GroupRelationsScenario implements JsTestScenario {
 
-    /*
-     * me -Possession of book 1->book 1
-     * me <-Possessed by book 2-book 2
-     * me -Possession of book 3->book 3
-     * me -Possession of book 3 copy->book 3 copy
-     * book3 has two hidden relations
-     * Relation "Possession of book 3 copy" is identified to relation "Possession of book 3"
-     * all possession relations are identified to possession
-     * me -other relation->other bubble
-     * me -other relation 2->other bubble 2
-     * other bubble with early creation date
-     * me -original relation->b1
-     * me -same as original relation->b2
-     */
+/*
+me -Possession of book 1->{
+    -Possession of book 1-> book 1,
+    <-Possessed by book 2- book 2,
+    -Possession of book 3-> {
+        -Possession of book 3->book 3 "two hidden relations",
+        -Possession of book 3 copy->book 3 copy
+   },
+   -original relation->{
+        -original relation->b1
+        -same as original relation->b2
+   },
+   -other relation->other bubble "other bubble with early creation date"
+   -other relation 2->other bubble 2
+}
+
+*/
 
     @Inject
     protected GraphFactory graphFactory;
@@ -53,10 +59,13 @@ public class GroupRelationsScenario implements JsTestScenario {
     protected VertexFactory vertexFactory;
 
     @Inject
-    ModelTestScenarios modelTestScenarios;
+    private ModelTestScenarios modelTestScenarios;
 
     @Inject
-    GraphSearchFactory graphSearchFactory;
+    private GraphSearchFactory graphSearchFactory;
+
+    @Inject
+    private GroupRelationFactory groupRelationFactory;
 
     private DateTime
             book1Date = new DateTime().minusSeconds(30),
@@ -83,7 +92,9 @@ public class GroupRelationsScenario implements JsTestScenario {
             rBook3,
             rBook3Copy;
 
-    private SubGraphPojo subGraphForMe;
+    private GroupRelationOperator possessionOfBook1, possessionOfBook3, originalRelationGroupRelation;
+
+    private SubGraphPojo subGraphForMe, possessionOfBook1SubGraph, possessionOfBook3SubGraph;
 
     @Override
     public JSONObject build() {
@@ -92,6 +103,14 @@ public class GroupRelationsScenario implements JsTestScenario {
         createEdges();
         subGraphForMe = userGraph.aroundForkUriInShareLevels(
                 me.uri(),
+                ShareLevel.allShareLevelsInt
+        );
+        possessionOfBook1SubGraph = userGraph.aroundForkUriInShareLevels(
+                possessionOfBook1.uri(),
+                ShareLevel.allShareLevelsInt
+        );
+        possessionOfBook3SubGraph = userGraph.aroundForkUriInShareLevels(
+                possessionOfBook3.uri(),
                 ShareLevel.allShareLevelsInt
         );
         List<GraphElementSearchResult> bookSearchResults = graphSearchFactory.usingSearchTerm(
@@ -114,6 +133,26 @@ public class GroupRelationsScenario implements JsTestScenario {
                                 )
                         )
                 )
+                        .put(
+                                "aroundPossessionOfBook1",
+                                SubGraphJson.toJson(
+                                        possessionOfBook1SubGraph
+                                )
+                        )
+                        .put(
+                                "aroundPossessionOfBook3",
+                                SubGraphJson.toJson(
+                                        possessionOfBook3SubGraph
+                                )
+                        )
+                        .put(
+                                "aroundOriginalRelation",
+                                SubGraphJson.toJson(
+                                        userGraph.aroundForkUriInShareLevels(
+                                                originalRelationGroupRelation.uri()
+                                        )
+                                )
+                        )
         ).get();
     }
 
@@ -126,6 +165,7 @@ public class GroupRelationsScenario implements JsTestScenario {
                 user.username()
         );
         book1.label("book 1");
+
         TagPojo bookMeta = book1.addTag(
                 modelTestScenarios.book()
         ).values().iterator().next();
@@ -165,44 +205,63 @@ public class GroupRelationsScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        rBook1 = me.addRelationToFork(book1);
+        rBook1 = me.addRelationToFork(book1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         rBook1.label("Possession of book 1");
-        TagPojo possession = book1.addTag(
+        TagPojo possession = rBook1.addTag(
                 modelTestScenarios.possessionIdentification()
         ).values().iterator().next();
-        rBook1.addTag(
-                possession
+        possessionOfBook1 = groupRelationFactory.withUri(
+                rBook1.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "Possession",
+                        ""
+                ).uri()
         );
-        rBook2 = book2.addRelationToFork(me);
+        rBook2 = book2.addRelationToFork(possessionOfBook1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         rBook2.label("Possessed by book 2");
         rBook2.addTag(
                 possession
         );
-        rBook3 = me.addRelationToFork(book3);
+        rBook3 = possessionOfBook1.addRelationToFork(book3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         rBook3.label("Possession of book 3");
         rBook3.addTag(
                 possession
         );
-        rBook3.addTag(
-                possession
+        possessionOfBook3 = groupRelationFactory.withUri(
+                rBook3.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "Possession of book 3",
+                        ""
+                ).uri()
         );
-        rBook3Copy = me.addRelationToFork(book3Copy);
+        TagPojo rBook3Tag = TestScenarios.tagFromFriendlyResource(
+                rBook3
+        );
+        rBook3Copy = possessionOfBook3.addRelationToFork(book3Copy.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         rBook3Copy.addTag(
                 possession
         );
         rBook3Copy.addTag(
-                TestScenarios.tagFromFriendlyResource(
-                        rBook3
-                )
+                rBook3Tag
         );
         rBook3Copy.label("Possession of book 3 copy");
-        RelationOperator otherRelation = me.addRelationToFork(otherBubble);
+        RelationOperator otherRelation = me.addRelationToFork(otherBubble.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         otherRelation.label("other relation");
-        RelationOperator otherRelation2 = me.addRelationToFork(otherBubble2);
+        RelationOperator otherRelation2 = me.addRelationToFork(otherBubble2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         otherRelation2.label("other relation 2");
-        RelationOperator originalRelation = me.addRelationToFork(b1);
+        RelationOperator originalRelation = me.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         originalRelation.label("original relation");
-        RelationOperator sameAsOriginalRelation = me.addRelationToFork(b2);
+        originalRelationGroupRelation = groupRelationFactory.withUri(
+                originalRelation.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "original relation",
+                        ""
+                ).uri()
+        );
+        RelationOperator sameAsOriginalRelation = originalRelationGroupRelation.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         sameAsOriginalRelation.label("same as original relation");
         TagPojo b1RelationIdentification = new TagPojo(
                 originalRelation.uri(),
@@ -215,28 +274,25 @@ public class GroupRelationsScenario implements JsTestScenario {
         subGraphForMe.vertexWithIdentifier(
                 otherBubble.uri()
         ).setCreationDate(new DateTime().minusDays(1).toDate().getTime());
-        subGraphForMe.vertexWithIdentifier(
+        possessionOfBook1SubGraph.vertexWithIdentifier(
                 book1.uri()
         ).setCreationDate(book1Date.toDate().getTime());
-        subGraphForMe.vertexWithIdentifier(
-                book1.uri()
-        ).setCreationDate(book1Date.toDate().getTime());
-        subGraphForMe.edgeWithIdentifier(
+        possessionOfBook1SubGraph.edgeWithIdentifier(
                 rBook1.uri()
         ).setCreationDate(book1Date.toDate().getTime());
-        subGraphForMe.vertexWithIdentifier(
+        possessionOfBook1SubGraph.vertexWithIdentifier(
                 book2.uri()
         ).setCreationDate(book2Date.toDate().getTime());
-        subGraphForMe.edgeWithIdentifier(
+        possessionOfBook1SubGraph.edgeWithIdentifier(
                 rBook2.uri()
         ).setCreationDate(book2Date.toDate().getTime());
-        subGraphForMe.vertexWithIdentifier(
+        possessionOfBook3SubGraph.vertexWithIdentifier(
                 book3.uri()
         ).setCreationDate(book3Date.toDate().getTime());
-        subGraphForMe.edgeWithIdentifier(
+        possessionOfBook3SubGraph.edgeWithIdentifier(
                 rBook3.uri()
         ).setCreationDate(book3Date.toDate().getTime());
-        subGraphForMe.edgeWithIdentifier(
+        possessionOfBook3SubGraph.edgeWithIdentifier(
                 rBook3Copy.uri()
         ).setCreationDate(book3CopyDate.toDate().getTime());
     }

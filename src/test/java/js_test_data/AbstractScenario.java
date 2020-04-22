@@ -59,11 +59,11 @@ public class AbstractScenario {
     }
 
     public void createEdges() {
-        RelationOperator r1 = center.addRelationToFork(b1);
+        RelationOperator r1 = center.addRelationToFork(b1.uri(), center.getShareLevel(), b1.getShareLevel());
         r1.label("r1");
-        RelationOperator r2 = center.addRelationToFork(b2);
+        RelationOperator r2 = center.addRelationToFork(b2.uri(), center.getShareLevel(), b2.getShareLevel());
         r2.label("r2");
-        RelationOperator r3 = center.addRelationToFork(b3);
+        RelationOperator r3 = center.addRelationToFork(b3.uri(), center.getShareLevel(), b3.getShareLevel());
         r3.label("r3");
     }
 }

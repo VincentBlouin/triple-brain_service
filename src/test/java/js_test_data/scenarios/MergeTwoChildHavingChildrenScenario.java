@@ -139,12 +139,12 @@ public class MergeTwoChildHavingChildrenScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        center1.addRelationToFork(b2).label("r1");
-        b2.addRelationToFork(b21).label("r21");
-        b2.addRelationToFork(b22).label("r22");
+        center1.addRelationToFork(b2.uri(), center1.getShareLevel(), b2.getShareLevel()).label("r1");
+        b2.addRelationToFork(b21.uri(), b2.getShareLevel(), b21.getShareLevel()).label("r21");
+        b2.addRelationToFork(b22.uri(), b2.getShareLevel(), b22.getShareLevel()).label("r22");
 
-        center2.addRelationToFork(o2).label("or1");
-        o2.addRelationToFork(o21).label("or21");
-        o2.addRelationToFork(o22).label("or22");
+        center2.addRelationToFork(o2.uri(), center2.getShareLevel(), o2.getShareLevel()).label("or1");
+        o2.addRelationToFork(o21.uri(), o2.getShareLevel(), o21.getShareLevel()).label("or21");
+        o2.addRelationToFork(o22.uri(), o2.getShareLevel(), o22.getShareLevel()).label("or22");
     }
 }

@@ -11,10 +11,12 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.common_utils.Uris;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.UserUris;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.relation.Relation;
 import guru.bubl.module.model.graph.relation.RelationPojo;
 import guru.bubl.module.model.json.LocalizedStringJson;
 import guru.bubl.service.SessionHandler;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.core.MediaType;
@@ -138,17 +140,29 @@ public class EdgeRestTestUtils {
         UserUris userUris = new UserUris(
                 UserUris.ownerUserNameFromUri(sourceVertexUri)
         );
-        return resource
-                .path(userUris.baseEdgeUri().getPath())
-                .queryParam("sourceUri", encodeURL(
-                        sourceVertexUri.toString()
-                ))
-                .queryParam("destinationUri", encodeURL(
-                        destinationVertexUri.toString()
-                ))
-                .cookie(authCookie)
-                .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
-                .post(ClientResponse.class);
+        try {
+            return resource
+                    .path(userUris.baseEdgeUri().getPath())
+                    .cookie(authCookie)
+                    .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
+                    .post(ClientResponse.class,
+                            new JSONObject().put(
+                                    "sourceUri",
+                                    sourceVertexUri.toString()
+                            ).put(
+                                    "destinationUri",
+                                    destinationVertexUri.toString()
+                            ).put(
+                                    "sourceShareLevel",
+                                    ShareLevel.PRIVATE.name()
+                            ).put(
+                                    "destinationSharelevel",
+                                    ShareLevel.PRIVATE.name()
+                            )
+                    );
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean oneOfTwoUriIsUri(URI first, URI second, URI toCompare) {

@@ -109,10 +109,10 @@ public class CircularityScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        b1.addRelationToFork(b2).label("r1");
-        b2.addRelationToFork(b3).label("r2");
-        b2.addRelationToFork(b4).label("r4");
-        b3.addRelationToFork(b1).label("r3");
-        b3.addRelationToFork(b5).label("r5");
+        b1.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r1");
+        b2.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r2");
+        b2.addRelationToFork(b4.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r4");
+        b3.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r3");
+        b3.addRelationToFork(b5.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r5");
     }
 }

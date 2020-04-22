@@ -44,10 +44,10 @@ public class DeepGraphScenario implements JsTestScenario {
     public JSONObject build() {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
-        b1.addRelationToFork(b2).label("r1");
-        b2.addRelationToFork(b3).label("r2");
-        b4.addRelationToFork(b2).label("r3");
-        b5.addRelationToFork(b1).label("r4");
+        b1.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r1");
+        b2.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r2");
+        b4.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r3");
+        b5.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r4");
         SubGraphPojo subGraphPojo = userGraph.aroundForkUriWithDepthInShareLevels(
                 b1.uri(),
                 2,

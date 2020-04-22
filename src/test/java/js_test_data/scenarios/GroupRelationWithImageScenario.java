@@ -27,16 +27,16 @@ import java.net.URI;
 public class GroupRelationWithImageScenario implements JsTestScenario {
 
     /*
-    * some project-idea for 1->idea 1
-    * some project-idea for 2->idea 2
-    * relation "idea for" is identified to idea which has an image
-    * some project-has component 1->component 1
-    * some project-has component 2->component 2
-    * has component is identified to component which has no images
-    * some project-other relation->-other bubble
-    * some project-other relation->-other bubble 2
-    * some project-other relation->-other bubble 3
-    */
+     * some project-idea for 1->idea 1
+     * some project-idea for 2->idea 2
+     * relation "idea for" is identified to idea which has an image
+     * some project-has component 1->component 1
+     * some project-has component 2->component 2
+     * has component is identified to component which has no images
+     * some project-other relation->-other bubble
+     * some project-other relation->-other bubble 2
+     * some project-other relation->-other bubble 3
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -121,11 +121,11 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                 ),
                 ideaFriendlyResource
         );
-        RelationOperator rIdea1 = someProject.addRelationToFork(idea1);
+        RelationOperator rIdea1 = someProject.addRelationToFork(idea1.uri(), someProject.getShareLevel(), idea1.getShareLevel());
         rIdea1.label("idea for 1");
         rIdea1.addTag(ideaIdentification);
 
-        RelationOperator rIdea2 = someProject.addRelationToFork(idea2);
+        RelationOperator rIdea2 = someProject.addRelationToFork(idea2.uri(), someProject.getShareLevel(), idea2.getShareLevel());
         rIdea2.label("idea for 2");
         rIdea2.addTag(ideaIdentification);
 
@@ -137,24 +137,30 @@ public class GroupRelationWithImageScenario implements JsTestScenario {
                         "component"
                 )
         );
-        RelationOperator rComponent1 = someProject.addRelationToFork(component1);
+        RelationOperator rComponent1 = someProject.addRelationToFork(component1.uri(), someProject.getShareLevel(), component1.getShareLevel());
         rComponent1.label("has component 1");
         rComponent1.addTag(componentIdentification);
 
-        RelationOperator rComponent2 = someProject.addRelationToFork(component2);
+        RelationOperator rComponent2 = someProject.addRelationToFork(component2.uri(), someProject.getShareLevel(), component2.getShareLevel());
         rComponent2.label("has component 2");
         rComponent2.addTag(componentIdentification);
 
         someProject.addRelationToFork(
-                otherBubble
+                otherBubble.uri(),
+                someProject.getShareLevel(),
+                otherBubble.getShareLevel()
         ).label("other relation");
 
         someProject.addRelationToFork(
-                otherBubble2
+                otherBubble2.uri(),
+                someProject.getShareLevel(),
+                otherBubble2.getShareLevel()
         ).label("other relation");
 
         someProject.addRelationToFork(
-                otherBubble3
+                otherBubble3.uri(),
+                someProject.getShareLevel(),
+                otherBubble3.getShareLevel()
         ).label("other relation");
     }
 }

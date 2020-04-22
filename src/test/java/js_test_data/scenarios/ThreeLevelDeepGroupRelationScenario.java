@@ -8,17 +8,21 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
-import guru.bubl.module.model.graph.subgraph.SubGraphJson;
+import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationOperator;
 import guru.bubl.module.model.graph.relation.RelationOperator;
-import guru.bubl.module.model.graph.tag.TagPojo;
+import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
+import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
-import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
+import org.codehaus.jettison.json.JSONObject;
+import sun.misc.UUDecoder;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.util.UUID;
 
 public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
     /*
@@ -34,7 +38,9 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
      }
     */
 
-    private TagPojo region = new TagPojo(
+    private GroupRelationOperator region, subRegionA, subRegionB;
+
+    private TagPojo regionTag = new TagPojo(
             URI.create(
                     "https://mindrespect.com/e6452d32-8015-4d8e-89ad-58f14699680d"
             ),
@@ -42,7 +48,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
                     "region"
             )
     );
-    private TagPojo subRegion = new TagPojo(
+    private TagPojo subRegionTag = new TagPojo(
             URI.create(
                     "https://mindrespect.com/077e5cd5-0adf-471a-8145-228107cf66e5"
             ),
@@ -50,7 +56,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
                     "sub-region"
             )
     );
-    private TagPojo subRegionA = new TagPojo(
+    private TagPojo subRegionATag = new TagPojo(
             URI.create(
                     "https://mindrespect.com/f893f25b-7cf1-4fee-860a-18b0764949d3"
             ),
@@ -59,7 +65,7 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
             )
     );
 
-    private TagPojo subRegionB = new TagPojo(
+    private TagPojo subRegionBTag = new TagPojo(
             URI.create(
                     "https://mindrespect.com/fc5379ff-fdc8-4b9d-ab40-d9adcac83315"
             ),
@@ -82,13 +88,13 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
             r4;
 
     @Inject
-    GraphFactory graphFactory;
+    private GraphFactory graphFactory;
 
     @Inject
-    VertexFactory vertexFactory;
+    private VertexFactory vertexFactory;
 
     @Inject
-    ModelTestScenarios modelTestScenarios;
+    private GroupRelationFactory groupRelationFactory;
 
     User user = User.withEmailAndUsername(
             "a",
@@ -100,12 +106,43 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
         UserGraph userGraph = graphFactory.loadForUser(user);
         createVertices();
         createEdges();
-        return SubGraphJson.toJson(
-                userGraph.aroundForkUriInShareLevels(
-                        fastChargingStation.uri(),
-                        ShareLevel.allShareLevelsInt
-                )
-        );
+        try {
+            return new JSONObject().put(
+                    "fastChargingStationGraph",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    fastChargingStation.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundRegion",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    region.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundSubRegionA",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    subRegionA.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundSubRegionB",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    subRegionB.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createVertices() {
@@ -132,28 +169,43 @@ public class ThreeLevelDeepGroupRelationScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        r1 = fastChargingStation.addRelationToFork(b1);
+        r1 = fastChargingStation.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r1.label("r1");
-        r1.addTag(region);
-        r1.addTag(subRegion);
-        r1.addTag(subRegionA);
-
-        r2 = fastChargingStation.addRelationToFork(b2);
+        r1.addTag(regionTag);
+        region = groupRelationFactory.withUri(
+                r1.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "region",
+                        ""
+                ).uri()
+        );
+        r1.addTag(subRegionTag);
+        r1.addTag(subRegionATag);
+        subRegionA = groupRelationFactory.withUri(
+                r1.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "sub-region-a",
+                        ""
+                ).uri()
+        );
+        r2 = subRegionA.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r2.label("r2");
-        r2.addTag(region);
-        r2.addTag(subRegion);
-        r2.addTag(subRegionA);
-
-        r3 = fastChargingStation.addRelationToFork(b3);
+        r3 = region.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r3.label("r3");
-        r3.addTag(region);
-        r3.addTag(subRegion);
-        r3.addTag(subRegionB);
-
-        r4 = fastChargingStation.addRelationToFork(b4);
+        r3.addTag(regionTag);
+        r3.addTag(subRegionTag);
+        r3.addTag(subRegionBTag);
+        subRegionB = groupRelationFactory.withUri(
+                r3.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "sub-region-b",
+                        ""
+                ).uri()
+        );
+        r4 = subRegionB.addRelationToFork(b4.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r4.label("r4");
-        r4.addTag(region);
-        r4.addTag(subRegion);
-        r4.addTag(subRegionB);
     }
 }

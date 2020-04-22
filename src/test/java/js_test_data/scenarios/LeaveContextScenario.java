@@ -76,23 +76,23 @@ public class LeaveContextScenario implements JsTestScenario {
 
         choiceA = vertexFactory.createForOwner(user.username());
         choiceA.label("choice a");
-        techChoice.addRelationToFork(choiceA);
+        techChoice.addRelationToFork(choiceA.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
 
         choiceB = vertexFactory.createForOwner(user.username());
         choiceB.label("choice b");
-        techChoice.addRelationToFork(choiceB);
+        techChoice.addRelationToFork(choiceB.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
 
         choiceC = vertexFactory.createForOwner(user.username());
         choiceC.label("choice c");
-        techChoice.addRelationToFork(choiceC);
+        techChoice.addRelationToFork(choiceC.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
 
         choiceA1 = vertexFactory.createForOwner(user.username());
         choiceA1.label("choice a1");
-        choiceA.addRelationToFork(choiceA1);
+        choiceA.addRelationToFork(choiceA1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
 
         choiceA2 = vertexFactory.createForOwner(user.username());
         choiceA2.label("choice a2");
-        choiceA.addRelationToFork(choiceA2);
+        choiceA.addRelationToFork(choiceA2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
     }
 
 

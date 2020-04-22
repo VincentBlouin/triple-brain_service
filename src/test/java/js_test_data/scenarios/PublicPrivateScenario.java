@@ -71,9 +71,9 @@ public class PublicPrivateScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = b1.addRelationToFork(b2);
+        RelationOperator r1 = b1.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r1.label("r1");
-        RelationOperator r2 = b1.addRelationToFork(b3);
+        RelationOperator r2 = b1.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r2.label("r2");
     }
 }

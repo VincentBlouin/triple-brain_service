@@ -9,6 +9,8 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.tag.TagPojo;
@@ -22,34 +24,40 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
+import java.util.UUID;
 
 public class RelationsAsTagScenario implements JsTestScenario {
 
     /*
-    *
-    * center-original some relation->b1
-    * center-some relation->b2
-    * center-some relation->b3
-    * center-some different relation->b4
-    *
-    * all relations labeled "some relation" are identified to the first "some relation"
+
+     center -some relation->{
+        -original some relation->b1
+        -some relation->b2
+        -some relation->b3
+     }
+     center-some different relation->b4
     */
 
     @Inject
-    GraphSearchFactory graphSearchFactory;
+    private GraphSearchFactory graphSearchFactory;
 
     @Inject
     protected GraphFactory graphFactory;
 
     @Inject
-    VertexFactory vertexFactory;
+    private VertexFactory vertexFactory;
 
-    VertexOperator
+    @Inject
+    private GroupRelationFactory groupRelationFactory;
+
+    private VertexOperator
             center,
             b1,
             b2,
             b3,
             b4;
+
+    private GroupRelationOperator groupRelation;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -63,24 +71,29 @@ public class RelationsAsTagScenario implements JsTestScenario {
         createRelations();
 
         return NoEx.wrap(() -> new JSONObject().put(
-                        "searchSome",
-                        new JSONArray(
-                                new Gson().toJson(
-                                        graphSearchFactory.usingSearchTerm(
-                                                "some"
-                                        ).searchRelationsForAutoCompletionByLabel(
-                                                user
-                                        )
+                "searchSome",
+                new JSONArray(
+                        new Gson().toJson(
+                                graphSearchFactory.usingSearchTerm(
+                                        "some"
+                                ).searchRelationsForAutoCompletionByLabel(
+                                        user
                                 )
                         )
+                )
                 ).put(
-                        "graph",
-                        SubGraphJson.toJson(
-                                userGraph.aroundForkUriInShareLevels(
-                                        center.uri(),
-                                        ShareLevel.allShareLevelsInt
-                                )
-                        ))
+                "graph",
+                SubGraphJson.toJson(
+                        userGraph.aroundForkUriInShareLevels(
+                                center.uri(),
+                                ShareLevel.allShareLevelsInt
+                        )
+                )).put("aroundGroupRelation", SubGraphJson.toJson(
+                        userGraph.aroundForkUriInShareLevels(
+                                groupRelation.uri(),
+                                ShareLevel.allShareLevelsInt
+                        )
+                ))
         ).get();
     }
 
@@ -108,22 +121,22 @@ public class RelationsAsTagScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        RelationOperator firstSomeRelation = center.addRelationToFork(b1);
+        RelationOperator firstSomeRelation = center.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
+        groupRelation = groupRelationFactory.withUri(
+                firstSomeRelation.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "some relation",
+                        ""
+                ).uri()
+        );
         firstSomeRelation.label("original some relation");
         TagPojo firstSomeRelationAsIdentifier = TestScenarios.tagFromFriendlyResource(
                 firstSomeRelation
         );
-        RelationOperator secondSomeRelation = center.addRelationToFork(b2);
-        secondSomeRelation.label("some relation");
-        secondSomeRelation.addTag(
-                firstSomeRelationAsIdentifier
-        );
-        RelationOperator thirdSomeRelation = center.addRelationToFork(b3);
-        thirdSomeRelation.label("some relation");
-        thirdSomeRelation.addTag(
-                firstSomeRelationAsIdentifier
-        );
-        RelationOperator differentRelation = center.addRelationToFork(b4);
-        differentRelation.label("some different relation");
+        groupRelation.addTag(firstSomeRelationAsIdentifier, ShareLevel.PRIVATE);
+        groupRelation.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("some relation");
+        groupRelation.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("some relation");
+        center.addRelationToFork(b4.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("some different relation");
     }
 }

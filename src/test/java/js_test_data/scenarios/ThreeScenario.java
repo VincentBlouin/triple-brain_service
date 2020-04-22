@@ -121,7 +121,7 @@ public class ThreeScenario implements JsTestScenario {
                 parent.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        RelationOperator singleParentToB1Relation = parent.addRelationToFork(b1);
+        RelationOperator singleParentToB1Relation = parent.addRelationToFork(b1.uri(), parent.getShareLevel(), b1.getShareLevel());
         SubGraphPojo subGraphOfB1RelatedToParent = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
                 ShareLevel.allShareLevelsInt
@@ -221,17 +221,17 @@ public class ThreeScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = b1.addRelationToFork(b2);
+        RelationOperator r1 = b1.addRelationToFork(b2.uri(), b1.getShareLevel(), b2.getShareLevel());
         r1.label("r1");
-        RelationOperator r2 = b1.addRelationToFork(b3);
+        RelationOperator r2 = b1.addRelationToFork(b3.uri(), b1.getShareLevel(), b3.getShareLevel());
         r2.label("r2");
-        RelationOperator r3 = b3.addRelationToFork(b4);
+        RelationOperator r3 = b3.addRelationToFork(b4.uri(), b3.getShareLevel(), b4.getShareLevel());
         r3.label("r3");
-        RelationOperator r4 = b3.addRelationToFork(b5);
+        RelationOperator r4 = b3.addRelationToFork(b5.uri(), b3.getShareLevel(), b4.getShareLevel());
         r4.label("r4");
         b4.addVertexAndRelation();
         b4.addVertexAndRelation();
-        RelationOperator relation = parent.addRelationToFork(child);
+        RelationOperator relation = parent.addRelationToFork(child.uri(), parent.getShareLevel(), child.getShareLevel());
         relation.label("relation");
     }
 }

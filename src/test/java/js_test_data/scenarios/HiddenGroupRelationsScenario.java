@@ -10,6 +10,8 @@ import guru.bubl.module.model.Image;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -22,6 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.util.UUID;
 
 public class HiddenGroupRelationsScenario implements JsTestScenario {
 
@@ -29,17 +32,19 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
      * b1-r1->b2
      * b2 has hidden relations
      * b2 has an image
-     * b2-shirt1->shirt1
-     * b2-shirt2->shirt2
-     * shirt2-color->red
-     * shirt2 has an image
-     * relations T-shirt are identified to Freebase T-shirt.
-     */
+     * b2 -T-shirt->{
+         -shirt1->shirt1
+         -shirt2->shirt2{
+            shirt2-color->red
+         }
+       }
+      shirt2 has an image
+ */
 
     /*
-    * Distant graph
-    * bubble labeled "distant bubble" will eventually connect to b2 or b1
-    */
+     * Distant graph
+     * bubble labeled "distant bubble" will eventually connect to b2 or b1
+     */
 
     @Inject
     protected GraphFactory graphFactory;
@@ -48,7 +53,10 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
     protected VertexFactory vertexFactory;
 
     @Inject
-    ModelTestScenarios modelTestScenarios;
+    private ModelTestScenarios modelTestScenarios;
+
+    @Inject
+    private GroupRelationFactory groupRelationFactory;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -59,6 +67,8 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
             shirt2,
             red,
             distantBubble;
+
+    private GroupRelationOperator tShirtGroupRelation;
 
     @Override
     public JSONObject build() {
@@ -81,13 +91,13 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
         );
-        RelationOperator distantToB2 = distantBubble.addRelationToFork(b2);
+        RelationOperator distantToB2 = distantBubble.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         SubGraphPojo b2GraphWhenConnectedToDistantBubble = userGraph.aroundForkUriInShareLevels(
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
         distantToB2.remove();
-        b1.addRelationToFork(distantBubble);
+        b1.addRelationToFork(distantBubble.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         SubGraphPojo distantBubbleGraphWhenConnectedToBubble1 = userGraph.aroundForkUriInShareLevels(
                 distantBubble.uri(),
                 ShareLevel.allShareLevelsInt
@@ -113,13 +123,22 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
                         "distantBubbleUri",
                         distantBubble.uri()
                 ).put(
+                        "tShirtGroupRelationGraph",
+                        SubGraphJson.toJson(
+                                userGraph.aroundForkUriInShareLevels(
+                                        tShirtGroupRelation.uri(),
+                                        ShareLevel.allShareLevelsInt
+                                )
+                        )
+
+                ).put(
                         "shirt2Graph",
                         SubGraphJson.toJson(shirt2Graph)
                 )
-                .put(
-                        "shirt2BubbleUri",
-                        shirt2.uri()
-                )
+                        .put(
+                                "shirt2BubbleUri",
+                                shirt2.uri()
+                        )
         ).get();
     }
 
@@ -165,14 +184,21 @@ public class HiddenGroupRelationsScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        b1.addRelationToFork(b2).label("r1");
-        RelationOperator shirt1Relation = b2.addRelationToFork(shirt1);
+        b1.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r1");
+        RelationOperator shirt1Relation = b2.addRelationToFork(shirt1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         shirt1Relation.label("shirt1");
         shirt1Relation.addTag(modelTestScenarios.tShirt());
-        RelationOperator shirt2Relation = b2.addRelationToFork(shirt2);
+        tShirtGroupRelation = groupRelationFactory.withUri(
+                shirt1Relation.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "T-shirt",
+                        ""
+                ).uri()
+        );
+        RelationOperator shirt2Relation = tShirtGroupRelation.addRelationToFork(shirt2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         shirt2Relation.label("shirt2");
-        shirt2Relation.addTag(modelTestScenarios.tShirt());
-        RelationOperator color = shirt2.addRelationToFork(red);
+        RelationOperator color = shirt2.addRelationToFork(red.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         color.label("color");
     }
 }

@@ -4,6 +4,9 @@ import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.FriendlyResourcePojo;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.group_relation.GroupRelation;
+import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
@@ -15,6 +18,7 @@ import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.inject.Inject;
+import java.util.UUID;
 
 public class ThreeLevelGroupRelationScenario implements JsTestScenario {
 /*
@@ -32,9 +36,9 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                 -g33->llll
             }
         }
-        -g3->hhhh
+        -g3->gggg
     }
-    center -r2-> iiii
+    center -r2-> hhhh
 */
 
 
@@ -45,7 +49,7 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
     protected VertexFactory vertexFactory;
 
     @Inject
-    protected TagFactory tagFactory;
+    protected GroupRelationFactory groupRelationFactory;
 
     User user = User.withEmailAndUsername("a", "b");
 
@@ -63,7 +67,9 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
             kkkk,
             llll;
 
-    private TagPojo group1;
+    private TagPojo group1Tag;
+
+    private GroupRelationOperator group1, group2, group3;
 
     @Override
     public Object build() {
@@ -80,10 +86,34 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                             )
                     )
             ).put(
+                    "aroundGroup1Tag",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    group1Tag.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
                     "aroundGroup1",
                     SubGraphJson.toJson(
                             userGraph.aroundForkUriInShareLevels(
                                     group1.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundGroup2",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    group2.uri(),
+                                    ShareLevel.allShareLevelsInt
+                            )
+                    )
+            ).put(
+                    "aroundGroup3",
+                    SubGraphJson.toJson(
+                            userGraph.aroundForkUriInShareLevels(
+                                    group3.uri(),
                                     ShareLevel.allShareLevelsInt
                             )
                     )
@@ -122,12 +152,9 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        center.addRelationToFork(aaaa).label("r1");
-
-        RelationOperator g1 = center.addRelationToFork(bbbb);
-        g1.label("g1");
-
-        group1 = g1.addTag(
+        center.addRelationToFork(aaaa.uri(), center.getShareLevel(), aaaa.getShareLevel()).label("r1");
+        RelationOperator g1 = center.addRelationToFork(bbbb.uri(), center.getShareLevel(), bbbb.getShareLevel());
+        group1Tag = g1.addTag(
                 new TagPojo(
                         g1.uri(),
                         new FriendlyResourcePojo(
@@ -135,14 +162,21 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                         )
                 )
         ).values().iterator().next();
+        group1 = groupRelationFactory.withUri(g1.convertToGroupRelation(
+                UUID.randomUUID().toString(),
+                ShareLevel.PRIVATE,
+                "group1",
+                ""
+        ).uri());
+        g1.label("g1");
 
-        RelationOperator g2 = center.addRelationToFork(cccc);
+        RelationOperator g2 = group1.addRelationToFork(cccc.uri(), group1.getShareLevel(), cccc.getShareLevel());
         g2.label("g2");
-        g2.addTag(group1);
+        g2.addTag(group1Tag);
 
-        RelationOperator g21 = center.addRelationToFork(dddd);
+        RelationOperator g21 = group1.addRelationToFork(dddd.uri(), group1.getShareLevel(), dddd.getShareLevel());
         g21.label("g21");
-        TagPojo group2 = g21.addTag(
+        TagPojo group2Tag = g21.addTag(
                 new TagPojo(
                         g21.uri(),
                         new FriendlyResourcePojo(
@@ -150,29 +184,34 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                         )
                 )
         ).values().iterator().next();
-        g21.addTag(group1);
-        g21.addTag(group2);
+        g21.addTag(group1Tag);
+        group2 = groupRelationFactory.withUri(g21.convertToGroupRelation(
+                UUID.randomUUID().toString(),
+                ShareLevel.PRIVATE,
+                "group2",
+                ""
+        ).uri());
 
-        RelationOperator g22 = center.addRelationToFork(eeee);
+        RelationOperator g22 = group2.addRelationToFork(eeee.uri(), group2.getShareLevel(), eeee.getShareLevel());
         g22.label("g22");
-        g22.addTag(group1);
-        g22.addTag(group2);
+        g22.addTag(group1Tag);
+        g22.addTag(group2Tag);
 
 
-        RelationOperator g23 = center.addRelationToFork(ffff);
+        RelationOperator g23 = group2.addRelationToFork(ffff.uri(), group2.getShareLevel(), ffff.getShareLevel());
         g23.label("g23");
-        g23.addTag(group1);
-        g23.addTag(group2);
+        g23.addTag(group1Tag);
+        g23.addTag(group2Tag);
 
-        RelationOperator g3 = center.addRelationToFork(gggg);
+        RelationOperator g3 = group2.addRelationToFork(gggg.uri(), group2.getShareLevel(), gggg.getShareLevel());
         g3.label("g3");
-        g3.addTag(group1);
+        g3.addTag(group1Tag);
 
-        center.addRelationToFork(hhhh).label("r2");
+        center.addRelationToFork(hhhh.uri(), center.getShareLevel(), hhhh.getShareLevel()).label("r2");
 
-        RelationOperator g31 = center.addRelationToFork(jjjj);
+        RelationOperator g31 = group2.addRelationToFork(jjjj.uri(), group2.getShareLevel(), jjjj.getShareLevel());
         g31.label("g31");
-        TagPojo group3 = g31.addTag(
+        TagPojo group3Tag = g31.addTag(
                 new TagPojo(
                         g31.uri(),
                         new FriendlyResourcePojo(
@@ -180,21 +219,27 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
                         )
                 )
         ).values().iterator().next();
-        g31.addTag(group1);
-        g31.addTag(group2);
+        g31.addTag(group1Tag);
+        g31.addTag(group2Tag);
 
+        group3 = groupRelationFactory.withUri(g31.convertToGroupRelation(
+                UUID.randomUUID().toString(),
+                ShareLevel.PRIVATE,
+                "group3",
+                ""
+        ).uri());
 
-        RelationOperator g32 = center.addRelationToFork(kkkk);
+        RelationOperator g32 = group3.addRelationToFork(kkkk.uri(), group3.getShareLevel(), kkkk.getShareLevel());
         g32.label("g32");
-        g32.addTag(group1);
-        g32.addTag(group2);
-        g32.addTag(group3);
+        g32.addTag(group1Tag);
+        g32.addTag(group2Tag);
+        g32.addTag(group3Tag);
 
-        RelationOperator g33 = center.addRelationToFork(llll);
+        RelationOperator g33 = group3.addRelationToFork(llll.uri(), group3.getShareLevel(), llll.getShareLevel());
         g33.label("g33");
-        g33.addTag(group1);
-        g33.addTag(group2);
-        g33.addTag(group3);
+        g33.addTag(group1Tag);
+        g33.addTag(group2Tag);
+        g33.addTag(group3Tag);
 
     }
 }

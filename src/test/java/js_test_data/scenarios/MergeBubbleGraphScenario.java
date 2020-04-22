@@ -85,11 +85,11 @@ public class MergeBubbleGraphScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        r1 = b1.addRelationToFork(b2);
+        r1 = b1.addRelationToFork(b2.uri(), b1.getShareLevel(), b2.getShareLevel());
         r1.label("r1");
-        r2 = b2.addRelationToFork(b3);
+        r2 = b2.addRelationToFork(b3.uri(), b2.getShareLevel(), b3.getShareLevel());
         r2.label("r2");
-        r4 = b4.addRelationToFork(b1);
+        r4 = b4.addRelationToFork(b1.uri(), b4.getShareLevel(), b1.getShareLevel());
         r4.label("r4");
     }
 }

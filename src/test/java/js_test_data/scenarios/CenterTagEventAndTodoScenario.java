@@ -171,20 +171,20 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = e1.addRelationToFork(e2);
+        RelationOperator r1 = e1.addRelationToFork(e2.uri(), e1.getShareLevel(), e2.getShareLevel());
         r1.label("r1");
         toDo = r1.addTag(
                 modelTestScenarios.toDo()
         ).values().iterator().next();
-        RelationOperator r2 = e1.addRelationToFork(e3);
+        RelationOperator r2 = e1.addRelationToFork(e3.uri(), e1.getShareLevel(), e3.getShareLevel());
         r2.label("r2");
         r2.addTag(toDo);
-        RelationOperator f1 = o1.addRelationToFork(o2);
+        RelationOperator f1 = o1.addRelationToFork(o2.uri(), o1.getShareLevel(), o2.getShareLevel());
         f1.label("f1");
         f1.addTag(toDo);
-        e1.addRelationToFork(a1).label("ra1");
-        e1.addRelationToFork(e4).label("r3");
-        e3.addRelationToFork(e31).label("r3e1");
-        e3.addRelationToFork(e32).label("r3e2");
+        e1.addRelationToFork(a1.uri(), e1.getShareLevel(), a1.getShareLevel()).label("ra1");
+        e1.addRelationToFork(e4.uri(), e1.getShareLevel(), e4.getShareLevel()).label("r3");
+        e3.addRelationToFork(e31.uri(), e3.getShareLevel(), e31.getShareLevel()).label("r3e1");
+        e3.addRelationToFork(e32.uri(), e3.getShareLevel(), e32.getShareLevel()).label("r3e2");
     }
 }

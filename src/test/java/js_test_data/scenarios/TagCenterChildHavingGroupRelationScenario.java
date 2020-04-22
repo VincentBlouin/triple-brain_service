@@ -62,14 +62,14 @@ public class TagCenterChildHavingGroupRelationScenario extends AbstractScenario 
     }
 
     public void createEdges() {
-        RelationOperator r1 = center.addRelationToFork(b1);
+        RelationOperator r1 = center.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r1.label("r1");
         r1.addTag(
                 modelTestScenarios.human()
         );
-        RelationOperator r2 = b1.addRelationToFork(b2);
+        RelationOperator r2 = b1.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r2.label("r2");
-        RelationOperator r3 = b1.addRelationToFork(b3);
+        RelationOperator r3 = b1.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r3.label("r3");
         r2AsMeta = r3.addTag(
                 TestScenarios.tagFromFriendlyResource(

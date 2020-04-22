@@ -45,8 +45,8 @@ public class BubbleWith2RelationsToSameBubbleScenario implements JsTestScenario 
                 user.username()
         );
         child.label("child");
-        center.addRelationToFork(child).label("r1");
-        center.addRelationToFork(child).label("r2");
+        center.addRelationToFork(child.uri(), center.getShareLevel(), child.getShareLevel()).label("r1");
+        center.addRelationToFork(child.uri(), center.getShareLevel(), child.getShareLevel()).label("r2");
         return SubGraphJson.toJson(
                 userGraph.aroundForkUriInShareLevels(
                         center.uri(),

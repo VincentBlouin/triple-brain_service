@@ -67,28 +67,28 @@ public class RelationResource implements EdgeResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/")
     public Response addRelation(
-            @QueryParam("sourceUri") String sourceUri,
-            @QueryParam("destinationUri") String destinationUri
+            JSONObject params
     ) {
         try {
-            sourceUri = decodeUrlSafe(sourceUri);
-            destinationUri = decodeUrlSafe(destinationUri);
+            URI sourceUri = URI.create(decodeUrlSafe(params.optString("sourceUri")));
+            URI destinationUri = URI.create(decodeUrlSafe(params.optString("destinationUri")));
+            ForkOperator source = (ForkOperator) graphElementSpecialOperatorFactory.getFromUri(
+                    sourceUri
+            );
+            Relation createdRelation = source.addRelationToFork(
+                    destinationUri,
+                    ShareLevel.valueOf(params.optString("sourceShareLevel", ShareLevel.PRIVATE.name())),
+                    ShareLevel.valueOf(params.optString("destinationShareLevel", ShareLevel.PRIVATE.name()))
+            );
+            if (createdRelation == null) {
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            }
+            return Response.created(URI.create(
+                    UserUris.graphElementShortId(createdRelation.uri())
+            )).build();
         } catch (UnsupportedEncodingException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        ForkOperator source = (ForkOperator) graphElementSpecialOperatorFactory.getFromUri(
-                URI.create(sourceUri)
-        );
-        ForkOperator destination = (ForkOperator) graphElementSpecialOperatorFactory.getFromUri(
-                URI.create(destinationUri)
-        );
-        Relation createdRelation = source.addRelationToFork(destination);
-        if (createdRelation == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-        return Response.created(URI.create(
-                UserUris.graphElementShortId(createdRelation.uri())
-        )).build();
     }
 
     @PUT
@@ -116,7 +116,8 @@ public class RelationResource implements EdgeResource {
         GroupRelationPojo newGroupRelation = edge.convertToGroupRelation(
                 params.optString("newGroupRelationShortId", UUID.randomUUID().toString()),
                 ShareLevel.valueOf(params.optString("initialShareLevel", ShareLevel.PRIVATE.name())),
-                params.optString("label", "")
+                params.optString("label", ""),
+                params.optString("note", "")
         );
         return Response.ok(
                 JsonUtils.getGson().toJson(

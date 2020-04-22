@@ -8,6 +8,8 @@ import guru.bubl.module.common_utils.NoEx;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.ShareLevel;
+import guru.bubl.module.model.graph.group_relation.GroupRelationFactory;
+import guru.bubl.module.model.graph.group_relation.GroupRelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphJson;
 import guru.bubl.module.model.graph.relation.RelationOperator;
 import guru.bubl.module.model.graph.subgraph.SubGraphPojo;
@@ -18,8 +20,10 @@ import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
+import sun.security.provider.SHA;
 
 import javax.inject.Inject;
+import java.util.UUID;
 
 public class CreationDateScenario implements JsTestScenario {
 
@@ -27,9 +31,11 @@ public class CreationDateScenario implements JsTestScenario {
      * b1-r1->b2
      * b1-r2->b3
      * b1-r3->b4
-     * b1-similar->s1
-     * b1-similar->s2
-     * b1-similar->s3
+     * b1-To do->{
+        -similar->s1,
+        -similar->s2,
+        -similar->s3,
+      }
      * similar have same identifier
      * b1-r4->b5
      * b1-r5->b6
@@ -44,13 +50,16 @@ public class CreationDateScenario implements JsTestScenario {
      */
 
     @Inject
-    GraphFactory graphFactory;
+    private GraphFactory graphFactory;
 
     @Inject
-    VertexFactory vertexFactory;
+    private VertexFactory vertexFactory;
 
     @Inject
-    ModelTestScenarios modelTestScenarios;
+    private ModelTestScenarios modelTestScenarios;
+
+    @Inject
+    private GroupRelationFactory groupRelationFactory;
 
     User user = User.withEmailAndUsername("f", "g");
 
@@ -74,8 +83,10 @@ public class CreationDateScenario implements JsTestScenario {
             b10;
     private SubGraphPojo
             subGraphForB1,
-            subGraphForB7;
+            subGraphForB7,
+            aroundTodoGroupRelation;
 
+    private GroupRelationOperator todoGroupRelation;
 
     @Override
     public Object build() {
@@ -84,6 +95,10 @@ public class CreationDateScenario implements JsTestScenario {
         createEdges();
         subGraphForB1 = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
+                ShareLevel.allShareLevelsInt
+        );
+        aroundTodoGroupRelation = userGraph.aroundForkUriInShareLevels(
+                todoGroupRelation.uri(),
                 ShareLevel.allShareLevelsInt
         );
         setupcreationDatesForSubGraphForB1();
@@ -101,6 +116,11 @@ public class CreationDateScenario implements JsTestScenario {
                 "surroundBubble7Graph",
                 SubGraphJson.toJson(
                         subGraphForB7
+                )
+        ).put(
+                "aroundTodoGroupRelation",
+                SubGraphJson.toJson(
+                        aroundTodoGroupRelation
                 )
         )).get();
     }
@@ -178,40 +198,44 @@ public class CreationDateScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = b1.addRelationToFork(b2);
+        RelationOperator r1 = b1.addRelationToFork(b2.uri(), b1.getShareLevel(), b2.getShareLevel());
         r1.label("r1");
-        RelationOperator r2 = b1.addRelationToFork(b3);
+        RelationOperator r2 = b1.addRelationToFork(b3.uri(), b1.getShareLevel(), b3.getShareLevel());
         r2.label("r2");
-        RelationOperator r3 = b1.addRelationToFork(b4);
+        RelationOperator r3 = b1.addRelationToFork(b4.uri(), b1.getShareLevel(), b4.getShareLevel());
         r3.label("r3");
-        RelationOperator r4 = b1.addRelationToFork(b5);
+        RelationOperator r4 = b1.addRelationToFork(b5.uri(), b1.getShareLevel(), b5.getShareLevel());
         r4.label("r4");
-        RelationOperator similar1 = b1.addRelationToFork(s1);
+        RelationOperator similar1 = b1.addRelationToFork(s1.uri(), b1.getShareLevel(), s1.getShareLevel());
         similar1.label("similar");
         similar1.addTag(modelTestScenarios.toDo());
-        RelationOperator similar2 = b1.addRelationToFork(s2);
-        similar2.label("similar");
-        similar2.addTag(modelTestScenarios.toDo());
-        RelationOperator similar3 = b1.addRelationToFork(s3);
-        similar3.label("similar");
-        similar3.addTag(modelTestScenarios.toDo());
-        RelationOperator r5 = b1.addRelationToFork(b6);
+        todoGroupRelation = groupRelationFactory.withUri(
+                similar1.convertToGroupRelation(
+                        UUID.randomUUID().toString(),
+                        ShareLevel.PRIVATE,
+                        "To do",
+                        ""
+                ).uri()
+        );
+        todoGroupRelation.addRelationToFork(s2.uri(), todoGroupRelation.getShareLevel(), s2.getShareLevel()).label("similar");
+        todoGroupRelation.addRelationToFork(s3.uri(), todoGroupRelation.getShareLevel(), s3.getShareLevel()).label("similar");
+        RelationOperator r5 = b1.addRelationToFork(b6.uri(), b1.getShareLevel(), b6.getShareLevel());
         r5.label("r5");
-        RelationOperator r6 = b1.addRelationToFork(b7);
+        RelationOperator r6 = b1.addRelationToFork(b7.uri(), b1.getShareLevel(), b7.getShareLevel());
         r6.label("r6");
-        RelationOperator r71 = b7.addRelationToFork(b71);
+        RelationOperator r71 = b7.addRelationToFork(b71.uri(), b7.getShareLevel(), b71.getShareLevel());
         r71.label("r71");
-        RelationOperator r72 = b7.addRelationToFork(b72);
+        RelationOperator r72 = b7.addRelationToFork(b72.uri(), b7.getShareLevel(), b72.getShareLevel());
         r72.label("r72");
-        RelationOperator r73 = b7.addRelationToFork(b73);
+        RelationOperator r73 = b7.addRelationToFork(b73.uri(), b7.getShareLevel(), b73.getShareLevel());
         r73.label("r73");
-        RelationOperator r74 = b7.addRelationToFork(b74);
+        RelationOperator r74 = b7.addRelationToFork(b74.uri(), b7.getShareLevel(), b74.getShareLevel());
         r74.label("r74");
-        RelationOperator r8 = b1.addRelationToFork(b8);
+        RelationOperator r8 = b1.addRelationToFork(b8.uri(), b8.getShareLevel(), b1.getShareLevel());
         r8.label("r8");
-        RelationOperator r9 = b1.addRelationToFork(b9);
+        RelationOperator r9 = b1.addRelationToFork(b9.uri(), b1.getShareLevel(), b9.getShareLevel());
         r9.label("r9");
-        RelationOperator r10 = b1.addRelationToFork(b10);
+        RelationOperator r10 = b1.addRelationToFork(b10.uri(), b1.getShareLevel(), b10.getShareLevel());
         r10.label("r10");
     }
 
@@ -233,8 +257,8 @@ public class CreationDateScenario implements JsTestScenario {
         subGraphForB1.vertexWithIdentifier(
                 b4.uri()
         ).setCreationDate(b1CreationDate.plusDays(3).toDate().getTime());
-        subGraphForB1.vertexWithIdentifier(
-                s1.uri()
+        subGraphForB1.getGroupRelations().get(
+                todoGroupRelation.uri()
         ).setCreationDate(b1CreationDate.plusDays(4).toDate().getTime());
         subGraphForB1.vertexWithIdentifier(
                 b5.uri()
@@ -254,10 +278,13 @@ public class CreationDateScenario implements JsTestScenario {
         subGraphForB1.vertexWithIdentifier(
                 b10.uri()
         ).setCreationDate(b1CreationDate.plusDays(10).toDate().getTime());
-        subGraphForB1.vertexWithIdentifier(
+        aroundTodoGroupRelation.vertexWithIdentifier(
+                s1.uri()
+        ).setCreationDate(b1CreationDate.plusDays(10).toDate().getTime());
+        aroundTodoGroupRelation.vertexWithIdentifier(
                 s2.uri()
         ).setCreationDate(b1CreationDate.plusDays(11).toDate().getTime());
-        subGraphForB1.vertexWithIdentifier(
+        aroundTodoGroupRelation.vertexWithIdentifier(
                 s3.uri()
         ).setCreationDate(b1CreationDate.plusDays(12).toDate().getTime());
     }

@@ -90,17 +90,17 @@ public class SameLevelRelationsWithMoreThanOneCommonTagScenario implements JsTes
     }
 
     private void createRelations() {
-        RelationOperator r1 = center.addRelationToFork(b1);
+        RelationOperator r1 = center.addRelationToFork(b1.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r1.label("r1");
         r1.addTag(modelTestScenarios.creatorPredicate());
         r1.addTag(modelTestScenarios.possessionIdentification());
-        RelationOperator r2 = center.addRelationToFork(b2);
+        RelationOperator r2 = center.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r2.label("r2");
         r2.addTag(modelTestScenarios.creatorPredicate());
         r2.addTag(modelTestScenarios.possessionIdentification());
-        RelationOperator r3 = center.addRelationToFork(b3);
+        RelationOperator r3 = center.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE);
         r3.label("r3");
         r3.addTag(modelTestScenarios.creatorPredicate());
-        center.addRelationToFork(otherBubble).label("other relation");
+        center.addRelationToFork(otherBubble.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("other relation");
     }
 }

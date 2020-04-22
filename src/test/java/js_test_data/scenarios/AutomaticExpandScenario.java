@@ -97,14 +97,14 @@ public class AutomaticExpandScenario implements JsTestScenario {
     }
 
     private void createRelations() {
-        b1.addRelationToFork(b2).label("r1");
-        b2.addRelationToFork(b21).label("r21");
-        b1.addRelationToFork(b3).label("r2");
-        b3.addRelationToFork(b31).label("r31");
-        b3.addRelationToFork(b32).label("r32");
-        b31.addRelationToFork(b311).label("r311");
-        b32.addRelationToFork(b321).label("r321");
-        b32.addRelationToFork(b322).label("r322");
+        b1.addRelationToFork(b2.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r1");
+        b2.addRelationToFork(b21.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r21");
+        b1.addRelationToFork(b3.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r2");
+        b3.addRelationToFork(b31.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r31");
+        b3.addRelationToFork(b32.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r32");
+        b31.addRelationToFork(b311.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r311");
+        b32.addRelationToFork(b321.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r321");
+        b32.addRelationToFork(b322.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label("r322");
     }
 
     private void createVertices() {
