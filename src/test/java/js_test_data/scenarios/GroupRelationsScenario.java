@@ -149,7 +149,8 @@ me -Possession of book 1->{
                                 "aroundOriginalRelation",
                                 SubGraphJson.toJson(
                                         userGraph.aroundForkUriInShareLevels(
-                                                originalRelationGroupRelation.uri()
+                                                originalRelationGroupRelation.uri(),
+                                                ShareLevel.allShareLevelsInt
                                         )
                                 )
                         )

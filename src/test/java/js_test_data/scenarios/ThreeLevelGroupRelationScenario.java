@@ -203,7 +203,7 @@ public class ThreeLevelGroupRelationScenario implements JsTestScenario {
         g23.addTag(group1Tag);
         g23.addTag(group2Tag);
 
-        RelationOperator g3 = group2.addRelationToFork(gggg.uri(), group2.getShareLevel(), gggg.getShareLevel());
+        RelationOperator g3 = group1.addRelationToFork(gggg.uri(), group1.getShareLevel(), gggg.getShareLevel());
         g3.label("g3");
         g3.addTag(group1Tag);
 
