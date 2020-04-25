@@ -32,6 +32,8 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static guru.bubl.module.common_utils.Uris.decodeUrlSafe;
 
@@ -75,6 +77,13 @@ public class RelationResource implements EdgeResource {
             ForkOperator source = (ForkOperator) graphElementSpecialOperatorFactory.getFromUri(
                     sourceUri
             );
+            Boolean isAllOwned = new UserUris(userGraph.user().username()).areAllUrisOwned(Stream.of(
+                    sourceUri,
+                    destinationUri
+            ).collect(Collectors.toSet()));
+            if (!isAllOwned) {
+                throw new WebApplicationException(Response.Status.FORBIDDEN.getStatusCode());
+            }
             Relation createdRelation = source.addRelationToFork(
                     destinationUri,
                     ShareLevel.valueOf(params.optString("sourceShareLevel", ShareLevel.PRIVATE.name())),

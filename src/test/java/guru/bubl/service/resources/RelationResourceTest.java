@@ -19,8 +19,10 @@ import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.hamcrest.core.Is;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
@@ -84,6 +86,27 @@ public class RelationResourceTest extends GraphManipulationRestTestUtils {
         assertThat(
                 edgeUtils().addRelationBetweenVertexAAndC().getStatus(),
                 is(Response.Status.BAD_REQUEST.getStatusCode())
+        );
+        assertFalse(vertexUtils().vertexWithUriHasDestinationVertexWithUri(
+                vertexAUri(),
+                vertexCUri()
+        ));
+    }
+
+    @Test
+    public void when_not_owned_source_or_destination_prevents_adding_relation() {
+        JSONObject newUser = createAUser();
+        NewCookie newUserCookie = authenticate(
+                newUser
+        ).getCookies().get(0);
+        assertThat(
+                edgeUtils().addRelationBetweenSourceAndDestinationVertexUri(
+                        graphUtils().vertexAUri(),
+                        graphUtils().vertexCUri(),
+                        newUser.optString("user_name"),
+                        newUserCookie
+                ).getStatus(),
+                is(Response.Status.FORBIDDEN.getStatusCode())
         );
         assertFalse(vertexUtils().vertexWithUriHasDestinationVertexWithUri(
                 vertexAUri(),

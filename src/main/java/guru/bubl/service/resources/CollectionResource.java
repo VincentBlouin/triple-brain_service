@@ -12,8 +12,8 @@ public interface CollectionResource {
     String getUsername();
 
     default Boolean areAllUrisOwned(Set<URI> uris) {
-        return uris.stream().allMatch(
-                uri -> UserUris.ownerUserNameFromUri(uri).equals(getUsername())
+        return new UserUris(getUsername()).areAllUrisOwned(
+                uris
         );
     }
 

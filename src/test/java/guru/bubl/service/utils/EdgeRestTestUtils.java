@@ -136,14 +136,28 @@ public class EdgeRestTestUtils {
     public ClientResponse addRelationBetweenSourceAndDestinationVertexUri(
             URI sourceVertexUri,
             URI destinationVertexUri
+            ) {
+        return addRelationBetweenSourceAndDestinationVertexUri(
+                sourceVertexUri,
+                destinationVertexUri,
+                UserUris.ownerUserNameFromUri(sourceVertexUri),
+                authCookie
+        );
+    }
+
+    public ClientResponse addRelationBetweenSourceAndDestinationVertexUri(
+            URI sourceVertexUri,
+            URI destinationVertexUri,
+            String username,
+            NewCookie cookie
     ) {
         UserUris userUris = new UserUris(
-                UserUris.ownerUserNameFromUri(sourceVertexUri)
+                username
         );
         try {
             return resource
                     .path(userUris.baseEdgeUri().getPath())
-                    .cookie(authCookie)
+                    .cookie(cookie)
                     .header(SessionHandler.X_XSRF_TOKEN, xsrfToken)
                     .post(ClientResponse.class,
                             new JSONObject().put(

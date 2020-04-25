@@ -1,6 +1,7 @@
 package guru.bubl.service.resources;
 
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.UserUris;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperator;
 import guru.bubl.module.model.center_graph_element.CenterGraphElementOperatorFactory;
 import guru.bubl.module.model.graph.graph_element.GraphElementOperator;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Date;
+import java.util.Set;
 
 public interface GraphElementResource {
 
@@ -87,8 +89,8 @@ public interface GraphElementResource {
         return Response.noContent().build();
     }
 
-
     default User getUser() {
         return getUserGraph().user();
     }
+
 }
