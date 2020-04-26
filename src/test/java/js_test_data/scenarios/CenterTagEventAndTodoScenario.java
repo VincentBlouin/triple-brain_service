@@ -69,7 +69,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
             o1,
             o2,
             a1,
-            singleTaggedToEvent;
+            singleVertexTaggedToEvent;
 
     @Override
     public Object build() {
@@ -109,7 +109,7 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
                 "singleTaggedToEvent",
                 SubGraphJson.toJson(
                         userGraph.aroundForkUriInShareLevels(
-                                singleTaggedToEvent.uri(),
+                                singleVertexTaggedToEvent.uri(),
                                 ShareLevel.allShareLevelsInt
                         )
                 )
@@ -161,11 +161,11 @@ public class CenterTagEventAndTodoScenario implements JsTestScenario {
         );
         a1.label("a1");
 
-        singleTaggedToEvent = vertexFactory.createForOwner(
+        singleVertexTaggedToEvent = vertexFactory.createForOwner(
                 user.username()
         );
-        singleTaggedToEvent.label("single tagged to event");
-        singleTaggedToEvent.addTag(
+        singleVertexTaggedToEvent.label("single tagged to event");
+        singleVertexTaggedToEvent.addTag(
                 event
         );
     }
