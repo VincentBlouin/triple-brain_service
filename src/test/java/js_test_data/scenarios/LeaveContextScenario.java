@@ -17,21 +17,21 @@ public class LeaveContextScenario implements JsTestScenario {
 
     /*
      *
-     * tech choice -> choice a
-     * tech choice -> choice b
-     * tech choice -> choice c
-     * choice a -> choice a1
-     * choice a -> choice a2
-     * */
+     tech choice {
+       -> choice a{
+            -> choice a1
+            -> choice a2
+       }
+       -> choice b
+       -> choice c
+    }
+    * */
 
     @Inject
     protected GraphFactory graphFactory;
 
     @Inject
     protected VertexFactory vertexFactory;
-
-    @Inject
-    ModelTestScenarios modelTestScenarios;
 
     User user = User.withEmailAndUsername("a", "b");
 
