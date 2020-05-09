@@ -153,7 +153,15 @@ me -Possession of book 1->{
                                                 ShareLevel.allShareLevelsInt
                                         )
                                 )
+                        ).put(
+                        "aroundBook1",
+                        SubGraphJson.toJson(
+                                userGraph.aroundForkUriInShareLevels(
+                                        book1.uri(),
+                                        ShareLevel.allShareLevelsInt
+                                )
                         )
+                )
         ).get();
     }
 
