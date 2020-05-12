@@ -20,7 +20,6 @@ import guru.bubl.test.module.utils.ModelTestScenarios;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
-import sun.security.provider.SHA;
 
 import javax.inject.Inject;
 import java.util.UUID;

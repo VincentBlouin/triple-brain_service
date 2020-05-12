@@ -18,7 +18,6 @@ import guru.bubl.module.model.graph.vertex.VertexFactory;
 import guru.bubl.module.model.graph.vertex.VertexOperator;
 import js_test_data.JsTestScenario;
 import org.codehaus.jettison.json.JSONObject;
-import sun.misc.UUDecoder;
 
 import javax.inject.Inject;
 import java.net.URI;
