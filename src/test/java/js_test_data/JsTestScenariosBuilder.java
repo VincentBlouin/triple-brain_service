@@ -60,7 +60,9 @@ public class JsTestScenariosBuilder {
             new LeaveContextScenario(),
             new TwoLevelGroupRelationScenario(),
             new ThreeLevelGroupRelationScenario(),
-            new MergeTwoChildHavingChildrenScenario()
+            new MergeTwoChildHavingChildrenScenario(),
+            new MergeAncestorWithDescendantScenario(),
+            new MergeDescendantWithAncestorScenario()
     );
 
 

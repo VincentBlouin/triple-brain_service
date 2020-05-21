@@ -81,6 +81,7 @@ public class ThreeScenario implements JsTestScenario {
     private VertexOperator
             b1,
             b2,
+            b21,
             b3,
             b4,
             b5,
@@ -102,6 +103,7 @@ public class ThreeScenario implements JsTestScenario {
                 b2.uri(),
                 ShareLevel.allShareLevelsInt
         );
+
         SubGraphPojo subGraphForB3 = userGraph.aroundForkUriInShareLevels(
                 b3.uri(),
                 ShareLevel.allShareLevelsInt
@@ -130,6 +132,11 @@ public class ThreeScenario implements JsTestScenario {
         child.mergeTo(b1);
         SubGraphPojo subGraphOfB1OnceMergedWithSingleChild = userGraph.aroundForkUriInShareLevels(
                 b1.uri(),
+                ShareLevel.allShareLevelsInt
+        );
+        b21.mergeTo(b3);
+        SubGraphPojo b3SubGraphMergedWithB21 = userGraph.aroundForkUriInShareLevels(
+                b3.uri(),
                 ShareLevel.allShareLevelsInt
         );
         try {
@@ -178,6 +185,11 @@ public class ThreeScenario implements JsTestScenario {
                     SubGraphJson.toJson(
                             subGraphOfB1OnceMergedWithSingleChild
                     )
+            ).put(
+                    "b3SubGraphMergedWithB21",
+                    SubGraphJson.toJson(
+                            b3SubGraphMergedWithB21
+                    )
             );
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -193,7 +205,10 @@ public class ThreeScenario implements JsTestScenario {
                 user.username()
         );
         b2.label("b2");
-        b2.addVertexAndRelation();
+        b21 = vertexFactory.createForOwner(
+                user.username()
+        );
+        b21.label("b21");
         b2.addVertexAndRelation();
         b3 = vertexFactory.createForOwner(
                 user.username()
@@ -221,17 +236,25 @@ public class ThreeScenario implements JsTestScenario {
     }
 
     private void createEdges() {
-        RelationOperator r1 = b1.addRelationToFork(b2.uri(), b1.getShareLevel(), b2.getShareLevel());
-        r1.label("r1");
-        RelationOperator r2 = b1.addRelationToFork(b3.uri(), b1.getShareLevel(), b3.getShareLevel());
-        r2.label("r2");
-        RelationOperator r3 = b3.addRelationToFork(b4.uri(), b3.getShareLevel(), b4.getShareLevel());
-        r3.label("r3");
-        RelationOperator r4 = b3.addRelationToFork(b5.uri(), b3.getShareLevel(), b4.getShareLevel());
-        r4.label("r4");
+        b1.addRelationToFork(b2.uri(), b1.getShareLevel(), b2.getShareLevel()).label(
+                "r1"
+        );
+        b2.addRelationToFork(b21.uri(), ShareLevel.PRIVATE, ShareLevel.PRIVATE).label(
+                "rb21"
+        );
+        b1.addRelationToFork(b3.uri(), b1.getShareLevel(), b3.getShareLevel()).label(
+                "r2"
+        );
+        b3.addRelationToFork(b4.uri(), b3.getShareLevel(), b4.getShareLevel()).label(
+                "r3"
+        );
+        b3.addRelationToFork(b5.uri(), b3.getShareLevel(), b4.getShareLevel()).label(
+                "r4"
+        );
         b4.addVertexAndRelation();
         b4.addVertexAndRelation();
-        RelationOperator relation = parent.addRelationToFork(child.uri(), parent.getShareLevel(), child.getShareLevel());
-        relation.label("relation");
+        parent.addRelationToFork(child.uri(), parent.getShareLevel(), child.getShareLevel()).label(
+                "relation"
+        );
     }
 }
