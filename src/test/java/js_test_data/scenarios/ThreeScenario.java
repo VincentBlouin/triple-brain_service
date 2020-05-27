@@ -30,24 +30,30 @@ import java.util.List;
 public class ThreeScenario implements JsTestScenario {
 
     /*
-     * b1-r1->b2
-     * b1-r2->b3
-     * b2 has two hidden relations
-     * b2 child are private
-     * b3 has two hidden relations
-     * b3 has the comment "b3 comment"
-     */
-
-    /*
-     * b3<-r2-b1
-     * b3-r3->-b4
-     * b4 is public
-     * b3-r4->b5
-     * b5 is public
-     * b4 has hidden relations
-     */
-
-    /*
+     b1{
+        -r1->b2{
+            ->
+            ->
+        }
+        -r2->b3{
+            -r3->-b4{
+                ->
+                ->
+            },
+            -r4->b5
+        }
+     }
+     b2 is tagged to computer scientist
+     b3 has the comment 'b3 comment'
+     b3{
+        <-r2-b1
+        -r3->-b4{
+            ->
+            ->
+        },
+        -r4->b5
+    }
+    b4 and b5 are public
     Also single child scenario
     parent-relation->child
     graph where child is connected to parent.
@@ -215,6 +221,7 @@ public class ThreeScenario implements JsTestScenario {
         );
         b3.label("b3");
         b3.comment("b3 comment");
+        b3.addTag(modelTestScenarios.computerScientistType(), ShareLevel.PRIVATE);
         b4 = vertexFactory.createForOwner(
                 user.username()
         );
