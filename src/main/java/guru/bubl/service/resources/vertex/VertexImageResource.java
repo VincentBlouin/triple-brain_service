@@ -37,7 +37,7 @@ public class VertexImageResource {
 
     private VertexOperator vertex;
 
-    public static final String IMAGES_FOLDER_PATH = "/var/lib/triple_brain/image";
+    public static final String IMAGES_FOLDER_PATH = "/home/mindrespect/var/lib/triple_brain/image";
 
     @Inject
     FriendlyResourceFactory friendlyResourceFactory;
