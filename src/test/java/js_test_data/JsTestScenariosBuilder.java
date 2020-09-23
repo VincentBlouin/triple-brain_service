@@ -64,7 +64,8 @@ public class JsTestScenariosBuilder {
             new MergeAncestorWithDescendantScenario(),
             new MergeDescendantWithAncestorScenario(),
             new MergeCentersScenario(),
-            new DuplicateScenario()
+            new DuplicateScenario(),
+            new GroupRelationAsChildScenario()
     );
 
 
