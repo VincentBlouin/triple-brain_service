@@ -2,7 +2,7 @@ jdk:
   - openjdk11
 before_install: git clone https://github.com/VincentBlouin/travis-maven-deploy.git
   target/travis
-script: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && mvn clean deploy -q --settings target/travis/settings.xml
+script: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && mvn clean deploy -DskipTests -q --settings target/travis/settings.xml
   || mvn clean verify --settings target/travis/settings.xml"
 branches:
   only:
