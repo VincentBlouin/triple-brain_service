@@ -8,8 +8,8 @@ import guru.bubl.module.model.graph.GraphFactory;
 import guru.bubl.module.model.graph.GraphTransactional;
 import guru.bubl.module.model.graph.subgraph.UserGraph;
 import guru.bubl.service.SessionHandler;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Session;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -86,7 +86,7 @@ public class JsTestScenariosBuilder {
                 ),
                 jsonObject.toString()
         );
-        transaction.failure();
+        transaction.rollback();
         transaction.close();
     }
 

@@ -10,8 +10,8 @@ import guru.bubl.module.model.forgot_password.UserForgotPasswordToken;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.model.json.UserJson;
 import guru.bubl.module.repository.user.UserRepository;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Session;
 
 import javax.inject.Inject;
 import javax.inject.Named;
