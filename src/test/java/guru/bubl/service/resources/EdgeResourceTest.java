@@ -17,10 +17,10 @@ import javax.ws.rs.core.Response;
 
 import java.net.URI;
 
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EdgeResourceTest extends GraphManipulationRestTestUtils {
     @Test

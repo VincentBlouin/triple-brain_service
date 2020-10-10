@@ -10,6 +10,7 @@ import com.google.inject.Injector;
 import guru.bubl.module.model.ModelModule;
 import guru.bubl.module.model.ModelTestModule;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
+import guru.bubl.module.neo4j_graph_manipulator.graph.embedded.admin.Neo4jModuleForTests;
 import guru.bubl.test.module.utils.ModelTestScenarios;
 import org.neo4j.graphdb.GraphDatabaseService;
 
@@ -34,7 +35,7 @@ public class JsTestScenariosStarter {
                 JsTestScenariosBuilder.class
         );
         jsTestScenariosBuilder.build(injector);
-        Neo4jModule.clearDb();
+        Neo4jModuleForTests.clearDb();
         System.exit(0);
     }
 

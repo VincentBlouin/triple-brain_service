@@ -70,6 +70,13 @@
                             <goal>test-jar</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -80,19 +87,6 @@
                         <include>**/ServiceTests.java</include>
                     </includes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>make-a-jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
@@ -206,16 +200,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-cypher</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-assistedinject</artifactId>
         </dependency>
@@ -262,6 +246,7 @@
             <artifactId>graph_model-test</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -269,6 +254,7 @@
             <artifactId>neo4j-graph-manipulator</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -276,6 +262,7 @@
             <artifactId>model</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
