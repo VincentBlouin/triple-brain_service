@@ -3,17 +3,17 @@
  */
 
 package guru.bubl.service;
-import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
-import guru.bubl.module.neo4j_graph_manipulator.graph.embedded.admin.Neo4jModuleForTests;
+
 import guru.bubl.service.usage_log.H2DataSource;
 import guru.bubl.service.usage_log.SQLConnection;
 
 public class Launch {
-    public static void before(){
+    public static void before() {
         SQLConnection.createTablesUsingDataSource(
                 new H2DataSource()
         );
-         Neo4jModuleForTests.clearDb();
     }
-    public static void after(){}
+
+    public static void after() {
+    }
 }

@@ -13,7 +13,7 @@ import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.tag.TagPojo;
 import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.SessionHandler;
-import guru.bubl.test.module.utils.ModelTestScenarios;
+import guru.bubl.module.model.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 

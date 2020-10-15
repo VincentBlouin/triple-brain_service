@@ -17,7 +17,7 @@ import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.service.SessionHandler;
 import guru.bubl.service.utils.GraphManipulationRestTestUtils;
 import guru.bubl.service.utils.RestTestUtils;
-import guru.bubl.test.module.utils.ModelTestScenarios;
+import guru.bubl.module.model.ModelTestScenarios;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 

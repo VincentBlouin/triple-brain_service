@@ -25,11 +25,11 @@ public class Launcher {
         server = new Server(port);
         HandlerCollection handlers = new HandlerCollection();
 
-        WebAppContext wac = new WebAppContext("src/main/webapp", "/service");
+        WebAppContext wac = new WebAppContext("src/test/webapp", "/service");
         handlers.addHandler(wac);
 
         String fileName = isForServiceTests ? "jetty-web-service-tests.xml" : "jetty-web-local-dev.xml";
-        XmlConfiguration conf = new XmlConfiguration(new File("src/test/webapp/WEB-INF/" + fileName).toURI().toURL().openStream());
+        XmlConfiguration conf = new XmlConfiguration(new File("src/test/" + fileName).toURI().toURL().openStream());
         conf.configure(wac);
 
         server.setHandler(handlers);

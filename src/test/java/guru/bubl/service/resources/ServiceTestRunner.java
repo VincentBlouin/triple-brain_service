@@ -9,7 +9,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import guru.bubl.module.neo4j_graph_manipulator.graph.Neo4jModule;
-import guru.bubl.module.neo4j_graph_manipulator.graph.embedded.admin.Neo4jModuleForTests;
 import guru.bubl.service.Launcher;
 import guru.bubl.service.utils.RestTestUtils;
 import org.junit.AfterClass;
@@ -25,7 +24,6 @@ public class ServiceTestRunner extends RunListener {
 
     @BeforeClass
     public static void beforeAllTests() throws Exception {
-        Neo4jModuleForTests.clearDb();
         RestTestUtils.BASE_URI = new URI("http://localhost:8786");
         RestTestUtils.launcher = new Launcher(
                 RestTestUtils.BASE_URI.getPort(),
