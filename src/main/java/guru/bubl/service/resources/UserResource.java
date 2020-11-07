@@ -26,6 +26,8 @@ import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResource;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
+import guru.bubl.service.resources.tree_copier.TreeCopierResource;
+import guru.bubl.service.resources.tree_copier.TreeCopierResourceFactory;
 import guru.bubl.service.resources.vertex.NotOwnedSurroundGraphResource;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -94,6 +96,9 @@ public class UserResource {
 
     @Inject
     Recaptcha recaptcha;
+
+    @Inject
+    private TreeCopierResourceFactory treeCopierResourceFactory;
 
     @POST
     @Path("{username}/search-users")
@@ -170,6 +175,19 @@ public class UserResource {
     ) {
         if (isUserNameTheOneInSession(username, persistentSessionId)) {
             return friendsResourceFactory.forUser(
+                    sessionHandler.userFromSession(request.getSession())
+            );
+        }
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
+    @Path("{username}/tree_copy")
+    public TreeCopierResource copierResource(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
+            return treeCopierResourceFactory.forCopier(
                     sessionHandler.userFromSession(request.getSession())
             );
         }

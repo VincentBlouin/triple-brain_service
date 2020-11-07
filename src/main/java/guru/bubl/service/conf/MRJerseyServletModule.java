@@ -22,6 +22,7 @@ import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.relation.RelationResourceFactory;
 import guru.bubl.service.resources.tag.TagResourceFactory;
 import guru.bubl.service.resources.test.*;
+import guru.bubl.service.resources.tree_copier.TreeCopierResourceFactory;
 import guru.bubl.service.resources.vertex.GraphElementTagResourceFactory;
 import guru.bubl.service.resources.vertex.VertexImageResourceFactory;
 import guru.bubl.service.resources.vertex.VertexResourceFactory;
@@ -89,6 +90,9 @@ public class MRJerseyServletModule extends JerseyServletModule {
         ));
         install(builder.build(
                 GroupRelationResourceFactory.class
+        ));
+        install(builder.build(
+                TreeCopierResourceFactory.class
         ));
         final Map<String, String> params = new HashMap<>();
         serve("/*").with(GuiceContainer.class, params);
