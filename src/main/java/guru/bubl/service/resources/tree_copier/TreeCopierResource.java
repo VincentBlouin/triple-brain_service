@@ -1,16 +1,12 @@
 package guru.bubl.service.resources.tree_copier;
 
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.Tree;
-import guru.bubl.module.model.graph.tag.TagPojo;
-import guru.bubl.module.model.graph.tree_copier.TreeCopier;
 import guru.bubl.module.model.graph.tree_copier.TreeCopierFactory;
 import guru.bubl.module.model.json.JsonUtils;
-import guru.bubl.module.model.tag.TagJson;
 import guru.bubl.module.repository.user.UserRepository;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -18,7 +14,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Set;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -42,7 +37,7 @@ public class TreeCopierResource {
     @POST
     @Path("{copiedUserName}")
     public Response copy(@PathParam("copiedUserName") String copiedUserName, JSONObject options) {
-        URI newRootUri = treeCopierFactory.forCopier(copier).ofAnotherUser(
+        URI newRootUri = treeCopierFactory.forCopier(copier).copyTreeOfUser(
                 JsonUtils.getGson().fromJson(options.optString("copiedTree"), Tree.class),
                 userRepository.findByUsername(copiedUserName)
         );
