@@ -35,11 +35,27 @@ public class TreeCopierResource {
     }
 
     @POST
-    @Path("{copiedUserName}")
-    public Response copy(@PathParam("copiedUserName") String copiedUserName, JSONObject options) {
+    @Path("/")
+    public Response copyForSelf(JSONObject options) {
+        return _copy(
+                options,
+                copier
+        );
+    }
+
+    @POST
+    @Path("/{copiedUserName}")
+    public Response copyForOtherUser(@PathParam("copiedUserName") String copiedUserName, JSONObject options) {
+        return _copy(
+                options,
+                userRepository.findByUsername(copiedUserName)
+        );
+    }
+
+    private Response _copy(JSONObject options, User copiedUser) {
         URI newRootUri = treeCopierFactory.forCopier(copier).copyTreeOfUser(
                 JsonUtils.getGson().fromJson(options.optString("copiedTree"), Tree.class),
-                userRepository.findByUsername(copiedUserName)
+                copiedUser
         );
         return Response.created(
                 newRootUri
