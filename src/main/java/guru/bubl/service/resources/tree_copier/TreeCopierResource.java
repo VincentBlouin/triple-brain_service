@@ -14,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -53,12 +54,12 @@ public class TreeCopierResource {
     }
 
     private Response _copy(JSONObject options, User copiedUser) {
-        URI newRootUri = treeCopierFactory.forCopier(copier).copyTreeOfUser(
+        Map<URI, URI> map = treeCopierFactory.forCopier(copier).copyTreeOfUser(
                 JsonUtils.getGson().fromJson(options.optString("copiedTree"), Tree.class),
                 copiedUser
         );
-        return Response.created(
-                newRootUri
+        return Response.ok(
+                JsonUtils.getGson().toJson(map)
         ).build();
     }
 }

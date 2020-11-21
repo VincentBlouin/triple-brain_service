@@ -42,7 +42,7 @@ public class TreeCopierResourceTest extends GraphManipulationRestTestUtils {
         );
         assertThat(
                 response.getStatus(),
-                is(Response.Status.CREATED.getStatusCode())
+                is(Response.Status.OK.getStatusCode())
         );
     }
 
