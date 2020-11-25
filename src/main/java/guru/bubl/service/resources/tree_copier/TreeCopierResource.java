@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
 import guru.bubl.module.model.graph.Tree;
+import guru.bubl.module.model.graph.tree_copier.TreeCopier;
 import guru.bubl.module.model.graph.tree_copier.TreeCopierFactory;
 import guru.bubl.module.model.json.JsonUtils;
 import guru.bubl.module.repository.user.UserRepository;
@@ -54,8 +55,14 @@ public class TreeCopierResource {
     }
 
     private Response _copy(JSONObject options, User copiedUser) {
-        Map<URI, URI> map = treeCopierFactory.forCopier(copier).copyTreeOfUser(
-                JsonUtils.getGson().fromJson(options.optString("copiedTree"), Tree.class),
+        Tree tree = JsonUtils.getGson().fromJson(options.optString("copiedTree"), Tree.class);
+        TreeCopier treeCopier = treeCopierFactory.forCopier(copier);
+        Map<URI, URI> map = options.has("parentUri") ? treeCopier.copyTreeOfUserWithNewParentUri(
+                tree,
+                copiedUser,
+                URI.create(options.optString("parentUri"))
+        ) : treeCopier.copyTreeOfUser(
+                tree,
                 copiedUser
         );
         return Response.ok(
