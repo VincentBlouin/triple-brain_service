@@ -27,7 +27,7 @@ public interface GraphElementResource {
 
     GraphElementOperator getOperatorFromShortId(String shortId);
 
-    @Path("/{type}/{shortId}/center")
+    @Path("/{shortId}/center")
     @POST
     default Response makeCenter(@PathParam("shortId") String shortId, JSONObject data) {
         CenterGraphElementOperator centerGraphElementOperator = getCenterOperatorFactory().usingFriendlyResource(
