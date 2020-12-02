@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import guru.bubl.module.model.User;
+import guru.bubl.module.model.graph.ShareLevel;
 import guru.bubl.module.model.graph.Tree;
 import guru.bubl.module.model.graph.tree_copier.TreeCopier;
 import guru.bubl.module.model.graph.tree_copier.TreeCopierFactory;
@@ -57,13 +58,16 @@ public class TreeCopierResource {
     private Response _copy(JSONObject options, User copiedUser) {
         Tree tree = JsonUtils.getGson().fromJson(options.optString("copiedTree"), Tree.class);
         TreeCopier treeCopier = treeCopierFactory.forCopier(copier);
-        Map<URI, URI> map = options.has("parentUri") ? treeCopier.copyTreeOfUserWithNewParentUri(
+        ShareLevel copyInShareLevel = ShareLevel.valueOf(options.optString("shareLevel", ShareLevel.PRIVATE.name()));
+        Map<URI, URI> map = options.has("parentUri") ? treeCopier.copyTreeOfUserWithNewParentUriInShareLevel(
                 tree,
                 copiedUser,
-                URI.create(options.optString("parentUri"))
-        ) : treeCopier.copyTreeOfUser(
+                URI.create(options.optString("parentUri")),
+                copyInShareLevel
+        ) : treeCopier.copyTreeOfUserInShareLevel(
                 tree,
-                copiedUser
+                copiedUser,
+                copyInShareLevel
         );
         return Response.ok(
                 JsonUtils.getGson().toJson(map)
