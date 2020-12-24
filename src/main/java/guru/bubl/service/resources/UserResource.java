@@ -24,6 +24,8 @@ import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
+import guru.bubl.service.resources.notification.NotificationResource;
+import guru.bubl.service.resources.notification.NotificationResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResource;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.tree_copier.TreeCopierResource;
@@ -96,6 +98,9 @@ public class UserResource {
 
     @Inject
     Recaptcha recaptcha;
+
+    @Inject
+    NotificationResourceFactory notificationResourceFactory;
 
     @Inject
     private TreeCopierResourceFactory treeCopierResourceFactory;
@@ -266,6 +271,21 @@ public class UserResource {
         );
     }
 
+    @Path("{username}/notification")
+    public NotificationResource getNotificationResource(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
+        }
+        return notificationResourceFactory.ofUser(
+                sessionHandler.userFromSession(request.getSession())
+        );
+    }
+
     @Path("session")
     public UserSessionResource sessionResource() {
         return injector.getInstance(
@@ -389,6 +409,7 @@ public class UserResource {
         );
         return Response.noContent().build();
     }
+
 
     private Boolean isUserNameTheOneInSession(String userName, String persistentSessionId) {
         if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {

@@ -18,6 +18,8 @@ import guru.bubl.service.resources.fork.ForkCollectionResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.group_relation.GroupRelationResourceFactory;
+import guru.bubl.service.resources.notification.NotificationResource;
+import guru.bubl.service.resources.notification.NotificationResourceFactory;
 import guru.bubl.service.resources.pattern.PatternConsumerResourceFactory;
 import guru.bubl.service.resources.relation.RelationResourceFactory;
 import guru.bubl.service.resources.tag.TagResourceFactory;
@@ -93,6 +95,9 @@ public class MRJerseyServletModule extends JerseyServletModule {
         ));
         install(builder.build(
                 TreeCopierResourceFactory.class
+        ));
+        install(builder.build(
+                NotificationResourceFactory.class
         ));
         final Map<String, String> params = new HashMap<>();
         serve("/*").with(GuiceContainer.class, params);

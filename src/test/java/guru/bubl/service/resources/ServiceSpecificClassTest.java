@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
 @Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        TreeCopierResourceTest.class
+        NotificationResourceTest.class
 })
 public class ServiceSpecificClassTest extends ServiceTestRunner {
 }
