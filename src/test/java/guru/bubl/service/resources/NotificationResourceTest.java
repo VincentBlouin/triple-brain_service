@@ -29,6 +29,7 @@ public class NotificationResourceTest extends GraphManipulationRestTestUtils {
                 .path("users")
                 .path(defaultAuthenticatedUser.username())
                 .path("notification")
+                .queryParam("nbSkip", "0")
                 .cookie(authCookie)
                 .header(SessionHandler.X_XSRF_TOKEN, currentXsrfToken)
                 .get(ClientResponse.class);
