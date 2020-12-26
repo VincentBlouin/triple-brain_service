@@ -410,6 +410,23 @@ public class UserResource {
         return Response.noContent().build();
     }
 
+    @POST
+    @Path("{username}/consultNotificationDate")
+    public Response updateNotificationDate(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId
+    ) {
+        if (!isUserNameTheOneInSession(username, persistentSessionId)) {
+            throw new WebApplicationException(
+                    Response.Status.FORBIDDEN
+            );
+        }
+        User authenticatedUser = sessionHandler.userFromSession(request.getSession());
+        userRepository.updateConsultNotificationDate(
+                authenticatedUser
+        );
+        return Response.noContent().build();
+    }
 
     private Boolean isUserNameTheOneInSession(String userName, String persistentSessionId) {
         if (!sessionHandler.isUserInSession(request.getSession(), persistentSessionId)) {
