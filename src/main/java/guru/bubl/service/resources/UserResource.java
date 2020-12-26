@@ -43,6 +43,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -422,10 +423,20 @@ public class UserResource {
             );
         }
         User authenticatedUser = sessionHandler.userFromSession(request.getSession());
-        userRepository.updateConsultNotificationDate(
+        Date newDate = userRepository.updateConsultNotificationDate(
                 authenticatedUser
         );
-        return Response.noContent().build();
+        authenticatedUser.setConsultNotificationDate(newDate);
+        try {
+            return Response.ok(
+                    new JSONObject().put(
+                            "consultNotificationsDate",
+                            newDate.getTime()
+                    )
+            ).build();
+        } catch (JSONException e) {
+            throw new RuntimeException();
+        }
     }
 
     private Boolean isUserNameTheOneInSession(String userName, String persistentSessionId) {
