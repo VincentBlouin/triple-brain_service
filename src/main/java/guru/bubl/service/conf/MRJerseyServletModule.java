@@ -14,6 +14,7 @@ import guru.bubl.service.SessionHandler;
 import guru.bubl.service.resources.*;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
 import guru.bubl.service.resources.center.PublicCenterGraphElementsResource;
+import guru.bubl.service.resources.export.ExportToMdResourceFactory;
 import guru.bubl.service.resources.fork.ForkCollectionResourceFactory;
 import guru.bubl.service.resources.friend.FriendListResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
@@ -98,6 +99,9 @@ public class MRJerseyServletModule extends JerseyServletModule {
         ));
         install(builder.build(
                 NotificationResourceFactory.class
+        ));
+        install(builder.build(
+                ExportToMdResourceFactory.class
         ));
         final Map<String, String> params = new HashMap<>();
         serve("/*").with(GuiceContainer.class, params);
