@@ -22,6 +22,8 @@ import guru.bubl.service.recaptcha.Recaptcha;
 import guru.bubl.service.recaptcha.RecaptchaResult;
 import guru.bubl.service.resources.center.CenterGraphElementsResource;
 import guru.bubl.service.resources.center.CenterGraphElementsResourceFactory;
+import guru.bubl.service.resources.export.ExportToMdResource;
+import guru.bubl.service.resources.export.ExportToMdResourceFactory;
 import guru.bubl.service.resources.friend.FriendsResource;
 import guru.bubl.service.resources.friend.FriendsResourceFactory;
 import guru.bubl.service.resources.notification.NotificationResource;
@@ -77,6 +79,9 @@ public class UserResource {
 
     @Inject
     CenterGraphElementsResourceFactory centerGraphElementsResourceFactory;
+
+    @Inject
+    ExportToMdResourceFactory exportToMdResourceFactory;
 
     @Inject
     private Injector injector;
@@ -182,6 +187,18 @@ public class UserResource {
         if (isUserNameTheOneInSession(username, persistentSessionId)) {
             return friendsResourceFactory.forUser(
                     sessionHandler.userFromSession(request.getSession())
+            );
+        }
+        throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+
+    @Path("{username}/export-to-md")
+    public ExportToMdResource ExportToMdResource(
+            @PathParam("username") String username,
+            @CookieParam(SessionHandler.PERSISTENT_SESSION) String persistentSessionId) {
+        if (isUserNameTheOneInSession(username, persistentSessionId)) {
+            return exportToMdResourceFactory.forUsername(
+                    sessionHandler.userFromSession(request.getSession()).username()
             );
         }
         throw new WebApplicationException(Response.Status.FORBIDDEN);
