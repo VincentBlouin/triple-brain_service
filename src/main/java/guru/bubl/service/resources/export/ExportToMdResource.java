@@ -32,24 +32,32 @@ public class ExportToMdResource {
     @POST
     @Path("/")
     public Response get() {
-        File file = exportToMarkdown.export();
-        StreamingOutput fileStream = new StreamingOutput() {
-            @Override
-            public void write(java.io.OutputStream output) throws IOException, WebApplicationException {
-                try {
-                    java.nio.file.Path path = Paths.get(file.getAbsolutePath());
-                    byte[] data = Files.readAllBytes(path);
-                    output.write(data);
-                    output.flush();
-                } catch (Exception e) {
-                    throw new WebApplicationException(e);
-                }
+        Thread thread = new Thread() {
+            public void run() {
+                exportToMarkdown.export();
             }
         };
+        thread.start();
         return Response
-                .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
-                .header("content-disposition", "attachment; filename = " + file.getName())
-                .build();
+                .ok().build();
+//        File file = exportToMarkdown.export();
+//        StreamingOutput fileStream = new StreamingOutput() {
+//            @Override
+//            public void write(java.io.OutputStream output) throws IOException, WebApplicationException {
+//                try {
+//                    java.nio.file.Path path = Paths.get(file.getAbsolutePath());
+//                    byte[] data = Files.readAllBytes(path);
+//                    output.write(data);
+//                    output.flush();
+//                } catch (Exception e) {
+//                    throw new WebApplicationException(e);
+//                }
+//            }
+//        };
+//        return Response
+//                .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+//                .header("content-disposition", "attachment; filename = " + file.getName())
+//                .build();
     }
 
 }
