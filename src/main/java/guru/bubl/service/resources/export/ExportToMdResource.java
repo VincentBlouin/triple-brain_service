@@ -1,13 +1,9 @@
 package guru.bubl.service.resources.export;
 
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import guru.bubl.module.model.User;
-import guru.bubl.module.model.graph.fork.ForkOperatorFactory;
 import guru.bubl.module.neo4j_graph_manipulator.graph.export.ExportToMarkdown;
 import guru.bubl.module.neo4j_graph_manipulator.graph.export.ExportToMarkdownFactory;
-import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
